@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">InfoXPeru</string>
+    <string name="login_title">Podrás visualizar los principales números de emergencia por distrito en la zona Lima</string>
+    <string name="email_label">Correo</string>
+    <string name="password_label">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="forgot_password">Has olvidado tu contraseña?</string>
+    <string name="not_registered">Aún no te has registrado?</string>
 </resources>
