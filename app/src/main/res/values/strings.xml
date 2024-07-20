@@ -6,4 +6,13 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="forgot_password">Has olvidado tu contraseña?</string>
     <string name="not_registered">Aún no te has registrado?</string>
+    <string name="register_screen_description">Al momento de registrarte podrás mantenerte al tanto de los cambios realizados</string>
+    <string name="register_screen_name">Nombre</string>
+    <string name="register_screen_last_name">Apellido</string>
+    <string name="register_screen_email">Correo</string>
+    <string name="register_screen_password">Contraseña</string>
+    <string name="register_screen_confirm_password">Confirmar contraseña</string>
+    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_screen_already_have_account">¿Ya tienes cuenta?</string>
+
 </resources>

@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -21,11 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +51,7 @@ fun RegisterScreen(navController: NavHostController) {
                     .padding(20.dp)
             ) {
                 Text(
-                    text = "Al momento de registrarte podrás mantenerte al tanto de los cambios realizados",
+                    text = stringResource(id = R.string.register_screen_description),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -54,7 +59,7 @@ fun RegisterScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /* TODO */ },
-                    label = { Text("Nombre") },
+                    label = { Text(stringResource(id = R.string.register_screen_name)) },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
@@ -63,7 +68,7 @@ fun RegisterScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /* TODO */ },
-                    label = { Text("Apellido") },
+                    label = { Text(stringResource(id = R.string.register_screen_last_name)) },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
@@ -72,7 +77,7 @@ fun RegisterScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /* TODO */ },
-                    label = { Text("Correo") },
+                    label = { Text(stringResource(id = R.string.register_screen_email)) },
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -84,7 +89,7 @@ fun RegisterScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /* TODO */ },
-                    label = { Text("Contraseña") },
+                    label = { Text(stringResource(id = R.string.register_screen_password)) },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -96,7 +101,7 @@ fun RegisterScreen(navController: NavHostController) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /* TODO */ },
-                    label = { Text("Confirmar contraseña") },
+                    label = { Text(stringResource(id = R.string.register_screen_confirm_password)) },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -117,7 +122,7 @@ fun RegisterScreen(navController: NavHostController) {
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
-                    Text("Registrarse")
+                    Text(stringResource(id = R.string.register_screen_register_button))
                 }
             }
         }
@@ -125,7 +130,7 @@ fun RegisterScreen(navController: NavHostController) {
         TextButton(
             onClick = { navController.navigate(Screen.Login.route) }
         ) {
-            Text("¿Ya tienes cuenta?")
+            Text(stringResource(id = R.string.register_screen_already_have_account))
         }
     }
 }

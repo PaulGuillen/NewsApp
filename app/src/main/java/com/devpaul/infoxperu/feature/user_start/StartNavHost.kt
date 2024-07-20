@@ -1,10 +1,12 @@
 package com.devpaul.infoxperu.feature.user_start
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
+import com.devpaul.infoxperu.feature.user_start.login.LoginViewModel
 import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 
 sealed class Screen(val route: String) {
@@ -17,13 +19,12 @@ sealed class Screen(val route: String) {
 fun StartNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Login.route) {
-            LoginScreen(navController)
+            val viewModel: LoginViewModel = hiltViewModel()
+            LoginScreen(navController = navController, viewModel = viewModel)
         }
         composable(Screen.Register.route) {
-            RegisterScreen(navController)
+            RegisterScreen(navController = navController)
         }
-//        composable(Screen.Support.route) {
-//            SupportScreen(navController)
-//        }
+        // Agregar otras composables aquí
     }
 }
