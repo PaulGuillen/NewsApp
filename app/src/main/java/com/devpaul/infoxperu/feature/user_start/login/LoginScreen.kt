@@ -23,30 +23,51 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.domain.ui.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
-import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val uiEvent by viewModel.uiEvent.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(uiEvent) {
         when (uiEvent) {
             is LoginUiEvent.LoginSuccess -> {
-                // Navegar a la pantalla de inicio
-                Toast.makeText(context, (uiEvent as LoginUiEvent.LoginSuccess).message, Toast.LENGTH_SHORT).show()
-               // navController.navigate(Screen.Home.route)
+                Toast.makeText(context, "Login Exitoso", Toast.LENGTH_SHORT).show()
+                viewModel.resetUiEvent()
+                // navController.navigate(Screen.Home.route)
             }
             is LoginUiEvent.LoginError -> {
                 Toast.makeText(context, (uiEvent as LoginUiEvent.LoginError).error, Toast.LENGTH_SHORT).show()
+                viewModel.resetUiEvent()
             }
             else -> Unit
         }
     }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LoginContent(navController = navController, onLogin = { email, password ->
+            viewModel.login(email.trim(), password.trim())
+        })
+
+        if (isLoading) {
+            ScreenLoading()
+        }
+
+    }
+}
+
+@Composable
+fun LoginContent(
+    navController: NavHostController,
+    onLogin: (String, String) -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -110,7 +131,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
         Button(
             onClick = {
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    viewModel.login(email.trim(), password.trim())
+                    onLogin(email, password)
                 } else {
                     Toast.makeText(context, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show()
                 }
@@ -125,6 +146,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
         ) {
             Text(stringResource(id = R.string.login_button))
         }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
@@ -148,6 +170,6 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
 fun PreviewLoginScreen() {
     InfoXPeruTheme {
         val navController = rememberNavController()
-        LoginScreen(navController = navController, viewModel = hiltViewModel())
+        LoginContent(navController = navController, onLogin = { _, _ -> })
     }
 }
