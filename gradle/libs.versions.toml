@@ -1,20 +1,20 @@
 [versions]
-agp = "8.5.1"
-kotlin = "1.9.0"
+agp = "8.0.2"  # Ajustar si es necesario
+kotlin = "1.9.21"  # Usa Kotlin 1.9.0
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.3"
-activityCompose = "1.9.0"
+activityCompose = "1.9.0"  # Ajustar si es necesario
 composeBom = "2024.06.00"
 daggerHilt = "2.49"
-hiltNavigationCompose = "1.2.0"
+hiltNavigationCompose = "1.2.0"  # Ajustar si es necesario
 retrofit = "2.9.0"
 lifecycle = "2.8.3"
 coroutines = "1.7.3"
-ksp = "1.9.21-1.0.16"
 timber = "5.0.1"
+firebase-bom = "33.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,8 +46,15 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
-kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }

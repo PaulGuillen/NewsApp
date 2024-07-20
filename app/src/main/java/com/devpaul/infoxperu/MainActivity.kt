@@ -10,8 +10,10 @@ import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 import androidx.compose.material3.*
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.feature.user_start.StartNavHost
-import com.devpaul.infoxperu.feature.user_start.LoginScreen
+import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

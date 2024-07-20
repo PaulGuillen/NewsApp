@@ -1,5 +1,6 @@
-package com.devpaul.infoxperu.feature.user_start
+package com.devpaul.infoxperu.feature.user_start.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -19,14 +21,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
-import timber.log.Timber
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -88,7 +92,19 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Acción de inicio de sesión */ },
+            onClick = {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    viewModel.login(email, password) { success ->
+                        if (success) {
+                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(context, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show()
+                }
+            },
             modifier = Modifier.wrapContentSize(),
             shape = RectangleShape,
             elevation = ButtonDefaults.buttonElevation(8.dp),
@@ -110,7 +126,7 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
-            onClick = { /* Acción de registro */ }
+            onClick = { navController.navigate(Screen.Register.route) }
         ) {
             Text(stringResource(id = R.string.not_registered))
         }
