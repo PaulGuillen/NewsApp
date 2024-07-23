@@ -1,6 +1,5 @@
 package com.devpaul.infoxperu.feature.user_start.register
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,9 +33,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.core.extension.validateRegistration
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading
-import com.devpaul.infoxperu.feature.user_start.Screen
+import com.devpaul.infoxperu.feature.user_start.login.Dialogs
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 
 @Composable
@@ -42,17 +44,16 @@ fun RegisterScreen(
     navController: NavHostController,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val uiEvent by viewModel.uiEvent.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
 
     BaseScreen { _, showSnackBar ->
         LaunchedEffect(uiEvent) {
             when (uiEvent) {
                 is RegisterUiEvent.RegisterSuccess -> {
-                    showSnackBar((uiEvent as RegisterUiEvent.RegisterSuccess).message)
                     viewModel.resetUiEvent()
-                    // navController.navigate(Screen.Home.route)
+                    showDialog = true
                 }
 
                 is RegisterUiEvent.RegisterError -> {
@@ -61,6 +62,13 @@ fun RegisterScreen(
                 }
 
                 else -> Unit
+            }
+        }
+
+        if (showDialog) {
+            Dialogs.ShowDialogSuccessRegister {
+                showDialog = false
+                navController.popBackStack()
             }
         }
 
@@ -75,6 +83,8 @@ fun RegisterScreen(
                         password.trim(),
                         confirmPassword.trim()
                     )
+                }, showSnackBar = { message ->
+                    showSnackBar(message)
                 })
 
             if (isLoading) {
@@ -87,7 +97,8 @@ fun RegisterScreen(
 @Composable
 fun RegisterContent(
     navController: NavHostController,
-    onRegister: (String, String, String, String, String) -> Unit
+    onRegister: (String, String, String, String, String) -> Unit,
+    showSnackBar: (String) -> Unit
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -95,6 +106,19 @@ fun RegisterContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
+
+    fun validateAndRegister() {
+        val validationResult = validateRegistration(
+            name, lastName, email, password, confirmPassword
+        )
+        if (validationResult != null) {
+            showSnackBar(validationResult)
+        } else {
+            onRegister(name, lastName, email, password, confirmPassword)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -121,6 +145,7 @@ fun RegisterContent(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
+
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -129,7 +154,9 @@ fun RegisterContent(
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = lastName,
                     onValueChange = { lastName = it },
@@ -138,7 +165,9 @@ fun RegisterContent(
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -146,28 +175,54 @@ fun RegisterContent(
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Email,
+                        keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next
                     )
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text(stringResource(id = R.string.register_screen_password)) },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        val image = if (passwordVisible)
+                            painterResource(id = R.drawable.baseline_visibility_24)
+                        else
+                            painterResource(id = R.drawable.baseline_visibility_off_24)
+
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(painter = image, contentDescription = null)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next
                     )
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
                     label = { Text(stringResource(id = R.string.register_screen_confirm_password)) },
+                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        val image = if (confirmPasswordVisible)
+                            painterResource(id = R.drawable.baseline_visibility_24)
+                        else
+                            painterResource(id = R.drawable.baseline_visibility_off_24)
+
+                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                            Icon(painter = image, contentDescription = null)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
@@ -179,7 +234,7 @@ fun RegisterContent(
 
                 Button(
                     onClick = {
-                        onRegister(name, lastName, email, password, confirmPassword)
+                        validateAndRegister()
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     shape = RectangleShape,
@@ -195,7 +250,7 @@ fun RegisterContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(
-            onClick = { navController.navigate(Screen.Login.route) }
+            onClick = { navController.popBackStack() }
         ) {
             Text(stringResource(id = R.string.register_screen_already_have_account))
         }
@@ -207,6 +262,6 @@ fun RegisterContent(
 fun PreviewRegisterScreen() {
     InfoXPeruTheme {
         val navController = rememberNavController()
-        RegisterContent(navController, onRegister = { _, _, _, _, _ -> })
+        RegisterContent(navController, onRegister = { _, _, _, _, _ -> }, showSnackBar = { })
     }
 }

@@ -4,7 +4,10 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,7 +17,10 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,51 +29,57 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
-    val context = LocalContext.current
     val uiEvent by viewModel.uiEvent.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    LaunchedEffect(uiEvent) {
-        when (uiEvent) {
-            is LoginUiEvent.LoginSuccess -> {
-                Toast.makeText(context, "Login Exitoso", Toast.LENGTH_SHORT).show()
-                viewModel.resetUiEvent()
-                // navController.navigate(Screen.Home.route)
+    BaseScreen { _, showSnackBar ->
+        LaunchedEffect(uiEvent) {
+            when (uiEvent) {
+                is LoginUiEvent.LoginSuccess -> {
+                    showSnackBar("Login Exitoso")
+                    viewModel.resetUiEvent()
+                    // navController.navigate(Screen.Home.route)
+                }
+                is LoginUiEvent.LoginError -> {
+                    showSnackBar((uiEvent as LoginUiEvent.LoginError).error)
+                    viewModel.resetUiEvent()
+                }
+                else -> Unit
             }
-            is LoginUiEvent.LoginError -> {
-                Toast.makeText(context, (uiEvent as LoginUiEvent.LoginError).error, Toast.LENGTH_SHORT).show()
-                viewModel.resetUiEvent()
-            }
-            else -> Unit
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        LoginContent(navController = navController, onLogin = { email, password ->
-            viewModel.login(email.trim(), password.trim())
-        })
-
-        if (isLoading) {
-            ScreenLoading()
         }
 
+        Box(modifier = Modifier.fillMaxSize()) {
+            LoginContent(navController = navController, onLogin = { email, password ->
+                viewModel.login(email.trim(), password.trim())
+            }, showSnackBar = { message ->
+                showSnackBar(message)
+            })
+
+            if (isLoading) {
+                ScreenLoading()
+            }
+        }
+
     }
+
 }
 
 @Composable
 fun LoginContent(
     navController: NavHostController,
-    onLogin: (String, String) -> Unit
+    onLogin: (String, String) -> Unit,
+    showSnackBar: (String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val context = LocalContext.current
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -115,15 +127,24 @@ fun LoginContent(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(stringResource(id = R.string.password_label)) },
-            visualTransformation = PasswordVisualTransformation(),
+            label = { Text(stringResource(id = R.string.register_screen_password)) },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    painterResource(id = R.drawable.baseline_visibility_24)
+                else
+                    painterResource(id = R.drawable.baseline_visibility_off_24)
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(painter = image, contentDescription = null)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_key_24),
-                    contentDescription = stringResource(id = R.string.password_label)
-                )
-            }
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -133,7 +154,7 @@ fun LoginContent(
                 if (email.isNotEmpty() && password.isNotEmpty()) {
                     onLogin(email, password)
                 } else {
-                    Toast.makeText(context, "Email or Password cannot be empty", Toast.LENGTH_SHORT).show()
+                    showSnackBar("Correo o Contraseña no pueden ser vacíos")
                 }
             },
             modifier = Modifier.wrapContentSize(),
@@ -170,6 +191,6 @@ fun LoginContent(
 fun PreviewLoginScreen() {
     InfoXPeruTheme {
         val navController = rememberNavController()
-        LoginContent(navController = navController, onLogin = { _, _ -> })
+        LoginContent(navController = navController, onLogin = { _, _ -> }, showSnackBar = { })
     }
 }

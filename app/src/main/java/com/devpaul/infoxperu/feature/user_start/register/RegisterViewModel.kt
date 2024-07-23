@@ -26,7 +26,8 @@ class RegisterViewModel @Inject constructor(
                         "uid" to userId,
                         "name" to name,
                         "lastName" to lastName,
-                        "email" to email
+                        "email" to email,
+                        "password" to password
                     )
                     firestore.collection("users").document(userId).set(user).await()
                     setUiEvent(RegisterUiEvent.RegisterSuccess("Registro exitoso"))
