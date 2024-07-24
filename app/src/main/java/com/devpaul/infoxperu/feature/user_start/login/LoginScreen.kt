@@ -1,6 +1,5 @@
 package com.devpaul.infoxperu.feature.user_start.login
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,6 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.core.extension.validateEmail
+import com.devpaul.infoxperu.core.extension.validateRegistration
+import com.devpaul.infoxperu.core.extension.validateStartSession
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
@@ -43,14 +45,26 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
         LaunchedEffect(uiEvent) {
             when (uiEvent) {
                 is LoginUiEvent.LoginSuccess -> {
-                    showSnackBar("Login Exitoso")
+                    showSnackBar((uiEvent as LoginUiEvent.LoginSuccess).message)
                     viewModel.resetUiEvent()
                     // navController.navigate(Screen.Home.route)
                 }
+
                 is LoginUiEvent.LoginError -> {
                     showSnackBar((uiEvent as LoginUiEvent.LoginError).error)
                     viewModel.resetUiEvent()
                 }
+
+                is LoginUiEvent.RecoveryPasswordSuccess -> {
+                    showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordSuccess).message)
+                    viewModel.resetUiEvent()
+                }
+
+                is LoginUiEvent.RecoveryPasswordError -> {
+                    showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordError).error)
+                    viewModel.resetUiEvent()
+                }
+
                 else -> Unit
             }
         }
@@ -60,26 +74,51 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
                 viewModel.login(email.trim(), password.trim())
             }, showSnackBar = { message ->
                 showSnackBar(message)
+            }, onForgotPassword = { email ->
+                viewModel.sendPasswordResetEmail(email)
             })
 
             if (isLoading) {
                 ScreenLoading()
             }
         }
-
     }
-
 }
+
 
 @Composable
 fun LoginContent(
     navController: NavHostController,
     onLogin: (String, String) -> Unit,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
+    onForgotPassword: (String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    fun validateRecoveryPassword() {
+        val validationResult = validateEmail(
+            context, email,
+        )
+        if (validationResult != null) {
+            showSnackBar(validationResult)
+        } else {
+            onForgotPassword(email)
+        }
+    }
+
+    fun validateLogin() {
+        val validationResult = validateStartSession(
+            context, email, password
+        )
+        if (validationResult != null) {
+            showSnackBar(validationResult)
+        } else {
+            onLogin(email, password)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -151,11 +190,7 @@ fun LoginContent(
 
         Button(
             onClick = {
-                if (email.isNotEmpty() && password.isNotEmpty()) {
-                    onLogin(email, password)
-                } else {
-                    showSnackBar("Correo o Contraseña no pueden ser vacíos")
-                }
+                validateLogin()
             },
             modifier = Modifier.wrapContentSize(),
             shape = RectangleShape,
@@ -171,7 +206,9 @@ fun LoginContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
-            onClick = { }
+            onClick = {
+                validateRecoveryPassword()
+            }
         ) {
             Text(stringResource(id = R.string.forgot_password))
         }
@@ -186,11 +223,16 @@ fun LoginContent(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
     InfoXPeruTheme {
         val navController = rememberNavController()
-        LoginContent(navController = navController, onLogin = { _, _ -> }, showSnackBar = { })
+        LoginContent(
+            navController = navController,
+            onLogin = { _, _ -> },
+            showSnackBar = { },
+            onForgotPassword = { })
     }
 }

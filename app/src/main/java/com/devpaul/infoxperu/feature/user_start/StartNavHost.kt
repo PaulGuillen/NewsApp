@@ -10,7 +10,7 @@ import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 sealed class Screen(val route: String) {
     data object Login : Screen("login")
     data object Register : Screen("register")
-    data object Support : Screen("support")
+    data object Home : Screen("home")
 }
 
 @Composable

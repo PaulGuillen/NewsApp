@@ -15,7 +15,7 @@ object Dialogs {
         CustomDialog(
             image = painterResource(id = R.drawable.baseline_check_circle_24),
             title = stringResource(id = R.string.register_success),
-            description = stringResource(id = R.string.register_success),
+            description = null,
             buttonText = stringResource(id = R.string.accept),
             onButtonClick = onClickAction
         )

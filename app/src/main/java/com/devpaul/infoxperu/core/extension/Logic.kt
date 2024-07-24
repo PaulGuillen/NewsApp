@@ -26,3 +26,27 @@ fun validateRegistration(
         else -> null
     }
 }
+
+fun validateEmail(
+    context: Context,
+    email: String,
+): String? {
+    return when {
+        email.isEmpty() -> context.getString(R.string.error_email_empty)
+        !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
+        else -> null
+    }
+}
+
+fun validateStartSession(
+    context: Context,
+    email: String,
+    password: String,
+): String? {
+    return when {
+        email.isEmpty() -> context.getString(R.string.error_email_empty)
+        !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
+        password.isEmpty() -> context.getString(R.string.error_password_empty)
+        else -> null
+    }
+}
