@@ -1,10 +1,14 @@
 package com.devpaul.infoxperu.core.extension
 
+import android.content.Context
+import com.devpaul.infoxperu.R
+
 fun isValidEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
 
 fun validateRegistration(
+    context: Context,
     name: String,
     lastName: String,
     email: String,
@@ -12,13 +16,13 @@ fun validateRegistration(
     confirmPassword: String
 ): String? {
     return when {
-        name.isEmpty() -> "El nombre no puede estar vacío"
-        lastName.isEmpty() -> "El apellido no puede estar vacío"
-        email.isEmpty() -> "El correo no puede estar vacío"
-        !isValidEmail(email) -> "El correo no es válido"
-        password.isEmpty() -> "La contraseña no puede estar vacía"
-        confirmPassword.isEmpty() -> "La confirmación de contraseña no puede estar vacía"
-        password != confirmPassword -> "Las contraseñas no coinciden"
+        name.isEmpty() -> context.getString(R.string.error_name_empty)
+        lastName.isEmpty() -> context.getString(R.string.error_lastname_empty)
+        email.isEmpty() -> context.getString(R.string.error_email_empty)
+        !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
+        password.isEmpty() -> context.getString(R.string.error_password_empty)
+        confirmPassword.isEmpty() -> context.getString(R.string.error_confirm_password_empty)
+        password != confirmPassword -> context.getString(R.string.error_password_mismatch)
         else -> null
     }
 }

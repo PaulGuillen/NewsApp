@@ -17,5 +17,11 @@
     <string name="register_success">Registro exitoso</string>
     <string name="register_error">Error en el registro</string>
     <string name="accept">Aceptar</string>
-
+    <string name="error_name_empty">El nombre no puede estar vacío</string>
+    <string name="error_lastname_empty">El apellido no puede estar vacío</string>
+    <string name="error_email_empty">El correo no puede estar vacío</string>
+    <string name="error_email_invalid">El correo no es válido</string>
+    <string name="error_password_empty">La contraseña no puede estar vacía</string>
+    <string name="error_confirm_password_empty">La confirmación de contraseña no puede estar vacía</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
 </resources>

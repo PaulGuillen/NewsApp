@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -108,10 +109,11 @@ fun RegisterContent(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     fun validateAndRegister() {
         val validationResult = validateRegistration(
-            name, lastName, email, password, confirmPassword
+            context, name, lastName, email, password, confirmPassword
         )
         if (validationResult != null) {
             showSnackBar(validationResult)
