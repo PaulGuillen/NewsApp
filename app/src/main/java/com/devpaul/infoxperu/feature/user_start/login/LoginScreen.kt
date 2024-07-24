@@ -45,9 +45,10 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
         LaunchedEffect(uiEvent) {
             when (uiEvent) {
                 is LoginUiEvent.LoginSuccess -> {
-                    showSnackBar((uiEvent as LoginUiEvent.LoginSuccess).message)
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
                     viewModel.resetUiEvent()
-                    // navController.navigate(Screen.Home.route)
                 }
 
                 is LoginUiEvent.LoginError -> {
@@ -70,6 +71,11 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
+
+            if (isLoading) {
+                ScreenLoading()
+            }
+            
             LoginContent(navController = navController, onLogin = { email, password ->
                 viewModel.login(email.trim(), password.trim())
             }, showSnackBar = { message ->
@@ -77,10 +83,6 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
             }, onForgotPassword = { email ->
                 viewModel.sendPasswordResetEmail(email)
             })
-
-            if (isLoading) {
-                ScreenLoading()
-            }
         }
     }
 }

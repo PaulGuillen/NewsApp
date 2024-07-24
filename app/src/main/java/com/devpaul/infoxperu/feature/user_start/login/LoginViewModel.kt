@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -11,6 +12,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : BaseViewModel<LoginUiEvent>() {
+
+    init {
+        checkUserLoggedIn()
+    }
 
     fun login(email: String, password: String) {
         setLoading(true)
@@ -59,4 +64,16 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    private fun checkUserLoggedIn() {
+        setLoading(true)
+        viewModelScope.launch {
+            delay(3000)
+            if (auth.currentUser != null) {
+                setUiEvent(LoginUiEvent.LoginSuccess("Usuario ya autenticado"))
+            }
+            setLoading(false)
+        }
+    }
+
 }

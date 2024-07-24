@@ -26,9 +26,9 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = White, // Color del texto del botón en modo claro
     secondary = BrickRed,
     onSecondary = White, // Color del texto del botón en modo claro
-    tertiary = White,
+    tertiary = Black,
     background = White,
-    surface = Color.LightGray,
+    surface = White,
 )
 
 @Composable
