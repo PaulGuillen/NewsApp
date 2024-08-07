@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.validateEmail
-import com.devpaul.infoxperu.core.extension.validateRegistration
 import com.devpaul.infoxperu.core.extension.validateStartSession
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.BottomNavigationBar
 import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
@@ -52,15 +53,15 @@ fun HomeScreen(navController: NavHostController) {
             SectionsRow()
             SectionHeader("Información diaria")
             InformationCard(
-                imageRes = R.drawable.ic_launcher_background, // Replace with your image resource
+                imageRes = R.drawable.background_dolar_home,
                 title = "Valor del dólar (USD)",
-                compra = "Compra",
-                venta = "Venta",
-                sitio = "Sitio",
-                fecha = "Fecha"
+                buys = "Compra",
+                sale = "Venta",
+                place = "Sitio",
+                date = "Fecha"
             )
             UITCard(
-                imageRes = R.drawable.ic_launcher_background, // Replace with your image resource
+                imageRes = R.drawable.ic_launcher_background,
                 title = "Valor de UIT",
                 uit = 5150.0,
                 periodo = 2024,
@@ -109,34 +110,75 @@ fun SectionItem(iconRes: Int, title: String) {
 }
 
 @Composable
-fun InformationCard(imageRes: Int, title: String, compra: String, venta: String, sitio: String, fecha: String) {
+fun InformationCard(
+    imageRes: Int,
+    title: String,
+    buys: String,
+    sale: String,
+    place: String,
+    date: String
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column {
             Image(
                 painter = painterResource(id = imageRes),
                 contentDescription = title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Compra: $compra", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Venta: $venta", style = MaterialTheme.typography.bodyMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = sitio, style = MaterialTheme.typography.bodySmall)
-            Text(text = fecha, style = MaterialTheme.typography.bodySmall)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Compra: $buys",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = "Venta: $sale",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = place,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                DividerView()
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = date,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
+
 
 @Composable
 fun UITCard(imageRes: Int, title: String, uit: Double, periodo: Int, fuente: String) {
@@ -160,7 +202,12 @@ fun UITCard(imageRes: Int, title: String, uit: Double, periodo: Int, fuente: Str
             Text(text = "UIT: $uit", style = MaterialTheme.typography.bodyMedium)
             Text(text = "Periodo: $periodo", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = fuente, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.End, modifier = Modifier.fillMaxWidth())
+            Text(
+                text = fuente,
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.End,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
