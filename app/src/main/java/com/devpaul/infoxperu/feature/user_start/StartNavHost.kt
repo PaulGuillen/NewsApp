@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devpaul.infoxperu.feature.home.district_view.DistrictScreen
-import com.devpaul.infoxperu.feature.home.home_view.HomeScreen
+import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news_view.NewsScreen
 import com.devpaul.infoxperu.feature.home.service_view.ServiceScreen
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen

@@ -23,6 +23,25 @@ android {
         }
     }
 
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+
+            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+        }
+
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -46,12 +65,16 @@ android {
             "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.21"
         )
     }
+
     buildFeatures {
+        buildConfig = true
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"

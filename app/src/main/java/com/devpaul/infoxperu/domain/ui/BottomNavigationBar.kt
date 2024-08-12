@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.infoxperu.feature.home.home_view.HomeScreen
 import com.devpaul.infoxperu.feature.user_start.Screen
 
 @Composable
