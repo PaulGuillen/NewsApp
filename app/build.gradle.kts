@@ -31,13 +31,13 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
 
-            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
         }
 
         create("prod") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/v2/\"")
+            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
         }
     }
@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation(libs.androidx.runtime.livedata)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -123,4 +126,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+
+    //Coil
+    implementation(libs.coil.compose)
 }

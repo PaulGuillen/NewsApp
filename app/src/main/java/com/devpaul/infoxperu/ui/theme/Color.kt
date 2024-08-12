@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Black = Color(0xFF423E3E)
+val BackgroundBlack = Color(0xFF696969)
 val BrickRed = Color(0xFFd84931)
 val Teal = Color(0xFF33cbd3)
 val LightGray = Color(0xFFd3f3f3)
