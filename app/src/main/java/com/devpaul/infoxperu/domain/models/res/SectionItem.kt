@@ -1,7 +1,6 @@
 package com.devpaul.infoxperu.domain.models.res
 
-data class Gratitude(
+data class SectionItem (
     val title: String = "",
-    val image: String = "",
-    val url: String = ""
+    val type: String = "",
 )

@@ -5,6 +5,7 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.models.res.Gratitude
+import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.feature.home.home_view.uc.HomeUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,9 +27,13 @@ class HomeViewModel @Inject constructor(
     private val _gratitude = MutableStateFlow<List<Gratitude>>(emptyList())
     val gratitude: StateFlow<List<Gratitude>> = _gratitude
 
+    private val _sections = MutableStateFlow<List<SectionItem>>(emptyList())
+    val sections: StateFlow<List<SectionItem>> = _sections
+
     init {
         getDollarQuote()
         fetchGratitude()
+        fetchSections()
     }
 
     private fun getDollarQuote() {
@@ -58,6 +63,23 @@ class HomeViewModel @Inject constructor(
             .addOnFailureListener {
              Timber.e(it)
             }
+    }
+
+    private fun fetchSections() {
+        viewModelScope.launch {
+            val db = FirebaseFirestore.getInstance()
+            db.collection("sectionItems")
+                .get()
+                .addOnSuccessListener { result ->
+                    val sectionList = result.map { document ->
+                        document.toObject(SectionItem::class.java)
+                    }
+                    _sections.value = sectionList
+                }
+                .addOnFailureListener {
+                    Timber.e(it)
+                }
+        }
     }
 
 }

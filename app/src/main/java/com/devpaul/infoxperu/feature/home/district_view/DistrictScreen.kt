@@ -20,20 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.ui.BottomNavigationBar
+import com.devpaul.infoxperu.domain.ui.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DistrictScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "LimaSegura", fontWeight = FontWeight.Bold) },
-                actions = {
-                    IconButton(onClick = { /* Handle settings click */ }) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                }
-            )
+            TopBar(title = "InfoPerú")
         },
         bottomBar = {
             BottomNavigationBar(navController)

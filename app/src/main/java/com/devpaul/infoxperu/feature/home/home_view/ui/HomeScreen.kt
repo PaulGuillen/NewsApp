@@ -1,16 +1,14 @@
 package com.devpaul.infoxperu.feature.home.home_view.ui
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -22,31 +20,28 @@ import com.devpaul.infoxperu.domain.ui.InformationCard
 import com.devpaul.infoxperu.domain.ui.SectionHeader
 import com.devpaul.infoxperu.domain.ui.UITCard
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.Gratitude
+import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.ui.AcknowledgmentSection
 import com.devpaul.infoxperu.domain.ui.SectionsRow
+import com.devpaul.infoxperu.domain.ui.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
 
     val dollarQuoteState by viewModel.dollarQuoteState.collectAsState()
     val gratitude by viewModel.gratitude.collectAsState()
+    val sectionItems by viewModel.sections.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "LimaSegura", fontWeight = FontWeight.Bold) },
-                actions = {
-                    IconButton(onClick = { /* Handle settings click */ }) {
-                        Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                }
-            )
+            TopBar(title = "InfoPerú")
         },
         bottomBar = {
             BottomNavigationBar(navController)
@@ -56,7 +51,9 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
             modifier = Modifier.fillMaxSize(),
             dollarQuoteState = dollarQuoteState,
             innerPadding = innerPadding,
-            gratitude = gratitude
+            gratitude = gratitude,
+            sectionItems = sectionItems,
+            context = context
         )
     }
 }
@@ -66,7 +63,9 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     dollarQuoteState: ResultState<DollarQuoteResponse>?,
     innerPadding: PaddingValues = PaddingValues(),
-    gratitude: List<Gratitude> = emptyList()
+    gratitude: List<Gratitude> = emptyList(),
+    sectionItems: List<SectionItem> = emptyList(),
+    context: Context
 ) {
 
     var data: DollarQuoteResponse? = null
@@ -76,15 +75,20 @@ fun HomeContent(
 
     val displayGratitude = if (isPreview) {
         listOf(
-            Gratitude(
-                image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjmwFjRcH2AxfbYvsQt4dbqpEIvlrqQklppo179jxqtQHLeUQX6UG-ukjyQWBmvLRQsfM&usqp=CAU",
-                title = "Mock Title 1"
-            ),
             Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 2"),
             Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 3")
         )
     } else {
         gratitude
+    }
+
+    val displaySections = if (isPreview) {
+        listOf(
+            SectionItem(title = "Noticias", type = "news"),
+            SectionItem(title = "Distritos", type = "districts")
+        )
+    } else {
+        sectionItems
     }
 
     Column(
@@ -94,17 +98,11 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
     ) {
         SectionHeader("Agradecimientos")
-        AcknowledgmentSection(displayGratitude)
+        AcknowledgmentSection(displayGratitude, context)
         SectionHeader("Secciones disponibles")
-        SectionsRow()
+        SectionsRow(displaySections, context)
         SectionHeader("Información diaria")
-        // HyperlinkText(url = "https://www.deperu.com", text = "https://www.deperu.com")
-
         when (dollarQuoteState) {
-            is ResultState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-
             is ResultState.Success -> {
                 data = dollarQuoteState.data
             }
@@ -139,10 +137,24 @@ fun HomeContent(
 
 @Preview(showBackground = true)
 @Composable
-fun HomeContentPreview() {
+fun HomeScreenPreview() {
     InfoXPeruTheme {
-        HomeContent(
-            dollarQuoteState = null
-        )
+        val navController = rememberNavController()
+        Scaffold(
+            topBar = {
+                TopBar(title = "InfoPerú")
+            },
+            bottomBar = {
+                BottomNavigationBar(navController = navController)
+            }
+        ) { innerPadding ->
+            HomeContent(
+                modifier = Modifier.fillMaxSize(),
+                dollarQuoteState = null,
+                innerPadding = innerPadding,
+                gratitude = emptyList(),
+                context = LocalContext.current
+            )
+        }
     }
 }
