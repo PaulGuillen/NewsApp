@@ -27,15 +27,14 @@ import androidx.compose.ui.unit.sp
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.ui.theme.BlueDark
+import androidx.compose.material3.*
+import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.models.res.CotizacionItem
+import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 
 @Composable
 fun InformationCard(
-    imageRes: Int,
-    title: String,
-    buys: String,
-    sale: String,
-    place: String,
-    date: String
+    dollarQuoteState: ResultState<DollarQuoteResponse>?,
 ) {
     Card(
         modifier = Modifier
@@ -45,32 +44,30 @@ fun InformationCard(
     ) {
         Column {
             Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = title,
+                painter = painterResource(id = R.drawable.background_dolar_home),
+                contentDescription = "Valor del dólar",
                 modifier = Modifier.fillMaxWidth()
             )
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier.size(24.dp)
-                    ) {
+                    Box(modifier = Modifier.size(24.dp)) {
                         Image(
                             painter = painterResource(id = R.drawable.dollar),
-                            contentDescription = title
+                            contentDescription = "Icono del dólar"
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = title,
+                        text = "Valor del dólar (USD)",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
@@ -79,69 +76,108 @@ fun InformationCard(
                         modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Compra:",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = BlueDark
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = buys,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                when (dollarQuoteState) {
+                    is ResultState.Loading -> {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+
+                    is ResultState.Success -> {
+                        val data = dollarQuoteState.data
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Compra:",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                ),
+                                color = BlueDark
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = data.cotizacion?.firstOrNull()?.compra?.toString() ?: "N/A",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Venta:",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                color = BlueDark
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+                                text = data.cotizacion?.firstOrNull()?.venta.toString(),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = data.sitio ?: "Sitio no disponible",
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 8.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        DividerView()
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = data.fecha ?: "Fecha no disponible",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 8.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
+                    is ResultState.Error -> {
+                        Text(
+                            text = "Error al obtener datos del dólar.",
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp
+                            ),
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+
+                    else -> {
+                        Text(
+                            text = "Sin datos disponibles",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp
+                            ),
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Venta:",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = BlueDark
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = sale,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = place,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DividerView()
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = date,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
@@ -151,11 +187,33 @@ fun InformationCard(
 @Composable
 fun InformationCardPreview() {
     InformationCard(
-        imageRes = R.drawable.background_dolar_home,
-        title = "Valor del dólar (USD)",
-        buys = "Compra",
-        sale = "Venta",
-        place = "Sitio",
-        date = "Fecha"
+        dollarQuoteState = ResultState.Success(
+            DollarQuoteResponse(
+                cotizacion = listOf(
+                    CotizacionItem(
+                        compra = 3.61,
+                        venta = 3.72
+                    )
+                ),
+                fecha = "2021-10-10",
+                sitio = "https://www.google.com"
+            )
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InformationCardErrorPreview() {
+    InformationCard(
+        dollarQuoteState = ResultState.Error(Exception("Simulated Error"))
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InformationCardNoDataPreview() {
+    InformationCard(
+        dollarQuoteState = null
     )
 }

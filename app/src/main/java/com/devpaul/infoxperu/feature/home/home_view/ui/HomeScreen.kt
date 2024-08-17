@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -102,29 +101,7 @@ fun HomeContent(
         SectionHeader("Secciones disponibles")
         SectionsRow(displaySections, context)
         SectionHeader("Información diaria")
-        when (dollarQuoteState) {
-            is ResultState.Success -> {
-                data = dollarQuoteState.data
-            }
-
-            is ResultState.Error -> {
-                error = dollarQuoteState.exception as? ApiException
-            }
-
-            else -> {
-                // Mostrar algo por defecto o dejar en blanco
-            }
-        }
-
-        InformationCard(
-            imageRes = R.drawable.background_dolar_home,
-            title = "Valor del dólar (USD)",
-            buys = (data?.cotizacion?.firstOrNull()?.compra ?: "Error de servicio").toString(),
-            sale = (data?.cotizacion?.firstOrNull()?.venta ?: "Error de servicio").toString(),
-            place = data?.sitio ?: "Error de servicio",
-            date = data?.fecha ?: "Error de servicio"
-        )
-
+        InformationCard(dollarQuoteState = dollarQuoteState)
         UITCard(
             imageRes = R.drawable.ic_launcher_background,
             title = "Valor de UIT",

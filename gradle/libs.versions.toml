@@ -18,6 +18,7 @@ firebase-bom = "33.1.2"
 ksp = "1.9.21-1.0.16"
 runtimeLivedata = "1.6.8"
 coil = "2.1.0"
+accompanist = "0.30.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,8 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+
+accompanist-placeholder = { group = "com.google.accompanist", name = "accompanist-placeholder-material", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

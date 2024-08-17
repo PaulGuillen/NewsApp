@@ -129,4 +129,7 @@ dependencies {
 
     //Coil
     implementation(libs.coil.compose)
+
+    //Accompanist
+    implementation(libs.accompanist.placeholder)
 }
