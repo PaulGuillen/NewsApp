@@ -21,9 +21,8 @@ import com.devpaul.infoxperu.domain.ui.UITCard
 import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.infoxperu.domain.models.res.ApiException
+import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.ui.AcknowledgmentSection
@@ -34,8 +33,8 @@ import com.devpaul.infoxperu.domain.ui.TopBar
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
 
     val dollarQuoteState by viewModel.dollarQuoteState.collectAsState()
-    val gratitude by viewModel.gratitude.collectAsState()
-    val sectionItems by viewModel.sections.collectAsState()
+    val gratitudeState by viewModel.gratitudeState.collectAsState()
+    val sectionItemsState by viewModel.sectionsState.collectAsState()
     val context = LocalContext.current
 
     Scaffold(
@@ -50,8 +49,8 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
             modifier = Modifier.fillMaxSize(),
             dollarQuoteState = dollarQuoteState,
             innerPadding = innerPadding,
-            gratitude = gratitude,
-            sectionItems = sectionItems,
+            gratitudeState = gratitudeState,
+            sectionItemsState = sectionItemsState,
             context = context
         )
     }
@@ -62,34 +61,10 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     dollarQuoteState: ResultState<DollarQuoteResponse>?,
     innerPadding: PaddingValues = PaddingValues(),
-    gratitude: List<Gratitude> = emptyList(),
-    sectionItems: List<SectionItem> = emptyList(),
+    gratitudeState: ResultState<List<Gratitude>>,
+    sectionItemsState: ResultState<List<SectionItem>>,
     context: Context
 ) {
-
-    var data: DollarQuoteResponse? = null
-    var error: ApiException? = null
-
-    val isPreview = LocalInspectionMode.current
-
-    val displayGratitude = if (isPreview) {
-        listOf(
-            Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 2"),
-            Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 3")
-        )
-    } else {
-        gratitude
-    }
-
-    val displaySections = if (isPreview) {
-        listOf(
-            SectionItem(title = "Noticias", type = "news"),
-            SectionItem(title = "Distritos", type = "districts")
-        )
-    } else {
-        sectionItems
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -97,11 +72,14 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
     ) {
         SectionHeader("Agradecimientos")
-        AcknowledgmentSection(displayGratitude, context)
+        AcknowledgmentSection(gratitudeState = gratitudeState, context = context)
+
         SectionHeader("Secciones disponibles")
-        SectionsRow(displaySections, context)
+        SectionsRow(sectionItemsState = sectionItemsState, context = context)
+
         SectionHeader("Información diaria")
         InformationCard(dollarQuoteState = dollarQuoteState)
+
         UITCard(
             imageRes = R.drawable.ic_launcher_background,
             title = "Valor de UIT",
@@ -117,6 +95,7 @@ fun HomeContent(
 fun HomeScreenPreview() {
     InfoXPeruTheme {
         val navController = rememberNavController()
+
         Scaffold(
             topBar = {
                 TopBar(title = "InfoPerú")
@@ -127,9 +106,28 @@ fun HomeScreenPreview() {
         ) { innerPadding ->
             HomeContent(
                 modifier = Modifier.fillMaxSize(),
-                dollarQuoteState = null,
+                dollarQuoteState = ResultState.Success(DollarQuoteResponse(
+                    cotizacion = listOf(
+                        CotizacionItem(
+                            compra = 3.61,
+                            venta = 3.72
+                        )
+                    ),
+                    fecha = "2021-10-10",
+                )),
                 innerPadding = innerPadding,
-                gratitude = emptyList(),
+                gratitudeState = ResultState.Success(
+                    listOf(
+                        Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 1", url = "https://example.com"),
+                        Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 2", url = "https://example.com")
+                    )
+                ),
+                sectionItemsState = ResultState.Success(
+                    listOf(
+                        SectionItem(title = "Noticias", type = "news"),
+                        SectionItem(title = "Distritos", type = "districts")
+                    )
+                ),
                 context = LocalContext.current
             )
         }

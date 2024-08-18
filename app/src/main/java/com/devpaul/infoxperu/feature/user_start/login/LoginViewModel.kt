@@ -68,7 +68,7 @@ class LoginViewModel @Inject constructor(
     private fun checkUserLoggedIn() {
         setLoading(true)
         viewModelScope.launch {
-            delay(3000)
+            delay(2000)
             if (auth.currentUser != null) {
                 setUiEvent(LoginUiEvent.LoginSuccess("Usuario ya autenticado"))
             }

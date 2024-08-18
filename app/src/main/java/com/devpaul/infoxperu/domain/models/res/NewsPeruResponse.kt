@@ -1,4 +1,4 @@
-package devpaul.business.safetylima.data.models.response
+package com.devpaul.infoxperu.domain.models.res
 
 import com.google.gson.annotations.SerializedName
 

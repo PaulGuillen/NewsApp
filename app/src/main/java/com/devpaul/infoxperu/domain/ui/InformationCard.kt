@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,15 +28,31 @@ import androidx.compose.ui.unit.sp
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.ui.theme.BlueDark
-import androidx.compose.material3.*
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
+import androidx.compose.runtime.*
+import com.devpaul.infoxperu.domain.ui.shimmer.SkeletonInformationCard
 
 @Composable
 fun InformationCard(
     dollarQuoteState: ResultState<DollarQuoteResponse>?,
 ) {
+    var showSkeleton by remember { mutableStateOf(true) }
+
+    LaunchedEffect(dollarQuoteState) {
+        showSkeleton = dollarQuoteState is ResultState.Loading
+    }
+
+    if (showSkeleton) {
+        SkeletonInformationCard()
+    } else {
+        InformationCardContent(dollarQuoteState)
+    }
+}
+
+@Composable
+fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,10 +97,6 @@ fun InformationCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 when (dollarQuoteState) {
-                    is ResultState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                    }
-
                     is ResultState.Success -> {
                         val data = dollarQuoteState.data
 
@@ -186,7 +199,7 @@ fun InformationCard(
 @Preview(showBackground = true)
 @Composable
 fun InformationCardPreview() {
-    InformationCard(
+    InformationCardContent(
         dollarQuoteState = ResultState.Success(
             DollarQuoteResponse(
                 cotizacion = listOf(
@@ -205,7 +218,7 @@ fun InformationCardPreview() {
 @Preview(showBackground = true)
 @Composable
 fun InformationCardErrorPreview() {
-    InformationCard(
+    InformationCardContent(
         dollarQuoteState = ResultState.Error(Exception("Simulated Error"))
     )
 }
@@ -213,7 +226,7 @@ fun InformationCardErrorPreview() {
 @Preview(showBackground = true)
 @Composable
 fun InformationCardNoDataPreview() {
-    InformationCard(
+    InformationCardContent(
         dollarQuoteState = null
     )
 }

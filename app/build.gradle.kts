@@ -130,6 +130,6 @@ dependencies {
     //Coil
     implementation(libs.coil.compose)
 
-    //Accompanist
-    implementation(libs.accompanist.placeholder)
+    //Shimmer
+    implementation(libs.shimmer.compose)
 }

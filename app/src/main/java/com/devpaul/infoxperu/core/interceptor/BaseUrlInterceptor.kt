@@ -1,3 +1,5 @@
+package com.devpaul.infoxperu.core.interceptor
+
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -12,7 +14,6 @@ class BaseUrlInterceptor @Inject constructor(
         var request = chain.request()
         val originalUrl = request.url
 
-        // Verifica si la URL contiene "v2"
         val newUrl = if (originalUrl.encodedPath.contains("v2")) {
             baseUrlNews.newBuilder()
                 .encodedPath(originalUrl.encodedPath)
@@ -25,9 +26,9 @@ class BaseUrlInterceptor @Inject constructor(
                 .build()
         }
 
-        // Crea una nueva solicitud con la URL modificada
         request = request.newBuilder()
             .url(newUrl)
+            .header("User-Agent", "devpaul")
             .build()
 
         return chain.proceed(request)

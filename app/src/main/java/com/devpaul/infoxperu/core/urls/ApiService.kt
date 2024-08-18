@@ -2,7 +2,7 @@ package com.devpaul.infoxperu.core.urls
 
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
-import devpaul.business.safetylima.data.models.response.NewsPeruResponse
+import com.devpaul.infoxperu.domain.models.res.NewsPeruResponse
 import devpaul.business.safetylima.data.models.response.UITResponse
 import retrofit2.Response
 import retrofit2.http.GET

@@ -24,11 +24,11 @@ class HomeViewModel @Inject constructor(
     private val _dollarQuoteState = MutableStateFlow<ResultState<DollarQuoteResponse>?>(null)
     val dollarQuoteState: StateFlow<ResultState<DollarQuoteResponse>?> = _dollarQuoteState
 
-    private val _gratitude = MutableStateFlow<List<Gratitude>>(emptyList())
-    val gratitude: StateFlow<List<Gratitude>> = _gratitude
+    private val _gratitudeState = MutableStateFlow<ResultState<List<Gratitude>>>(ResultState.Loading)
+    val gratitudeState: StateFlow<ResultState<List<Gratitude>>> = _gratitudeState
 
-    private val _sections = MutableStateFlow<List<SectionItem>>(emptyList())
-    val sections: StateFlow<List<SectionItem>> = _sections
+    private val _sectionsState = MutableStateFlow<ResultState<List<SectionItem>>>(ResultState.Loading)
+    val sectionsState: StateFlow<ResultState<List<SectionItem>>> = _sectionsState
 
     init {
         getDollarQuote()
@@ -52,34 +52,38 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchGratitude() {
+        _gratitudeState.value = ResultState.Loading
+
         firestore.collection("gratitude")
             .get()
             .addOnSuccessListener { documents ->
                 val gratitudeList = documents.map { document ->
                     document.toObject(Gratitude::class.java)
                 }
-                _gratitude.value = gratitudeList
+                _gratitudeState.value = ResultState.Success(gratitudeList)
             }
-            .addOnFailureListener {
-             Timber.e(it)
+            .addOnFailureListener { exception ->
+                _gratitudeState.value = ResultState.Error(exception)
+                Timber.e(exception)
             }
     }
 
+
     private fun fetchSections() {
-        viewModelScope.launch {
-            val db = FirebaseFirestore.getInstance()
-            db.collection("sectionItems")
-                .get()
-                .addOnSuccessListener { result ->
-                    val sectionList = result.map { document ->
-                        document.toObject(SectionItem::class.java)
-                    }
-                    _sections.value = sectionList
+        _sectionsState.value = ResultState.Loading
+
+        firestore.collection("sectionItems")
+            .get()
+            .addOnSuccessListener { result ->
+                val sectionList = result.map { document ->
+                    document.toObject(SectionItem::class.java)
                 }
-                .addOnFailureListener {
-                    Timber.e(it)
-                }
-        }
+                _sectionsState.value = ResultState.Success(sectionList)
+            }
+            .addOnFailureListener { exception ->
+                _sectionsState.value = ResultState.Error(exception)
+                Timber.e(exception)
+            }
     }
 
 }

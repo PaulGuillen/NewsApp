@@ -1,7 +1,7 @@
 package com.devpaul.infoxperu.core.modules
 
-import BaseUrlInterceptor
 import com.devpaul.infoxperu.BuildConfig
+import com.devpaul.infoxperu.core.interceptor.BaseUrlInterceptor
 import com.devpaul.infoxperu.core.urls.ApiService
 import dagger.Module
 import dagger.Provides

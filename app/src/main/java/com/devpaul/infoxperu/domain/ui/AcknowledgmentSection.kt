@@ -25,66 +25,143 @@ import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.ui.shimmer.AcknowledgmentShimmer
 
 @Composable
-fun AcknowledgmentSection(gratitude: List<Gratitude>, context: Context) {
+fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(220.dp)
-            .horizontalScroll(rememberScrollState())
-            .padding(horizontal = 10.dp)
-    ) {
-        gratitude.forEach { gratitudeR ->
-            Card(
-                modifier = Modifier
-                    .width(320.dp)
-                    .padding(8.dp)
-                    .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(gratitudeR.url))
-                        context.startActivity(intent)
-                    },
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            ) {
-                Box(
+    var showSkeleton by remember { mutableStateOf(true) }
+
+    LaunchedEffect(gratitudeState) {
+        showSkeleton = gratitudeState is ResultState.Loading
+    }
+
+    if (showSkeleton) {
+        AcknowledgmentShimmer()
+    } else {
+        AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = context)
+    }
+}
+
+@Composable
+fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
+    when (gratitudeState) {
+        is ResultState.Loading -> {
+            AcknowledgmentShimmer()
+        }
+
+        is ResultState.Success -> {
+            if (gratitudeState.data.isNotEmpty()) {
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .height(220.dp)
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 10.dp)
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(gratitudeR.image),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(16.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(BackgroundBlack.copy(alpha = 0.5f))
-                    )
-                    Text(
-                        text = gratitudeR.title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        fontSize = 18.sp,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 8.dp, top = 8.dp),
-                        maxLines = 1,
-                        textAlign = TextAlign.Center
-                    )
+                    gratitudeState.data.forEach { gratitude ->
+                        Card(
+                            modifier = Modifier
+                                .width(320.dp)
+                                .padding(8.dp)
+                                .clickable {
+                                    val intent =
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(gratitude.url))
+                                    context.startActivity(intent)
+                                },
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = CardDefaults.cardElevation(8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.background
+                            )
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(gratitude.image),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(16.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(BackgroundBlack.copy(alpha = 0.5f))
+                                )
+                                Text(
+                                    text = gratitude.title,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSecondary,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(end = 14.dp, top = 8.dp),
+                                    maxLines = 1,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    }
                 }
+            } else {
+                AcknowledgmentShimmer()
+            }
+        }
 
+        is ResultState.Error -> {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 10.dp)
+            ) {
+                repeat(3) {
+                    Card(
+                        modifier = Modifier
+                            .width(320.dp)
+                            .padding(8.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.background
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(BackgroundBlack.copy(alpha = 0.25f))
+                            )
+                            Text(
+                                text = "Error al cargar los agradecimientos",
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(end = 14.dp, top = 8.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -92,9 +169,9 @@ fun AcknowledgmentSection(gratitude: List<Gratitude>, context: Context) {
 
 @Preview(showBackground = true)
 @Composable
-fun AcknowledgmentSectionPreview() {
-    AcknowledgmentSection(
-        gratitude = listOf(
+fun AcknowledgmentSectionSuccessPreview() {
+    val gratitudeState = ResultState.Success(
+        listOf(
             Gratitude(
                 title = "DePeru",
                 image = "https://www.example.com/image.png",
@@ -104,8 +181,22 @@ fun AcknowledgmentSectionPreview() {
                 title = "Agradecido",
                 image = "https://www.example.com/image2.png",
                 url = "https://www.agradecido.com"
-            ),
-        ),
-        context = LocalContext.current
+            )
+        )
     )
+    AcknowledgmentSection(gratitudeState = gratitudeState, context = LocalContext.current)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AcknowledgmentSectionLoadingPreview() {
+    val gratitudeState = ResultState.Loading
+    AcknowledgmentSection(gratitudeState = gratitudeState, context = LocalContext.current)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AcknowledgmentSectionErrorPreview() {
+    val gratitudeState = ResultState.Error(Exception("Failed to load data"))
+    AcknowledgmentSection(gratitudeState = gratitudeState, context = LocalContext.current)
 }
