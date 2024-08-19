@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
+import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.domain.ui.AcknowledgmentSection
 import com.devpaul.infoxperu.domain.ui.SectionsRow
 import com.devpaul.infoxperu.domain.ui.TopBar
@@ -33,6 +34,7 @@ import com.devpaul.infoxperu.domain.ui.TopBar
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
 
     val dollarQuoteState by viewModel.dollarQuoteState.collectAsState()
+    val uitState by viewModel.uitState.collectAsState()
     val gratitudeState by viewModel.gratitudeState.collectAsState()
     val sectionItemsState by viewModel.sectionsState.collectAsState()
     val context = LocalContext.current
@@ -48,6 +50,7 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
         HomeContent(
             modifier = Modifier.fillMaxSize(),
             dollarQuoteState = dollarQuoteState,
+            uitState = uitState,
             innerPadding = innerPadding,
             gratitudeState = gratitudeState,
             sectionItemsState = sectionItemsState,
@@ -60,6 +63,7 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
 fun HomeContent(
     modifier: Modifier = Modifier,
     dollarQuoteState: ResultState<DollarQuoteResponse>?,
+    uitState: ResultState<UITResponse>?,
     innerPadding: PaddingValues = PaddingValues(),
     gratitudeState: ResultState<List<Gratitude>>,
     sectionItemsState: ResultState<List<SectionItem>>,
@@ -78,15 +82,9 @@ fun HomeContent(
         SectionsRow(sectionItemsState = sectionItemsState, context = context)
 
         SectionHeader("Información diaria")
-        InformationCard(dollarQuoteState = dollarQuoteState)
+        InformationCard(dollarQuoteState = dollarQuoteState, context = context)
 
-        UITCard(
-            imageRes = R.drawable.ic_launcher_background,
-            title = "Valor de UIT",
-            uit = 5150.0,
-            periodo = 2024,
-            fuente = "DePeru.com"
-        )
+        UITCard(uitState = uitState, context = context)
     }
 }
 
@@ -106,20 +104,37 @@ fun HomeScreenPreview() {
         ) { innerPadding ->
             HomeContent(
                 modifier = Modifier.fillMaxSize(),
-                dollarQuoteState = ResultState.Success(DollarQuoteResponse(
-                    cotizacion = listOf(
-                        CotizacionItem(
-                            compra = 3.61,
-                            venta = 3.72
-                        )
-                    ),
-                    fecha = "2021-10-10",
-                )),
+                dollarQuoteState = ResultState.Success(
+                    DollarQuoteResponse(
+                        cotizacion = listOf(
+                            CotizacionItem(
+                                compra = 3.61,
+                                venta = 3.72
+                            )
+                        ),
+                        fecha = "2021-10-10",
+                    )
+                ),
+                uitState = ResultState.Success(
+                    UITResponse(
+                        UIT = 123.45,
+                        periodo = 1,
+                        servicio = "Mock Service"
+                    )
+                ),
                 innerPadding = innerPadding,
                 gratitudeState = ResultState.Success(
                     listOf(
-                        Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 1", url = "https://example.com"),
-                        Gratitude(image = "https://via.placeholder.com/150", title = "Mock Title 2", url = "https://example.com")
+                        Gratitude(
+                            image = "https://via.placeholder.com/150",
+                            title = "Mock Title 1",
+                            url = "https://example.com"
+                        ),
+                        Gratitude(
+                            image = "https://via.placeholder.com/150",
+                            title = "Mock Title 2",
+                            url = "https://example.com"
+                        )
                     )
                 ),
                 sectionItemsState = ResultState.Success(

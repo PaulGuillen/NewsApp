@@ -34,7 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.ui.shimmer.AcknowledgmentShimmer
+import com.devpaul.infoxperu.domain.ui.skeleton.AcknowledgmentSkeleton
 
 @Composable
 fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
@@ -46,7 +46,7 @@ fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context:
     }
 
     if (showSkeleton) {
-        AcknowledgmentShimmer()
+        AcknowledgmentSkeleton()
     } else {
         AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = context)
     }
@@ -56,7 +56,7 @@ fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context:
 fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
     when (gratitudeState) {
         is ResultState.Loading -> {
-            AcknowledgmentShimmer()
+            AcknowledgmentSkeleton()
         }
 
         is ResultState.Success -> {
@@ -118,7 +118,7 @@ fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, c
                     }
                 }
             } else {
-                AcknowledgmentShimmer()
+                AcknowledgmentSkeleton()
             }
         }
 

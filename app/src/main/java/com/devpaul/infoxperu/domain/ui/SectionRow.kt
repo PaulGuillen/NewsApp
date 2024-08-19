@@ -18,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.devpaul.infoxperu.domain.ui.shimmer.SectionsRowSkeleton
+import com.devpaul.infoxperu.domain.ui.skeleton.SectionsRowSkeleton
 
 @Composable
 fun SectionsRow(sectionItemsState: ResultState<List<SectionItem>>, context: Context) {

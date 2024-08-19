@@ -1,6 +1,10 @@
 package com.devpaul.infoxperu.domain.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +36,13 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import androidx.compose.runtime.*
-import com.devpaul.infoxperu.domain.ui.shimmer.SkeletonInformationCard
+import androidx.compose.ui.platform.LocalContext
+import com.devpaul.infoxperu.domain.ui.skeleton.SkeletonInformationCard
 
 @Composable
 fun InformationCard(
     dollarQuoteState: ResultState<DollarQuoteResponse>?,
+    context: Context
 ) {
     var showSkeleton by remember { mutableStateOf(true) }
 
@@ -47,17 +53,23 @@ fun InformationCard(
     if (showSkeleton) {
         SkeletonInformationCard()
     } else {
-        InformationCardContent(dollarQuoteState)
+        InformationCardContent(dollarQuoteState, context)
     }
 }
 
 @Composable
-fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?) {
+fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, context: Context) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
+            .padding(16.dp)
+            .clickable {
+                if (dollarQuoteState is ResultState.Success) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(dollarQuoteState.data.enlace))
+                    context.startActivity(intent)
+                }
+            },
+        elevation = CardDefaults.cardElevation(8.dp),
     ) {
         Column {
             Image(
@@ -140,28 +152,27 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?) 
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
+
                         Text(
                             text = data.sitio ?: "Sitio no disponible",
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(end = 8.dp)
+                                .padding(end = 20.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         DividerView()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = data.fecha ?: "Fecha no disponible",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
+                            style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(end = 8.dp)
+                                .padding(end = 20.dp)
                         )
-
                         Spacer(modifier = Modifier.height(8.dp))
                     }
 
@@ -211,7 +222,8 @@ fun InformationCardPreview() {
                 fecha = "2021-10-10",
                 sitio = "https://www.google.com"
             )
-        )
+        ),
+        context = LocalContext.current
     )
 }
 
@@ -219,7 +231,8 @@ fun InformationCardPreview() {
 @Composable
 fun InformationCardErrorPreview() {
     InformationCardContent(
-        dollarQuoteState = ResultState.Error(Exception("Simulated Error"))
+        dollarQuoteState = ResultState.Error(Exception("Simulated Error")),
+        context = LocalContext.current
     )
 }
 
@@ -227,6 +240,7 @@ fun InformationCardErrorPreview() {
 @Composable
 fun InformationCardNoDataPreview() {
     InformationCardContent(
-        dollarQuoteState = null
+        dollarQuoteState = null,
+        context = LocalContext.current
     )
 }

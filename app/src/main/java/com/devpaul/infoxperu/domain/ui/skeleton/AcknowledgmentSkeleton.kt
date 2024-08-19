@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.shimmer
+package com.devpaul.infoxperu.domain.ui.skeleton
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode
@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AcknowledgmentShimmer() {
+fun AcknowledgmentSkeleton() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -74,5 +74,5 @@ fun AcknowledgmentShimmer() {
 @Preview(showBackground = true)
 @Composable
 fun SkeletonScreenAcknowledgmentPreview() {
-    AcknowledgmentShimmer()
+    AcknowledgmentSkeleton()
 }

@@ -6,7 +6,9 @@ import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
-import com.devpaul.infoxperu.feature.home.home_view.uc.HomeUseCase
+import com.devpaul.infoxperu.domain.models.res.UITResponse
+import com.devpaul.infoxperu.feature.home.home_view.uc.DollarQuoteUseCase
+import com.devpaul.infoxperu.feature.home.home_view.uc.UITUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeUseCase: HomeUseCase,
+    private val dollarQuoteUseCase: DollarQuoteUseCase,
+    private val uitUseCase: UITUseCase,
     private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
     private val _dollarQuoteState = MutableStateFlow<ResultState<DollarQuoteResponse>?>(null)
     val dollarQuoteState: StateFlow<ResultState<DollarQuoteResponse>?> = _dollarQuoteState
+
+    private val _uitState = MutableStateFlow<ResultState<UITResponse>?>(null)
+    val uitState: StateFlow<ResultState<UITResponse>?> = _uitState
 
     private val _gratitudeState = MutableStateFlow<ResultState<List<Gratitude>>>(ResultState.Loading)
     val gratitudeState: StateFlow<ResultState<List<Gratitude>>> = _gratitudeState
@@ -32,6 +38,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getDollarQuote()
+        getUit()
         fetchGratitude()
         fetchSections()
     }
@@ -41,12 +48,27 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val result = homeUseCase()
+                val result = dollarQuoteUseCase()
                 _dollarQuoteState.value = result
             } catch (e: ApiException) {
                 _dollarQuoteState.value = ResultState.Error(e)
             } catch (e: Exception) {
                 _dollarQuoteState.value = ResultState.Error(e)
+            }
+        }
+    }
+
+    private fun getUit() {
+        _uitState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            try {
+                val result = uitUseCase()
+                _uitState.value = result
+            } catch (e: ApiException) {
+                _uitState.value = ResultState.Error(e)
+            } catch (e: Exception) {
+                _uitState.value = ResultState.Error(e)
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.shimmer
+package com.devpaul.infoxperu.domain.ui.skeleton
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode

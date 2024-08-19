@@ -12,23 +12,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = BrickRed,
-    onPrimary = White, // Color del texto del botón en modo claro
+    primary = BrickRed, // Color principal en modo oscuro
+    onPrimary = White, // Color del texto sobre color principal en modo oscuro
     secondary = BrickRed,
-    onSecondary = White, // Color del texto del botón en modo claro
+    onSecondary = White,
     tertiary = White,
-    background = Black,
-    surface = Color.DarkGray,
+    background = Black, // Color de fondo en modo oscuro
+    surface = Color.DarkGray // Color de las superficies (tarjetas) en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = BrickRed,
-    onPrimary = White, // Color del texto del botón en modo claro
+    primary = BrickRed, // Color principal en modo claro
+    onPrimary = White, // Color del texto sobre color principal en modo claro
     secondary = BrickRed,
-    onSecondary = White, // Color del texto del botón en modo claro
-    tertiary = Black,
-    background = White,
-    surface = White,
+    onSecondary = White,
+    tertiary = Black, // Color terciario en modo claro
+    background = White, // Color de fondo en modo claro
+    surface = White // Color de las superficies (tarjetas) en modo claro
 )
 
 @Composable

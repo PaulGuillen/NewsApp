@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class HomeUseCase @Inject constructor(
+class DollarQuoteUseCase @Inject constructor(
     private val repository: HomeRepository
 ) {
     suspend operator fun invoke(): ResultState<DollarQuoteResponse> {
