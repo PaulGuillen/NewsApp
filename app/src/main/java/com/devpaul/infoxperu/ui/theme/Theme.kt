@@ -26,7 +26,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = White, // Color del texto sobre color principal en modo claro
     secondary = BrickRed,
     onSecondary = White,
-    tertiary = Black, // Color terciario en modo claro
+    tertiary = Color.DarkGray, // Color terciario en modo claro
     background = White, // Color de fondo en modo claro
     surface = White // Color de las superficies (tarjetas) en modo claro
 )

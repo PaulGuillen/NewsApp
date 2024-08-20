@@ -33,7 +33,8 @@ import com.devpaul.infoxperu.core.extension.validateStartSession
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
-import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
+import com.devpaul.infoxperu.ui.theme.BrickRed
+import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {
@@ -74,7 +75,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
             if (isLoading) {
                 ScreenLoading()
             }
-            
+
             LoginContent(navController = navController, onLogin = { email, password ->
                 viewModel.login(email.trim(), password.trim())
             }, showSnackBar = { message ->
@@ -159,7 +160,12 @@ fun LoginContent(
                     painter = painterResource(id = R.drawable.baseline_email_24),
                     contentDescription = stringResource(id = R.string.email_label)
                 )
-            }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = BrickRed,
+                cursorColor = BrickRed,
+                focusedLabelColor = BrickRed
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -180,6 +186,11 @@ fun LoginContent(
                     Icon(painter = image, contentDescription = null)
                 }
             },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = BrickRed,
+                cursorColor = BrickRed,
+                focusedLabelColor = BrickRed
+            ),
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
@@ -197,8 +208,8 @@ fun LoginContent(
             shape = RectangleShape,
             elevation = ButtonDefaults.buttonElevation(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                containerColor = BrickRed,
+                contentColor = White
             )
         ) {
             Text(stringResource(id = R.string.login_button))
@@ -211,7 +222,10 @@ fun LoginContent(
                 validateRecoveryPassword()
             }
         ) {
-            Text(stringResource(id = R.string.forgot_password))
+            Text(
+                stringResource(id = R.string.forgot_password),
+                color = BrickRed
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -219,21 +233,21 @@ fun LoginContent(
         TextButton(
             onClick = { navController.navigate(Screen.Register.route) }
         ) {
-            Text(stringResource(id = R.string.not_registered))
+            Text(
+                stringResource(id = R.string.not_registered),
+                color = BrickRed
+            )
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    InfoXPeruTheme {
-        val navController = rememberNavController()
-        LoginContent(
-            navController = navController,
-            onLogin = { _, _ -> },
-            showSnackBar = { },
-            onForgotPassword = { })
-    }
+    val navController = rememberNavController()
+    LoginContent(
+        navController = navController,
+        onLogin = { _, _ -> },
+        showSnackBar = { },
+        onForgotPassword = { })
 }

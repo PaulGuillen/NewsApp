@@ -38,7 +38,8 @@ import com.devpaul.infoxperu.core.extension.validateRegistration
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.login.Dialogs
-import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
+import com.devpaul.infoxperu.ui.theme.BrickRed
+import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun RegisterScreen(
@@ -133,7 +134,7 @@ fun RegisterContent(
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(containerColor = White),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
@@ -242,8 +243,8 @@ fun RegisterContent(
                     shape = RectangleShape,
                     elevation = ButtonDefaults.buttonElevation(8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = BrickRed,
+                        contentColor = White
                     )
                 ) {
                     Text(stringResource(id = R.string.register_screen_register_button))
@@ -254,7 +255,10 @@ fun RegisterContent(
         TextButton(
             onClick = { navController.popBackStack() }
         ) {
-            Text(stringResource(id = R.string.register_screen_already_have_account))
+            Text(
+                stringResource(id = R.string.register_screen_already_have_account),
+                color = BrickRed
+            )
         }
     }
 }
@@ -262,8 +266,6 @@ fun RegisterContent(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegisterScreen() {
-    InfoXPeruTheme {
-        val navController = rememberNavController()
-        RegisterContent(navController, onRegister = { _, _, _, _, _ -> }, showSnackBar = { })
-    }
+    val navController = rememberNavController()
+    RegisterContent(navController, onRegister = { _, _, _, _, _ -> }, showSnackBar = { })
 }

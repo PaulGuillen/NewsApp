@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-
-import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.infoxperu.domain.extension.setStatusBarColor
 import com.devpaul.infoxperu.feature.user_start.StartNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,12 +18,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            InfoXPeruTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    val navController = rememberNavController()
-                    StartNavHost(navController)
-                }
+            val isDarkTheme = isSystemInDarkTheme()
+            val statusBarColor = if (isDarkTheme) Color.Black else Color.White
+            setStatusBarColor(statusBarColor, darkIcons = !isDarkTheme)
+            Surface(color = MaterialTheme.colorScheme.background) {
+                val navController = rememberNavController()
+                StartNavHost(navController)
             }
         }
     }
+
 }

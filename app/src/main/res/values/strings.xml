@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InfoXPeru</string>
+    <string name="app_name">InfoPeru</string>
     <string name="login_title">Podrás visualizar los principales números de emergencia por distrito en la zona Lima</string>
     <string name="email_label">Correo</string>
     <string name="password_label">Contraseña</string>
@@ -24,4 +24,14 @@
     <string name="error_password_empty">La contraseña no puede estar vacía</string>
     <string name="error_confirm_password_empty">La confirmación de contraseña no puede estar vacía</string>
     <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="section_gratitude_header">Agradecimientos</string>
+    <string name="section_available_sections_header">Secciones disponibles</string>
+    <string name="section_daily_info_header">Información diaria</string>
+
+    <!--BottomNavigationBar-->
+    <string name="bottom_nav_home">Inicio</string>
+    <string name="bottom_nav_news">Noticias</string>
+    <string name="bottom_nav_services">Servicios</string>
+    <string name="bottom_nav_districts">Distritos</string>
+
 </resources>

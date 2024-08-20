@@ -1,7 +1,9 @@
 package com.devpaul.infoxperu.core.extension
 
 import android.content.Context
+import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.R
+import com.google.firebase.auth.FirebaseAuth
 
 fun isValidEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -48,5 +50,14 @@ fun validateStartSession(
         !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
         password.isEmpty() -> context.getString(R.string.error_password_empty)
         else -> null
+    }
+}
+
+fun logOut(navHostController: NavHostController){
+    FirebaseAuth.getInstance().signOut()
+    navHostController.navigate("login") {
+        popUpTo(navHostController.graph.startDestinationId) {
+            inclusive = true
+        }
     }
 }

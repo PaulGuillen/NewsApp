@@ -3,6 +3,7 @@ package com.devpaul.infoxperu.domain.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,8 @@ import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.devpaul.infoxperu.domain.ui.skeleton.SkeletonInformationCard
+import com.devpaul.infoxperu.ui.theme.Black
+import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun InformationCard(
@@ -62,14 +65,18 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable {
-                if (dollarQuoteState is ResultState.Success) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(dollarQuoteState.data.enlace))
-                    context.startActivity(intent)
-                }
-            },
+            .padding(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = White,
+            contentColor = Black
+        ),
+        onClick = {
+            if (dollarQuoteState is ResultState.Success) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(dollarQuoteState.data.enlace))
+                context.startActivity(intent)
+            }
+        }
     ) {
         Column {
             Image(

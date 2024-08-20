@@ -1,6 +1,5 @@
 package com.devpaul.infoxperu.domain.ui
 
-import android.content.ClipData.Item
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
@@ -20,6 +19,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.devpaul.infoxperu.domain.models.res.SectionItem
+import com.devpaul.infoxperu.ui.theme.Black
+import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun ItemSection(sectionItem: SectionItem, context: Context) {
@@ -27,22 +28,26 @@ fun ItemSection(sectionItem: SectionItem, context: Context) {
         modifier = Modifier
             .width(180.dp)
             .height(80.dp)
-            .padding(8.dp)
-            .clickable {
-                Toast.makeText(context, sectionItem.type, Toast.LENGTH_SHORT).show()
-            },
+            .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(0.8.dp, Color.Black),
         elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = White,
+            contentColor = Black
+        ),
+        onClick = {
+            Toast.makeText(context, sectionItem.type, Toast.LENGTH_SHORT).show()
+        }
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Text(
                 text = sectionItem.title,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = Black,
             )
         }
     }

@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,12 +39,13 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.skeleton.UITCardSkeleton
+import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.BlueDark
+import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun UITCard(uitState: ResultState<UITResponse>?, context: Context) {
     var showSkeleton by remember { mutableStateOf(true) }
-    val isLightTheme = !isSystemInDarkTheme()
 
     LaunchedEffect(uitState) {
         showSkeleton = uitState is ResultState.Loading
@@ -56,24 +54,28 @@ fun UITCard(uitState: ResultState<UITResponse>?, context: Context) {
     if (showSkeleton) {
         UITCardSkeleton()
     } else {
-        UITCardContent(uitState, context, isLightTheme)
+        UITCardContent(uitState, context)
     }
 }
 
 @Composable
-fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context, isLightTheme: Boolean) {
+fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable {
-                if (uitState is ResultState.Success) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uitState.data.enlace))
-                    context.startActivity(intent)
-                }
-            },
+            .padding(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = White,
+            contentColor = Black
+        ),
+        onClick = {
+            if (uitState is ResultState.Success) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uitState.data.enlace))
+                context.startActivity(intent)
+            }
+        }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -184,8 +186,7 @@ fun UITCardSuccessPreview() {
                 sitio = "DePeru.com"
             )
         ),
-        context = LocalContext.current,
-        isLightTheme = true
+        context = LocalContext.current
     )
 }
 
@@ -194,8 +195,7 @@ fun UITCardSuccessPreview() {
 fun UITCardErrorPreview() {
     UITCardContent(
         uitState = ResultState.Error(Exception("Simulated Error")),
-        context = LocalContext.current,
-        isLightTheme = true
+        context = LocalContext.current
     )
 }
 
@@ -204,7 +204,6 @@ fun UITCardErrorPreview() {
 fun UITCardNotDataAvailablePreview() {
     UITCardContent(
         uitState = null,
-        context = LocalContext.current,
-        isLightTheme = true
+        context = LocalContext.current
     )
 }

@@ -11,17 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.ui.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.InformationCard
 import com.devpaul.infoxperu.domain.ui.SectionHeader
 import com.devpaul.infoxperu.domain.ui.UITCard
-import com.devpaul.infoxperu.ui.theme.InfoXPeruTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.core.extension.logOut
 import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
@@ -41,7 +42,10 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
 
     Scaffold(
         topBar = {
-            TopBar(title = "InfoPerú")
+            TopBar(title = stringResource(R.string.app_name),
+                onLogoutClick = {
+                    logOut(navController)
+                })
         },
         bottomBar = {
             BottomNavigationBar(navController)
@@ -75,13 +79,13 @@ fun HomeContent(
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
-        SectionHeader("Agradecimientos")
+        SectionHeader(stringResource(R.string.section_gratitude_header))
         AcknowledgmentSection(gratitudeState = gratitudeState, context = context)
 
-        SectionHeader("Secciones disponibles")
+        SectionHeader(stringResource(R.string.section_available_sections_header))
         SectionsRow(sectionItemsState = sectionItemsState, context = context)
 
-        SectionHeader("Información diaria")
+        SectionHeader(stringResource(R.string.section_daily_info_header))
         InformationCard(dollarQuoteState = dollarQuoteState, context = context)
 
         UITCard(uitState = uitState, context = context)
@@ -91,60 +95,58 @@ fun HomeContent(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    InfoXPeruTheme {
-        val navController = rememberNavController()
+    val navController = rememberNavController()
 
-        Scaffold(
-            topBar = {
-                TopBar(title = "InfoPerú")
-            },
-            bottomBar = {
-                BottomNavigationBar(navController = navController)
-            }
-        ) { innerPadding ->
-            HomeContent(
-                modifier = Modifier.fillMaxSize(),
-                dollarQuoteState = ResultState.Success(
-                    DollarQuoteResponse(
-                        cotizacion = listOf(
-                            CotizacionItem(
-                                compra = 3.61,
-                                venta = 3.72
-                            )
-                        ),
-                        fecha = "2021-10-10",
-                    )
-                ),
-                uitState = ResultState.Success(
-                    UITResponse(
-                        UIT = 123.45,
-                        periodo = 1,
-                        servicio = "Mock Service"
-                    )
-                ),
-                innerPadding = innerPadding,
-                gratitudeState = ResultState.Success(
-                    listOf(
-                        Gratitude(
-                            image = "https://via.placeholder.com/150",
-                            title = "Mock Title 1",
-                            url = "https://example.com"
-                        ),
-                        Gratitude(
-                            image = "https://via.placeholder.com/150",
-                            title = "Mock Title 2",
-                            url = "https://example.com"
-                        )
-                    )
-                ),
-                sectionItemsState = ResultState.Success(
-                    listOf(
-                        SectionItem(title = "Noticias", type = "news"),
-                        SectionItem(title = "Distritos", type = "districts")
-                    )
-                ),
-                context = LocalContext.current
-            )
+    Scaffold(
+        topBar = {
+            TopBar(title = "InfoPerú")
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
         }
+    ) { innerPadding ->
+        HomeContent(
+            modifier = Modifier.fillMaxSize(),
+            dollarQuoteState = ResultState.Success(
+                DollarQuoteResponse(
+                    cotizacion = listOf(
+                        CotizacionItem(
+                            compra = 3.61,
+                            venta = 3.72
+                        )
+                    ),
+                    fecha = "2021-10-10",
+                )
+            ),
+            uitState = ResultState.Success(
+                UITResponse(
+                    UIT = 123.45,
+                    periodo = 1,
+                    servicio = "Mock Service"
+                )
+            ),
+            innerPadding = innerPadding,
+            gratitudeState = ResultState.Success(
+                listOf(
+                    Gratitude(
+                        image = "https://via.placeholder.com/150",
+                        title = "Mock Title 1",
+                        url = "https://example.com"
+                    ),
+                    Gratitude(
+                        image = "https://via.placeholder.com/150",
+                        title = "Mock Title 2",
+                        url = "https://example.com"
+                    )
+                )
+            ),
+            sectionItemsState = ResultState.Success(
+                listOf(
+                    SectionItem(title = "Noticias", type = "news"),
+                    SectionItem(title = "Distritos", type = "districts")
+                )
+            ),
+            context = LocalContext.current
+        )
     }
 }
