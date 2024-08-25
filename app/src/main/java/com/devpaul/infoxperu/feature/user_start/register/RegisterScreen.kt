@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.validateRegistration
 import com.devpaul.infoxperu.domain.screen.BaseScreen
-import com.devpaul.infoxperu.domain.ui.ScreenLoading
+import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.login.Dialogs
 import com.devpaul.infoxperu.ui.theme.BrickRed
 import com.devpaul.infoxperu.ui.theme.White

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.devpaul.infoxperu.R
-import com.devpaul.infoxperu.domain.ui.CustomDialog
+import com.devpaul.infoxperu.domain.ui.utils.CustomDialog
 
 object Dialogs {
 

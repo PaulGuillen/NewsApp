@@ -31,7 +31,7 @@ import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.validateEmail
 import com.devpaul.infoxperu.core.extension.validateStartSession
 import com.devpaul.infoxperu.domain.screen.BaseScreen
-import com.devpaul.infoxperu.domain.ui.ScreenLoading
+import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.BrickRed
 import com.devpaul.infoxperu.ui.theme.White

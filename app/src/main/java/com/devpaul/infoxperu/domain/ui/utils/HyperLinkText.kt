@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.utils
 
 import android.content.Intent
 import android.net.Uri

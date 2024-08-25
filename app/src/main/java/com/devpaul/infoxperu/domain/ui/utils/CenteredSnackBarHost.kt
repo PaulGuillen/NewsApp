@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.utils
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

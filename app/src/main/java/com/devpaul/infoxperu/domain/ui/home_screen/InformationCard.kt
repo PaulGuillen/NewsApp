@@ -1,11 +1,9 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.home_screen
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -180,7 +178,7 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
                                 .fillMaxWidth()
                                 .padding(end = 20.dp)
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
 
                     is ResultState.Error -> {

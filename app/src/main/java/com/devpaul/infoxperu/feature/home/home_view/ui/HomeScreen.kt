@@ -13,10 +13,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
-import com.devpaul.infoxperu.domain.ui.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.InformationCard
-import com.devpaul.infoxperu.domain.ui.SectionHeader
-import com.devpaul.infoxperu.domain.ui.UITCard
+import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.domain.ui.home_screen.InformationCard
+import com.devpaul.infoxperu.domain.ui.utils.SectionHeader
+import com.devpaul.infoxperu.domain.ui.home_screen.UITCard
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,9 +27,9 @@ import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.models.res.UITResponse
-import com.devpaul.infoxperu.domain.ui.AcknowledgmentSection
-import com.devpaul.infoxperu.domain.ui.SectionsRow
-import com.devpaul.infoxperu.domain.ui.TopBar
+import com.devpaul.infoxperu.domain.ui.home_screen.AcknowledgmentSection
+import com.devpaul.infoxperu.domain.ui.home_screen.SectionsRow
+import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
@@ -75,7 +75,6 @@ fun HomeContent(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {

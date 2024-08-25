@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.home_screen
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll

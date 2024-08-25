@@ -1,6 +1,6 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.utils
 
-import android.service.autofill.OnClickAction
+import android.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -58,7 +58,7 @@ fun CustomDialog(
 @Composable
 fun CustomDialogPreview() {
     CustomDialog(
-        image = painterResource(id = android.R.drawable.ic_dialog_alert),
+        image = painterResource(id = R.drawable.ic_dialog_alert),
         title = "Title",
         description = "Description",
         buttonText = "Button",

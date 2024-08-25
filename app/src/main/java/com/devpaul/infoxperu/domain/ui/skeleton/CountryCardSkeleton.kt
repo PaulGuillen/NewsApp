@@ -7,7 +7,12 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -20,8 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SectionsRowSkeleton() {
-
+fun CountryCardSkeleton() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -43,11 +47,11 @@ fun SectionsRowSkeleton() {
             .horizontalScroll(rememberScrollState())
             .padding(start = 10.dp, top = 2.dp, bottom = 2.dp, end = 2.dp)
     ) {
-        repeat(3) {
+        repeat(5) {
             Card(
                 modifier = Modifier
-                    .width(180.dp)
-                    .height(80.dp)
+                    .width(120.dp)
+                    .height(100.dp)
                     .padding(8.dp),
                 shape = RoundedCornerShape(8.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -64,6 +68,6 @@ fun SectionsRowSkeleton() {
 
 @Preview(showBackground = true)
 @Composable
-fun SectionsRowShimmerPreview() {
-    SectionsRowSkeleton()
+fun CountryCardSkeletonPreview() {
+    CountryCardSkeleton()
 }

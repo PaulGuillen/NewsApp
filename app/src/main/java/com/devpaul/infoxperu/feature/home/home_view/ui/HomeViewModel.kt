@@ -90,7 +90,6 @@ class HomeViewModel @Inject constructor(
             }
     }
 
-
     private fun fetchSections() {
         _sectionsState.value = ResultState.Loading
 

@@ -3,7 +3,7 @@ package com.devpaul.infoxperu.domain.screen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import com.devpaul.infoxperu.domain.ui.CenteredSnackBarHost
+import com.devpaul.infoxperu.domain.ui.utils.CenteredSnackBarHost
 import kotlinx.coroutines.launch
 
 @Composable

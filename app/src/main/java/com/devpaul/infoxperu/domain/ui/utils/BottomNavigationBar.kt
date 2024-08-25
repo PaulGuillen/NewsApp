@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui
+package com.devpaul.infoxperu.domain.ui.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
