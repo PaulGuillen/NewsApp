@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login
+package com.devpaul.infoxperu.feature.user_start
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource

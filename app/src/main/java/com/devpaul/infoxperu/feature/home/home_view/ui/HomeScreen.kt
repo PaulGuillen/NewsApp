@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
-import com.devpaul.infoxperu.core.extension.logOut
 import com.devpaul.infoxperu.domain.models.res.CotizacionItem
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
@@ -44,7 +43,7 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hilt
         topBar = {
             TopBar(title = stringResource(R.string.app_name),
                 onLogoutClick = {
-                    logOut(navController)
+                    viewModel.logOut(navController)
                 })
         },
         bottomBar = {

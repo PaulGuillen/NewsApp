@@ -132,4 +132,8 @@ dependencies {
 
     //Shimmer
     implementation(libs.shimmer.compose)
+
+    //DataStore
+    implementation(libs.datastore.preferences)
+    implementation(libs.datastore.core)
 }

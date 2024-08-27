@@ -20,8 +20,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.core.extension.logOut
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
@@ -36,7 +36,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
         topBar = {
             TopBar(title = stringResource(R.string.app_name),
                 onLogoutClick = {
-                    logOut(navController)
+                    viewModel.logOut(navController)
                 })
         },
         bottomBar = {
@@ -65,6 +65,7 @@ fun NewsContent(
             .verticalScroll(rememberScrollState())
     ) {
         CountryCards(countryState = countryState, context = context)
+        DividerView()
     }
 }
 

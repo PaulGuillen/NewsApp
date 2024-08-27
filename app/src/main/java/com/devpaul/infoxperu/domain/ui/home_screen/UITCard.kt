@@ -77,7 +77,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
         }
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
         ) {
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -135,7 +135,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 8.dp)
+                            .padding(end = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     DividerView()
@@ -147,7 +147,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 8.dp)
+                            .padding(end = 16.dp)
                     )
                 }
 

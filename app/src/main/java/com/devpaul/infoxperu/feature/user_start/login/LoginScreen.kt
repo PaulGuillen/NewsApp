@@ -87,7 +87,6 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
     }
 }
 
-
 @Composable
 fun LoginContent(
     navController: NavHostController,

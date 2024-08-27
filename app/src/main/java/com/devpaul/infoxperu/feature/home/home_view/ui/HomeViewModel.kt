@@ -1,12 +1,15 @@
 package com.devpaul.infoxperu.feature.home.home_view.ui
 
 import androidx.lifecycle.*
+import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
 import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.models.res.UITResponse
+import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.DollarQuoteUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.UITUseCase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,8 +24,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val dollarQuoteUseCase: DollarQuoteUseCase,
     private val uitUseCase: UITUseCase,
-    private val firestore: FirebaseFirestore
-) : ViewModel() {
+    private val firestore: FirebaseFirestore,
+    dataStoreUseCase: DataStoreUseCase
+) : BaseViewModel<HomeUiEvent>(dataStoreUseCase) {
 
     private val _dollarQuoteState = MutableStateFlow<ResultState<DollarQuoteResponse>?>(null)
     val dollarQuoteState: StateFlow<ResultState<DollarQuoteResponse>?> = _dollarQuoteState
@@ -30,10 +34,12 @@ class HomeViewModel @Inject constructor(
     private val _uitState = MutableStateFlow<ResultState<UITResponse>?>(null)
     val uitState: StateFlow<ResultState<UITResponse>?> = _uitState
 
-    private val _gratitudeState = MutableStateFlow<ResultState<List<Gratitude>>>(ResultState.Loading)
+    private val _gratitudeState =
+        MutableStateFlow<ResultState<List<Gratitude>>>(ResultState.Loading)
     val gratitudeState: StateFlow<ResultState<List<Gratitude>>> = _gratitudeState
 
-    private val _sectionsState = MutableStateFlow<ResultState<List<SectionItem>>>(ResultState.Loading)
+    private val _sectionsState =
+        MutableStateFlow<ResultState<List<SectionItem>>>(ResultState.Loading)
     val sectionsState: StateFlow<ResultState<List<SectionItem>>> = _sectionsState
 
     init {
