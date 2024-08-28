@@ -17,10 +17,15 @@ class GoogleNewsUseCase @Inject constructor(
             withContext(Dispatchers.IO) {
                 val response = repository.googleNews(query, language)
                 val mappedResponse = mapper.mapToGoogleNewsJSON(response)
-                ResultState.Success(mappedResponse)
+
+                val limitedNewsItems = mappedResponse.newsItems.take(20)
+                val limitedNews = mappedResponse.copy(newsItems = limitedNewsItems)
+
+                ResultState.Success(limitedNews)
             }
         } catch (e: Exception) {
             ResultState.Error(e)
         }
     }
+
 }

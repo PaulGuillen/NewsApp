@@ -1,14 +1,10 @@
 package com.devpaul.infoxperu.core.extension
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.R
-import com.devpaul.infoxperu.core.manager.DataStoreUseCaseImpl
-import com.devpaul.infoxperu.feature.home.news_view.NewsViewModel
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun isValidEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -55,5 +51,16 @@ fun validateStartSession(
         !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
         password.isEmpty() -> context.getString(R.string.error_password_empty)
         else -> null
+    }
+}
+
+fun formatPubDate(dateStr: String?): String {
+    return try {
+        val parser = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("dd 'de' MMMM, hh:mm a", Locale("es", "ES"))
+        val parsedDate = parser.parse(dateStr.toString())
+        formatter.format(parsedDate ?: Date())
+    } catch (e: Exception) {
+        dateStr ?: ""
     }
 }

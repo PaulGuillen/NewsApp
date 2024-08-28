@@ -14,14 +14,14 @@ data class GoogleNewsXML @JvmOverloads constructor(
 
 @Root(name = "channel", strict = false)
 data class Channel @JvmOverloads constructor(
+    @field:Element(name = "generator", required = false)
+    var generator: String? = null,
     @field:Element(name = "title")
     var title: String = "",
     @field:Element(name = "link")
     var link: String = "",
     @field:Element(name = "language")
     var language: String = "",
-    @field:Element(name = "generator", required = false)
-    var generator: String? = null,
     @field:Element(name = "webMaster", required = false)
     var webMaster: String? = null,
     @field:Element(name = "copyright", required = false)
@@ -40,12 +40,12 @@ data class NewsItem @JvmOverloads constructor(
     var title: String = "",
     @field:Element(name = "link")
     var link: String = "",
+    @field:Element(name = "guid", required = false)
+    var guid: String? = null,
     @field:Element(name = "pubDate", required = false)
     var pubDate: String? = null,
     @field:Element(name = "description", required = false)
     var description: String? = null,
-    @field:Element(name = "guid", required = false)
-    var guid: String? = null,
     @field:Element(name = "source", required = false)
     var source: NewsSource? = null
 )

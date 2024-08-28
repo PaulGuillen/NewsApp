@@ -25,7 +25,7 @@ import com.devpaul.infoxperu.domain.ui.skeleton.SectionsRowSkeleton
 fun CountryCards(
     countryState: ResultState<List<Country>>,
     context: Context,
-    onCountrySelected: (String) -> Unit
+    onCountrySelected: (Country) -> Unit
 ) {
     var showSkeleton by remember { mutableStateOf(true) }
 
@@ -48,7 +48,7 @@ fun CountryCards(
 fun CountryCardsContent(
     countryState: ResultState<List<Country>>,
     context: Context,
-    onCountrySelected: (String) -> Unit
+    onCountrySelected: (Country) -> Unit
 ) {
     when (countryState) {
         is ResultState.Loading -> {
@@ -66,7 +66,7 @@ fun CountryCardsContent(
                         CountryCard(
                             country = countryItem,
                             context = context,
-                            onClick = { onCountrySelected(countryItem.category) }
+                            onClick = { onCountrySelected(countryItem) }
                         )
                     }
                 }
@@ -76,22 +76,7 @@ fun CountryCardsContent(
         }
 
         is ResultState.Error -> {
-            Row(
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 10.dp)
-            ) {
-                repeat(3) {
-                    CountryCard(
-                        Country(
-                            title = "Titulo",
-                            category = "Categoria",
-                            summary = "Resumen",
-                            imageUrl = "https://www.google.com",
-                        ), context
-                    )
-                }
-            }
+            // Manejo del error
         }
     }
 }

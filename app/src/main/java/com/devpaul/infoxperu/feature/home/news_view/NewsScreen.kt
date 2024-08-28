@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,15 +34,22 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
+import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
+import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
+import com.devpaul.infoxperu.domain.ui.news_screen.GoogleNewsCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
 fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hiltViewModel()) {
+
     val context = LocalContext.current
     val countryState by viewModel.countryState.collectAsState()
+    val googleNews by viewModel.googleNewsState.collectAsState()
+    var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
     Scaffold(
         topBar = {
@@ -61,8 +67,11 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             modifier = Modifier.fillMaxSize(),
             countryState = countryState,
             innerPadding = innerPadding,
-            onCountrySelected = { category ->
-                viewModel.getGoogleNews(query = category, language = "es")
+            googleNewsState = googleNews,
+            selectedCountry = selectedCountry,
+            onCountrySelected = { country ->
+                selectedCountry = country
+                viewModel.getGoogleNews(query = country.category, language = "es")
             }
         )
     }
@@ -74,22 +83,26 @@ fun NewsContent(
     modifier: Modifier = Modifier,
     countryState: ResultState<List<Country>>,
     innerPadding: PaddingValues = PaddingValues(),
-    onCountrySelected: (String) -> Unit
+    googleNewsState: ResultState<GoogleNewsJSON>,
+    selectedCountry: Country?,
+    onCountrySelected: (Country) -> Unit
 ) {
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
-        CountryCards(countryState = countryState, context = context, onCountrySelected = {
-            selectedCategory = it
-            onCountrySelected(it)
-        })
+        CountryCards(
+            countryState = countryState,
+            context = context,
+            onCountrySelected = {
+                onCountrySelected(it)
+            }
+        )
         Spacer(modifier = Modifier.padding(8.dp))
         DividerView()
-        if (selectedCategory == null) {
+        if (selectedCountry == null) {
             Spacer(modifier = Modifier.weight(1f))
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -97,22 +110,22 @@ fun NewsContent(
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.baseline_sentiment_very_dissatisfied_24),
+                    painter = painterResource(id = R.drawable.no_country_selected),
                     contentDescription = null,
                     modifier = Modifier.size(128.dp)
                 )
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(
-                    text = "Seleccione una categoría",
+                    text = "Seleccione un país para ver las noticias",
                     style = MaterialTheme.typography.titleMedium
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
         } else {
-            Text(
-                text = "Categoría seleccionada: $selectedCategory",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black
+            GoogleNewsCards(
+                title = selectedCountry.title,
+                googleNewsState = googleNewsState,
+                context = context
             )
         }
     }
@@ -120,8 +133,9 @@ fun NewsContent(
 
 @Preview(showBackground = true)
 @Composable
-fun NewsScreenPreview() {
+fun NewsScreenPreviewWithOutCountrySelected() {
     val navController = rememberNavController()
+    var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
     Scaffold(
         topBar = {
@@ -134,7 +148,6 @@ fun NewsScreenPreview() {
         NewsContent(
             context = LocalContext.current,
             modifier = Modifier.fillMaxSize(),
-            innerPadding = innerPadding,
             countryState = ResultState.Success(
                 listOf(
                     Country(
@@ -157,6 +170,113 @@ fun NewsScreenPreview() {
                     ),
                 )
             ),
+            innerPadding = innerPadding,
+            googleNewsState = ResultState.Success(
+                GoogleNewsJSON(
+                    title = "Peru",
+                    link = "https://www.google.com",
+                    language = "es",
+                    lastBuildDate = "2021-09-01",
+                    description = "Descripción",
+                    newsItems = emptyList()
+                )
+            ),
+            selectedCountry = selectedCountry,
+            onCountrySelected = { selectedCountry = it }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsScreenPreviewWithCountrySelected() {
+    val navController = rememberNavController()
+    val selectedCountry = Country(
+        title = "Peru",
+        category = "peru",
+        summary = "Resumen",
+        imageUrl = "https://www.google.com",
+    )
+
+    Scaffold(
+        topBar = {
+            TopBar(title = "InfoPerú")
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) { innerPadding ->
+        NewsContent(
+            context = LocalContext.current,
+            modifier = Modifier.fillMaxSize(),
+            countryState = ResultState.Success(
+                listOf(
+                    Country(
+                        title = "Peru",
+                        category = "peru",
+                        summary = "Resumen",
+                        imageUrl = "https://www.google.com",
+                    ),
+                    Country(
+                        title = "Argentina",
+                        category = "argentina",
+                        summary = "Resumen",
+                        imageUrl = "https://www.google.com",
+                    ),
+                    Country(
+                        title = "Ecuador",
+                        category = "ecuador",
+                        summary = "Resumen",
+                        imageUrl = "https://www.google.com",
+                    ),
+                )
+            ),
+            innerPadding = innerPadding,
+            googleNewsState = ResultState.Success(
+                GoogleNewsJSON(
+                    title = "Peru",
+                    link = "https://www.google.com",
+                    language = "es",
+                    lastBuildDate = "2021-09-01",
+                    description = "Descripción",
+                    newsItems = listOf(
+                        NewsItemJSON(
+                            title = "Primero",
+                            link = "https://www.google.com",
+                            guid = "123",
+                            pubDate = "2021-09-01",
+                            description = "Descripción",
+                            source = NewsSourceJSON(
+                                url = "https://www.google.com",
+                                name = "Infobae Perú"
+                            )
+                        ),
+                        NewsItemJSON(
+                            title = "Segundo",
+                            link = "https://www.google.com",
+                            guid = "123",
+                            pubDate = "2021-09-01",
+                            description = "Descripción",
+                            source = NewsSourceJSON(
+                                url = "https://www.google.com",
+                                name = "Infobae Perú"
+                            )
+                        ),
+                        NewsItemJSON(
+                            title = "Tercero",
+                            link = "https://www.google.com",
+                            guid = "123",
+                            pubDate = "2021-09-01",
+                            description = "Descripción",
+                            source = NewsSourceJSON(
+                                url = "https://www.google.com",
+                                name = "Infobae Perú"
+                            )
+                        )
+                    )
+                )
+            ),
+            selectedCountry = selectedCountry,
             onCountrySelected = { }
         )
     }

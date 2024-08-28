@@ -19,5 +19,7 @@ data class NewsItemJSON(
 )
 
 data class NewsSourceJSON(
-    val url: String
+    val url: String,
+    val name: String
 )
+

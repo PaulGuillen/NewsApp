@@ -33,7 +33,8 @@ class GoogleNewsMapper {
 
     private fun mapToNewsSourceJSON(newsSource: NewsSource?): NewsSourceJSON {
         return NewsSourceJSON(
-            url = newsSource!!.url
+            url = newsSource!!.url,
+            name = newsSource.name
         )
     }
 }
