@@ -8,7 +8,8 @@ import javax.inject.Named
 
 class BaseUrlInterceptor @Inject constructor(
     @Named("BaseUrlPeru") private val baseUrlPeru: HttpUrl,
-    @Named("BaseUrlNews") private val baseUrlNews: HttpUrl
+    @Named("BaseUrlNews") private val baseUrlNews: HttpUrl,
+    @Named("BaseUrlGoogleNews") private val baseUrlGoogleNews: HttpUrl
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
@@ -19,6 +20,12 @@ class BaseUrlInterceptor @Inject constructor(
                 .encodedPath(originalUrl.encodedPath)
                 .query(originalUrl.query)
                 .build()
+        } else if (originalUrl.encodedPath.contains("rss")) {
+            baseUrlGoogleNews.newBuilder()
+                .encodedPath(originalUrl.encodedPath)
+                .query(originalUrl.query)
+                .build()
+
         } else {
             baseUrlPeru.newBuilder()
                 .encodedPath(originalUrl.encodedPath)
@@ -28,6 +35,7 @@ class BaseUrlInterceptor @Inject constructor(
 
         request = request.newBuilder()
             .url(newUrl)
+            .header("Accept-Encoding", "identity")
             .header("User-Agent", "devpaul")
             .build()
 

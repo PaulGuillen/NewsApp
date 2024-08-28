@@ -33,12 +33,14 @@ android {
 
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+            buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
         }
 
         create("prod") {
             dimension = "environment"
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+            buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
         }
     }
 
@@ -110,6 +112,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
+    implementation(libs.converter.simplexml)
 
     // Lifecycle
     implementation(libs.lifecycle.livedata.ktx)

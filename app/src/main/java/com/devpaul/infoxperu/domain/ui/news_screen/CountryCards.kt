@@ -22,7 +22,11 @@ import com.devpaul.infoxperu.domain.ui.skeleton.CountryCardSkeleton
 import com.devpaul.infoxperu.domain.ui.skeleton.SectionsRowSkeleton
 
 @Composable
-fun CountryCards(countryState: ResultState<List<Country>>, context: Context) {
+fun CountryCards(
+    countryState: ResultState<List<Country>>,
+    context: Context,
+    onCountrySelected: (String) -> Unit
+) {
     var showSkeleton by remember { mutableStateOf(true) }
 
     LaunchedEffect(countryState) {
@@ -32,12 +36,20 @@ fun CountryCards(countryState: ResultState<List<Country>>, context: Context) {
     if (showSkeleton) {
         CountryCardSkeleton()
     } else {
-        CountryCardsContent(countryState = countryState, context = context)
+        CountryCardsContent(
+            countryState = countryState,
+            context = context,
+            onCountrySelected = onCountrySelected
+        )
     }
 }
 
 @Composable
-fun CountryCardsContent(countryState: ResultState<List<Country>>, context: Context) {
+fun CountryCardsContent(
+    countryState: ResultState<List<Country>>,
+    context: Context,
+    onCountrySelected: (String) -> Unit
+) {
     when (countryState) {
         is ResultState.Loading -> {
             SectionsRowSkeleton()
@@ -51,7 +63,11 @@ fun CountryCardsContent(countryState: ResultState<List<Country>>, context: Conte
                         .padding(horizontal = 10.dp)
                 ) {
                     countryState.data.forEach { countryItem ->
-                        CountryCard(countryItem, context)
+                        CountryCard(
+                            country = countryItem,
+                            context = context,
+                            onClick = { onCountrySelected(countryItem.category) }
+                        )
                     }
                 }
             } else {
@@ -105,5 +121,8 @@ fun PreviewCountryCardContent() {
             ),
         )
     )
-    CountryCardsContent(countryState = countryState, context = LocalContext.current)
+    CountryCardsContent(
+        countryState = countryState,
+        context = LocalContext.current,
+        onCountrySelected = {})
 }

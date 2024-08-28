@@ -2,13 +2,11 @@ package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -20,20 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
+import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
+fun GoogleNewsCard(googleNewsState: NewsItemJSON, context: Context) {
     Card(
         modifier = Modifier
-            .width(120.dp)
-            .height(120.dp)
+            .width(200.dp)
+            .height(140.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -43,7 +40,7 @@ fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
             contentColor = Black
         ),
         onClick = {
-            onClick()
+
         }
     ) {
         Column(
@@ -51,15 +48,8 @@ fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize(),
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(country.imageUrl),
-                contentDescription = country.title,
-                modifier = Modifier
-                    .size(60.dp)
-            )
             Text(
-                textAlign = TextAlign.Center,
-                text = country.title,
+                text = googleNewsState.title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Black,
             )
@@ -69,13 +59,15 @@ fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
 
 @Preview(showBackground = true)
 @Composable
-fun SectionItemPreview() {
-    CountryCard(
-        Country(
+fun GoogleNewsCardPreview() {
+    GoogleNewsCard(
+        NewsItemJSON(
             "Peru",
             "peru",
             "Peru",
-            "https://www.infoxperu.com/noticias"
+            "https://www.infoxperu.com/noticias",
+            "Peru",
+            NewsSourceJSON("https://www.infoxperu.com/noticias")
         ),
         context = LocalContext.current
     )

@@ -1,24 +1,34 @@
 package com.devpaul.infoxperu.feature.home.news_view
 
+import androidx.lifecycle.viewModelScope
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
+import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
+import com.devpaul.infoxperu.feature.home.home_view.uc.GoogleNewsUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
+    private val googleNewsUseCase: GoogleNewsUseCase,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
-) : BaseViewModel<NewsUiEvent>(dataStoreUseCase)  {
+) : BaseViewModel<NewsUiEvent>(dataStoreUseCase) {
 
     private val _countryState = MutableStateFlow<ResultState<List<Country>>>(ResultState.Loading)
     val countryState: StateFlow<ResultState<List<Country>>> = _countryState
+
+    private val _googleNewsState =
+        MutableStateFlow<ResultState<GoogleNewsJSON>>(ResultState.Loading)
+    val googleNewsState: StateFlow<ResultState<GoogleNewsJSON>> = _googleNewsState
 
     init {
         fetchCountry()
@@ -39,6 +49,21 @@ class NewsViewModel @Inject constructor(
                 _countryState.value = ResultState.Error(exception)
                 Timber.e(exception)
             }
+    }
+
+    fun getGoogleNews(query: String, language: String) {
+        _googleNewsState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            try {
+                val result = googleNewsUseCase(query, language)
+                _googleNewsState.value = result
+            } catch (e: ApiException) {
+                _googleNewsState.value = ResultState.Error(e)
+            } catch (e: Exception) {
+                _googleNewsState.value = ResultState.Error(e)
+            }
+        }
     }
 
 }

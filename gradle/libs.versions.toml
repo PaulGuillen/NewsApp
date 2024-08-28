@@ -11,6 +11,7 @@ composeBom = "2024.06.00"
 daggerHilt = "2.49"
 hiltNavigationCompose = "1.2.0"  # Ajustar si es necesario
 retrofit = "2.9.0"
+simplexml = "2.9.0"
 lifecycle = "2.8.3"
 coroutines = "1.7.3"
 timber = "5.0.1"
@@ -43,6 +44,7 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+converter-simplexml = { group = "com.squareup.retrofit2", name = "converter-simplexml", version.ref = "simplexml" }
 
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
