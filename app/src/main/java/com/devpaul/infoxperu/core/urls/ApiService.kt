@@ -1,11 +1,14 @@
 package com.devpaul.infoxperu.core.urls
 
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
-import com.devpaul.infoxperu.domain.models.res.NewsResponse
+import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.NewsPeruResponse
+import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.UITResponse
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -17,6 +20,13 @@ interface ApiService {
 
     @GET("uitperu.json")
     suspend fun dataUIT(): Response<UITResponse>
+
+    @GET("doc/doc")
+    fun deltaProject(
+        @Query("query") query: String,
+        @Query("mode") mode: String,
+        @Query("format") format: String
+    ): Call<GDELProject>
 
     @GET("v2/top-headlines?country=ar&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
     suspend fun getDataArgentina(): Response<NewsResponse>

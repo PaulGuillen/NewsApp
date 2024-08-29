@@ -11,6 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
@@ -23,71 +24,57 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @Named("BaseUrlPeru")
-    fun provideBaseUrlPeru(): HttpUrl = BuildConfig.BASE_URL_PERU.toHttpUrlOrNull()!!
-
-    @Provides
-    @Singleton
-    @Named("BaseUrlNews")
-    fun provideBaseUrlNews(): HttpUrl = BuildConfig.BASE_URL_NEWS.toHttpUrlOrNull()!!
-
-    @Provides
-    @Singleton
-    @Named("BaseUrlGoogleNews")
-    fun provideBaseUrlGoogleNews(): HttpUrl = BuildConfig.BASE_URL_GOOGLE_NEWS.toHttpUrlOrNull()!!
-
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(
-        @Named("BaseUrlPeru") baseUrlPeru: HttpUrl,
-        @Named("BaseUrlNews") baseUrlNews: HttpUrl,
-        @Named("BaseUrlGoogleNews") baseUrlGoogleNews: HttpUrl
-    ): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(BaseUrlInterceptor(baseUrlPeru, baseUrlNews, baseUrlGoogleNews))
+            .addInterceptor(BaseUrlInterceptor())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        @Named("BaseUrl") baseUrl: HttpUrl,
+        converterFactory: Converter.Factory
+    ): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
+            .addConverterFactory(converterFactory)
             .build()
     }
 
     @Provides
     @Singleton
     @Named("RetrofitPeru")
-    fun provideRetrofitPeru(
-        okHttpClient: OkHttpClient,
-        @Named("BaseUrlPeru") baseUrlPeru: HttpUrl
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(baseUrlPeru)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun provideRetrofitPeru(okHttpClient: OkHttpClient): Retrofit {
+        return provideRetrofit(
+            okHttpClient,
+            BuildConfig.BASE_URL_PERU.toHttpUrlOrNull()!!,
+            GsonConverterFactory.create()
+        )
     }
 
     @Provides
     @Singleton
     @Named("RetrofitNews")
-    fun provideRetrofitNews(
-        okHttpClient: OkHttpClient,
-        @Named("BaseUrlNews") baseUrlNews: HttpUrl
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(baseUrlNews)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun provideRetrofitNews(okHttpClient: OkHttpClient): Retrofit {
+        return provideRetrofit(
+            okHttpClient,
+            BuildConfig.BASE_URL_NEWS.toHttpUrlOrNull()!!,
+            GsonConverterFactory.create()
+        )
     }
 
     @Provides
     @Singleton
     @Named("RetrofitGoogleNewsXML")
-    fun provideRetrofitGoogleNewsXML(
-        okHttpClient: OkHttpClient,
-        @Named("BaseUrlGoogleNews") baseUrlGoogleNews: HttpUrl
-    ): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(baseUrlGoogleNews)
-            .addConverterFactory(SimpleXmlConverterFactory.create())
-            .build()
+    fun provideRetrofitGoogleNewsXML(okHttpClient: OkHttpClient): Retrofit {
+        return provideRetrofit(
+            okHttpClient,
+            BuildConfig.BASE_URL_GOOGLE_NEWS.toHttpUrlOrNull()!!,
+            SimpleXmlConverterFactory.create()
+        )
     }
 
     @Provides
@@ -102,4 +89,3 @@ object NetworkModule {
         return retrofit.create(ApiServiceGoogleNews::class.java)
     }
 }
-

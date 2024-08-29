@@ -34,6 +34,11 @@ android {
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
             buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
+            buildConfigField(
+                "String",
+                "BASE_URL_GDELT_PROJECT",
+                "\"https://api.gdeltproject.org/api/v2/\""
+            )
         }
 
         create("prod") {
@@ -41,6 +46,11 @@ android {
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
             buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
             buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
+            buildConfigField(
+                "String",
+                "BASE_URL_GDELT_PROJECT",
+                "\"https://api.gdeltproject.org/api/v2/\""
+            )
         }
     }
 

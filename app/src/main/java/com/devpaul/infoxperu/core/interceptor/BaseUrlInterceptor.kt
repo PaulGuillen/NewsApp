@@ -1,44 +1,37 @@
 package com.devpaul.infoxperu.core.interceptor
 
-import okhttp3.HttpUrl
+import com.devpaul.infoxperu.BuildConfig
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
-import javax.inject.Named
 
-class BaseUrlInterceptor @Inject constructor(
-    @Named("BaseUrlPeru") private val baseUrlPeru: HttpUrl,
-    @Named("BaseUrlNews") private val baseUrlNews: HttpUrl,
-    @Named("BaseUrlGoogleNews") private val baseUrlGoogleNews: HttpUrl
-) : Interceptor {
+class BaseUrlInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var request = chain.request()
+        val request = chain.request()
         val originalUrl = request.url
 
-        val newUrl = if (originalUrl.encodedPath.contains("v2")) {
-            baseUrlNews.newBuilder()
-                .encodedPath(originalUrl.encodedPath)
-                .query(originalUrl.query)
-                .build()
-        } else if (originalUrl.encodedPath.contains("rss")) {
-            baseUrlGoogleNews.newBuilder()
-                .encodedPath(originalUrl.encodedPath)
-                .query(originalUrl.query)
-                .build()
+        val newBaseUrl = when {
+            originalUrl.encodedPath.contains("v2") -> BuildConfig.BASE_URL_NEWS
+            originalUrl.encodedPath.contains("rss/search") -> BuildConfig.BASE_URL_GOOGLE_NEWS
+            originalUrl.encodedPath.contains("doc/doc") -> BuildConfig.BASE_URL_GDELT_PROJECT
+            else -> BuildConfig.BASE_URL_PERU
+        }.toHttpUrlOrNull()
 
-        } else {
-            baseUrlPeru.newBuilder()
-                .encodedPath(originalUrl.encodedPath)
-                .query(originalUrl.query)
-                .build()
+        val newUrl = newBaseUrl?.newBuilder()
+            ?.encodedPath(originalUrl.encodedPath)
+            ?.query(originalUrl.query)
+            ?.build() ?: originalUrl
+
+        val newRequestBuilder = request.newBuilder().url(newUrl)
+
+        if (newBaseUrl.toString().contains(BuildConfig.BASE_URL_PERU)) {
+            newRequestBuilder.header("User-Agent", "devpaul")
         }
 
-        request = request.newBuilder()
-            .url(newUrl)
-            .header("Accept-Encoding", "identity")
-            .header("User-Agent", "devpaul")
-            .build()
+        if (originalUrl.encodedPath.contains("rss/search")) {
+            newRequestBuilder.header("Accept-Encoding", "identity")
+        }
 
-        return chain.proceed(request)
+        return chain.proceed(newRequestBuilder.build())
     }
 }
