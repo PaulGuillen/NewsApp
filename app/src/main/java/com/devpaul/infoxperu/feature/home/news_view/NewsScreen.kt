@@ -37,12 +37,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.models.res.Article
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
 import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
+import com.devpaul.infoxperu.domain.ui.news_screen.GDELTCards
 import com.devpaul.infoxperu.domain.ui.news_screen.GoogleNewsCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
@@ -54,6 +57,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
     val context = LocalContext.current
     val countryState by viewModel.countryState.collectAsState()
     val googleNews by viewModel.googleNewsState.collectAsState()
+    val projectGDELTNews by viewModel.projectGDELTState.collectAsState()
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
     Scaffold(
@@ -73,10 +77,16 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             countryState = countryState,
             innerPadding = innerPadding,
             googleNewsState = googleNews,
+            projectGDELTNews = projectGDELTNews,
             selectedCountry = selectedCountry,
             onCountrySelected = { country ->
                 selectedCountry = country
                 viewModel.getGoogleNews(query = country.category, language = "es")
+                viewModel.getProjectGDELTNews(
+                    query = country.category,
+                    mode = "ArtList",
+                    format = "json"
+                )
             }
         )
     }
@@ -89,6 +99,7 @@ fun NewsContent(
     countryState: ResultState<List<Country>>,
     innerPadding: PaddingValues = PaddingValues(),
     googleNewsState: ResultState<GoogleNewsJSON>,
+    projectGDELTNews: ResultState<GDELProject>,
     selectedCountry: Country?,
     onCountrySelected: (Country) -> Unit
 ) {
@@ -98,6 +109,7 @@ fun NewsContent(
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
+        Spacer(modifier = Modifier.padding(top = 16.dp))
         CountryCards(
             countryState = countryState,
             context = context,
@@ -133,15 +145,19 @@ fun NewsContent(
                 context = context
             )
 
+            Spacer(modifier = Modifier.padding(top = 16.dp))
             Box(
                 modifier = Modifier
                     .width(160.dp)
-                    .padding(top = 16.dp, bottom = 16.dp)
                     .align(Alignment.CenterHorizontally)
                     .height(0.6.dp)
                     .background(SlateGray)
             )
+            Spacer(modifier = Modifier.padding(top = 16.dp))
 
+            GDELTCards(projectGDELTState = projectGDELTNews, context = context)
+
+            Spacer(modifier = Modifier.padding(top = 16.dp))
         }
     }
 }
@@ -194,6 +210,22 @@ fun NewsScreenPreviewWithOutCountrySelected() {
                     lastBuildDate = "2021-09-01",
                     description = "Descripción",
                     newsItems = emptyList()
+                )
+            ),
+            projectGDELTNews = ResultState.Success(
+                GDELProject(
+                    listOf(
+                        Article(
+                            "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
+                            "",
+                            "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
+                            "20240707T020000Z",
+                            "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
+                            "deperu.com",
+                            "Galician",
+                            "United States",
+                        )
+                    )
                 )
             ),
             selectedCountry = selectedCountry,
@@ -287,6 +319,22 @@ fun NewsScreenPreviewWithCountrySelected() {
                                 url = "https://www.google.com",
                                 name = "Infobae Perú"
                             )
+                        )
+                    )
+                )
+            ),
+            projectGDELTNews = ResultState.Success(
+                GDELProject(
+                    listOf(
+                        Article(
+                            "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
+                            "",
+                            "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
+                            "20240707T020000Z",
+                            "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
+                            "deperu.com",
+                            "Galician",
+                            "United States",
                         )
                     )
                 )

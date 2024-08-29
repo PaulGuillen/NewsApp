@@ -37,7 +37,7 @@ import com.devpaul.infoxperu.ui.theme.White
 fun GoogleNewsCard(googleNewsState: NewsItemJSON, context: Context) {
     Card(
         modifier = Modifier
-            .width(260.dp)
+            .width(300.dp)
             .height(180.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp),

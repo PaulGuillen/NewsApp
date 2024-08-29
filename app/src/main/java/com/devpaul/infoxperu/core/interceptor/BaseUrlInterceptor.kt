@@ -11,9 +11,9 @@ class BaseUrlInterceptor : Interceptor {
         val originalUrl = request.url
 
         val newBaseUrl = when {
-            originalUrl.encodedPath.contains("v2") -> BuildConfig.BASE_URL_NEWS
+            originalUrl.encodedPath.contains("top-headline") -> BuildConfig.BASE_URL_NEWS
             originalUrl.encodedPath.contains("rss/search") -> BuildConfig.BASE_URL_GOOGLE_NEWS
-            originalUrl.encodedPath.contains("doc/doc") -> BuildConfig.BASE_URL_GDELT_PROJECT
+            originalUrl.encodedPath.contains("v2/doc/doc") -> BuildConfig.BASE_URL_GDELT_PROJECT
             else -> BuildConfig.BASE_URL_PERU
         }.toHttpUrlOrNull()
 

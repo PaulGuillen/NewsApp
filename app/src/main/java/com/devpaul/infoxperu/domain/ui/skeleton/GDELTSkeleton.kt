@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GoogleNewsSkeleton() {
+fun SkeletonGDELT() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -76,8 +76,8 @@ fun GoogleNewsSkeleton() {
             repeat(4) {
                 Card(
                     modifier = Modifier
-                        .width(280.dp)
-                        .height(180.dp)
+                        .width(300.dp)
+                        .height(240.dp)
                         .padding(end = 18.dp),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -94,7 +94,7 @@ fun GoogleNewsSkeleton() {
         Box(
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(top = 10.dp)
+                .padding(top = 18.dp)
                 .width(90.dp)
                 .height(20.dp)
                 .background(color, RoundedCornerShape(4.dp))
@@ -104,6 +104,6 @@ fun GoogleNewsSkeleton() {
 
 @Preview(showBackground = true)
 @Composable
-fun GoogleNewsSkeletonPreview() {
-    GoogleNewsSkeleton()
+fun SkeletonGDELTPreview() {
+    SkeletonGDELT()
 }

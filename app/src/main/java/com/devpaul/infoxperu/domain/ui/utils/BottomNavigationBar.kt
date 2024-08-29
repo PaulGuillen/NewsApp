@@ -26,7 +26,12 @@ fun BottomNavigationBar(navController: NavHostController) {
         containerColor = Color.White,
     ) {
         NavigationBarItem(
-            icon = { Icon(imageVector = Icons.Default.Home, contentDescription = stringResource(id = R.string.bottom_nav_home)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = stringResource(id = R.string.bottom_nav_home)
+                )
+            },
             label = { Text(stringResource(id = R.string.bottom_nav_home)) },
             selected = navController.currentBackStackEntry?.destination?.route == Screen.Home.route,
             onClick = {
@@ -43,7 +48,12 @@ fun BottomNavigationBar(navController: NavHostController) {
             )
         )
         NavigationBarItem(
-            icon = { Icon(imageVector = Icons.Default.Info, contentDescription = stringResource(id = R.string.bottom_nav_news)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = stringResource(id = R.string.bottom_nav_news)
+                )
+            },
             label = { Text(stringResource(id = R.string.bottom_nav_news)) },
             selected = navController.currentBackStackEntry?.destination?.route == "news",
             onClick = {
@@ -60,7 +70,12 @@ fun BottomNavigationBar(navController: NavHostController) {
             )
         )
         NavigationBarItem(
-            icon = { Icon(imageVector = Icons.Default.Info, contentDescription = stringResource(id = R.string.bottom_nav_services)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = stringResource(id = R.string.bottom_nav_services)
+                )
+            },
             label = { Text(stringResource(id = R.string.bottom_nav_services)) },
             selected = navController.currentBackStackEntry?.destination?.route == "services",
             onClick = {
@@ -77,7 +92,12 @@ fun BottomNavigationBar(navController: NavHostController) {
             )
         )
         NavigationBarItem(
-            icon = { Icon(imageVector = Icons.Default.Info, contentDescription = stringResource(id = R.string.bottom_nav_districts)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = stringResource(id = R.string.bottom_nav_districts)
+                )
+            },
             label = { Text(stringResource(id = R.string.bottom_nav_districts)) },
             selected = navController.currentBackStackEntry?.destination?.route == "districts",
             onClick = {

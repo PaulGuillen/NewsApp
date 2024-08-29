@@ -5,8 +5,10 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
 import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
+import com.devpaul.infoxperu.feature.home.home_view.uc.GDELTUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.GoogleNewsUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val googleNewsUseCase: GoogleNewsUseCase,
+    private val projectGDELTUseCase: GDELTUseCase,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
 ) : BaseViewModel<NewsUiEvent>(dataStoreUseCase) {
@@ -29,6 +32,10 @@ class NewsViewModel @Inject constructor(
     private val _googleNewsState =
         MutableStateFlow<ResultState<GoogleNewsJSON>>(ResultState.Loading)
     val googleNewsState: StateFlow<ResultState<GoogleNewsJSON>> = _googleNewsState
+
+    private val _projectGDELTState =
+        MutableStateFlow<ResultState<GDELProject>>(ResultState.Loading)
+    val projectGDELTState: StateFlow<ResultState<GDELProject>> = _projectGDELTState
 
     init {
         fetchCountry()
@@ -62,6 +69,21 @@ class NewsViewModel @Inject constructor(
                 _googleNewsState.value = ResultState.Error(e)
             } catch (e: Exception) {
                 _googleNewsState.value = ResultState.Error(e)
+            }
+        }
+    }
+
+    fun getProjectGDELTNews(query: String, mode: String, format: String) {
+        _projectGDELTState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            try {
+                val result = projectGDELTUseCase(query, mode, format)
+                _projectGDELTState.value = result
+            } catch (e: ApiException) {
+                _projectGDELTState.value = ResultState.Error(e)
+            } catch (e: Exception) {
+                _projectGDELTState.value = ResultState.Error(e)
             }
         }
     }

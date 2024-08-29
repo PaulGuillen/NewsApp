@@ -5,6 +5,7 @@ import com.devpaul.infoxperu.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 fun isValidEmail(email: String): Boolean {
     return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -62,5 +63,18 @@ fun formatPubDate(dateStr: String?): String {
         formatter.format(parsedDate ?: Date())
     } catch (e: Exception) {
         dateStr ?: ""
+    }
+}
+
+fun formatIsoDate(isoDate: String): String {
+    val inputFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US)
+    inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+    val date: Date? = inputFormat.parse(isoDate)
+    val outputFormat = SimpleDateFormat("dd 'de' MMMM, hh:mm a", Locale("es", "ES"))
+    outputFormat.timeZone = TimeZone.getDefault()
+    return if (date != null) {
+        outputFormat.format(date)
+    } else {
+        "Formato no soportado"
     }
 }

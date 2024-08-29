@@ -12,16 +12,16 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("noticias.json")
+    @GET("rest/noticias.json")
     suspend fun newsFromPeru(): Response<MutableList<NewsPeruResponse>>
 
-    @GET("cotizaciondolar.json")
+    @GET("rest/cotizaciondolar.json")
     suspend fun dollarQuote(): Response<DollarQuoteResponse>
 
-    @GET("uitperu.json")
+    @GET("rest/uitperu.json")
     suspend fun dataUIT(): Response<UITResponse>
 
-    @GET("doc/doc")
+    @GET("v2/doc/doc")
     fun deltaProject(
         @Query("query") query: String,
         @Query("mode") mode: String,
