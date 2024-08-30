@@ -50,6 +50,9 @@ fun CountryCardsContent(
     context: Context,
     onCountrySelected: (Country) -> Unit
 ) {
+
+    var selectedCountry by remember { mutableStateOf<Country?>(null) }
+
     when (countryState) {
         is ResultState.Loading -> {
             SectionsRowSkeleton()
@@ -65,8 +68,12 @@ fun CountryCardsContent(
                     countryState.data.forEach { countryItem ->
                         CountryCard(
                             country = countryItem,
+                            isSelected = selectedCountry == countryItem,
                             context = context,
-                            onClick = { onCountrySelected(countryItem) }
+                            onClick = {
+                                selectedCountry = countryItem
+                                onCountrySelected(countryItem)
+                            }
                         )
                     }
                 }

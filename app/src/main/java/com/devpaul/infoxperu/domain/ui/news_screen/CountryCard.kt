@@ -26,10 +26,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.ui.theme.Black
+import com.devpaul.infoxperu.ui.theme.GreenLight
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
+fun CountryCard(
+    country: Country,
+    isSelected: Boolean,
+    context: Context,
+    onClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .width(120.dp)
@@ -39,7 +45,7 @@ fun CountryCard(country: Country, context: Context, onClick: () -> Unit = {}) {
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         border = BorderStroke(0.8.dp, Color.Black),
         colors = CardDefaults.cardColors(
-            containerColor = White,
+            containerColor = if (isSelected) GreenLight else White,
             contentColor = Black
         ),
         onClick = {
@@ -77,6 +83,7 @@ fun SectionItemPreview() {
             "Peru",
             "https://www.infoxperu.com/noticias"
         ),
+        isSelected = false,
         context = LocalContext.current
     )
 }

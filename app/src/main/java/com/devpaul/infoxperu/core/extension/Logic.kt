@@ -78,3 +78,11 @@ fun formatIsoDate(isoDate: String): String {
         "Formato no soportado"
     }
 }
+
+fun limitText(text: String, maxCharacters: Int): String {
+    return if (text.length > maxCharacters) {
+        text.take(maxCharacters) + "…"
+    } else {
+        text
+    }
+}

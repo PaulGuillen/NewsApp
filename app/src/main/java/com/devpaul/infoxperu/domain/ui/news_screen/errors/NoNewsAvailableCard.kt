@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,31 +24,38 @@ import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
 fun NoNewsAvailableCard() {
-    Card(
-        modifier = Modifier
-            .width(260.dp)
-            .height(180.dp)
-            .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(0.8.dp, Color.Black),
-        colors = CardDefaults.cardColors(
-            containerColor = White,
-            contentColor = Black
-        ),
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(),
+        Card(
+            modifier = Modifier
+                .width(260.dp)
+                .height(180.dp)
+                .padding(8.dp),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            border = BorderStroke(0.8.dp, Color.Black),
+            colors = CardDefaults.cardColors(
+                containerColor = White,
+                contentColor = Black
+            ),
         ) {
-            Text(
-                text = "No hay noticias disponibles.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Black,
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Text(
+                    text = "No hay noticias disponibles.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Black,
+                )
+            }
         }
     }
+
 }
 
 @Preview(showBackground = true)

@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SkeletonGDELT() {
+fun RedditSkeleton() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -77,7 +77,7 @@ fun SkeletonGDELT() {
                 Card(
                     modifier = Modifier
                         .width(300.dp)
-                        .height(240.dp)
+                        .height(180.dp)
                         .padding(end = 18.dp),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -104,6 +104,6 @@ fun SkeletonGDELT() {
 
 @Preview(showBackground = true)
 @Composable
-fun SkeletonGDELTPreview() {
+fun SkeletonRedditPreview() {
     RedditSkeleton()
 }

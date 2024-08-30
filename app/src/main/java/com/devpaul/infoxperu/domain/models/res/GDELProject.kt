@@ -32,3 +32,4 @@ data class Article(
     @SerializedName("sourcecountry")
     val sourceCountry: String
 )
+

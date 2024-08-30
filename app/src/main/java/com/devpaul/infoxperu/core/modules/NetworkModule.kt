@@ -46,6 +46,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("RetrofitReddit")
+    fun provideReddit(okHttpClient: OkHttpClient): Retrofit {
+        return provideRetrofit(
+            okHttpClient,
+            BuildConfig.BASE_URL_REDDIT.toHttpUrlOrNull()!!,
+            GsonConverterFactory.create()
+        )
+    }
+
+    @Provides
+    @Singleton
     @Named("RetrofitPeru")
     fun provideRetrofitPeru(okHttpClient: OkHttpClient): Retrofit {
         return provideRetrofit(

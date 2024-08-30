@@ -32,25 +32,29 @@ android {
             versionNameSuffix = "-dev"
 
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
-            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/\"")
             buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
             buildConfigField(
                 "String",
                 "BASE_URL_GDELT_PROJECT",
-                "\"https://api.gdeltproject.org/api/v2/\""
+                "\"https://api.gdeltproject.org/\""
             )
+            buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
+
         }
 
         create("prod") {
             dimension = "environment"
             buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
-            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/\"")
+            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/\"")
             buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
             buildConfigField(
                 "String",
                 "BASE_URL_GDELT_PROJECT",
-                "\"https://api.gdeltproject.org/api/\""
+                "\"https://api.gdeltproject.org/\""
             )
+            buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
+
         }
     }
 
@@ -107,10 +111,17 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.coroutines.test) // Coroutines test library
+    testImplementation(libs.mockito.core) // Mockito core library
+    testImplementation(libs.kotlin.test) // Kotlin test library
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -139,6 +150,8 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
 
     //Coil
     implementation(libs.coil.compose)

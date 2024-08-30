@@ -5,9 +5,11 @@ import com.devpaul.infoxperu.core.urls.ApiServiceGoogleNews
 import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsXML
+import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import timber.log.Timber
 import javax.inject.Inject
 
-class NewsRepository @Inject constructor(
+open class NewsRepository @Inject constructor(
     private val apiService: ApiService,
     private val apiServiceGoogleNews: ApiServiceGoogleNews
 ) {
@@ -29,6 +31,25 @@ class NewsRepository @Inject constructor(
             val errorMessage = response.errorBody()?.string() ?: "Unknown error"
             throw ApiException(response.code(), errorMessage)
         }
+    }
+
+    fun redditNews(country: String): RedditResponse {
+        try {
+            val response = apiService.redditNews(country).execute()
+            if (response.isSuccessful) {
+                return response.body()
+                    ?: throw Exception("Error fetching data: response body is null")
+            } else {
+                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                Timber.e("Error fetching data: $errorMessage")
+                throw ApiException(response.code(), errorMessage)
+
+            }
+        } catch (e: Exception) {
+            Timber.e("Error fetching data: ${e.message}")
+            throw e
+        }
+
     }
 
 }

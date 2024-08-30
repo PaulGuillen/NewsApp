@@ -26,38 +26,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Article
-import com.devpaul.infoxperu.domain.models.res.GDELProject
+import com.devpaul.infoxperu.domain.models.res.ListingData
+import com.devpaul.infoxperu.domain.models.res.PostData
+import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
+import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.RedditSkeleton
 
 @Composable
-fun GDELTCards(projectGDELTState: ResultState<GDELProject>, context: Context) {
+fun RedditCards(redditState: ResultState<RedditResponse>, context: Context) {
     var showSkeleton by remember { mutableStateOf(true) }
 
-    LaunchedEffect(projectGDELTState) {
-        showSkeleton = projectGDELTState is ResultState.Loading
+    LaunchedEffect(redditState) {
+        showSkeleton = redditState is ResultState.Loading
     }
 
     if (showSkeleton) {
         RedditSkeleton()
     } else {
-        GDELTCardsContent(projectGDELTState = projectGDELTState, context = context)
+        RedditContent(redditState = redditState, context = context)
     }
-
 }
 
 @Composable
-fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Context) {
+fun RedditContent(redditState: ResultState<RedditResponse>?, context: Context) {
 
-    when (projectGDELTState) {
+    when (redditState) {
         is ResultState.Loading -> {
             RedditSkeleton()
         }
 
         is ResultState.Success -> {
-            if (projectGDELTState.data.articles.isNotEmpty()) {
+            if (redditState.data.data.children.isNotEmpty()) {
                 Column(
                     modifier = Modifier.padding(8.dp)
                 ) {
@@ -69,7 +70,7 @@ fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Con
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "GDELT Noticias",
+                            text = "Reddit Posts",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
@@ -89,13 +90,13 @@ fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Con
                     LazyRow(
                         modifier = Modifier
                     ) {
-                        items(projectGDELTState.data.articles) { articleItem ->
-                            GDELTCard(article = articleItem, context = context)
+                        items(redditState.data.data.children) { redditItems ->
+                            RedditCard(redditChildren = redditItems, context = context)
                         }
                     }
 
                     Text(
-                        text = "Cantidad: ${projectGDELTState.data.articles.size}",
+                        text = "Cantidad: ${redditState.data.data.children.size}",
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
@@ -111,58 +112,30 @@ fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Con
         else -> {
             ErrorCard()
         }
-
     }
 }
 
-@Preview(showBackground = true, name = "GDELTCards Content - Success")
+@Preview(showBackground = true, name = "Loading State")
 @Composable
-fun PreviewGDELTCardsSuccess() {
-    val sampleData = GDELProject(
-        listOf(
-            Article(
-                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                "",
-                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                "20240707T020000Z",
-                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                "deperu.com",
-                "Galician",
-                "United States",
-            ),
-            Article(
-                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                "",
-                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                "20240707T020000Z",
-                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                "deperu.com",
-                "Galician",
-                "United",
-            ),
-        )
-    )
-    GDELTCardsContent(
-        projectGDELTState = ResultState.Success(sampleData),
+fun PreviewRedditLoading() {
+    RedditCards(redditState = ResultState.Loading, context = LocalContext.current)
+}
+
+@Preview(showBackground = true, name = "Success State")
+@Composable
+fun PreviewRedditSuccess() {
+    val samplePostData = PostData(subreddit = "news", title = "Sample News Title")
+    val postDataWrapper = PostDataWrapper(kind = "Listing", data = samplePostData)
+    val listingData = ListingData(children = listOf(postDataWrapper))
+    val redditResponse = RedditResponse(kind = "Listing", data = listingData)
+    RedditCards(redditState = ResultState.Success(redditResponse), context = LocalContext.current)
+}
+
+@Preview(showBackground = true, name = "Error State")
+@Composable
+fun PreviewRedditError() {
+    RedditCards(
+        redditState = ResultState.Error(Exception("Network Error")),
         context = LocalContext.current
     )
 }
-
-@Preview(showBackground = true, name = "GDELTCards Content - Error")
-@Composable
-fun PreviewGDELTCardsError() {
-    GDELTCardsContent(
-        projectGDELTState = ResultState.Error(Exception("Error de prueba")),
-        context = LocalContext.current
-    )
-}
-
-@Preview(showBackground = true, name = "GDELTCards Content - Loading")
-@Composable
-fun PreviewGDELTCardsLoading() {
-    GDELTCardsContent(
-        projectGDELTState = ResultState.Loading,
-        context = LocalContext.current
-    )
-}
-
