@@ -38,19 +38,23 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Article
+import com.devpaul.infoxperu.domain.models.res.ArticleNewsResponse
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.ListingData
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
+import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.models.res.PostData
 import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import com.devpaul.infoxperu.domain.models.res.SourceResponse
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
 import com.devpaul.infoxperu.domain.ui.news_screen.GDELTCards
 import com.devpaul.infoxperu.domain.ui.news_screen.GoogleNewsCards
+import com.devpaul.infoxperu.domain.ui.news_screen.NewsAPICards
 import com.devpaul.infoxperu.domain.ui.news_screen.RedditCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
@@ -63,6 +67,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
     val countryState by viewModel.countryState.collectAsState()
     val googleNews by viewModel.googleNewsState.collectAsState()
     val projectGDELTNews by viewModel.projectGDELTState.collectAsState()
+    val newsAPIState by viewModel.newsAPIState.collectAsState()
     val redditState by viewModel.redditState.collectAsState()
 
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
@@ -86,6 +91,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             googleNewsState = googleNews,
             projectGDELTNews = projectGDELTNews,
             redditState = redditState,
+            newsAPIState = newsAPIState,
             selectedCountry = selectedCountry,
             onCountrySelected = { country ->
                 selectedCountry = country
@@ -96,6 +102,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
                     format = "json"
                 )
                 viewModel.getRedditNews(country = country.category)
+                viewModel.getNewsAPI(initLetters = country.initLetters)
             }
         )
     }
@@ -110,6 +117,7 @@ fun NewsContent(
     googleNewsState: ResultState<GoogleNewsJSON>,
     projectGDELTNews: ResultState<GDELProject>,
     redditState: ResultState<RedditResponse>,
+    newsAPIState: ResultState<NewsResponse>,
     selectedCountry: Country?,
     onCountrySelected: (Country) -> Unit
 ) {
@@ -166,6 +174,18 @@ fun NewsContent(
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
+            NewsAPICards("", newsAPIState = newsAPIState, context = context)
+
+            Spacer(modifier = Modifier.padding(top = 16.dp))
+
+            Box(
+                modifier = Modifier
+                    .width(160.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .height(0.6.dp)
+                    .background(SlateGray)
+            )
+            
             GDELTCards(projectGDELTState = projectGDELTNews, context = context)
 
             Spacer(modifier = Modifier.padding(top = 16.dp))
@@ -299,6 +319,27 @@ fun NewsScreenPreviewWithOutCountrySelected() {
                             )
                         ),
                         before = "123"
+                    )
+                )
+            ),
+            newsAPIState = ResultState.Success(
+                NewsResponse(
+                    status = "ok",
+                    totalResults = 1,
+                    articles = listOf(
+                        ArticleNewsResponse(
+                            source = SourceResponse(
+                                id = null,
+                                name = "Infobae Perú"
+                            ),
+                            author = "Infobae Perú",
+                            title = "Peru",
+                            articleDescription = "Peru",
+                            url = "https://www.google.com",
+                            imageUrl = "https://www.google.com",
+                            publishDate = "2021-09-01",
+                            content = "Peru"
+                        )
                     )
                 )
             ),
@@ -459,6 +500,27 @@ fun NewsScreenPreviewWithCountrySelected() {
                             )
                         ),
                         before = "123"
+                    )
+                )
+            ),
+            newsAPIState = ResultState.Success(
+                NewsResponse(
+                    status = "ok",
+                    totalResults = 1,
+                    articles = listOf(
+                        ArticleNewsResponse(
+                            source = SourceResponse(
+                                id = null,
+                                name = "Infobae Perú"
+                            ),
+                            author = "Infobae Perú",
+                            title = "Peru",
+                            articleDescription = "Peru",
+                            url = "https://www.google.com",
+                            imageUrl = "https://www.google.com",
+                            publishDate = "2021-09-01",
+                            content = "Peru"
+                        )
                     )
                 )
             ),

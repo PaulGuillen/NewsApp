@@ -35,19 +35,9 @@ interface ApiService {
         @Path("country") country: String
     ): Call<RedditResponse>
 
-    @GET("v2/top-headlines?country=ar&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
-    suspend fun getDataArgentina(): Response<NewsResponse>
-
-    @GET("v2/top-headlines?country=co&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
-    suspend fun getDataColombia(): Response<NewsResponse>
-
-    @GET("v2/top-headlines?country=cu&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
-    suspend fun getDataCuba(): Response<NewsResponse>
-
-    @GET("v2/top-headlines?country=mx&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
-    suspend fun getDataMexico(): Response<NewsResponse>
-
-    @GET("v2/top-headlines?country=ve&apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
-    suspend fun getDataVenezuela(): Response<NewsResponse>
+    @GET("v2/top-headlines?apiKey=f206dd4aec1b46f38defa2ae5b0740e1")
+    fun newsAPI(
+        @Query("country") initLetters: String
+    ): Call<NewsResponse>
 
 }

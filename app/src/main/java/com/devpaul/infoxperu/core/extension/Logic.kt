@@ -3,6 +3,8 @@ package com.devpaul.infoxperu.core.extension
 import android.content.Context
 import com.devpaul.infoxperu.R
 import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -84,5 +86,15 @@ fun limitText(text: String, maxCharacters: Int): String {
         text.take(maxCharacters) + "…"
     } else {
         text
+    }
+}
+
+fun formatPublishedAt(publishedAt: String): String {
+    return try {
+        val zonedDateTime = ZonedDateTime.parse(publishedAt)
+        val formatter = DateTimeFormatter.ofPattern("d 'de' MMMM, h:mm a", Locale("es", "ES"))
+        zonedDateTime.format(formatter)
+    } catch (e: Exception) {
+        ""
     }
 }

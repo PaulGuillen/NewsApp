@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.ui.skeleton.CountryCardSkeleton
-import com.devpaul.infoxperu.domain.ui.skeleton.SectionsRowSkeleton
 
 @Composable
 fun CountryCards(
@@ -55,7 +54,7 @@ fun CountryCardsContent(
 
     when (countryState) {
         is ResultState.Loading -> {
-            SectionsRowSkeleton()
+            CountryCardSkeleton()
         }
 
         is ResultState.Success -> {

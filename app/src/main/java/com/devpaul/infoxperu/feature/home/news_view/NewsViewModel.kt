@@ -7,10 +7,12 @@ import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
+import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.GDELTUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.GoogleNewsUseCase
+import com.devpaul.infoxperu.feature.home.home_view.uc.NewsAPIUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.RedditUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +27,7 @@ class NewsViewModel @Inject constructor(
     private val googleNewsUseCase: GoogleNewsUseCase,
     private val projectGDELTUseCase: GDELTUseCase,
     private val redditUseCase: RedditUseCase,
+    private val newsAPIUseCase: NewsAPIUseCase,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
 ) : BaseViewModel<NewsUiEvent>(dataStoreUseCase) {
@@ -43,6 +46,10 @@ class NewsViewModel @Inject constructor(
     private val _redditState =
         MutableStateFlow<ResultState<RedditResponse>>(ResultState.Loading)
     val redditState: StateFlow<ResultState<RedditResponse>> = _redditState
+
+    private val _newsAPIState =
+        MutableStateFlow<ResultState<NewsResponse>>(ResultState.Loading)
+    val newsAPIState: StateFlow<ResultState<NewsResponse>> = _newsAPIState
 
     init {
         fetchCountry()
@@ -106,6 +113,21 @@ class NewsViewModel @Inject constructor(
                 _redditState.value = ResultState.Error(e)
             } catch (e: Exception) {
                 _redditState.value = ResultState.Error(e)
+            }
+        }
+    }
+
+    fun getNewsAPI(initLetters: String) {
+        _newsAPIState.value = ResultState.Loading
+
+        viewModelScope.launch {
+            try {
+                val result = newsAPIUseCase(initLetters)
+                _newsAPIState.value = result
+            } catch (e: ApiException) {
+                _newsAPIState.value = ResultState.Error(e)
+            } catch (e: Exception) {
+                _newsAPIState.value = ResultState.Error(e)
             }
         }
     }

@@ -54,7 +54,6 @@ android {
                 "\"https://api.gdeltproject.org/\""
             )
             buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
-
         }
     }
 
