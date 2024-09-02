@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,15 +26,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Article
+import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.RedditSkeleton
+import com.devpaul.infoxperu.feature.user_start.Screen
+import com.google.gson.Gson
 
 @Composable
-fun GDELTCards(projectGDELTState: ResultState<GDELProject>, context: Context) {
+fun GDELTCards(
+    navController: NavController,
+    selectedCountry: Country,
+    projectGDELTState: ResultState<GDELProject>,
+    context: Context
+) {
     var showSkeleton by remember { mutableStateOf(true) }
 
     LaunchedEffect(projectGDELTState) {
@@ -43,13 +54,23 @@ fun GDELTCards(projectGDELTState: ResultState<GDELProject>, context: Context) {
     if (showSkeleton) {
         RedditSkeleton()
     } else {
-        GDELTCardsContent(projectGDELTState = projectGDELTState, context = context)
+        GDELTCardsContent(
+            navController = navController,
+            selectedCountry = selectedCountry,
+            projectGDELTState = projectGDELTState,
+            context = context
+        )
     }
 
 }
 
 @Composable
-fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Context) {
+fun GDELTCardsContent(
+    navController: NavController,
+    selectedCountry: Country,
+    projectGDELTState: ResultState<GDELProject>?,
+    context: Context
+) {
 
     when (projectGDELTState) {
         is ResultState.Loading -> {
@@ -75,13 +96,21 @@ fun GDELTCardsContent(projectGDELTState: ResultState<GDELProject>?, context: Con
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+
+                        val gson = Gson()
+                        val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
                             text = "Ver Más",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Blue,
                             modifier = Modifier.clickable {
-                                // Acción al hacer clic en "Ver Más"
+                                navController.navigate(
+                                    Screen.AllNews.createRoute(
+                                        "projectGDELT",
+                                        countryJson
+                                    )
+                                )
                             }
                         )
                     }
@@ -143,6 +172,8 @@ fun PreviewGDELTCardsSuccess() {
         )
     )
     GDELTCardsContent(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         projectGDELTState = ResultState.Success(sampleData),
         context = LocalContext.current
     )
@@ -152,6 +183,8 @@ fun PreviewGDELTCardsSuccess() {
 @Composable
 fun PreviewGDELTCardsError() {
     GDELTCardsContent(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         projectGDELTState = ResultState.Error(Exception("Error de prueba")),
         context = LocalContext.current
     )
@@ -161,6 +194,8 @@ fun PreviewGDELTCardsError() {
 @Composable
 fun PreviewGDELTCardsLoading() {
     GDELTCardsContent(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         projectGDELTState = ResultState.Loading,
         context = LocalContext.current
     )

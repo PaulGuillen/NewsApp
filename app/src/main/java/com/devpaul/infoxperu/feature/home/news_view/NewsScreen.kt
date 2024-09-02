@@ -85,6 +85,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
     ) { innerPadding ->
         NewsContent(
             context = context,
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
             countryState = countryState,
             innerPadding = innerPadding,
@@ -111,6 +112,7 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
 @Composable
 fun NewsContent(
     context: Context,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     countryState: ResultState<List<Country>>,
     innerPadding: PaddingValues = PaddingValues(),
@@ -158,7 +160,8 @@ fun NewsContent(
             Spacer(modifier = Modifier.weight(1f))
         } else {
             GoogleNewsCards(
-                title = selectedCountry.title,
+                navController = navController,
+                selectedCountry = selectedCountry,
                 googleNewsState = googleNewsState,
                 context = context
             )
@@ -174,7 +177,12 @@ fun NewsContent(
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
-            NewsAPICards("", newsAPIState = newsAPIState, context = context)
+            NewsAPICards(
+                navController = navController,
+                selectedCountry = selectedCountry,
+                newsAPIState = newsAPIState,
+                context = context
+            )
 
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
@@ -185,8 +193,13 @@ fun NewsContent(
                     .height(0.6.dp)
                     .background(SlateGray)
             )
-            
-            GDELTCards(projectGDELTState = projectGDELTNews, context = context)
+
+            GDELTCards(
+                navController = navController,
+                selectedCountry = selectedCountry,
+                projectGDELTState = projectGDELTNews,
+                context = context
+            )
 
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
@@ -200,7 +213,12 @@ fun NewsContent(
 
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
-            RedditCards(redditState = redditState, context = context)
+            RedditCards(
+                navController = navController,
+                selectedCountry = selectedCountry,
+                redditState = redditState,
+                context = context
+            )
 
             Spacer(modifier = Modifier.padding(top = 16.dp))
         }
@@ -223,6 +241,7 @@ fun NewsScreenPreviewWithOutCountrySelected() {
     ) { innerPadding ->
         NewsContent(
             context = LocalContext.current,
+            navController = navController,
             modifier = Modifier.fillMaxSize(),
             countryState = ResultState.Success(
                 listOf(
@@ -371,6 +390,7 @@ fun NewsScreenPreviewWithCountrySelected() {
         NewsContent(
             context = LocalContext.current,
             modifier = Modifier.fillMaxSize(),
+            navController = navController,
             countryState = ResultState.Success(
                 listOf(
                     Country(

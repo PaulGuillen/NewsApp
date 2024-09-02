@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,16 +26,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
 import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.GoogleNewsSkeleton
+import com.devpaul.infoxperu.feature.user_start.Screen
+import com.google.gson.Gson
 
 @Composable
-fun GoogleNewsCards(title: String, googleNewsState: ResultState<GoogleNewsJSON>, context: Context) {
+fun GoogleNewsCards(
+    navController: NavController,
+    selectedCountry: Country,
+    googleNewsState: ResultState<GoogleNewsJSON>,
+    context: Context
+) {
     var showSkeleton by remember { mutableStateOf(true) }
 
     LaunchedEffect(googleNewsState) {
@@ -44,13 +56,19 @@ fun GoogleNewsCards(title: String, googleNewsState: ResultState<GoogleNewsJSON>,
     if (showSkeleton) {
         GoogleNewsSkeleton()
     } else {
-        GoogleNewsContent(title = title, googleNewsState = googleNewsState, context = context)
+        GoogleNewsContent(
+            navController = navController,
+            selectedCountry = selectedCountry,
+            googleNewsState = googleNewsState,
+            context = context
+        )
     }
 }
 
 @Composable
 fun GoogleNewsContent(
-    title: String,
+    navController: NavController,
+    selectedCountry: Country,
     googleNewsState: ResultState<GoogleNewsJSON>,
     context: Context
 ) {
@@ -73,19 +91,26 @@ fun GoogleNewsContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = title + " " + googleNewsState.data.description,
+                            text = selectedCountry.title + " " + googleNewsState.data.description,
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+                        val gson = Gson()
+                        val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
                             text = "Ver Más",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Blue,
                             modifier = Modifier.clickable {
-                                // Acción al hacer clic en "Ver Más"
+                                navController.navigate(
+                                    Screen.AllNews.createRoute(
+                                        "googleNews",
+                                        countryJson
+                                    )
+                                )
                             }
                         )
                     }
@@ -150,7 +175,8 @@ fun GoogleNewsSectionPreview() {
     )
 
     GoogleNewsContent(
-        title = "Peru",
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         googleNewsState = googleNewsState,
         context = LocalContext.current
     )
@@ -172,7 +198,8 @@ fun PreviewGoogleNewsError() {
 @Composable
 fun PreviewGoogleNewsLoading() {
     GoogleNewsContent(
-        title = "Cargando Noticias",
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         googleNewsState = ResultState.Loading,
         context = LocalContext.current
     )

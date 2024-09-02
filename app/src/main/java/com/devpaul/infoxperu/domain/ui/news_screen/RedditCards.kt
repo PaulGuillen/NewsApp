@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.ListingData
 import com.devpaul.infoxperu.domain.models.res.PostData
 import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
@@ -33,9 +37,16 @@ import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.RedditSkeleton
+import com.devpaul.infoxperu.feature.user_start.Screen
+import com.google.gson.Gson
 
 @Composable
-fun RedditCards(redditState: ResultState<RedditResponse>, context: Context) {
+fun RedditCards(
+    navController: NavController,
+    selectedCountry: Country,
+    redditState: ResultState<RedditResponse>,
+    context: Context
+) {
     var showSkeleton by remember { mutableStateOf(true) }
 
     LaunchedEffect(redditState) {
@@ -45,12 +56,22 @@ fun RedditCards(redditState: ResultState<RedditResponse>, context: Context) {
     if (showSkeleton) {
         RedditSkeleton()
     } else {
-        RedditContent(redditState = redditState, context = context)
+        RedditContent(
+            navController = navController,
+            selectedCountry = selectedCountry,
+            redditState = redditState,
+            context = context
+        )
     }
 }
 
 @Composable
-fun RedditContent(redditState: ResultState<RedditResponse>?, context: Context) {
+fun RedditContent(
+    navController: NavController,
+    selectedCountry: Country,
+    redditState: ResultState<RedditResponse>?,
+    context: Context
+) {
 
     when (redditState) {
         is ResultState.Loading -> {
@@ -76,13 +97,20 @@ fun RedditContent(redditState: ResultState<RedditResponse>?, context: Context) {
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+                        val gson = Gson()
+                        val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
                             text = "Ver Más",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Blue,
                             modifier = Modifier.clickable {
-                                // Acción al hacer clic en "Ver Más"
+                                navController.navigate(
+                                    Screen.AllNews.createRoute(
+                                        "reddit",
+                                        countryJson
+                                    )
+                                )
                             }
                         )
                     }
@@ -118,7 +146,12 @@ fun RedditContent(redditState: ResultState<RedditResponse>?, context: Context) {
 @Preview(showBackground = true, name = "Loading State")
 @Composable
 fun PreviewRedditLoading() {
-    RedditCards(redditState = ResultState.Loading, context = LocalContext.current)
+    RedditCards(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
+        redditState = ResultState.Loading,
+        context = LocalContext.current
+    )
 }
 
 @Preview(showBackground = true, name = "Success State")
@@ -128,13 +161,20 @@ fun PreviewRedditSuccess() {
     val postDataWrapper = PostDataWrapper(kind = "Listing", data = samplePostData)
     val listingData = ListingData(children = listOf(postDataWrapper))
     val redditResponse = RedditResponse(kind = "Listing", data = listingData)
-    RedditCards(redditState = ResultState.Success(redditResponse), context = LocalContext.current)
+    RedditCards(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
+        redditState = ResultState.Success(redditResponse),
+        context = LocalContext.current
+    )
 }
 
 @Preview(showBackground = true, name = "Error State")
 @Composable
 fun PreviewRedditError() {
     RedditCards(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         redditState = ResultState.Error(Exception("Network Error")),
         context = LocalContext.current
     )

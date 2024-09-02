@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,16 +26,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.ArticleNewsResponse
+import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.SourceResponse
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.NewsAPISkeleton
+import com.devpaul.infoxperu.feature.user_start.Screen
+import com.google.gson.Gson
 
 @Composable
-fun NewsAPICards(title: String, newsAPIState: ResultState<NewsResponse>, context: Context) {
+fun NewsAPICards(
+    navController: NavController,
+    selectedCountry: Country,
+    newsAPIState: ResultState<NewsResponse>,
+    context: Context
+) {
     var showSkeleton by remember { mutableStateOf(true) }
 
     LaunchedEffect(newsAPIState) {
@@ -44,13 +55,19 @@ fun NewsAPICards(title: String, newsAPIState: ResultState<NewsResponse>, context
     if (showSkeleton) {
         NewsAPISkeleton()
     } else {
-        NewsAPICardsContent(title = title, newsAPIState = newsAPIState, context = context)
+        NewsAPICardsContent(
+            navController = navController,
+            selectedCountry = selectedCountry,
+            newsAPIState = newsAPIState,
+            context = context
+        )
     }
 }
 
 @Composable
 fun NewsAPICardsContent(
-    title: String,
+    navController: NavController,
+    selectedCountry: Country,
     newsAPIState: ResultState<NewsResponse>,
     context: Context
 ) {
@@ -79,13 +96,20 @@ fun NewsAPICardsContent(
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+                        val gson = Gson()
+                        val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
                             text = "Ver Más",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Blue,
                             modifier = Modifier.clickable {
-                                // Acción al hacer clic en "Ver Más"
+                                navController.navigate(
+                                    Screen.AllNews.createRoute(
+                                        "newsAPI",
+                                        countryJson
+                                    )
+                                )
                             }
                         )
                     }
@@ -157,7 +181,8 @@ fun NewsAPICardsPreview() {
     )
 
     NewsAPICardsContent(
-        title = "Peru",
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         newsAPIState = newsAPIState,
         context = LocalContext.current
     )
@@ -179,7 +204,8 @@ fun NewsAPICardsNewsError() {
 @Composable
 fun NewsAPICardsLoading() {
     NewsAPICardsContent(
-        title = "Cargando Noticias",
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
         newsAPIState = ResultState.Loading,
         context = LocalContext.current
     )

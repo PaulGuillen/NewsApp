@@ -63,12 +63,15 @@ class NewsViewModel @Inject constructor(
             .addOnSuccessListener { documents ->
                 val countryList = documents.map { document ->
                     document.toObject(Country::class.java)
-                }.sortedBy { it.title != "Perú" }
+                }.sortedWith(compareBy { country ->
+                    when (country.title) {
+                        "Perú" -> 1
+                        "Argentina" -> 2
+                        "México" -> 3
+                        else -> 4
+                    }
+                })
                 _countryState.value = ResultState.Success(countryList)
-            }
-            .addOnFailureListener { exception ->
-                _countryState.value = ResultState.Error(exception)
-                Timber.e(exception)
             }
     }
 
