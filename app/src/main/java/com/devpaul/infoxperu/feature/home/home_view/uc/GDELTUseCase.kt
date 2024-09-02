@@ -15,6 +15,7 @@ class GDELTUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
+        limit: Int,
         query: String,
         mode: String,
         format: String
@@ -26,7 +27,7 @@ class GDELTUseCase @Inject constructor(
                 val sortedArticles = sortArticlesByDate(validArticles)
 
                 if (sortedArticles.isNotEmpty()) {
-                    val limitedNews = limitArticles(sortedArticles, 10)
+                    val limitedNews = limitArticles(sortedArticles, limit)
                     ResultState.Success(limitedNews)
                 } else {
                     ResultState.Error(Exception("No se encontraron artículos válidos."))
@@ -58,6 +59,10 @@ class GDELTUseCase @Inject constructor(
     }
 
     private fun limitArticles(articles: List<Article>, limit: Int): GDELProject {
-        return GDELProject(articles.take(limit))
+        return if (limit == 0) {
+            GDELProject(articles)
+        } else {
+            GDELProject(articles.take(limit))
+        }
     }
 }

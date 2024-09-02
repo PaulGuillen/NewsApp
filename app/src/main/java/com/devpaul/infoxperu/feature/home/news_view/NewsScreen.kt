@@ -96,14 +96,15 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             selectedCountry = selectedCountry,
             onCountrySelected = { country ->
                 selectedCountry = country
-                viewModel.getGoogleNews(query = country.category, language = "es")
+                viewModel.getGoogleNews(query = country.category, language = "es", limit = 20)
                 viewModel.getProjectGDELTNews(
+                    limit = 10,
                     query = country.category,
                     mode = "ArtList",
                     format = "json"
                 )
-                viewModel.getRedditNews(country = country.category)
-                viewModel.getNewsAPI(initLetters = country.initLetters)
+                viewModel.getRedditNews(limit = 20, country = country.category)
+                viewModel.getNewsAPI(limit = 20, initLetters = country.initLetters)
             }
         )
     }

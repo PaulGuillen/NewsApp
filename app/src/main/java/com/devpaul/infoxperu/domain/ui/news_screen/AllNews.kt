@@ -2,7 +2,6 @@ package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,15 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
@@ -72,21 +68,30 @@ fun AllNews(
     LaunchedEffect(newsType) {
         when (newsType) {
             "googleNews" -> {
-                viewModel.getGoogleNews(query = selectedCountry.category, language = "es")
+                viewModel.getGoogleNews(
+                    limit = 0,
+                    query = selectedCountry.category,
+                    language = "es"
+                )
             }
+
             "projectGDELT" -> {
                 viewModel.getProjectGDELTNews(
+                    limit = 0,
                     query = selectedCountry.category,
                     mode = "ArtList",
                     format = "json"
                 )
             }
+
             "reddit" -> {
-                viewModel.getRedditNews(country = selectedCountry.category)
+                viewModel.getRedditNews(limit = 0, country = selectedCountry.category)
             }
+
             "newsAPI" -> {
-                viewModel.getNewsAPI(initLetters = selectedCountry.initLetters)
+                viewModel.getNewsAPI(limit = 0, initLetters = selectedCountry.initLetters)
             }
+
             else -> {
                 Timber.e("Invalid news type: $newsType")
             }

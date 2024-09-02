@@ -15,13 +15,17 @@ class GoogleNewsUseCase @Inject constructor(
     private val repository: NewsRepository,
     private val mapper: GoogleNewsMapper
 ) {
-    suspend operator fun invoke(query: String, language: String): ResultState<GoogleNewsJSON> {
+    suspend operator fun invoke(
+        limit: Int,
+        query: String,
+        language: String
+    ): ResultState<GoogleNewsJSON> {
         return try {
             withContext(Dispatchers.IO) {
                 val response = repository.googleNews(query, language)
                 val mappedResponse = mapper.mapToGoogleNewsJSON(response)
                 val sortedNewsItems = sortNewsItemsByDate(mappedResponse.newsItems)
-                val limitedNewsItems = limitNewsItems(sortedNewsItems, 20)
+                val limitedNewsItems = limitNewsItems(sortedNewsItems, limit)
                 val limitedNews = mappedResponse.copy(newsItems = limitedNewsItems)
                 ResultState.Success(limitedNews)
             }
@@ -38,6 +42,10 @@ class GoogleNewsUseCase @Inject constructor(
     }
 
     private fun limitNewsItems(newsItems: List<NewsItemJSON>, limit: Int): List<NewsItemJSON> {
-        return newsItems.take(limit)
+        return if (limit == 0) {
+            newsItems
+        } else {
+            newsItems.take(limit)
+        }
     }
 }

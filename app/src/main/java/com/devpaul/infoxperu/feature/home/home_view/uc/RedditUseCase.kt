@@ -11,13 +11,13 @@ import javax.inject.Inject
 class RedditUseCase @Inject constructor(
     private val repository: NewsRepository,
 ) {
-    suspend operator fun invoke(country: String): ResultState<RedditResponse> {
+    suspend operator fun invoke(limit: Int, country: String): ResultState<RedditResponse> {
         return try {
             withContext(Dispatchers.IO) {
                 val response = repository.redditNews(country)
                 val sortedNewsItems =
                     response.data.children.sortedByDescending { it.data.createdUtc }
-                val limitedNewsItems = limitNewsItems(sortedNewsItems, 20)
+                val limitedNewsItems = limitNewsItems(sortedNewsItems, limit)
                 val modifiedResponse =
                     response.copy(data = response.data.copy(children = limitedNewsItems))
                 ResultState.Success(modifiedResponse)
@@ -31,7 +31,11 @@ class RedditUseCase @Inject constructor(
         newsItems: List<PostDataWrapper>,
         limit: Int
     ): List<PostDataWrapper> {
-        return newsItems.take(limit)
+        return if (limit == 0) {
+            newsItems
+        } else {
+            newsItems.take(limit)
+        }
     }
 
 }

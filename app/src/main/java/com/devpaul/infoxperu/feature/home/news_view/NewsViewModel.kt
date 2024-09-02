@@ -19,7 +19,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,12 +74,12 @@ class NewsViewModel @Inject constructor(
             }
     }
 
-    fun getGoogleNews(query: String, language: String) {
+    fun getGoogleNews(query: String, language: String, limit: Int) {
         _googleNewsState.value = ResultState.Loading
 
         viewModelScope.launch {
             try {
-                val result = googleNewsUseCase(query, language)
+                val result = googleNewsUseCase(limit, query, language)
                 _googleNewsState.value = result
             } catch (e: ApiException) {
                 _googleNewsState.value = ResultState.Error(e)
@@ -90,12 +89,12 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getProjectGDELTNews(query: String, mode: String, format: String) {
+    fun getProjectGDELTNews(query: String, mode: String, format: String, limit: Int) {
         _projectGDELTState.value = ResultState.Loading
 
         viewModelScope.launch {
             try {
-                val result = projectGDELTUseCase(query, mode, format)
+                val result = projectGDELTUseCase(limit, query, mode, format)
                 _projectGDELTState.value = result
             } catch (e: ApiException) {
                 _projectGDELTState.value = ResultState.Error(e)
@@ -105,12 +104,12 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getRedditNews(country: String) {
+    fun getRedditNews(limit: Int, country: String) {
         _redditState.value = ResultState.Loading
 
         viewModelScope.launch {
             try {
-                val result = redditUseCase(country)
+                val result = redditUseCase(limit, country)
                 _redditState.value = result
             } catch (e: ApiException) {
                 _redditState.value = ResultState.Error(e)
@@ -120,12 +119,12 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getNewsAPI(initLetters: String) {
+    fun getNewsAPI(limit: Int, initLetters: String) {
         _newsAPIState.value = ResultState.Loading
 
         viewModelScope.launch {
             try {
-                val result = newsAPIUseCase(initLetters)
+                val result = newsAPIUseCase(limit, initLetters)
                 _newsAPIState.value = result
             } catch (e: ApiException) {
                 _newsAPIState.value = ResultState.Error(e)
