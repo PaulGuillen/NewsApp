@@ -1,12 +1,17 @@
 package com.devpaul.infoxperu.domain.ui.news_screen
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,10 +36,13 @@ import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import com.devpaul.infoxperu.domain.screen.atomic.NewsCountCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.AllNewsSkeleton
 import com.devpaul.infoxperu.feature.home.news_view.NewsViewModel
+import com.devpaul.infoxperu.ui.theme.Taupe
+import com.devpaul.infoxperu.ui.theme.White
 import com.google.gson.Gson
 import timber.log.Timber
 
@@ -123,10 +131,10 @@ fun AllNewsContent(
     when (newsState) {
         is ResultState.Success -> {
             when (val data = newsState.data) {
-                is GoogleNewsJSON -> VerticalCardList(data = data)
-                is GDELProject -> VerticalCardList(data = data)
-                is RedditResponse -> VerticalCardList(data = data)
-                is NewsResponse -> VerticalCardList(data = data)
+                is GoogleNewsJSON -> VerticalCardList(data = data, context = context)
+                is GDELProject -> VerticalCardList(data = data, context = context)
+                is RedditResponse -> VerticalCardList(data = data, context = context)
+                is NewsResponse -> VerticalCardList(data = data, context = context)
                 else -> NoNewsAvailableCard()
             }
         }
@@ -137,51 +145,97 @@ fun AllNewsContent(
 }
 
 @Composable
-fun VerticalCardList(data: Any) {
+fun VerticalCardList(data: Any, context: Context) {
     Column(
         modifier = Modifier
-            .padding(top = 16.dp, start = 8.dp, end = 8.dp, bottom = 60.dp)
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+            .fillMaxHeight()
+            .background(Taupe)
     ) {
-        when (data) {
-            is GoogleNewsJSON -> {
-                data.newsItems.forEach { item ->
-                    NewsCard(title = item.title, summary = item.description.toString())
-                }
-            }
+        Column(
+            modifier = Modifier
+                .padding(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 60.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            when (data) {
+                is GoogleNewsJSON -> {
+                    NewsCountCard(countText = "Cantidad de noticias: ${data.newsItems.size}")
 
-            is GDELProject -> {
-                data.articles.forEach { item ->
-                    NewsCard(title = item.title, summary = item.domain)
+                    data.newsItems.forEach { item ->
+                        NewsCard(
+                            context = context,
+                            title = item.title,
+                            summary = item.description.toString(),
+                            url = item.link
+                        )
+                    }
                 }
-            }
 
-            is RedditResponse -> {
-                data.data.children.forEach { post ->
-                    NewsCard(title = post.data.title.toString(), summary = post.data.author)
+                is GDELProject -> {
+                    NewsCountCard(
+                        countText = "Cantidad de noticias: ${data.articles.size}",
+                        containerColor = White
+                    )
+                    data.articles.forEach { item ->
+                        NewsCard(
+                            context = context,
+                            title = item.title,
+                            summary = item.domain,
+                            url = item.url
+                        )
+                    }
                 }
-            }
 
-            is NewsResponse -> {
-                data.articles.forEach { article ->
-                    NewsCard(title = article.title, summary = article.author.toString())
+                is RedditResponse -> {
+                    NewsCountCard(
+                        countText = "Cantidad de posts: ${data.data.children.size}",
+                        containerColor = White
+                    )
+                    data.data.children.forEach { post ->
+                        NewsCard(
+                            context = context,
+                            title = post.data.title.toString(),
+                            summary = post.data.author,
+                            url = post.data.url.toString()
+                        )
+                    }
+                }
+
+                is NewsResponse -> {
+                    NewsCountCard(
+                        countText = "Cantidad de noticias: ${data.articles.size}",
+                        containerColor = White
+                    )
+                    data.articles.forEach { article ->
+                        NewsCard(
+                            context = context,
+                            title = article.title,
+                            summary = article.author.toString(),
+                            url = article.url
+                        )
+                    }
                 }
             }
         }
     }
+
 }
 
 @Composable
-fun NewsCard(title: String, summary: String) {
-    androidx.compose.material3.Card(
+fun NewsCard(context: Context, title: String, summary: String, url: String) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp, horizontal = 12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = White
+        ),
+        onClick = {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = title, style = MaterialTheme.typography.titleLarge)
-            Text(text = summary, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -189,13 +243,19 @@ fun NewsCard(title: String, summary: String) {
 @Preview(showBackground = true)
 @Composable
 fun NewsCardPreview() {
-    NewsCard(title = "Sample Title", summary = "Sample summary for the news item.")
+    NewsCard(
+        context = LocalContext.current,
+        title = "Sample Title",
+        summary = "Sample summary for the news item.",
+        url = "https://www.google.com"
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun VerticalCardListPreview() {
     VerticalCardList(
+        context = LocalContext.current,
         data =
         GoogleNewsJSON(
             title = "Titulo",
