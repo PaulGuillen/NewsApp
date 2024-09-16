@@ -77,10 +77,10 @@ fun BottomNavigationBar(navController: NavHostController) {
                 )
             },
             label = { Text(stringResource(id = R.string.bottom_nav_services)) },
-            selected = navController.currentBackStackEntry?.destination?.route == "services",
+            selected = navController.currentBackStackEntry?.destination?.route == "contacts",
             onClick = {
-                navController.navigate("services") {
-                    popUpTo("services") { inclusive = true }
+                navController.navigate("contacts") {
+                    popUpTo("contacts") { inclusive = true }
                 }
             },
             colors = NavigationBarItemDefaults.colors(

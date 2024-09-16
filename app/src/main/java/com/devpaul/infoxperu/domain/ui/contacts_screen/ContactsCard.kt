@@ -1,20 +1,15 @@
-package com.devpaul.infoxperu.domain.ui.home_screen
+package com.devpaul.infoxperu.domain.ui.contacts_screen
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,75 +27,75 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Gratitude
-import com.devpaul.infoxperu.domain.ui.skeleton.AcknowledgmentSkeleton
+import com.devpaul.infoxperu.domain.models.res.Contact
+import com.devpaul.infoxperu.domain.ui.skeleton.ContactSkeleton
 import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
+fun ContactsCard(contactState: ResultState<List<Contact>>, context: Context) {
 
     var showSkeleton by remember { mutableStateOf(true) }
 
-    LaunchedEffect(gratitudeState) {
-        showSkeleton = gratitudeState is ResultState.Loading
+    LaunchedEffect(contactState) {
+        showSkeleton = contactState is ResultState.Loading
     }
 
     if (showSkeleton) {
-        AcknowledgmentSkeleton()
+        ContactSkeleton()
     } else {
-        AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = context)
+        ContactsCardContent(contactState = contactState, context = context)
     }
 }
 
 @Composable
-fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
-    when (gratitudeState) {
+fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Context) {
+    when (contactState) {
         is ResultState.Loading -> {
-            AcknowledgmentSkeleton()
+            ContactSkeleton()
         }
 
         is ResultState.Success -> {
-            if (gratitudeState.data.isNotEmpty()) {
-                Row(
+            if (contactState.data.isNotEmpty()) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp)
-                        .horizontalScroll(rememberScrollState())
-                        .padding(horizontal = 10.dp)
+                        .fillMaxSize()
                 ) {
-                    gratitudeState.data.forEach { gratitude ->
+                    contactState.data.forEach { contact ->
                         Card(
                             modifier = Modifier
-                                .width(320.dp)
-                                .padding(8.dp)
-                                .clickable {
-                                    val intent =
-                                        Intent(Intent.ACTION_VIEW, Uri.parse(gratitude.url))
-                                    context.startActivity(intent)
-                                },
+                                .fillMaxWidth()
+                                .height(220.dp)
+                                .padding(10.dp),
                             shape = RoundedCornerShape(16.dp),
                             elevation = CardDefaults.cardElevation(8.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.background
-                            )
+                            ),
+                            onClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Contacto: ${contact.type}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         ) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(gratitude.image),
+                                    painter = rememberAsyncImagePainter(contact.imageUrl),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .fillMaxSize()
+                                        .fillMaxWidth()
+                                        .height(200.dp)
                                         .clip(RoundedCornerShape(16.dp)),
                                     contentScale = ContentScale.Crop
                                 )
@@ -110,38 +105,34 @@ fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, c
                                         .background(BackgroundBlack.copy(alpha = 0.5f))
                                 )
                                 Text(
-                                    text = gratitude.title,
-                                    style = MaterialTheme.typography.headlineMedium,
+                                    text = contact.title ?: "",
+                                    style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSecondary,
+                                    color = White,
                                     fontSize = 18.sp,
-                                    modifier = Modifier
-                                        .align(Alignment.TopEnd)
-                                        .padding(end = 14.dp, top = 8.dp),
                                     maxLines = 1,
-                                    textAlign = TextAlign.Center
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
                                 )
                             }
                         }
                     }
                 }
             } else {
-                AcknowledgmentSkeleton()
+                ContactSkeleton()
             }
         }
 
         is ResultState.Error -> {
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 10.dp)
+                    .fillMaxSize()
             ) {
-                repeat(3) {
+                repeat(1) {
                     Card(
                         modifier = Modifier
-                            .width(320.dp)
+                            .fillMaxWidth()
+                            .height(220.dp)
                             .padding(8.dp),
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.cardElevation(8.dp),
@@ -160,9 +151,10 @@ fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, c
                                     .background(BackgroundBlack.copy(alpha = 0.25f))
                             )
                             Text(
-                                text = "Error al cargar los agradecimientos",
+                                text = "Error al cargar los contactos",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = Black,
+                                fontWeight = FontWeight.Bold,
+                                color = White,
                                 fontSize = 15.sp,
                                 modifier = Modifier
                                     .align(Alignment.Center)
@@ -175,36 +167,37 @@ fun AcknowledgmentSectionContent(gratitudeState: ResultState<List<Gratitude>>, c
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun AcknowledgmentSectionSuccessPreview() {
-    val gratitudeState = ResultState.Success(
+fun ContactSectionSuccessPreview() {
+    val contactState = ResultState.Success(
         listOf(
-            Gratitude(
-                title = "DePeru",
-                image = "https://www.example.com/image.png",
-                url = "https://www.deperu.com"
+            Contact(
+                title = "Polica Nacional del Perú",
+                type = "policia",
+                imageUrl = "https://www.deperu.com"
             ),
-            Gratitude(
-                title = "Agradecido",
-                image = "https://www.example.com/image2.png",
-                url = "https://www.agradecido.com"
+            Contact(
+                title = "Bomberos",
+                type = "bombero",
+                imageUrl = "https://www.deperu.com"
             )
         )
     )
-    AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = LocalContext.current)
+    ContactsCardContent(contactState = contactState, context = LocalContext.current)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AcknowledgmentSectionLoadingPreview() {
-    val gratitudeState = ResultState.Loading
-    AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = LocalContext.current)
+fun ContactSectionLoadingPreview() {
+    val contactState = ResultState.Loading
+    ContactsCardContent(contactState = contactState, context = LocalContext.current)
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AcknowledgmentSectionErrorPreview() {
-    val gratitudeState = ResultState.Error(Exception("Failed to load data"))
-    AcknowledgmentSectionContent(gratitudeState = gratitudeState, context = LocalContext.current)
+fun ContactSectionErrorPreview() {
+    val contactState = ResultState.Error(Exception("Failed to load data"))
+    ContactsCardContent(contactState = contactState, context = LocalContext.current)
 }

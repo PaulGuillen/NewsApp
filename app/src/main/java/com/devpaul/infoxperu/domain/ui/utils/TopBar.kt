@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TopBar(
     title: String,
-    onMenuClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {
         IconButton(onClick = onLogoutClick) {
@@ -42,9 +40,9 @@ fun TopBar(
             title = { Text(text = title, fontWeight = FontWeight.Bold) },
             actions = actions,
             navigationIcon = {
-                IconButton(onClick = onMenuClick) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-                }
+//                IconButton(onClick = onMenuClick) {
+//                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
+//                }
             }
         )
     }

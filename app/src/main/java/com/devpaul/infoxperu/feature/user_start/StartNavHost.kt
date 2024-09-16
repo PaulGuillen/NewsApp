@@ -7,10 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devpaul.infoxperu.domain.ui.news_screen.AllNews
+import com.devpaul.infoxperu.feature.home.contacts_view.ui.ContactScreen
 import com.devpaul.infoxperu.feature.home.district_view.DistrictScreen
 import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news_view.NewsScreen
-import com.devpaul.infoxperu.feature.home.service_view.ServiceScreen
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
 import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 
@@ -19,7 +19,7 @@ sealed class Screen(val route: String) {
     data object Register : Screen("register")
     data object Home : Screen("home")
     data object News : Screen("news")
-    data object Services : Screen("services")
+    data object Services : Screen("contacts")
     data object Districts : Screen("districts")
     data object AllNews : Screen("all_news/{newsType}/{country}") {
         fun createRoute(newsType: String, country: String) = "all_news/$newsType/$country"
@@ -42,7 +42,7 @@ fun StartNavHost(navController: NavHostController) {
             NewsScreen(navController = navController)
         }
         composable(Screen.Services.route) {
-            ServiceScreen(navController = navController)
+            ContactScreen(navController = navController)
         }
         composable(Screen.Districts.route) {
             DistrictScreen(navController = navController)

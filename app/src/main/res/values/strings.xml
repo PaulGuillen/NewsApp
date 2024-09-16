@@ -6,7 +6,7 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="forgot_password">Has olvidado tu contraseña?</string>
     <string name="not_registered">Aún no te has registrado?</string>
-    <string name="register_screen_description">Al momento de registrarte podrás mantenerte al tanto de los cambios realizados</string>
+    <string name="register_screen_description">Si te registras podrás mantenerte al tanto de los cambios realizados</string>
     <string name="register_screen_name">Nombre</string>
     <string name="register_screen_last_name">Apellido</string>
     <string name="register_screen_email">Correo</string>
@@ -31,7 +31,7 @@
     <!--BottomNavigationBar-->
     <string name="bottom_nav_home">Inicio</string>
     <string name="bottom_nav_news">Noticias</string>
-    <string name="bottom_nav_services">Servicios</string>
+    <string name="bottom_nav_services">Contactos</string>
     <string name="bottom_nav_districts">Distritos</string>
 
 </resources>
