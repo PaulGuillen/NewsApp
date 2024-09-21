@@ -100,6 +100,7 @@ fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Conte
                                     contentScale = ContentScale.Crop
                                 )
                                 Box(
+
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(BackgroundBlack.copy(alpha = 0.5f))
