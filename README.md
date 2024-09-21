@@ -3,8 +3,7 @@
 _Noticias utilizando APIS gratuitas.. ejemplo de desarrollo._
 
 ## Comenzando 🚀
-_Este proyecto consta en el enfoque de un negocio de pastelería, en el cual el usuario pueda reservar uno o varios productos(pasteles), ademas de contar con
-el metodo de pago efectivo (post-envío) o el metodo de pago via movíl (pre - entrega)._
+_Proyecto consumo de APIS gratuitas de noticias_
 
 ### Pre-requisitos 📋
 
