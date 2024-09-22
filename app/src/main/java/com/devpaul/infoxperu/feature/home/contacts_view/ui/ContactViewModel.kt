@@ -17,7 +17,6 @@ class ContactViewModel @Inject constructor(
     dataStoreUseCase: DataStoreUseCase
 ) : BaseViewModel<ContactUiEvent>(dataStoreUseCase) {
 
-
     private val _contactState =
         MutableStateFlow<ResultState<List<Contact>>>(ResultState.Loading)
     val contactState: StateFlow<ResultState<List<Contact>>> = _contactState

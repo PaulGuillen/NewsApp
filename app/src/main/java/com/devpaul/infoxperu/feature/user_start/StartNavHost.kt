@@ -6,9 +6,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.devpaul.infoxperu.domain.ui.contacts_screen.district_screen.DistrictsScreen
 import com.devpaul.infoxperu.domain.ui.news_screen.AllNews
 import com.devpaul.infoxperu.feature.home.contacts_view.ui.ContactScreen
-import com.devpaul.infoxperu.feature.home.district_view.DistrictScreen
+import com.devpaul.infoxperu.feature.home.district_view.ProfileScreen
 import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news_view.NewsScreen
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
@@ -20,7 +21,11 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object News : Screen("news")
     data object Services : Screen("contacts")
-    data object Districts : Screen("districts")
+    data object Districts : Screen("districts/{district}") {
+        fun createRoute(district: String) = "districts/$district"
+    }
+
+    data object Profile : Screen("profile")
     data object AllNews : Screen("all_news/{newsType}/{country}") {
         fun createRoute(newsType: String, country: String) = "all_news/$newsType/$country"
     }
@@ -44,8 +49,19 @@ fun StartNavHost(navController: NavHostController) {
         composable(Screen.Services.route) {
             ContactScreen(navController = navController)
         }
-        composable(Screen.Districts.route) {
-            DistrictScreen(navController = navController)
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController = navController)
+        }
+        composable(
+            route = Screen.Districts.route,
+            arguments = listOf(
+                navArgument("district") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            DistrictsScreen(
+                navController = navController,
+                district = backStackEntry.arguments?.getString("district"),
+            )
         }
         composable(
             route = Screen.AllNews.route,

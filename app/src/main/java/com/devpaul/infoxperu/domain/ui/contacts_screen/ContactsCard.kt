@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,16 +32,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
 import com.devpaul.infoxperu.domain.ui.skeleton.ContactSkeleton
+import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun ContactsCard(contactState: ResultState<List<Contact>>, context: Context) {
+fun ContactsCard(
+    navController: NavController,
+    contactState: ResultState<List<Contact>>,
+    context: Context
+) {
 
     var showSkeleton by remember { mutableStateOf(true) }
 
@@ -50,12 +59,20 @@ fun ContactsCard(contactState: ResultState<List<Contact>>, context: Context) {
     if (showSkeleton) {
         ContactSkeleton()
     } else {
-        ContactsCardContent(contactState = contactState, context = context)
+        ContactsCardContent(
+            navController = navController,
+            contactState = contactState,
+            context = context
+        )
     }
 }
 
 @Composable
-fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Context) {
+fun ContactsCardContent(
+    navController: NavController,
+    contactState: ResultState<List<Contact>>,
+    context: Context
+) {
     when (contactState) {
         is ResultState.Loading -> {
             ContactSkeleton()
@@ -63,11 +80,11 @@ fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Conte
 
         is ResultState.Success -> {
             if (contactState.data.isNotEmpty()) {
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    contactState.data.forEach { contact ->
+                    items(contactState.data) { contact ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -79,6 +96,7 @@ fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Conte
                                 containerColor = MaterialTheme.colorScheme.background
                             ),
                             onClick = {
+                                navController.navigate(Screen.Districts.createRoute("newsAPI"))
                                 Toast.makeText(
                                     context,
                                     "Contacto: ${contact.type}",
@@ -100,7 +118,6 @@ fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Conte
                                     contentScale = ContentScale.Crop
                                 )
                                 Box(
-
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(BackgroundBlack.copy(alpha = 0.5f))
@@ -168,7 +185,6 @@ fun ContactsCardContent(contactState: ResultState<List<Contact>>, context: Conte
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun ContactSectionSuccessPreview() {
@@ -186,19 +202,31 @@ fun ContactSectionSuccessPreview() {
             )
         )
     )
-    ContactsCardContent(contactState = contactState, context = LocalContext.current)
+    ContactsCardContent(
+        navController = rememberNavController(),
+        contactState = contactState,
+        context = LocalContext.current
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ContactSectionLoadingPreview() {
     val contactState = ResultState.Loading
-    ContactsCardContent(contactState = contactState, context = LocalContext.current)
+    ContactsCardContent(
+        navController = rememberNavController(),
+        contactState = contactState,
+        context = LocalContext.current
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ContactSectionErrorPreview() {
     val contactState = ResultState.Error(Exception("Failed to load data"))
-    ContactsCardContent(contactState = contactState, context = LocalContext.current)
+    ContactsCardContent(
+        navController = rememberNavController(),
+        contactState = contactState,
+        context = LocalContext.current
+    )
 }

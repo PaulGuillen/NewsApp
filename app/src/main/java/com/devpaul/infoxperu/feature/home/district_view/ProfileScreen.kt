@@ -15,7 +15,7 @@ import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
-fun DistrictScreen(navController: NavHostController) {
+fun ProfileScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopBar(title = "InfoPerú")
@@ -38,5 +38,5 @@ fun DistrictScreen(navController: NavHostController) {
 @Composable
 fun DistrictScreenPreview() {
     val navController = rememberNavController()
-    DistrictScreen(navController = navController)
+    ProfileScreen(navController = navController)
 }

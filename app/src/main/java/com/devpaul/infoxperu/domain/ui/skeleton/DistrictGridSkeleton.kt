@@ -1,6 +1,3 @@
-package com.devpaul.infoxperu.domain.ui.skeleton
-
-import DistrictGridSkeleton
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
@@ -8,11 +5,12 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ContactSkeleton() {
+fun DistrictGridSkeleton() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -41,30 +39,27 @@ fun ContactSkeleton() {
         ), label = ""
     )
 
-    Column(
+    // Usamos LazyVerticalGrid para ocupar varias líneas
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3), // 2 columnas para ocupar más espacio
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, top = 2.dp, bottom = 2.dp, end = 2.dp)
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
-        repeat(3) {
+        items(15) { // Ajustar el número de ítems para más filas
             Card(
                 modifier = Modifier
+                    .padding(8.dp)
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .padding(10.dp),
+                    .aspectRatio(1f), // Hacemos la tarjeta cuadrada
                 shape = RoundedCornerShape(8.dp),
                 elevation = CardDefaults.cardElevation(8.dp),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color)
-                    )
-                }
+                        .background(color) // Aplicamos el shimmer
+                )
             }
         }
     }
@@ -72,6 +67,6 @@ fun ContactSkeleton() {
 
 @Preview(showBackground = true)
 @Composable
-fun ContactSkeletonPreview() {
+fun DistrictGridSkeletonPreview() {
     DistrictGridSkeleton()
 }

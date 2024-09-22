@@ -3,6 +3,7 @@ package com.devpaul.infoxperu.domain.ui.utils
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,13 +23,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TopBar(
     title: String,
-    onLogoutClick: () -> Unit = {},
+    onBackClick: (() -> Unit)? = null, // Hacer el botón de retroceso opcional
+    onLogoutClick: (() -> Unit)? = null, // Hacer el botón de logout opcional
     actions: @Composable RowScope.() -> Unit = {
-        IconButton(onClick = onLogoutClick) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                contentDescription = "Salir sesión"
-            )
+        if (onLogoutClick != null) {
+            IconButton(onClick = onLogoutClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = "Salir sesión"
+                )
+            }
         }
     }
 ) {
@@ -40,9 +44,14 @@ fun TopBar(
             title = { Text(text = title, fontWeight = FontWeight.Bold) },
             actions = actions,
             navigationIcon = {
-//                IconButton(onClick = onMenuClick) {
-//                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
-//                }
+                onBackClick?.let {
+                    IconButton(onClick = it) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Atrás"
+                        )
+                    }
+                }
             }
         )
     }
@@ -53,6 +62,16 @@ fun TopBar(
 fun TopBarPreview() {
     TopBar(
         title = "InfoPerú",
+        onBackClick = { /* Acción de retroceder */ }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TopBarWithLogoutPreview() {
+    TopBar(
+        title = "InfoPerú",
+        onBackClick = { /* Acción de retroceder */ },
         onLogoutClick = { /* Acción de salir sesión */ }
     )
 }

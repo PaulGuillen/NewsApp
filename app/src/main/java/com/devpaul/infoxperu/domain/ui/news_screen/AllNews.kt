@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,11 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
@@ -40,6 +43,7 @@ import com.devpaul.infoxperu.domain.screen.atomic.NewsCountCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.AllNewsSkeleton
+import com.devpaul.infoxperu.domain.ui.utils.TopBar
 import com.devpaul.infoxperu.feature.home.news_view.NewsViewModel
 import com.devpaul.infoxperu.ui.theme.Taupe
 import com.devpaul.infoxperu.ui.theme.White
@@ -109,15 +113,25 @@ fun AllNews(
         showSkeleton = selectedState is ResultState.Loading
     }
 
-    if (showSkeleton) {
-        AllNewsSkeleton()
-    } else {
-        AllNewsContent(
-            navController = navController,
-            selectedCountry = selectedCountry,
-            newsState = selectedState,
-            context = context
-        )
+    Scaffold(
+        topBar = {
+            TopBar(
+                title = stringResource(R.string.app_name),
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+    ) { innerPadding ->
+        if (showSkeleton) {
+            AllNewsSkeleton(modifier = Modifier.padding(innerPadding))
+        } else {
+            AllNewsContent(
+                navController = navController,
+                selectedCountry = selectedCountry,
+                newsState = selectedState,
+                context = context,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
 
@@ -126,15 +140,36 @@ fun AllNewsContent(
     navController: NavController,
     selectedCountry: Country,
     newsState: ResultState<*>,
-    context: Context
+    context: Context,
+    modifier: Modifier
+
 ) {
     when (newsState) {
         is ResultState.Success -> {
             when (val data = newsState.data) {
-                is GoogleNewsJSON -> VerticalCardList(data = data, context = context)
-                is GDELProject -> VerticalCardList(data = data, context = context)
-                is RedditResponse -> VerticalCardList(data = data, context = context)
-                is NewsResponse -> VerticalCardList(data = data, context = context)
+                is GoogleNewsJSON -> VerticalCardList(
+                    data = data,
+                    context = context,
+                    modifier = modifier
+                )
+
+                is GDELProject -> VerticalCardList(
+                    data = data,
+                    context = context,
+                    modifier = modifier
+                )
+
+                is RedditResponse -> VerticalCardList(
+                    data = data,
+                    context = context,
+                    modifier = modifier
+                )
+
+                is NewsResponse -> VerticalCardList(
+                    data = data,
+                    context = context,
+                    modifier = modifier
+                )
                 else -> NoNewsAvailableCard()
             }
         }
@@ -144,17 +179,17 @@ fun AllNewsContent(
     }
 }
 
+
 @Composable
-fun VerticalCardList(data: Any, context: Context) {
+fun VerticalCardList(data: Any, context: Context, modifier: Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight()
             .background(Taupe)
     ) {
         Column(
             modifier = Modifier
-                .padding(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 60.dp)
+                .padding(start = 8.dp, end = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             when (data) {
@@ -215,11 +250,15 @@ fun VerticalCardList(data: Any, context: Context) {
                         )
                     }
                 }
+
+                else -> {
+                    NoNewsAvailableCard()
+                }
             }
         }
     }
-
 }
+
 
 @Composable
 fun NewsCard(context: Context, title: String, summary: String, url: String) {
@@ -256,6 +295,7 @@ fun NewsCardPreview() {
 fun VerticalCardListPreview() {
     VerticalCardList(
         context = LocalContext.current,
+        modifier = Modifier.fillMaxHeight(),
         data =
         GoogleNewsJSON(
             title = "Titulo",
