@@ -23,7 +23,7 @@ import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
 fun DistrictsScreen(
-    district: String?,
+    serviceSelected: String?,
     viewModel: DistrictViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
@@ -43,7 +43,7 @@ fun DistrictsScreen(
             innerPadding = innerPadding,
             context = context,
             districtState = districtState,
-            district = district
+            serviceSelected = serviceSelected
         )
     }
 }
@@ -55,7 +55,7 @@ fun DistrictScreenContent(
     innerPadding: PaddingValues = PaddingValues(),
     context: Context,
     districtState: ResultState<List<District>>,
-    district: String?
+    serviceSelected: String?
 ) {
     Column(
         modifier = modifier
@@ -65,7 +65,7 @@ fun DistrictScreenContent(
             navController = navController,
             context = context,
             districtState = districtState,
-            district = district
+            serviceSelected = serviceSelected
         )
     }
 }
@@ -89,7 +89,7 @@ fun ServiceScreenPreview() {
                     District("Lima", "lima")
                 )
             ),
-            district = "lima"
+            serviceSelected = "lima"
         )
     }
 }

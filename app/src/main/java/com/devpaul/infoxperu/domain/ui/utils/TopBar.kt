@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TopBar(
     title: String,
-    onBackClick: (() -> Unit)? = null, // Hacer el botón de retroceso opcional
-    onLogoutClick: (() -> Unit)? = null, // Hacer el botón de logout opcional
+    onBackClick: (() -> Unit)? = null,
+    onLogoutClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {
         if (onLogoutClick != null) {
             IconButton(onClick = onLogoutClick) {

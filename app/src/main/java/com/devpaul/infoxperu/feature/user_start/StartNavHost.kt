@@ -60,7 +60,7 @@ fun StartNavHost(navController: NavHostController) {
         ) { backStackEntry ->
             DistrictsScreen(
                 navController = navController,
-                district = backStackEntry.arguments?.getString("district"),
+                serviceSelected = backStackEntry.arguments?.getString("district"),
             )
         }
         composable(

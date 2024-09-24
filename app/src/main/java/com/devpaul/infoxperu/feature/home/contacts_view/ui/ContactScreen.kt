@@ -3,7 +3,6 @@ package com.devpaul.infoxperu.feature.home.contacts_view.ui
 import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,16 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.contacts_screen.ContactsCard
-import com.devpaul.infoxperu.domain.ui.contacts_screen.ServiceCardInformation
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
@@ -68,10 +64,10 @@ fun ContentScreenContent(
         modifier = modifier
             .padding(innerPadding)
     ) {
-        ServiceCardInformation()
-        Spacer(modifier = Modifier.padding(10.dp))
-        DividerView()
-        Spacer(modifier = Modifier.padding(10.dp))
+        //   ServiceCardInformation()
+//        Spacer(modifier = Modifier.padding(10.dp))
+//        DividerView()
+        //  Spacer(modifier = Modifier.padding(10.dp))
         ContactsCard(navController = navController, contactState = contactState, context = context)
     }
 }

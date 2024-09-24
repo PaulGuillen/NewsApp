@@ -36,7 +36,7 @@ import com.devpaul.infoxperu.ui.theme.BrickRed
 fun DistrictGrid(
     navController: NavController,
     context: Context,
-    district: String?,
+    serviceSelected: String?,
     districtState: ResultState<List<District>>
 ) {
 
@@ -76,7 +76,8 @@ fun DistrictGrid(
                 navController = navController,
                 districtState = districtState,
                 searchQuery = searchQuery,
-                context = context
+                context = context,
+                serviceSelected = serviceSelected
             )
         }
     }
@@ -86,8 +87,9 @@ fun DistrictGrid(
 fun DistrictCardContent(
     navController: NavController,
     districtState: ResultState<List<District>>,
-    searchQuery: String, // Añadimos el valor de búsqueda
-    context: Context
+    searchQuery: String,
+    context: Context,
+    serviceSelected: String?
 ) {
     when (districtState) {
         is ResultState.Loading -> {
@@ -106,7 +108,7 @@ fun DistrictCardContent(
                     .padding(8.dp)
             ) {
                 items(filteredDistricts) { district ->
-                    DistrictCard(district)
+                    DistrictCard(context, serviceSelected, navController, district)
                 }
             }
         }
@@ -124,7 +126,7 @@ fun DistrictGridPreview() {
     DistrictGrid(
         navController = navController,
         context = androidx.compose.ui.platform.LocalContext.current,
-        district = "Lima",
+        serviceSelected = "Lima",
         districtState = ResultState.Success(
             listOf(
                 District("Ancon", "ancon"),
@@ -145,7 +147,7 @@ fun DistrictGridLoadingPreview() {
     DistrictGrid(
         navController = navController,
         context = androidx.compose.ui.platform.LocalContext.current,
-        district = "Lima",
+        serviceSelected = "Lima",
         districtState = ResultState.Loading
     )
 }

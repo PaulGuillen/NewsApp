@@ -1,3 +1,4 @@
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,17 +16,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.models.res.District
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun DistrictCard(district: District) {
+fun DistrictCard(
+    context: Context,
+    serviceSelected: String?,
+    navController: NavController,
+    district: District
+) {
     Card(
         modifier = Modifier
             .width(140.dp)
@@ -36,7 +45,10 @@ fun DistrictCard(district: District) {
             containerColor = White,
             contentColor = Black
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        onClick = {
+            navController.navigate("districts/${district.type}")
+        }
     ) {
         Column(
             modifier = Modifier
@@ -56,9 +68,8 @@ fun DistrictCard(district: District) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Texto del distrito
             Text(
-                text = district.title ?: "", // Muestra el título del distrito
+                text = district.title ?: "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -74,9 +85,12 @@ fun DistrictCard(district: District) {
 @Composable
 fun DistrictCardPreview() {
     DistrictCard(
+        context = LocalContext.current,
+        serviceSelected = "Ancon",
+        navController = rememberNavController(),
         district = District(
             title = "Ancon",
             type = "ancon"
-        ) // Inicializa correctamente el objeto District
+        )
     )
 }
