@@ -1,3 +1,5 @@
+package com.devpaul.infoxperu.domain.ui.utils
+
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +33,6 @@ import com.devpaul.infoxperu.ui.theme.White
 @Composable
 fun DistrictCard(
     context: Context,
-    serviceSelected: String?,
     navController: NavController,
     district: District
 ) {
@@ -47,8 +48,14 @@ fun DistrictCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         onClick = {
-            navController.navigate("districts/${district.type}")
+//            navController.navigate("districts/${district.type}")
+//            navController.navigate(
+//                Screen.AllServices.createRoute(
+//                    districtTypeSelected = district.type ?: ""
+//                )
+//            )
         }
+
     ) {
         Column(
             modifier = Modifier
@@ -86,7 +93,6 @@ fun DistrictCard(
 fun DistrictCardPreview() {
     DistrictCard(
         context = LocalContext.current,
-        serviceSelected = "Ancon",
         navController = rememberNavController(),
         district = District(
             title = "Ancon",

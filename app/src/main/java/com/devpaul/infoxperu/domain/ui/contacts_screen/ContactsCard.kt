@@ -1,7 +1,5 @@
 package com.devpaul.infoxperu.domain.ui.contacts_screen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,7 +44,6 @@ import com.devpaul.infoxperu.ui.theme.White
 fun ContactsCard(
     navController: NavController,
     contactState: ResultState<List<Contact>>,
-    context: Context
 ) {
 
     var showSkeleton by remember { mutableStateOf(true) }
@@ -62,7 +58,6 @@ fun ContactsCard(
         ContactsCardContent(
             navController = navController,
             contactState = contactState,
-            context = context
         )
     }
 }
@@ -71,7 +66,6 @@ fun ContactsCard(
 fun ContactsCardContent(
     navController: NavController,
     contactState: ResultState<List<Contact>>,
-    context: Context
 ) {
     when (contactState) {
         is ResultState.Loading -> {
@@ -96,12 +90,7 @@ fun ContactsCardContent(
                                 containerColor = MaterialTheme.colorScheme.background
                             ),
                             onClick = {
-                                navController.navigate(Screen.Districts.createRoute("newsAPI"))
-                                Toast.makeText(
-                                    context,
-                                    "Contacto: ${contact.type}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                navController.navigate(Screen.Districts.route)
                             }
                         ) {
                             Box(
@@ -205,7 +194,6 @@ fun ContactSectionSuccessPreview() {
     ContactsCardContent(
         navController = rememberNavController(),
         contactState = contactState,
-        context = LocalContext.current
     )
 }
 
@@ -216,7 +204,6 @@ fun ContactSectionLoadingPreview() {
     ContactsCardContent(
         navController = rememberNavController(),
         contactState = contactState,
-        context = LocalContext.current
     )
 }
 
@@ -227,6 +214,5 @@ fun ContactSectionErrorPreview() {
     ContactsCardContent(
         navController = rememberNavController(),
         contactState = contactState,
-        context = LocalContext.current
     )
 }

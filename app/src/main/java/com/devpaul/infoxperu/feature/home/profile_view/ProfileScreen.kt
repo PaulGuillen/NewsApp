@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.district_view
+package com.devpaul.infoxperu.feature.home.profile_view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

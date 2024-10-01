@@ -1,6 +1,5 @@
-package com.devpaul.infoxperu.domain.ui.contacts_screen.district_screen
+package com.devpaul.infoxperu.domain.ui.contacts_screen
 
-import DistrictCard
 import DistrictGridSkeleton
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -21,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,13 +30,13 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.District
+import com.devpaul.infoxperu.domain.ui.utils.DistrictCard
 import com.devpaul.infoxperu.ui.theme.BrickRed
 
 @Composable
 fun DistrictGrid(
     navController: NavController,
     context: Context,
-    serviceSelected: String?,
     districtState: ResultState<List<District>>
 ) {
 
@@ -77,7 +77,6 @@ fun DistrictGrid(
                 districtState = districtState,
                 searchQuery = searchQuery,
                 context = context,
-                serviceSelected = serviceSelected
             )
         }
     }
@@ -89,7 +88,6 @@ fun DistrictCardContent(
     districtState: ResultState<List<District>>,
     searchQuery: String,
     context: Context,
-    serviceSelected: String?
 ) {
     when (districtState) {
         is ResultState.Loading -> {
@@ -108,7 +106,7 @@ fun DistrictCardContent(
                     .padding(8.dp)
             ) {
                 items(filteredDistricts) { district ->
-                    DistrictCard(context, serviceSelected, navController, district)
+                    DistrictCard(context, navController, district)
                 }
             }
         }
@@ -125,8 +123,7 @@ fun DistrictGridPreview() {
     val navController = rememberNavController()
     DistrictGrid(
         navController = navController,
-        context = androidx.compose.ui.platform.LocalContext.current,
-        serviceSelected = "Lima",
+        context = LocalContext.current,
         districtState = ResultState.Success(
             listOf(
                 District("Ancon", "ancon"),
@@ -146,8 +143,7 @@ fun DistrictGridLoadingPreview() {
     val navController = rememberNavController()
     DistrictGrid(
         navController = navController,
-        context = androidx.compose.ui.platform.LocalContext.current,
-        serviceSelected = "Lima",
+        context = LocalContext.current,
         districtState = ResultState.Loading
     )
 }

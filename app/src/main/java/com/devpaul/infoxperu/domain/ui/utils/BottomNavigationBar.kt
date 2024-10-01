@@ -73,14 +73,14 @@ fun BottomNavigationBar(navController: NavHostController) {
             icon = {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = stringResource(id = R.string.bottom_nav_services)
+                    contentDescription = stringResource(id = R.string.bottom_nav_districts)
                 )
             },
-            label = { Text(stringResource(id = R.string.bottom_nav_services)) },
-            selected = navController.currentBackStackEntry?.destination?.route == "contacts",
+            label = { Text(stringResource(id = R.string.bottom_nav_districts)) },
+            selected = navController.currentBackStackEntry?.destination?.route == "districts",
             onClick = {
-                navController.navigate("contacts") {
-                    popUpTo("contacts") { inclusive = true }
+                navController.navigate("districts") {
+                    popUpTo("districts") { inclusive = true }
                 }
             },
             colors = NavigationBarItemDefaults.colors(

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.contacts_view.ui
+package com.devpaul.infoxperu.feature.home.services_view.ui.district_screen
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -18,57 +18,52 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.ui.contacts_screen.ContactsCard
-import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.domain.models.res.District
+import com.devpaul.infoxperu.domain.ui.contacts_screen.DistrictGrid
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
-fun ContactScreen(
-    viewModel: ContactViewModel = hiltViewModel(),
+fun DistrictsScreen(
+    viewModel: DistrictViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
-    val contactState by viewModel.contactState.collectAsState()
     val context = LocalContext.current
+    val districtState by viewModel.districtState.collectAsState()
 
     Scaffold(
         topBar = {
-            TopBar(title = stringResource(R.string.app_name),
-                onLogoutClick = {
-                    viewModel.logOut(navController)
-                })
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
+            TopBar(
+                title = stringResource(R.string.app_name),
+                onBackClick = { navController.popBackStack() })
         }
     ) { innerPadding ->
-        ContentScreenContent(
+        DistrictScreenContent(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             innerPadding = innerPadding,
             context = context,
-            contactState = contactState,
+            districtState = districtState,
         )
     }
 }
 
 @Composable
-fun ContentScreenContent(
+fun DistrictScreenContent(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     innerPadding: PaddingValues = PaddingValues(),
     context: Context,
-    contactState: ResultState<List<Contact>>
+    districtState: ResultState<List<District>>,
 ) {
     Column(
         modifier = modifier
             .padding(innerPadding)
     ) {
-        //   ServiceCardInformation()
-//        Spacer(modifier = Modifier.padding(10.dp))
-//        DividerView()
-        //  Spacer(modifier = Modifier.padding(10.dp))
-        ContactsCard(navController = navController, contactState = contactState, context = context)
+        DistrictGrid(
+            navController = navController,
+            context = context,
+            districtState = districtState,
+        )
     }
 }
 
@@ -79,30 +74,18 @@ fun ServiceScreenPreview() {
     Scaffold(
         topBar = {
             TopBar(title = "InfoPerú")
-        },
-        bottomBar = {
-            BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
-        ContentScreenContent(
+        DistrictScreenContent(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             innerPadding = innerPadding,
             context = LocalContext.current,
-            contactState = ResultState.Success(
+            districtState = ResultState.Success(
                 listOf(
-                    Contact(
-                        title = "Policia Nacional del Perú",
-                        type = "policia",
-                        imageUrl = "https://www.deperu.com"
-                    ),
-                    Contact(
-                        title = "Bomberos",
-                        type = "bombero",
-                        imageUrl = "https://www.deperu.com"
-                    )
+                    District("Lima", "lima")
                 )
-            )
+            ),
         )
     }
 }
