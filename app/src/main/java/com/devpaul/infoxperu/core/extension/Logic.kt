@@ -2,6 +2,7 @@ package com.devpaul.infoxperu.core.extension
 
 import android.content.Context
 import com.devpaul.infoxperu.R
+import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -97,4 +98,9 @@ fun formatPublishedAt(publishedAt: String): String {
     } catch (e: Exception) {
         ""
     }
+}
+
+fun removeAccents(input: String): String {
+    val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
+    return normalized.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
 }

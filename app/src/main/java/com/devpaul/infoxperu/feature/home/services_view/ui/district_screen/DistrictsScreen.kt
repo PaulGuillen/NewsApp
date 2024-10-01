@@ -9,6 +9,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -20,7 +23,8 @@ import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.District
 import com.devpaul.infoxperu.domain.ui.contacts_screen.DistrictGrid
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.domain.ui.utils.TopBarWithSearch
 
 @Composable
 fun DistrictsScreen(
@@ -29,13 +33,20 @@ fun DistrictsScreen(
 ) {
     val context = LocalContext.current
     val districtState by viewModel.districtState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            TopBar(
+            TopBarWithSearch(
                 title = stringResource(R.string.app_name),
-                onBackClick = { navController.popBackStack() })
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { searchQuery = it }
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(navController)
         }
+
     ) { innerPadding ->
         DistrictScreenContent(
             modifier = Modifier.fillMaxSize(),
@@ -43,6 +54,7 @@ fun DistrictsScreen(
             innerPadding = innerPadding,
             context = context,
             districtState = districtState,
+            searchQuery = searchQuery
         )
     }
 }
@@ -54,6 +66,7 @@ fun DistrictScreenContent(
     innerPadding: PaddingValues = PaddingValues(),
     context: Context,
     districtState: ResultState<List<District>>,
+    searchQuery: String
 ) {
     Column(
         modifier = modifier
@@ -61,6 +74,7 @@ fun DistrictScreenContent(
     ) {
         DistrictGrid(
             navController = navController,
+            searchQuery = searchQuery,
             context = context,
             districtState = districtState,
         )
@@ -73,7 +87,7 @@ fun ServiceScreenPreview() {
     val navController = rememberNavController()
     Scaffold(
         topBar = {
-            TopBar(title = "InfoPerú")
+            TopBarWithSearch(title = "InfoPerú", "", onSearchQueryChanged = {})
         }
     ) { innerPadding ->
         DistrictScreenContent(
@@ -81,6 +95,7 @@ fun ServiceScreenPreview() {
             navController = navController,
             innerPadding = innerPadding,
             context = LocalContext.current,
+            searchQuery = "",
             districtState = ResultState.Success(
                 listOf(
                     District("Lima", "lima")

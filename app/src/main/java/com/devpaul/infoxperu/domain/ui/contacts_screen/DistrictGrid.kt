@@ -2,17 +2,11 @@ package com.devpaul.infoxperu.domain.ui.contacts_screen
 
 import DistrictGridSkeleton
 import android.content.Context
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,27 +15,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.extension.removeAccents
 import com.devpaul.infoxperu.domain.models.res.District
 import com.devpaul.infoxperu.domain.ui.utils.DistrictCard
-import com.devpaul.infoxperu.ui.theme.BrickRed
+import timber.log.Timber
 
 @Composable
 fun DistrictGrid(
     navController: NavController,
     context: Context,
-    districtState: ResultState<List<District>>
+    districtState: ResultState<List<District>>,
+    searchQuery: String
 ) {
-
     var showSkeleton by remember { mutableStateOf(true) }
-    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(districtState) {
         showSkeleton = districtState is ResultState.Loading
@@ -50,35 +41,12 @@ fun DistrictGrid(
     if (showSkeleton) {
         DistrictGridSkeleton()
     } else {
-        Column(modifier = Modifier.fillMaxSize()) {
-
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("Buscar distrito") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_search_24),
-                        contentDescription = stringResource(id = R.string.icon_search)
-                    )
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrickRed,
-                    cursorColor = BrickRed,
-                    focusedLabelColor = BrickRed
-                )
-            )
-
-            DistrictCardContent(
-                navController = navController,
-                districtState = districtState,
-                searchQuery = searchQuery,
-                context = context,
-            )
-        }
+        DistrictCardContent(
+            navController = navController,
+            districtState = districtState,
+            searchQuery = searchQuery,
+            context = context,
+        )
     }
 }
 
@@ -95,9 +63,12 @@ fun DistrictCardContent(
         }
 
         is ResultState.Success -> {
+            val normalizedSearchQuery = removeAccents(searchQuery)
             val filteredDistricts = districtState.data.filter {
-                it.title?.contains(searchQuery, ignoreCase = true) ?: false
+                val normalizedTitle = removeAccents(it.title ?: "")
+                normalizedTitle.contains(normalizedSearchQuery, ignoreCase = true)
             }
+            Timber.d("Filtered districts: $filteredDistricts")
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -133,7 +104,8 @@ fun DistrictGridPreview() {
                 District("Miraflores", "miraflores"),
                 District("Surco", "surco")
             )
-        )
+        ),
+        searchQuery = ""
     )
 }
 
@@ -144,6 +116,7 @@ fun DistrictGridLoadingPreview() {
     DistrictGrid(
         navController = navController,
         context = LocalContext.current,
-        districtState = ResultState.Loading
+        districtState = ResultState.Loading,
+        searchQuery = ""
     )
 }
