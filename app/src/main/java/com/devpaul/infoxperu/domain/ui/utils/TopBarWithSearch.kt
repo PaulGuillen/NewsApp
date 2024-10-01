@@ -1,9 +1,7 @@
 package com.devpaul.infoxperu.domain.ui.utils
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,52 +44,16 @@ fun TopBarWithSearch(
             .shadow(elevation = 6.dp, shape = RoundedCornerShape(0.dp)),
         color = White
     ) {
-        TopAppBar(
-            title = {
-                if (isSearching) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = onSearchQueryChanged,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 32.dp),
-                        placeholder = { Text("Buscar distrito...") },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_search_24),
-                                contentDescription = "Buscar"
-                            )
-                        },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_close_24),
-                                contentDescription = "Cerrar búsqueda",
-                                modifier = Modifier
-                                    .padding(end = 12.dp)
-                                    .clickable {
-                                        isSearching = false
-                                        onSearchQueryChanged("")
-                                    }
-                            )
-                        },
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = BrickRed,
-                            cursorColor = BrickRed,
-                            focusedLabelColor = BrickRed
-                        )
-                    )
-                } else {
+        if (!isSearching) {
+            TopAppBar(
+                title = {
                     Text(
                         text = title,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.fillMaxWidth(),
                     )
-                }
-            },
-            actions = {
-                if (!isSearching) {
+                },
+                actions = {
                     IconButton(onClick = { isSearching = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_search_24),
@@ -99,8 +61,41 @@ fun TopBarWithSearch(
                         )
                     }
                 }
-            }
-        )
+            )
+        } else {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 24.dp, top = 20.dp, bottom = 8.dp),
+                placeholder = { Text("Buscar distrito...") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_search_24),
+                        contentDescription = "Buscar"
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_close_24),
+                        contentDescription = "Cerrar búsqueda",
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .clickable {
+                                isSearching = false
+                                onSearchQueryChanged("")
+                            }
+                    )
+                },
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = BrickRed,
+                    cursorColor = BrickRed,
+                    focusedLabelColor = BrickRed
+                )
+            )
+        }
     }
 }
 

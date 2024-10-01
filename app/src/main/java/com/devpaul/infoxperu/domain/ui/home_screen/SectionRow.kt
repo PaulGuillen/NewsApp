@@ -2,9 +2,10 @@ package com.devpaul.infoxperu.domain.ui.home_screen
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -12,27 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.SectionItem
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.devpaul.infoxperu.domain.ui.skeleton.SectionsRowSkeleton
 
 @Composable
 fun SectionsRow(sectionItemsState: ResultState<List<SectionItem>>, context: Context) {
-    var showSkeleton by remember { mutableStateOf(true) }
-
-    LaunchedEffect(sectionItemsState) {
-        showSkeleton = sectionItemsState is ResultState.Loading
-    }
-
-    if (showSkeleton) {
-        SectionsRowSkeleton()
-    } else {
-        SectionsRowContent(sectionItemsState = sectionItemsState, context = context)
-    }
+    SectionsRowContent(sectionItemsState = sectionItemsState, context = context)
 }
 
 @Composable
@@ -65,10 +50,12 @@ fun SectionsRowContent(sectionItemsState: ResultState<List<SectionItem>>, contex
                     .padding(horizontal = 10.dp)
             ) {
                 repeat(3) {
-                    ItemSection(SectionItem(
-                        title = "Error",
-                        type = "error"
-                    ), context)
+                    ItemSection(
+                        SectionItem(
+                            title = "Error",
+                            type = "error"
+                        ), context
+                    )
                 }
             }
         }
