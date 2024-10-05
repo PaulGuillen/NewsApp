@@ -23,7 +23,9 @@ import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
 @Composable
-fun ErrorCard() {
+fun ErrorCard(
+    cardHeight: Int = 180
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -32,7 +34,7 @@ fun ErrorCard() {
         Card(
             modifier = Modifier
                 .width(260.dp)
-                .height(180.dp)
+                .height(cardHeight.dp)
                 .padding(8.dp),
             shape = RoundedCornerShape(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),

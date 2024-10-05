@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.district_screen
+package com.devpaul.infoxperu.domain.ui.service_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,8 +50,8 @@ fun ContactCardContent(
         modifier = Modifier
             .width(220.dp)
             .height(140.dp)
-            .padding(10.dp),
-        shape = RoundedCornerShape(16.dp),
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = White

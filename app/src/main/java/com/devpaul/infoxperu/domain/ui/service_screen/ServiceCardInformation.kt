@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.district_screen
+package com.devpaul.infoxperu.domain.ui.service_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

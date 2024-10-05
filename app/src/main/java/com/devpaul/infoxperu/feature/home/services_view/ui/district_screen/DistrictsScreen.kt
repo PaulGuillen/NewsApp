@@ -22,7 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.District
-import com.devpaul.infoxperu.domain.ui.district_screen.DistrictGrid
+import com.devpaul.infoxperu.domain.ui.service_screen.DistrictGrid
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBarWithSearch
 
