@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.models.res.District
+import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
@@ -48,12 +49,12 @@ fun DistrictCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         onClick = {
-//            navController.navigate("districts/${district.type}")
-//            navController.navigate(
-//                Screen.AllServices.createRoute(
-//                    districtTypeSelected = district.type ?: ""
-//                )
-//            )
+            navController.navigate("district_management/${district.type}")
+            navController.navigate(
+                Screen.DistrictManagement.createRoute(
+                    districtSelected = district.type ?: ""
+                )
+            )
         }
 
     ) {

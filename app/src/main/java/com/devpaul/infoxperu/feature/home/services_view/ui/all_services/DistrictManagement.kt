@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -22,10 +23,9 @@ import com.devpaul.infoxperu.domain.models.res.Service
 import timber.log.Timber
 
 @Composable
-fun AllServices(
+fun DistrictManagement(
     navController: NavController,
-    serviceSelected: String?,  // policía, bombero, etc.
-    districtTypeSelected: String? // ancón, ate, etc.
+    districtSelected: String? // ancón, ate, etc.
 ) {
     val viewModel: AllServicesViewModel = hiltViewModel()
     val serviceData by viewModel.serviceSelected.collectAsState()
@@ -37,7 +37,7 @@ fun AllServices(
     ) {
         Button(
             onClick = {
-                viewModel.fetchAllServicesForDistrict(districtTypeSelected)
+                viewModel.fetchAllServicesForDistrict(districtSelected)
             }
         ) {
             Text("Ver Todo")
@@ -47,7 +47,6 @@ fun AllServices(
 
         when (serviceData) {
             is ResultState.Loading -> {
-                //CircularProgressIndicator()
                 Timber.d("Services : Cargando datos...")
             }
 
@@ -65,4 +64,13 @@ fun AllServices(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAllServices() {
+    DistrictManagement(
+        navController = NavController(LocalContext.current),
+        districtSelected = "policía"
+    )
 }

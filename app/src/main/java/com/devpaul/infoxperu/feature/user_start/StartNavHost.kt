@@ -11,7 +11,7 @@ import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news_view.NewsScreen
 import com.devpaul.infoxperu.feature.home.profile_view.ProfileScreen
 import com.devpaul.infoxperu.feature.home.services_view.ui.ContactScreen
-import com.devpaul.infoxperu.feature.home.services_view.ui.all_services.AllServices
+import com.devpaul.infoxperu.feature.home.services_view.ui.all_services.DistrictManagement
 import com.devpaul.infoxperu.feature.home.services_view.ui.district_screen.DistrictsScreen
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
 import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
@@ -24,9 +24,9 @@ sealed class Screen(val route: String) {
     data object Services : Screen("contacts")
     data object Districts : Screen("districts")
     data object Profile : Screen("profile")
-    data object AllServices : Screen("all_services/{serviceSelected}/{districtTypeSelected}") {
-        fun createRoute(serviceSelected: String, districtTypeSelected: String) =
-            "all_services/$serviceSelected/$districtTypeSelected"
+    data object DistrictManagement : Screen("district_management/{districtSelected}") {
+        fun createRoute(districtSelected: String) =
+            "district_management/$districtSelected"
     }
     data object AllNews : Screen("all_news/{newsType}/{country}") {
         fun createRoute(newsType: String, country: String) = "all_news/$newsType/$country"
@@ -61,15 +61,14 @@ fun StartNavHost(navController: NavHostController) {
         }
 
         composable(
-            route = Screen.AllServices.route,
+            route = Screen.DistrictManagement.route,
             arguments = listOf(
-                navArgument("serviceSelected") { type = NavType.StringType }
+                navArgument("districtSelected") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            AllServices(
+            DistrictManagement(
                 navController = navController,
-                serviceSelected = backStackEntry.arguments?.getString("serviceSelected"),
-                districtTypeSelected = backStackEntry.arguments?.getString("districtTypeSelected")
+                districtSelected = backStackEntry.arguments?.getString("districtSelected")
             )
         }
 
