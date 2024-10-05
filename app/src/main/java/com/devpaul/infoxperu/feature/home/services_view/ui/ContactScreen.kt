@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.ui.contacts_screen.ContactsCard
+import com.devpaul.infoxperu.domain.ui.district_screen.ContactsCard
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.contacts_screen
+package com.devpaul.infoxperu.domain.ui.district_screen
 
 import DistrictGridSkeleton
 import android.content.Context
