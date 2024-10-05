@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.district_screen
+package com.devpaul.infoxperu.domain.ui.service_screen
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
@@ -18,10 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.models.res.Country
-import com.devpaul.infoxperu.domain.ui.news_screen.CountryCard
 import com.devpaul.infoxperu.domain.ui.skeleton.CountryCardSkeleton
-import com.devpaul.infoxperu.feature.user_start.Screen
 
 @Composable
 fun DistrictManagement(

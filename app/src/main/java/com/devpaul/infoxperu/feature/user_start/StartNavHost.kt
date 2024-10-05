@@ -11,8 +11,8 @@ import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news_view.NewsScreen
 import com.devpaul.infoxperu.feature.home.profile_view.ProfileScreen
 import com.devpaul.infoxperu.feature.home.services_view.ui.ContactScreen
-import com.devpaul.infoxperu.feature.home.services_view.ui.all_services.DistrictManagement
 import com.devpaul.infoxperu.feature.home.services_view.ui.district_screen.DistrictsScreen
+import com.devpaul.infoxperu.feature.home.services_view.ui.management.DistrictManagement
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
 import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 

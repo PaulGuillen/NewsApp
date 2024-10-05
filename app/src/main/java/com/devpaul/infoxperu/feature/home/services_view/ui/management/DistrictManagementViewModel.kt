@@ -1,7 +1,8 @@
-package com.devpaul.infoxperu.feature.home.services_view.ui.all_services
+package com.devpaul.infoxperu.feature.home.services_view.ui.management
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
+import com.devpaul.infoxperu.domain.models.res.Contact
 import com.devpaul.infoxperu.domain.models.res.Service
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.home.services_view.ui.ContactUiEvent
@@ -14,7 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AllServicesViewModel @Inject constructor(
+class DistrictManagementViewModel @Inject constructor(
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
 ) : BaseViewModel<ContactUiEvent>(dataStoreUseCase) {
@@ -22,6 +23,10 @@ class AllServicesViewModel @Inject constructor(
     private val _serviceSelected =
         MutableStateFlow<ResultState<List<Service>>>(ResultState.Loading)
     val serviceSelected: StateFlow<ResultState<List<Service>>> = _serviceSelected
+
+    private val _contactSelected =
+        MutableStateFlow<ResultState<List<Contact>>>(ResultState.Loading)
+    val contactSelected: StateFlow<ResultState<List<Contact>>> = _contactSelected
 
     private val gson: Gson = Gson()
 
@@ -98,7 +103,6 @@ class AllServicesViewModel @Inject constructor(
                 _serviceSelected.value = ResultState.Error(Exception("Error fetching districts"))
             }
     }
-
 
     fun fetchService(serviceSelected: String?, districtType: String?) {
         if (serviceSelected == null || districtType == null) return
