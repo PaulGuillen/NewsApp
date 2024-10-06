@@ -16,11 +16,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,21 +40,10 @@ fun ContactsCard(
     navController: NavController,
     contactState: ResultState<List<Contact>>,
 ) {
-
-    var showSkeleton by remember { mutableStateOf(true) }
-
-    LaunchedEffect(contactState) {
-        showSkeleton = contactState is ResultState.Loading
-    }
-
-    if (showSkeleton) {
-        ContactSkeleton()
-    } else {
-        ContactsCardContent(
-            navController = navController,
-            contactState = contactState,
-        )
-    }
+    ContactsCardContent(
+        navController = navController,
+        contactState = contactState,
+    )
 }
 
 @Composable

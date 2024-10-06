@@ -1,14 +1,11 @@
 package com.devpaul.infoxperu.feature.home.services_view.ui.management
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,11 +22,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
+import com.devpaul.infoxperu.core.extension.EMPTY
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.mocks.ContactMock
+import com.devpaul.infoxperu.core.mocks.ServiceMock
 import com.devpaul.infoxperu.domain.models.res.Contact
+import com.devpaul.infoxperu.domain.models.res.Service
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.service_screen.SectionsRowContact
+import com.devpaul.infoxperu.domain.ui.service_screen.ServicesCards
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 
 @Composable
@@ -40,23 +41,24 @@ fun DistrictManagement(
 ) {
 
     val contactState by viewModel.contactState.collectAsState()
+    val serviceState by viewModel.serviceState.collectAsState()
     val context = LocalContext.current
-    var selectedContact by remember { mutableStateOf<String?>(null) }
+    var selectedContact by remember { mutableStateOf<String?>(String.EMPTY) }
 
     Scaffold(
         topBar = {
             TopBar(title = stringResource(R.string.app_name),
-                onLogoutClick = {
-                    viewModel.logOut(navController)
+                onBackClick = {
+                    navController.popBackStack()
                 })
         }
     ) { innerPadding ->
         DistrictContentManagement(
             modifier = Modifier.fillMaxSize(),
             contactState = contactState,
+            serviceState = serviceState,
             innerPadding = innerPadding,
             navController = navController,
-            districtSelected = districtSelected,
             selectedContact = selectedContact,
             onCountrySelected = { contact ->
                 selectedContact = contact
@@ -64,22 +66,19 @@ fun DistrictManagement(
                     districtSelected = districtSelected.toString(),
                     serviceSelected = contact
                 )
-                Toast.makeText(context, "Contacto seleccionado: $contact", Toast.LENGTH_SHORT)
-                    .show()
             },
             context = context
         )
     }
 }
 
-
 @Composable
 fun DistrictContentManagement(
     modifier: Modifier,
     contactState: ResultState<List<Contact>>,
+    serviceState: ResultState<List<Service>>,
     innerPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
-    districtSelected: String?,
     selectedContact: String?,
     onCountrySelected: (String) -> Unit,
     context: Context
@@ -87,7 +86,6 @@ fun DistrictContentManagement(
     Column(
         modifier = modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
     ) {
         SectionsRowContact(
             navHostController = navController,
@@ -100,21 +98,31 @@ fun DistrictContentManagement(
         Spacer(modifier = Modifier.padding(10.dp))
         DividerView()
         Spacer(modifier = Modifier.padding(10.dp))
+        if (selectedContact.isNullOrEmpty()) {
+            //Do something
+        } else {
+            ServicesCards(
+                navController = navController,
+                serviceState = serviceState,
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDistrictContentManagement() {
+fun SuccessDistrictSelected() {
 
     val contactMock = ContactMock()
+    val serviceMock = ServiceMock()
     val mockContactState = ResultState.Success(contactMock.contactListMock)
+    val serviceMockState = ResultState.Success(serviceMock.serviceListMock)
 
     DistrictContentManagement(
         modifier = Modifier.fillMaxSize(),
+        serviceState = serviceMockState,
         contactState = mockContactState,
         navController = rememberNavController(),
-        districtSelected = "Distrito 1",
         selectedContact = "Policía",
         onCountrySelected = { },
         context = LocalContext.current

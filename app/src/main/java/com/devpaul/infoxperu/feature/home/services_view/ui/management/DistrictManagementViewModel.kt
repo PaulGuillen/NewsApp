@@ -19,9 +19,9 @@ class DistrictManagementViewModel @Inject constructor(
     dataStoreUseCase: DataStoreUseCase
 ) : BaseViewModel<ContactUiEvent>(dataStoreUseCase) {
 
-    private val _serviceSelected =
+    private val _serviceState =
         MutableStateFlow<ResultState<List<Service>>>(ResultState.Loading)
-    val serviceSelected: StateFlow<ResultState<List<Service>>> = _serviceSelected
+    val serviceState: StateFlow<ResultState<List<Service>>> = _serviceState
 
     private val _contactState =
         MutableStateFlow<ResultState<List<Contact>>>(ResultState.Loading)
@@ -66,19 +66,19 @@ class DistrictManagementViewModel @Inject constructor(
                                 val service = services.toObject(Service::class.java)
                                 service.let { allServices.add(it) }
                             }
-                            _serviceSelected.value = ResultState.Success(allServices)
+                            _serviceState.value = ResultState.Success(allServices)
                             Timber.d("AllServices - Document data: $allServices")
                         }
                         .addOnFailureListener { exception ->
                             Timber.e(exception, "Error fetching bombero services")
-                            _serviceSelected.value =
+                            _serviceState.value =
                                 ResultState.Error(Exception("Error fetching bombero services"))
                         }
                 }
             }
             .addOnFailureListener { exception ->
                 Timber.e(exception, "Error fetching services")
-                _serviceSelected.value = ResultState.Error(Exception("Error fetching services"))
+                _serviceState.value = ResultState.Error(Exception("Error fetching services"))
             }
 
     }
