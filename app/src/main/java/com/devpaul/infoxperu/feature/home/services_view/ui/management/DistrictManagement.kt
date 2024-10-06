@@ -31,7 +31,7 @@ fun DistrictManagement(
     districtSelected: String?
 ) {
     val viewModel: DistrictManagementViewModel = hiltViewModel()
-    val contactDataState by viewModel.contactSelected.collectAsState()
+    val contactState by viewModel.contactState.collectAsState()
     val context = LocalContext.current
 
     Scaffold(
@@ -44,7 +44,7 @@ fun DistrictManagement(
     ) { innerPadding ->
         DistrictContentManagement(
             modifier = Modifier.fillMaxSize(),
-            contactDataState = contactDataState,
+            contactState = contactState,
             innerPadding = innerPadding,
             navController = navController,
             districtSelected = districtSelected,
@@ -56,7 +56,7 @@ fun DistrictManagement(
 @Composable
 fun DistrictContentManagement(
     modifier: Modifier,
-    contactDataState: ResultState<List<Contact>>,
+    contactState: ResultState<List<Contact>>,
     innerPadding: PaddingValues = PaddingValues(),
     navController: NavHostController,
     districtSelected: String?,
@@ -69,7 +69,7 @@ fun DistrictContentManagement(
     ) {
         SectionsRowContact(
             navHostController = navController,
-            sectionContactState = contactDataState,
+            sectionContactState = contactState,
             context = context,
         )
     }
@@ -84,7 +84,7 @@ fun PreviewDistrictContentManagement() {
 
     DistrictContentManagement(
         modifier = Modifier.fillMaxSize(),
-        contactDataState = mockContactState,
+        contactState = mockContactState,
         navController = rememberNavController(),
         districtSelected = "Distrito 1",
         context = LocalContext.current

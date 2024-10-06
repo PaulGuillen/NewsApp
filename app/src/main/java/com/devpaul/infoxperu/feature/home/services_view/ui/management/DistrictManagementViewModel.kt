@@ -24,11 +24,32 @@ class DistrictManagementViewModel @Inject constructor(
         MutableStateFlow<ResultState<List<Service>>>(ResultState.Loading)
     val serviceSelected: StateFlow<ResultState<List<Service>>> = _serviceSelected
 
-    private val _contactSelected =
+    private val _contactState =
         MutableStateFlow<ResultState<List<Contact>>>(ResultState.Loading)
-    val contactSelected: StateFlow<ResultState<List<Contact>>> = _contactSelected
+    val contactState: StateFlow<ResultState<List<Contact>>> = _contactState
 
     private val gson: Gson = Gson()
+
+    init {
+        fetchContacts()
+    }
+
+    private fun fetchContacts() {
+        _contactState.value = ResultState.Loading
+
+        firestore.collection("contacts")
+            .get()
+            .addOnSuccessListener { documents ->
+                val contactsList = documents.map { document ->
+                    document.toObject(Contact::class.java)
+                }
+                _contactState.value = ResultState.Success(contactsList)
+            }
+            .addOnFailureListener { exception ->
+                _contactState.value = ResultState.Error(exception)
+                Timber.e(exception)
+            }
+    }
 
     fun fetchAllServicesForDistrict(districtType: String?) {
         if (districtType == null) return
