@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import com.devpaul.infoxperu.ui.theme.White
 
@@ -34,10 +33,12 @@ import com.devpaul.infoxperu.ui.theme.White
 fun ContactCard(
     navController: NavController,
     contact: Contact,
+    onClick: (String) -> Unit
 ) {
     ContactCardContent(
         navController = navController,
         contact = contact,
+        onClick = onClick,
     )
 }
 
@@ -45,6 +46,7 @@ fun ContactCard(
 fun ContactCardContent(
     navController: NavController,
     contact: Contact,
+    onClick: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -57,7 +59,7 @@ fun ContactCardContent(
             containerColor = White
         ),
         onClick = {
-            navController.navigate(Screen.Districts.route)
+            onClick(contact.type.toString())
         }
     ) {
         Box(
@@ -102,6 +104,7 @@ fun ContactCardSuccessPreview() {
             type = "serenazgo",
             imageUrl = "https://www.deperu.com"
         ),
+        onClick = {}
     )
 }
 

@@ -2,7 +2,6 @@ package com.devpaul.infoxperu.domain.models.res
 
 data class Service(
     val title: String? = null,
-    val type: String? = null,
     val numberOne: String? = null,
     val numberTwo: String? = null,
     val description: String? = null,

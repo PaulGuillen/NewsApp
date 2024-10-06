@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,11 +20,13 @@ fun SectionsRowContact(
     navHostController: NavHostController,
     sectionContactState: ResultState<List<Contact>>,
     context: Context,
+    onContactSelected: (String) -> Unit,
 ) {
     SectionsRowContactContent(
         navHostController = navHostController,
         sectionContactState = sectionContactState,
         context = context,
+        onContactSelected = onContactSelected,
     )
 }
 
@@ -34,6 +35,7 @@ fun SectionsRowContactContent(
     navHostController: NavHostController,
     sectionContactState: ResultState<List<Contact>>,
     context: Context,
+    onContactSelected: (String) -> Unit,
 ) {
     when (sectionContactState) {
         is ResultState.Loading -> {
@@ -47,11 +49,15 @@ fun SectionsRowContactContent(
                         .horizontalScroll(rememberScrollState())
                 ) {
                     sectionContactState.data.forEach { sectionItem ->
-                        ContactCard(navHostController, sectionItem)
+                        ContactCard(
+                            navController = navHostController,
+                            contact = sectionItem,
+                            onClick = onContactSelected,
+                        )
                     }
                 }
             } else {
-                Text(text = "No hay secciones disponibles.")
+                ErrorCard(cardHeight = 140)
             }
         }
 
@@ -74,6 +80,7 @@ fun SectionsRowContactSuccessPreview() {
         navHostController = rememberNavController(),
         sectionContactState = sectionsState,
         context = LocalContext.current,
+        onContactSelected = { }
     )
 }
 
@@ -84,6 +91,7 @@ fun SectionsRowLoadingPreview() {
         navHostController = rememberNavController(),
         sectionContactState = ResultState.Loading,
         context = LocalContext.current,
+        onContactSelected = { }
     )
 }
 
@@ -95,5 +103,6 @@ fun SectionsRowErrorPreview() {
         navHostController = rememberNavController(),
         sectionContactState = sectionsState,
         context = LocalContext.current,
+        onContactSelected = { }
     )
 }
