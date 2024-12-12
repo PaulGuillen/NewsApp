@@ -25,11 +25,10 @@ class LoginViewModel @Inject constructor(
         setLoading(true)
         viewModelScope.launch {
             try {
-                val result = auth.signInWithEmailAndPassword(email, password).await() // Utiliza await para esperar asincrónicamente
+                val result = auth.signInWithEmailAndPassword(email, password).await()
                 setLoading(false)
                 if (result.user != null) {
                     dataStoreUseCase.setValue("logIn", true)
-                    Timber.d("logIn - LoginViewModelOne: ${dataStoreUseCase.getBoolean("logIn")}")
                     setUiEvent(LoginUiEvent.LoginSuccess("Inicio de sesión exitoso"))
                 } else {
                     setUiEvent(LoginUiEvent.LoginError("Inicio de sesión fallido"))
@@ -76,8 +75,6 @@ class LoginViewModel @Inject constructor(
                     setUiEvent(LoginUiEvent.LoginSuccess("Usuario ya autenticado"))
                 }
                 setLoading(false)
-            } else {
-                Timber.d("No loading shown as user not logged in.")
             }
         }
     }

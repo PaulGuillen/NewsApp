@@ -48,26 +48,24 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
-                    viewModel.resetUiEvent()
                 }
 
                 is LoginUiEvent.LoginError -> {
                     showSnackBar((uiEvent as LoginUiEvent.LoginError).error)
-                    viewModel.resetUiEvent()
                 }
 
                 is LoginUiEvent.RecoveryPasswordSuccess -> {
                     showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordSuccess).message)
-                    viewModel.resetUiEvent()
                 }
 
                 is LoginUiEvent.RecoveryPasswordError -> {
                     showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordError).error)
-                    viewModel.resetUiEvent()
                 }
 
-                else -> Unit
+                null -> Unit
             }
+
+            viewModel.resetUiEvent()
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
