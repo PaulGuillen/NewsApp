@@ -1,17 +1,10 @@
 package com.devpaul.infoxperu.feature.user_start.login
 
 import androidx.lifecycle.viewModelScope
-import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
+import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
-import com.devpaul.infoxperu.feature.util.Constant.LOGIN_DELAY
-import com.devpaul.infoxperu.feature.util.Constant.LOGIN_ERROR
-import com.devpaul.infoxperu.feature.util.Constant.LOGIN_FAILURE
-import com.devpaul.infoxperu.feature.util.Constant.LOGIN_SUCCESS
+import com.devpaul.infoxperu.feature.util.Constant
 import com.devpaul.infoxperu.feature.util.Constant.LOG_IN_KEY
-import com.devpaul.infoxperu.feature.util.Constant.PASSWORD_RECOVERY_ERROR
-import com.devpaul.infoxperu.feature.util.Constant.PASSWORD_RECOVERY_FAILURE
-import com.devpaul.infoxperu.feature.util.Constant.PASSWORD_RECOVERY_SUCCESS
-import com.devpaul.infoxperu.feature.util.Constant.USER_ALREADY_LOGGED_IN
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -23,52 +16,43 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val dataStoreUseCase: DataStoreUseCase
-) : BaseViewModel<LoginUiEvent>() {
+) : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
-    init {
-        checkUserLoggedIn()
+    override suspend fun handleIntent(intent: LoginUiIntent) {
+        when (intent) {
+            is LoginUiIntent.Login -> login(intent.email, intent.password)
+            is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(intent.email)
+            is LoginUiIntent.CheckUserLoggedIn -> checkUserLoggedIn()
+        }
     }
 
-    fun login(email: String, password: String) {
+    private fun login(email: String, password: String) {
         setLoading(true)
         viewModelScope.launch {
             try {
                 val result = auth.signInWithEmailAndPassword(email, password).await()
                 if (result.user != null) {
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                    setUiEvent(LoginUiEvent.LoginSuccess(LOGIN_SUCCESS))
+                    setUiEvent(LoginUiEvent.LoginSuccess(Constant.LOGIN_SUCCESS))
                 } else {
-                    setUiEvent(LoginUiEvent.LoginError(LOGIN_FAILURE))
+                    setUiEvent(LoginUiEvent.LoginError(Constant.LOGIN_FAILURE))
                 }
             } catch (e: Exception) {
-                setUiEvent(LoginUiEvent.LoginError("$LOGIN_ERROR${e.message}"))
+                setUiEvent(LoginUiEvent.LoginError("${Constant.LOGIN_ERROR} ${e.message}"))
             } finally {
                 setLoading(false)
             }
         }
     }
 
-    fun sendPasswordResetEmail(email: String) {
+    private fun sendPasswordResetEmail(email: String) {
         setLoading(true)
         viewModelScope.launch {
             try {
-                auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            setUiEvent(
-                                LoginUiEvent.RecoveryPasswordSuccess(
-                                    PASSWORD_RECOVERY_SUCCESS
-                                )
-                            )
-                        } else {
-                            setUiEvent(LoginUiEvent.RecoveryPasswordError(PASSWORD_RECOVERY_FAILURE))
-                        }
-                    }
-                    .addOnFailureListener {
-                        setUiEvent(LoginUiEvent.RecoveryPasswordError("$PASSWORD_RECOVERY_ERROR${it.message}"))
-                    }
+                auth.sendPasswordResetEmail(email).await()
+                setUiEvent(LoginUiEvent.RecoveryPasswordSuccess(Constant.PASSWORD_RECOVERY_SUCCESS))
             } catch (e: Exception) {
-                setUiEvent(LoginUiEvent.RecoveryPasswordError("$PASSWORD_RECOVERY_ERROR${e.message}"))
+                setUiEvent(LoginUiEvent.RecoveryPasswordError("${Constant.PASSWORD_RECOVERY_FAILURE} ${e.message}"))
             } finally {
                 setLoading(false)
             }
@@ -80,9 +64,9 @@ class LoginViewModel @Inject constructor(
             val logIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) ?: false
             if (logIn) {
                 setLoading(true)
-                delay(LOGIN_DELAY)
+                delay(Constant.LOGIN_DELAY)
                 if (auth.currentUser != null) {
-                    setUiEvent(LoginUiEvent.LoginSuccess(USER_ALREADY_LOGGED_IN))
+                    setUiEvent(LoginUiEvent.LoginSuccess(Constant.USER_ALREADY_LOGGED_IN))
                 }
                 setLoading(false)
             }

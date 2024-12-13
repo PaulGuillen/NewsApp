@@ -1,7 +1,6 @@
 package com.devpaul.infoxperu.feature.home.home_view.ui
 
 import androidx.lifecycle.*
-import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
 import com.devpaul.infoxperu.domain.models.res.ApiException
