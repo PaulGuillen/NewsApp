@@ -16,10 +16,10 @@ class RegisterViewModel @Inject constructor(
     override suspend fun handleIntent(intent: RegisterUiIntent) {
         when (intent) {
             is RegisterUiIntent.Register -> register(
-                intent.name,
-                intent.lastname,
-                intent.email,
-                intent.password
+                name = intent.name,
+                lastName = intent.lastname,
+                email = intent.email,
+                password = intent.password
             )
         }
     }

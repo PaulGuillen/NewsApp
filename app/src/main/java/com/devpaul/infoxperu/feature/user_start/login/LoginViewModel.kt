@@ -18,8 +18,8 @@ class LoginViewModel @Inject constructor(
 
     override suspend fun handleIntent(intent: LoginUiIntent) {
         when (intent) {
-            is LoginUiIntent.Login -> login(intent.email, intent.password)
-            is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(intent.email)
+            is LoginUiIntent.Login -> login(email = intent.email, password = intent.password)
+            is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)
             is LoginUiIntent.CheckUserLoggedIn -> checkUserLoggedIn()
         }
     }
