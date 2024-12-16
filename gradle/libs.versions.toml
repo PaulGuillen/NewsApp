@@ -1,7 +1,7 @@
 # Archivo libs.versions.toml
 
 [versions]
-agp = "8.5.1"
+agp = "8.5.2"
 kotlin = "1.9.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"

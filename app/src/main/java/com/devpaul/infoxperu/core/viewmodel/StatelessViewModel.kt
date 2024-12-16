@@ -69,7 +69,7 @@ abstract class StatelessViewModel<T, I>(
         uiIntentChannel.trySendBlocking(intent)
     }
 
-    protected open suspend fun handleIntent(intent: I) {
+    protected open fun handleIntent(intent: I) {
         // Subclasses should override to handle intents
     }
 

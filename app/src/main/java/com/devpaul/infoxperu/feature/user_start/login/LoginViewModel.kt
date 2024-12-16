@@ -16,7 +16,7 @@ class LoginViewModel @Inject constructor(
     private val dataStoreUseCase: DataStoreUseCase,
 ) : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
-    override suspend fun handleIntent(intent: LoginUiIntent) {
+    override fun handleIntent(intent: LoginUiIntent) {
         when (intent) {
             is LoginUiIntent.Login -> login(email = intent.email, password = intent.password)
             is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)

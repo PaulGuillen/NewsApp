@@ -17,7 +17,7 @@ class RegisterViewModel @Inject constructor(
     private val dataStoreUseCase: DataStoreUseCase,
 ) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
 
-    override suspend fun handleIntent(intent: RegisterUiIntent) {
+    override fun handleIntent(intent: RegisterUiIntent) {
         when (intent) {
             is RegisterUiIntent.Register -> register(
                 name = intent.name,
