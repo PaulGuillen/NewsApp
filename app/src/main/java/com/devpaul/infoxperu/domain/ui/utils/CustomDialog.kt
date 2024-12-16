@@ -1,6 +1,5 @@
 package com.devpaul.infoxperu.domain.ui.utils
 
-import android.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.ui.theme.BrickRed
 import com.devpaul.infoxperu.ui.theme.White
 
@@ -75,7 +75,7 @@ fun CustomDialog(
 @Composable
 fun CustomDialogPreview() {
     CustomDialog(
-        image = painterResource(id = R.drawable.ic_dialog_alert),
+        image = painterResource(id = R.drawable.baseline_check_circle_24),
         title = "Title",
         description = "Description",
         buttonText = "Button",

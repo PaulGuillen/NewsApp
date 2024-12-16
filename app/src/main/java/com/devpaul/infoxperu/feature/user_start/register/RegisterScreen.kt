@@ -94,6 +94,11 @@ fun RegisterScreen(
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
+
+            if (isLoading) {
+                ScreenLoading()
+            }
+
             RegisterContent(
                 navController = navController,
                 onRegister = { name, lastName, email, password ->
@@ -108,10 +113,6 @@ fun RegisterScreen(
                 }, showSnackBar = { message ->
                     showSnackBar(message)
                 })
-
-            if (isLoading) {
-                ScreenLoading()
-            }
         }
     }
 }

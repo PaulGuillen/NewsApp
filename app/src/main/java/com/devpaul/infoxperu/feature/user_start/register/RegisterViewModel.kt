@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.feature.user_start.register
 
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
+import com.devpaul.infoxperu.feature.util.Constant
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
 ) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
 
     override suspend fun handleIntent(intent: RegisterUiIntent) {
@@ -19,7 +20,7 @@ class RegisterViewModel @Inject constructor(
                 name = intent.name,
                 lastName = intent.lastname,
                 email = intent.email,
-                password = intent.password
+                password = intent.password,
             )
         }
     }
@@ -37,20 +38,20 @@ class RegisterViewModel @Inject constructor(
                 val userId = result.user?.uid
                 if (userId != null) {
                     val user = hashMapOf(
-                        "uid" to userId,
-                        "name" to name,
-                        "lastName" to lastName,
-                        "email" to email,
-                        "password" to password
+                        Constant.ID_FIELD to userId,
+                        Constant.NAME_FIELD to name,
+                        Constant.LAST_NAME_FIELD to lastName,
+                        Constant.EMAIL_FIELD to email,
+                        Constant.PASSWORD_FIELD to password
                     )
-                    firestore.collection("users").document(userId).set(user).await()
-                    setUiEvent(RegisterUiEvent.RegisterSuccess("Registro exitoso"))
+                    firestore.collection(Constant.USERS_COLLECTION).document(userId).set(user).await()
+                    setUiEvent(RegisterUiEvent.RegisterSuccess(Constant.REGISTER_SUCCESS))
                 } else {
-                    setUiEvent(RegisterUiEvent.RegisterError("Error al obtener el ID del usuario"))
+                    setUiEvent(RegisterUiEvent.RegisterError(Constant.REGISTER_ERROR))
                 }
             },
             onError = { error ->
-                setUiEvent(RegisterUiEvent.RegisterError("Error en el registro: ${error.message}"))
+                setUiEvent(RegisterUiEvent.RegisterError("${Constant.REGISTER_FAILURE} ${error.message}"))
             },
             onComplete = {
                 setLoading(false)

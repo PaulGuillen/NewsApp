@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val dataStoreUseCase: DataStoreUseCase
+    private val dataStoreUseCase: DataStoreUseCase,
 ) : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
     override suspend fun handleIntent(intent: LoginUiIntent) {

@@ -75,6 +75,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hi
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
+
                 is LoginUiEvent.LoginError -> showSnackBar((uiEvent as LoginUiEvent.LoginError).error)
                 is LoginUiEvent.RecoveryPasswordSuccess -> showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordSuccess).message)
                 is LoginUiEvent.RecoveryPasswordError -> showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordError).error)
