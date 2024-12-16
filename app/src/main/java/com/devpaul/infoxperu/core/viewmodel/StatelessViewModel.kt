@@ -7,7 +7,9 @@ import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 abstract class StatelessViewModel<T, I>(
@@ -30,6 +32,26 @@ abstract class StatelessViewModel<T, I>(
         }
     }
 
+    fun executeInScope(
+        block: suspend () -> Unit,
+        onError: ((Throwable) -> Unit)? = null,
+        onComplete: (() -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                block()
+            } catch (e: Throwable) {
+                handleGlobalError(e, onError)
+            } finally {
+                onComplete?.invoke()
+            }
+        }
+    }
+
+    private fun handleGlobalError(error: Throwable, onError: ((Throwable) -> Unit)? = null) {
+        onError?.invoke(error)
+    }
+
     protected fun setLoading(isLoading: Boolean) {
         _isLoading.value = isLoading
     }
@@ -42,6 +64,14 @@ abstract class StatelessViewModel<T, I>(
         _uiEvent.value = null
     }
 
+    fun executeUiIntent(intent: I) {
+        uiIntentChannel.trySendBlocking(intent)
+    }
+
+    protected open suspend fun handleIntent(intent: I) {
+        // Subclasses should override to handle intents
+    }
+
     fun logOut(navHostController: NavHostController) {
         viewModelScope.launch {
             FirebaseAuth.getInstance().signOut()
@@ -50,16 +80,5 @@ abstract class StatelessViewModel<T, I>(
                 popUpTo(0) { inclusive = true }
             }
         }
-    }
-
-    fun executeUiIntent(intent: I) {
-        uiIntentChannel.trySendBlocking(intent)
-    }
-
-    /**
-     * Override this method to handle specific intents in subclasses.
-     */
-    protected open suspend fun handleIntent(intent: I) {
-        // Subclasses should override to handle intents
     }
 }

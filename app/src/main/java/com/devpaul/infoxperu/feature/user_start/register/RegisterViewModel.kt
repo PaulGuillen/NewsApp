@@ -1,11 +1,9 @@
 package com.devpaul.infoxperu.feature.user_start.register
 
-import androidx.lifecycle.viewModelScope
-import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
+import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -13,12 +11,28 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
-) : BaseViewModel<RegisterUiEvent>() {
+) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
 
-    fun register(name: String, lastName: String, email: String, password: String, confirmPassword: String) {
+    override suspend fun handleIntent(intent: RegisterUiIntent) {
+        when (intent) {
+            is RegisterUiIntent.Register -> register(
+                intent.name,
+                intent.lastname,
+                intent.email,
+                intent.password
+            )
+        }
+    }
+
+    fun register(
+        name: String,
+        lastName: String,
+        email: String,
+        password: String,
+    ) {
         setLoading(true)
-        viewModelScope.launch {
-            try {
+        executeInScope(
+            block = {
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
                 val userId = result.user?.uid
                 if (userId != null) {
@@ -34,11 +48,13 @@ class RegisterViewModel @Inject constructor(
                 } else {
                     setUiEvent(RegisterUiEvent.RegisterError("Error al obtener el ID del usuario"))
                 }
-            } catch (e: Exception) {
-                setUiEvent(RegisterUiEvent.RegisterError("Error en el registro: ${e.message}"))
-            } finally {
+            },
+            onError = { error ->
+                setUiEvent(RegisterUiEvent.RegisterError("Error en el registro: ${error.message}"))
+            },
+            onComplete = {
                 setLoading(false)
             }
-        }
+        )
     }
 }

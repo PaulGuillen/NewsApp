@@ -71,17 +71,17 @@ fun RegisterScreen(
         LaunchedEffect(uiEvent) {
             when (uiEvent) {
                 is RegisterUiEvent.RegisterSuccess -> {
-                    viewModel.resetUiEvent()
                     showDialog = true
                 }
 
                 is RegisterUiEvent.RegisterError -> {
                     showSnackBar((uiEvent as RegisterUiEvent.RegisterError).error)
-                    viewModel.resetUiEvent()
                 }
 
                 else -> Unit
             }
+
+            viewModel.resetUiEvent()
         }
 
         if (showDialog) {
@@ -96,13 +96,14 @@ fun RegisterScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             RegisterContent(
                 navController = navController,
-                onRegister = { name, lastName, email, password, confirmPassword ->
-                    viewModel.register(
-                        name.trim(),
-                        lastName.trim(),
-                        email.trim(),
-                        password.trim(),
-                        confirmPassword.trim()
+                onRegister = { name, lastName, email, password ->
+                    viewModel.executeUiIntent(
+                        RegisterUiIntent.Register(
+                            name = name.trim(),
+                            lastname = lastName.trim(),
+                            email = email.trim(),
+                            password = password.trim(),
+                        )
                     )
                 }, showSnackBar = { message ->
                     showSnackBar(message)
@@ -118,7 +119,7 @@ fun RegisterScreen(
 @Composable
 fun RegisterContent(
     navController: NavHostController,
-    onRegister: (String, String, String, String, String) -> Unit,
+    onRegister: (String, String, String, String) -> Unit,
     showSnackBar: (String) -> Unit
 ) {
 
@@ -138,7 +139,7 @@ fun RegisterContent(
         if (validationResult != null) {
             showSnackBar(validationResult)
         } else {
-            onRegister(name, lastName, email, password, confirmPassword)
+            onRegister(name, lastName, email, password)
         }
     }
 
@@ -286,5 +287,5 @@ fun RegisterContent(
 @Composable
 fun PreviewRegisterScreen() {
     val navController = rememberNavController()
-    RegisterContent(navController, onRegister = { _, _, _, _, _ -> }, showSnackBar = { })
+    RegisterContent(navController, onRegister = { _, _, _, _ -> }, showSnackBar = { })
 }
