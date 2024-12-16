@@ -1,7 +1,9 @@
 package com.devpaul.infoxperu.feature.user_start.register
 
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
+import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.util.Constant
+import com.devpaul.infoxperu.feature.util.Constant.LOG_IN_KEY
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +14,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
+    private val dataStoreUseCase: DataStoreUseCase,
 ) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
 
     override suspend fun handleIntent(intent: RegisterUiIntent) {
@@ -45,6 +48,7 @@ class RegisterViewModel @Inject constructor(
                         Constant.PASSWORD_FIELD to password
                     )
                     firestore.collection(Constant.USERS_COLLECTION).document(userId).set(user).await()
+                    dataStoreUseCase.setValue(LOG_IN_KEY, true)
                     setUiEvent(RegisterUiEvent.RegisterSuccess(Constant.REGISTER_SUCCESS))
                 } else {
                     setUiEvent(RegisterUiEvent.RegisterError(Constant.REGISTER_ERROR))

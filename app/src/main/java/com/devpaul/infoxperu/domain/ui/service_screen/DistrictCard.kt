@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.utils
+package com.devpaul.infoxperu.domain.ui.service_screen
 
 import android.content.Context
 import androidx.compose.foundation.Image

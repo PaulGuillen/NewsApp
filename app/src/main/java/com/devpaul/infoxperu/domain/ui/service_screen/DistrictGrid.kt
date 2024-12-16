@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.extension.removeAccents
 import com.devpaul.infoxperu.domain.models.res.District
-import com.devpaul.infoxperu.domain.ui.utils.DistrictCard
 
 @Composable
 fun DistrictGrid(

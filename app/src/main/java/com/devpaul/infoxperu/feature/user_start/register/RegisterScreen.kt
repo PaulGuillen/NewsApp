@@ -10,20 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,12 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +40,9 @@ import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.validateRegistration
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.screen.ShowDialogSuccessRegister
+import com.devpaul.infoxperu.domain.ui.register_screen.RegisterFormCallbacks
+import com.devpaul.infoxperu.domain.ui.register_screen.RegisterFormFields
+import com.devpaul.infoxperu.domain.ui.register_screen.RegisterFormState
 import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
 import com.devpaul.infoxperu.ui.theme.BrickRed
@@ -123,7 +113,7 @@ fun RegisterContent(
     onRegister: (String, String, String, String) -> Unit,
     showSnackBar: (String) -> Unit
 ) {
-
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -131,7 +121,6 @@ fun RegisterContent(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     fun validateAndRegister() {
         val validationResult = validateRegistration(
@@ -143,6 +132,26 @@ fun RegisterContent(
             onRegister(name, lastName, email, password)
         }
     }
+
+    val state = RegisterFormState(
+        name = name,
+        lastName = lastName,
+        email = email,
+        password = password,
+        confirmPassword = confirmPassword,
+        passwordVisible = passwordVisible,
+        confirmPasswordVisible = confirmPasswordVisible
+    )
+
+    val callbacks = RegisterFormCallbacks(
+        onNameChange = { name = it },
+        onLastNameChange = { lastName = it },
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onConfirmPasswordChange = { confirmPassword = it },
+        onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
+        onConfirmPasswordVisibilityChange = { confirmPasswordVisible = !confirmPasswordVisible }
+    )
 
     Column(
         modifier = Modifier
@@ -158,128 +167,34 @@ fun RegisterContent(
             colors = CardDefaults.cardColors(containerColor = White),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
+            Column(modifier = Modifier.padding(20.dp)) {
                 Text(
                     text = stringResource(id = R.string.register_screen_description),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 )
 
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(id = R.string.register_screen_name)) },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = lastName,
-                    onValueChange = { lastName = it },
-                    label = { Text(stringResource(id = R.string.register_screen_last_name)) },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(stringResource(id = R.string.register_screen_email)) },
-                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Next
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(stringResource(id = R.string.register_screen_password)) },
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    trailingIcon = {
-                        val image = if (passwordVisible)
-                            painterResource(id = R.drawable.baseline_visibility_24)
-                        else
-                            painterResource(id = R.drawable.baseline_visibility_off_24)
-
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(painter = image, contentDescription = null)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Next
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text(stringResource(id = R.string.register_screen_confirm_password)) },
-                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                    trailingIcon = {
-                        val image = if (confirmPasswordVisible)
-                            painterResource(id = R.drawable.baseline_visibility_24)
-                        else
-                            painterResource(id = R.drawable.baseline_visibility_off_24)
-
-                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                            Icon(painter = image, contentDescription = null)
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    )
-                )
+                RegisterFormFields(state = state, callbacks = callbacks)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = {
-                        validateAndRegister()
-                    },
+                    onClick = { validateAndRegister() },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     shape = RectangleShape,
                     elevation = ButtonDefaults.buttonElevation(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BrickRed,
-                        contentColor = White
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = BrickRed, contentColor = White)
                 ) {
                     Text(stringResource(id = R.string.register_screen_register_button))
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(8.dp))
-        TextButton(
-            onClick = { navController.popBackStack() }
-        ) {
-            Text(
-                stringResource(id = R.string.register_screen_already_have_account),
-                color = BrickRed
-            )
+
+        TextButton(onClick = { navController.popBackStack() }) {
+            Text(stringResource(id = R.string.register_screen_already_have_account), color = BrickRed)
         }
     }
 }
