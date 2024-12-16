@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
+import com.devpaul.infoxperu.feature.util.Constant
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -75,8 +76,8 @@ abstract class StatelessViewModel<T, I>(
     fun logOut(navHostController: NavHostController) {
         viewModelScope.launch {
             FirebaseAuth.getInstance().signOut()
-            dataStoreUseCase?.setValue("logIn", false)
-            navHostController.navigate("login") {
+            dataStoreUseCase?.setValue(Constant.LOG_IN_KEY, false)
+            navHostController.navigate(Constant.LOG_IN_KEY) {
                 popUpTo(0) { inclusive = true }
             }
         }
