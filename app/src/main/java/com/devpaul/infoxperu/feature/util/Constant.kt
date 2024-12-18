@@ -27,4 +27,8 @@ object Constant {
 
     // Other constants
     const val LOGIN_DELAY = 3000L
+
+    //Collections
+    const val GRATITUDE = "gratitude"
+    const val SECTION_ITEMS = "sectionItems"
 }

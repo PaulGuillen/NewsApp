@@ -1,9 +1,7 @@
 package com.devpaul.infoxperu.feature.home.home_view.ui
 
-import androidx.lifecycle.viewModelScope
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
-import com.devpaul.infoxperu.domain.models.res.ApiException
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
 import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
@@ -11,11 +9,11 @@ import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.DollarQuoteUseCase
 import com.devpaul.infoxperu.feature.home.home_view.uc.UITUseCase
+import com.devpaul.infoxperu.feature.util.Constant
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,7 +76,7 @@ class HomeViewModel @Inject constructor(
 
         executeInScope(
             block = {
-                firestore.collection("gratitude")
+                firestore.collection(Constant.GRATITUDE)
                     .get()
                     .addOnSuccessListener { documents ->
                         val gratitudeList = documents.map { document ->
@@ -101,7 +99,7 @@ class HomeViewModel @Inject constructor(
 
         executeInScope(
             block = {
-                firestore.collection("sectionItems")
+                firestore.collection(Constant.USERS_COLLECTION)
                     .get()
                     .addOnSuccessListener { result ->
                         val sectionList = result.map { document ->
