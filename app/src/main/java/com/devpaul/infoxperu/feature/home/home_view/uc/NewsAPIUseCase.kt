@@ -1,19 +1,20 @@
 package com.devpaul.infoxperu.feature.home.home_view.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.ArticleNewsResponse
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NewsAPIUseCase @Inject constructor(
     private val repository: NewsRepository,
+    private val dispatcherProvider: CoroutineDispatcherProvider,
 ) {
     suspend operator fun invoke(limit: Int, initLetters: String): ResultState<NewsResponse> {
         return try {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcherProvider.io) {
                 val response = repository.newsAPI(initLetters)
                 val sortedNewsItems = response.articles.sortedByDescending {
                     parseDate(it.publishDate)

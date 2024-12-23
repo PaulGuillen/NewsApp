@@ -1,11 +1,11 @@
 package com.devpaul.infoxperu.feature.home.home_view.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
 import com.devpaul.infoxperu.feature.home.home_view.repository.GoogleNewsMapper
 import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 class GoogleNewsUseCase @Inject constructor(
     private val repository: NewsRepository,
-    private val mapper: GoogleNewsMapper
+    private val mapper: GoogleNewsMapper,
+    private val dispatcherProvider: CoroutineDispatcherProvider,
 ) {
     suspend operator fun invoke(
         limit: Int,
@@ -21,7 +22,7 @@ class GoogleNewsUseCase @Inject constructor(
         language: String
     ): ResultState<GoogleNewsJSON> {
         return try {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcherProvider.io) {
                 val response = repository.googleNews(query, language)
                 val mappedResponse = mapper.mapToGoogleNewsJSON(response)
                 val sortedNewsItems = sortNewsItemsByDate(mappedResponse.newsItems)

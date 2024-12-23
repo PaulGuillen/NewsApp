@@ -1,6 +1,7 @@
 package com.devpaul.infoxperu.feature.home.home_view.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
@@ -10,10 +11,11 @@ import javax.inject.Inject
 
 class RedditUseCase @Inject constructor(
     private val repository: NewsRepository,
+    private val dispatcherProvider: CoroutineDispatcherProvider,
 ) {
     suspend operator fun invoke(limit: Int, country: String): ResultState<RedditResponse> {
         return try {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcherProvider.io) {
                 val response = repository.redditNews(country)
                 val sortedNewsItems =
                     response.data.children.sortedByDescending { it.data.createdUtc }

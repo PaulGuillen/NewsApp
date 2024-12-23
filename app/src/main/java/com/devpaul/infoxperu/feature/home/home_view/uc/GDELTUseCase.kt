@@ -1,10 +1,10 @@
 package com.devpaul.infoxperu.feature.home.home_view.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.Article
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 class GDELTUseCase @Inject constructor(
     private val repository: NewsRepository,
+    private val dispatcherProvider: CoroutineDispatcherProvider,
 ) {
 
     suspend operator fun invoke(
@@ -21,7 +22,7 @@ class GDELTUseCase @Inject constructor(
         format: String
     ): ResultState<GDELProject> {
         return try {
-            withContext(Dispatchers.IO) {
+            withContext(dispatcherProvider.io) {
                 val response = repository.deltaProject(query, mode, format)
                 val validArticles = filterValidArticles(response.articles)
                 val sortedArticles = sortArticlesByDate(validArticles)
