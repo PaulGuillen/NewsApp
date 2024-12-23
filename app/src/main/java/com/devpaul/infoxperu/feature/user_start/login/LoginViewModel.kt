@@ -31,13 +31,13 @@ class LoginViewModel @Inject constructor(
                 val result = auth.signInWithEmailAndPassword(email, password).await()
                 if (result.user != null) {
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                    setUiEvent(LoginUiEvent.LoginSuccess(Constant.LOGIN_SUCCESS))
+                    setUiEvent(LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS))
                 } else {
-                    setUiEvent(LoginUiEvent.LoginError(Constant.LOGIN_FAILURE))
+                    setUiEvent(LoginUiEvent.LoginError(error = Constant.LOGIN_FAILURE))
                 }
             },
             onError = { error ->
-                setUiEvent(LoginUiEvent.LoginError("${Constant.LOGIN_ERROR} ${error.message}"))
+                setUiEvent(LoginUiEvent.LoginError(error = "${Constant.LOGIN_ERROR} ${error.message}"))
             },
             onComplete = {
                 setLoading(false)
@@ -50,10 +50,10 @@ class LoginViewModel @Inject constructor(
         executeInScope(
             block = {
                 auth.sendPasswordResetEmail(email).await()
-                setUiEvent(LoginUiEvent.RecoveryPasswordSuccess(Constant.PASSWORD_RECOVERY_SUCCESS))
+                setUiEvent(LoginUiEvent.RecoveryPasswordSuccess(message = Constant.PASSWORD_RECOVERY_SUCCESS))
             },
             onError = { error ->
-                setUiEvent(LoginUiEvent.RecoveryPasswordError("${Constant.PASSWORD_RECOVERY_FAILURE} ${error.message}"))
+                setUiEvent(LoginUiEvent.RecoveryPasswordError(error = "${Constant.PASSWORD_RECOVERY_FAILURE} ${error.message}"))
             },
             onComplete = {
                 setLoading(false)

@@ -1,7 +1,12 @@
 package com.devpaul.infoxperu.core.mocks
 
 import com.devpaul.infoxperu.domain.models.res.Contact
+import com.devpaul.infoxperu.domain.models.res.CotizacionItem
+import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
+import com.devpaul.infoxperu.domain.models.res.Gratitude
+import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.models.res.Service
+import com.devpaul.infoxperu.domain.models.res.UITResponse
 
 data class ContactMock(
     val contactListMock: List<Contact> = listOf(
@@ -42,4 +47,46 @@ data class ServiceMock(
         imageTwo = "",
         imageThree = "",
     ),
+)
+
+data class SectionMock(
+    val sectionMock: List<SectionItem> = listOf(
+        SectionItem(title = "Noticias", type = "news"),
+        SectionItem(title = "Distritos", type = "districts")
+    )
+)
+
+data class GratitudeMock(
+    val gratitudeMock: List<Gratitude> = listOf(
+        Gratitude(
+            image = "https://via.placeholder.com/150",
+            title = "Mock Title 1",
+            url = "https://example.com",
+        ),
+        Gratitude(
+            image = "https://via.placeholder.com/150",
+            title = "Mock Title 2",
+            url = "https://example.com",
+        )
+    )
+)
+
+data class DollarQuoteMock(
+    val dollarQuoteMock: DollarQuoteResponse = DollarQuoteResponse(
+        cotizacion = listOf(
+            CotizacionItem(
+                compra = 3.61,
+                venta = 3.72
+            )
+        ),
+        fecha = "2021-10-10",
+    )
+)
+
+data class UITMock(
+    val uitMock: UITResponse = UITResponse(
+        UIT = 123.45,
+        periodo = 1,
+        servicio = "Mock Service"
+    )
 )

@@ -49,13 +49,13 @@ class RegisterViewModel @Inject constructor(
                     )
                     firestore.collection(Constant.USERS_COLLECTION).document(userId).set(user).await()
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                    setUiEvent(RegisterUiEvent.RegisterSuccess(Constant.REGISTER_SUCCESS))
+                    setUiEvent(RegisterUiEvent.RegisterSuccess(message = Constant.REGISTER_SUCCESS))
                 } else {
-                    setUiEvent(RegisterUiEvent.RegisterError(Constant.REGISTER_ERROR))
+                    setUiEvent(RegisterUiEvent.RegisterError(error = Constant.REGISTER_ERROR))
                 }
             },
             onError = { error ->
-                setUiEvent(RegisterUiEvent.RegisterError("${Constant.REGISTER_FAILURE} ${error.message}"))
+                setUiEvent(RegisterUiEvent.RegisterError(error = "${Constant.REGISTER_FAILURE} ${error.message}"))
             },
             onComplete = {
                 setLoading(false)

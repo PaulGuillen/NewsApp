@@ -38,14 +38,16 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<ResultState<List<SectionItem>>>(ResultState.Loading)
     val sectionsState: StateFlow<ResultState<List<SectionItem>>> = _sectionsState
 
-    init {
-        getDollarQuote()
-        getUit()
-        fetchGratitude()
-        fetchSections()
+    override fun handleIntent(intent: HomeUiIntent) {
+        when (intent) {
+            is HomeUiIntent.DollarQuote -> fetchDollarQuote()
+            is HomeUiIntent.UIT -> fetchUit()
+            is HomeUiIntent.Gratitude -> fetchGratitude()
+            is HomeUiIntent.Sections -> fetchSections()
+        }
     }
 
-    private fun getDollarQuote() {
+    private fun fetchDollarQuote() {
         _dollarQuoteState.value = ResultState.Loading
         executeInScope(
             block = {
@@ -53,12 +55,13 @@ class HomeViewModel @Inject constructor(
                 _dollarQuoteState.value = result
             },
             onError = { error ->
-                _dollarQuoteState.value = ResultState.Error(error as? Exception ?: Exception(error))
+                _dollarQuoteState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
         )
     }
 
-    private fun getUit() {
+    private fun fetchUit() {
         _uitState.value = ResultState.Loading
         executeInScope(
             block = {
@@ -66,7 +69,8 @@ class HomeViewModel @Inject constructor(
                 _uitState.value = result
             },
             onError = { error ->
-                _uitState.value = ResultState.Error(error as? Exception ?: Exception(error))
+                _uitState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
         )
     }
@@ -82,14 +86,15 @@ class HomeViewModel @Inject constructor(
                         val gratitudeList = documents.map { document ->
                             document.toObject(Gratitude::class.java)
                         }
-                        _gratitudeState.value = ResultState.Success(gratitudeList)
+                        _gratitudeState.value = ResultState.Success(data = gratitudeList)
                     }
                     .addOnFailureListener { exception ->
-                        _gratitudeState.value = ResultState.Error(exception)
+                        _gratitudeState.value = ResultState.Error(exception = exception)
                     }
             },
             onError = { error ->
-                _gratitudeState.value = ResultState.Error(error as? Exception ?: Exception(error))
+                _gratitudeState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
         )
     }
@@ -99,20 +104,21 @@ class HomeViewModel @Inject constructor(
 
         executeInScope(
             block = {
-                firestore.collection(Constant.USERS_COLLECTION)
+                firestore.collection(Constant.SECTION_ITEMS)
                     .get()
                     .addOnSuccessListener { result ->
                         val sectionList = result.map { document ->
                             document.toObject(SectionItem::class.java)
                         }
-                        _sectionsState.value = ResultState.Success(sectionList)
+                        _sectionsState.value = ResultState.Success(data = sectionList)
                     }
                     .addOnFailureListener { exception ->
-                        _sectionsState.value = ResultState.Error(exception)
+                        _sectionsState.value = ResultState.Error(exception = exception)
                     }
             },
             onError = { error ->
-                _sectionsState.value = ResultState.Error(error as? Exception ?: Exception(error))
+                _sectionsState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
         )
     }

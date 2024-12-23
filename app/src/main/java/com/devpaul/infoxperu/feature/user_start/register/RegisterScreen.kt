@@ -78,7 +78,7 @@ fun RegisterScreen(
             ShowDialogSuccessRegister {
                 showDialog = false
                 navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
+                    popUpTo(Screen.Register.route) { inclusive = true }
                 }
             }
         }
