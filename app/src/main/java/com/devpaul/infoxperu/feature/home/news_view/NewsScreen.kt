@@ -37,19 +37,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Article
-import com.devpaul.infoxperu.domain.models.res.ArticleNewsResponse
+import com.devpaul.infoxperu.core.mocks.CountryMock
+import com.devpaul.infoxperu.core.mocks.GDELProjectMock
+import com.devpaul.infoxperu.core.mocks.GoogleNewsMock
+import com.devpaul.infoxperu.core.mocks.NewsMock
+import com.devpaul.infoxperu.core.mocks.RedditMock
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
-import com.devpaul.infoxperu.domain.models.res.ListingData
-import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
-import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
-import com.devpaul.infoxperu.domain.models.res.PostData
-import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
-import com.devpaul.infoxperu.domain.models.res.SourceResponse
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
 import com.devpaul.infoxperu.domain.ui.news_screen.GDELTCards
@@ -244,125 +241,12 @@ fun NewsScreenPreviewWithOutCountrySelected() {
             context = LocalContext.current,
             navController = navController,
             modifier = Modifier.fillMaxSize(),
-            countryState = ResultState.Success(
-                listOf(
-                    Country(
-                        title = "Peru",
-                        category = "peru",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                    Country(
-                        title = "Argentina",
-                        category = "argentina",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                    Country(
-                        title = "Ecuador",
-                        category = "ecuador",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                )
-            ),
+            countryState = ResultState.Success(data = CountryMock().countryListMock),
             innerPadding = innerPadding,
-            googleNewsState = ResultState.Success(
-                GoogleNewsJSON(
-                    title = "Peru",
-                    link = "https://www.google.com",
-                    language = "es",
-                    lastBuildDate = "2021-09-01",
-                    description = "Descripción",
-                    newsItems = emptyList()
-                )
-            ),
-            projectGDELTNews = ResultState.Success(
-                GDELProject(
-                    listOf(
-                        Article(
-                            "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                            "",
-                            "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                            "20240707T020000Z",
-                            "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                            "deperu.com",
-                            "Galician",
-                            "United States",
-                        )
-                    )
-                )
-            ),
-            redditState = ResultState.Success(
-                RedditResponse(
-                    kind = "Listing",
-                    data = ListingData(
-                        after = "123",
-                        dist = 1,
-                        modhash = "123",
-                        geoFilter = "123",
-                        children = listOf(
-                            PostDataWrapper(
-                                kind = "t3",
-                                data = PostData(
-                                    subreddit = "peru",
-                                    title = "Peru",
-                                    selfText = "Peru",
-                                    authorFullname = "123",
-                                    saved = false,
-                                    gilded = 0,
-                                    clicked = false,
-                                    subredditNamePrefixed = "r/peru",
-                                    hidden = false,
-                                    pwls = 0,
-                                    linkFlairCssClass = "123",
-                                    downs = 0,
-                                    hideScore = false,
-                                    name = "123",
-                                    quarantine = false,
-                                    linkFlairTextColor = "123",
-                                    upvoteRatio = 0.0,
-                                    subredditType = "123",
-                                    ups = 0,
-                                    totalAwardsReceived = 0,
-                                    isOriginalContent = false,
-                                    userReports = emptyList(),
-                                    secureMedia = null,
-                                    isRedditMediaDomain = false,
-                                    isMeta = false,
-                                    category = "123",
-                                    linkFlairText = "123",
-                                    canModPost = false,
-                                    score = 0,
-                                    approvedBy = "123",
-                                )
-                            )
-                        ),
-                        before = "123"
-                    )
-                )
-            ),
-            newsAPIState = ResultState.Success(
-                NewsResponse(
-                    status = "ok",
-                    totalResults = 1,
-                    articles = listOf(
-                        ArticleNewsResponse(
-                            source = SourceResponse(
-                                id = null,
-                                name = "Infobae Perú"
-                            ),
-                            author = "Infobae Perú",
-                            title = "Peru",
-                            articleDescription = "Peru",
-                            url = "https://www.google.com",
-                            imageUrl = "https://www.google.com",
-                            publishDate = "2021-09-01",
-                            content = "Peru"
-                        )
-                    )
-                )
-            ),
+            googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
+            projectGDELTNews = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
+            redditState = ResultState.Success(data = RedditMock().redditMock),
+            newsAPIState = ResultState.Success(data = NewsMock().newsMock),
             selectedCountry = selectedCountry,
             onCountrySelected = { selectedCountry = it }
         )
@@ -373,12 +257,7 @@ fun NewsScreenPreviewWithOutCountrySelected() {
 @Composable
 fun NewsScreenPreviewWithCountrySelected() {
     val navController = rememberNavController()
-    val selectedCountry = Country(
-        title = "Peru",
-        category = "peru",
-        summary = "Resumen",
-        imageUrl = "https://www.google.com",
-    )
+    val selectedCountry = CountryMock().countryListMock.first()
 
     Scaffold(
         topBar = {
@@ -392,159 +271,12 @@ fun NewsScreenPreviewWithCountrySelected() {
             context = LocalContext.current,
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            countryState = ResultState.Success(
-                listOf(
-                    Country(
-                        title = "Peru",
-                        category = "peru",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                    Country(
-                        title = "Argentina",
-                        category = "argentina",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                    Country(
-                        title = "Ecuador",
-                        category = "ecuador",
-                        summary = "Resumen",
-                        imageUrl = "https://www.google.com",
-                    ),
-                )
-            ),
+            countryState = ResultState.Success(data = CountryMock().countryListMock),
             innerPadding = innerPadding,
-            googleNewsState = ResultState.Success(
-                GoogleNewsJSON(
-                    title = "Peru",
-                    link = "https://www.google.com",
-                    language = "es",
-                    lastBuildDate = "2021-09-01",
-                    description = "Descripción",
-                    newsItems = listOf(
-                        NewsItemJSON(
-                            title = "Primero",
-                            link = "https://www.google.com",
-                            guid = "123",
-                            pubDate = "2021-09-01",
-                            description = "Descripción",
-                            source = NewsSourceJSON(
-                                url = "https://www.google.com",
-                                name = "Infobae Perú"
-                            )
-                        ),
-                        NewsItemJSON(
-                            title = "Segundo",
-                            link = "https://www.google.com",
-                            guid = "123",
-                            pubDate = "2021-09-01",
-                            description = "Descripción",
-                            source = NewsSourceJSON(
-                                url = "https://www.google.com",
-                                name = "Infobae Perú"
-                            )
-                        ),
-                        NewsItemJSON(
-                            title = "Tercero",
-                            link = "https://www.google.com",
-                            guid = "123",
-                            pubDate = "2021-09-01",
-                            description = "Descripción",
-                            source = NewsSourceJSON(
-                                url = "https://www.google.com",
-                                name = "Infobae Perú"
-                            )
-                        )
-                    )
-                )
-            ),
-            projectGDELTNews = ResultState.Success(
-                GDELProject(
-                    listOf(
-                        Article(
-                            "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                            "",
-                            "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                            "20240707T020000Z",
-                            "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                            "deperu.com",
-                            "Galician",
-                            "United States",
-                        )
-                    )
-                )
-            ),
-            redditState = ResultState.Success(
-                RedditResponse(
-                    kind = "Listing",
-                    data = ListingData(
-                        after = "123",
-                        dist = 1,
-                        modhash = "123",
-                        geoFilter = "123",
-                        children = listOf(
-                            PostDataWrapper(
-                                kind = "t3",
-                                data = PostData(
-                                    subreddit = "peru",
-                                    title = "Peru",
-                                    selfText = "Peru",
-                                    authorFullname = "123",
-                                    saved = false,
-                                    gilded = 0,
-                                    clicked = false,
-                                    subredditNamePrefixed = "r/peru",
-                                    hidden = false,
-                                    pwls = 0,
-                                    linkFlairCssClass = "123",
-                                    downs = 0,
-                                    hideScore = false,
-                                    name = "123",
-                                    quarantine = false,
-                                    linkFlairTextColor = "123",
-                                    upvoteRatio = 0.0,
-                                    subredditType = "123",
-                                    ups = 0,
-                                    totalAwardsReceived = 0,
-                                    isOriginalContent = false,
-                                    userReports = emptyList(),
-                                    secureMedia = null,
-                                    isRedditMediaDomain = false,
-                                    isMeta = false,
-                                    category = "123",
-                                    linkFlairText = "123",
-                                    canModPost = false,
-                                    score = 0,
-                                    approvedBy = "123",
-                                )
-                            )
-                        ),
-                        before = "123"
-                    )
-                )
-            ),
-            newsAPIState = ResultState.Success(
-                NewsResponse(
-                    status = "ok",
-                    totalResults = 1,
-                    articles = listOf(
-                        ArticleNewsResponse(
-                            source = SourceResponse(
-                                id = null,
-                                name = "Infobae Perú"
-                            ),
-                            author = "Infobae Perú",
-                            title = "Peru",
-                            articleDescription = "Peru",
-                            url = "https://www.google.com",
-                            imageUrl = "https://www.google.com",
-                            publishDate = "2021-09-01",
-                            content = "Peru"
-                        )
-                    )
-                )
-            ),
+            googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
+            projectGDELTNews = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
+            redditState = ResultState.Success(data = RedditMock().redditMock),
+            newsAPIState = ResultState.Success(data = NewsMock().newsMock),
             selectedCountry = selectedCountry,
             onCountrySelected = { }
         )

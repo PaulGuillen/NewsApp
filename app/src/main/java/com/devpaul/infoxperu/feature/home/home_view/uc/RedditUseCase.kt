@@ -5,7 +5,6 @@ import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -39,5 +38,4 @@ class RedditUseCase @Inject constructor(
             newsItems.take(limit)
         }
     }
-
 }
