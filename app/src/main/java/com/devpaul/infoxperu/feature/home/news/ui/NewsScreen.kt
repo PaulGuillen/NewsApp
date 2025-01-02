@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import com.devpaul.infoxperu.feature.util.Constant
 
 @Composable
 fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hiltViewModel()) {
+
     val context = LocalContext.current
     val countryState by viewModel.countryState.collectAsState()
     val googleNews by viewModel.googleNewsState.collectAsState()
@@ -59,6 +61,10 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
     val redditState by viewModel.redditState.collectAsState()
 
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.executeUiIntent(NewsUiIntent.Country)
+    }
 
     val state = NewsUiState(
         countryState = countryState,

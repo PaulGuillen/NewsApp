@@ -7,16 +7,11 @@ import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 
-sealed class NewsUiEvent {
-
-}
+sealed class NewsUiEvent
 
 
 sealed class NewsUiIntent {
-    data object DollarQuote : NewsUiIntent()
-    data object UIT : NewsUiIntent()
-    data object Gratitude : NewsUiIntent()
-    data object Sections : NewsUiIntent()
+    data object Country : NewsUiIntent()
 }
 
 data class NewsUiState(

@@ -41,11 +41,11 @@ import com.devpaul.infoxperu.domain.ui.utils.TopBar
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
 
+    val context = LocalContext.current
     val dollarQuoteState by viewModel.dollarQuoteState.collectAsState()
     val uitState by viewModel.uitState.collectAsState()
     val gratitudeState by viewModel.gratitudeState.collectAsState()
     val sectionItemsState by viewModel.sectionsState.collectAsState()
-    val context = LocalContext.current
 
     BaseScreen { _, _ ->
         LaunchedEffect(Unit) {

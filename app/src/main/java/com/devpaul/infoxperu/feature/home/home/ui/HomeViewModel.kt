@@ -49,6 +49,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchDollarQuote() {
         _dollarQuoteState.value = ResultState.Loading
+
         executeInScope(
             block = {
                 val result = dollarQuoteUseCase()

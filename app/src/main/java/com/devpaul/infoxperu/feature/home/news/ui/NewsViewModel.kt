@@ -1,9 +1,7 @@
 package com.devpaul.infoxperu.feature.home.news.ui
 
-import androidx.lifecycle.viewModelScope
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
-import com.devpaul.infoxperu.domain.models.res.ApiException
+import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
@@ -14,11 +12,11 @@ import com.devpaul.infoxperu.feature.home.home.domain.uc.GDELTUseCase
 import com.devpaul.infoxperu.feature.home.home.domain.uc.GoogleNewsUseCase
 import com.devpaul.infoxperu.feature.home.home.domain.uc.NewsAPIUseCase
 import com.devpaul.infoxperu.feature.home.home.domain.uc.RedditUseCase
+import com.devpaul.infoxperu.feature.util.Constant
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +27,7 @@ class NewsViewModel @Inject constructor(
     private val newsAPIUseCase: NewsAPIUseCase,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
-) : BaseViewModel<NewsUiEvent>(dataStoreUseCase) {
+) : StatelessViewModel<NewsUiEvent, NewsUiIntent>(dataStoreUseCase) {
 
     private val _countryState = MutableStateFlow<ResultState<List<Country>>>(ResultState.Loading)
     val countryState: StateFlow<ResultState<List<Country>>> = _countryState
@@ -50,88 +48,105 @@ class NewsViewModel @Inject constructor(
         MutableStateFlow<ResultState<NewsResponse>>(ResultState.Loading)
     val newsAPIState: StateFlow<ResultState<NewsResponse>> = _newsAPIState
 
-    init {
-        fetchCountry()
+    override fun handleIntent(intent: NewsUiIntent) {
+        when (intent) {
+            is NewsUiIntent.Country -> fetchCountry()
+        }
     }
 
     private fun fetchCountry() {
         _countryState.value = ResultState.Loading
 
-        firestore.collection("country")
-            .get()
-            .addOnSuccessListener { documents ->
-                val countryList = documents.map { document ->
-                    document.toObject(Country::class.java)
-                }.sortedWith(compareBy { country ->
-                    when (country.title) {
-                        "Perú" -> 1
-                        "Argentina" -> 2
-                        "México" -> 3
-                        else -> 4
+        executeInScope(
+            block = {
+                firestore.collection(Constant.COUNTRY_COLLECTION)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val countryList = documents.map { document ->
+                            document.toObject(Country::class.java)
+                        }.sortedWith(compareBy { country ->
+                            when (country.title) {
+                                Constant.COUNTRY_PERU -> 1
+                                Constant.COUNTRY_ARGENTINA -> 2
+                                Constant.COUNTRY_MEXICO -> 3
+                                else -> 4
+                            }
+                        })
+                        _countryState.value = ResultState.Success(countryList)
                     }
-                })
-                _countryState.value = ResultState.Success(countryList)
+                    .addOnFailureListener { exception ->
+                        _countryState.value =
+                            ResultState.Error(
+                                exception = exception as? Exception ?: Exception(
+                                    exception
+                                )
+                            )
+                    }
+            },
+            onError = { error ->
+                _countryState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
+        )
     }
 
     fun getGoogleNews(query: String, language: String, limit: Int) {
         _googleNewsState.value = ResultState.Loading
 
-        viewModelScope.launch {
-            try {
+        executeInScope(
+            block = {
                 val result = googleNewsUseCase(limit, query, language)
                 _googleNewsState.value = result
-            } catch (e: ApiException) {
-                _googleNewsState.value = ResultState.Error(e)
-            } catch (e: Exception) {
-                _googleNewsState.value = ResultState.Error(e)
+            },
+            onError = { error ->
+                _googleNewsState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
-        }
+        )
     }
 
     fun getProjectGDELTNews(query: String, mode: String, format: String, limit: Int) {
         _projectGDELTState.value = ResultState.Loading
 
-        viewModelScope.launch {
-            try {
+        executeInScope(
+            block = {
                 val result = projectGDELTUseCase(limit, query, mode, format)
                 _projectGDELTState.value = result
-            } catch (e: ApiException) {
-                _projectGDELTState.value = ResultState.Error(e)
-            } catch (e: Exception) {
-                _projectGDELTState.value = ResultState.Error(e)
+            },
+            onError = { error ->
+                _projectGDELTState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
-        }
+        )
     }
 
     fun getRedditNews(limit: Int, country: String) {
         _redditState.value = ResultState.Loading
 
-        viewModelScope.launch {
-            try {
+        executeInScope(
+            block = {
                 val result = redditUseCase(limit, country)
                 _redditState.value = result
-            } catch (e: ApiException) {
-                _redditState.value = ResultState.Error(e)
-            } catch (e: Exception) {
-                _redditState.value = ResultState.Error(e)
+            },
+            onError = { error ->
+                _redditState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
-        }
+        )
     }
 
     fun getNewsAPI(limit: Int, initLetters: String) {
         _newsAPIState.value = ResultState.Loading
 
-        viewModelScope.launch {
-            try {
+        executeInScope(
+            block = {
                 val result = newsAPIUseCase(limit, initLetters)
                 _newsAPIState.value = result
-            } catch (e: ApiException) {
-                _newsAPIState.value = ResultState.Error(e)
-            } catch (e: Exception) {
-                _newsAPIState.value = ResultState.Error(e)
+            },
+            onError = { error ->
+                _newsAPIState.value =
+                    ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
-        }
+        )
     }
-
 }

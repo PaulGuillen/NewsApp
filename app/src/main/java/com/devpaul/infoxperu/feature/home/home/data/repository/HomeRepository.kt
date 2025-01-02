@@ -12,9 +12,9 @@ class HomeRepository @Inject constructor(
     suspend fun dollarQuote(): DollarQuoteResponse {
         val response = apiService.dollarQuote()
         if (response.isSuccessful) {
-            return response.body() ?: throw Exception("Error fetching data: response body is null")
+            return response.body() ?: throw Exception(ERROR_FETCHING_DATA)
         } else {
-            val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
             throw ApiException(response.code(), errorMessage)
         }
     }
@@ -22,10 +22,15 @@ class HomeRepository @Inject constructor(
     suspend fun uit(): UITResponse {
         val response = apiService.dataUIT()
         if (response.isSuccessful) {
-            return response.body() ?: throw Exception("Error fetching data: response body is null")
+            return response.body() ?: throw Exception(ERROR_FETCHING_DATA)
         } else {
-            val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
             throw ApiException(response.code(), errorMessage)
         }
+    }
+
+    companion object {
+        const val ERROR_FETCHING_DATA = "Error fetching data: response body is null"
+        const val ERROR_UNKNOWN = "Unknown error"
     }
 }

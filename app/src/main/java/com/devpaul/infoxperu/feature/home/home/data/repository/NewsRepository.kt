@@ -7,7 +7,6 @@ import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsXML
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
-import timber.log.Timber
 import javax.inject.Inject
 
 open class NewsRepository @Inject constructor(
@@ -19,47 +18,42 @@ open class NewsRepository @Inject constructor(
             val response = apiServiceGoogleNews.googleNews(query, language).execute()
             if (response.isSuccessful) {
                 return response.body()
-                    ?: throw Exception("Error fetching data: response body is null")
+                    ?: throw Exception(ERROR_FETCHING_DATA)
             } else {
-                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
                 throw ApiException(response.code(), errorMessage)
             }
         } catch (e: Exception) {
-            Timber.e("Error fetching data: ${e.message}")
             throw e
         }
     }
 
-    suspend fun deltaProject(query: String, mode: String, format: String): GDELProject {
+    fun deltaProject(query: String, mode: String, format: String): GDELProject {
         try {
             val response = apiService.deltaProject(query, mode, format).execute()
             if (response.isSuccessful) {
                 return response.body()
-                    ?: throw Exception("Error fetching data: response body is null")
+                    ?: throw Exception(ERROR_FETCHING_DATA)
             } else {
-                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
                 throw ApiException(response.code(), errorMessage)
             }
         } catch (e: Exception) {
-            Timber.e("Error fetching data: ${e.message}")
             throw e
         }
     }
 
-    suspend fun redditNews(country: String): RedditResponse {
+    fun redditNews(country: String): RedditResponse {
         try {
             val response = apiService.redditNews(country).execute()
             if (response.isSuccessful) {
                 return response.body()
-                    ?: throw Exception("Error fetching data: response body is null")
+                    ?: throw Exception(ERROR_FETCHING_DATA)
             } else {
-                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                Timber.e("Error fetching data: $errorMessage")
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
                 throw ApiException(response.code(), errorMessage)
-
             }
         } catch (e: Exception) {
-            Timber.e("Error fetching data: ${e.message}")
             throw e
         }
     }
@@ -69,17 +63,18 @@ open class NewsRepository @Inject constructor(
             val response = apiService.newsAPI(initLetters).execute()
             if (response.isSuccessful) {
                 return response.body()
-                    ?: throw Exception("Error fetching data: response body is null")
+                    ?: throw Exception(ERROR_FETCHING_DATA)
             } else {
-                val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                Timber.e("Error fetching data: $errorMessage")
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
                 throw ApiException(response.code(), errorMessage)
-
             }
         } catch (e: Exception) {
-            Timber.e("Error fetching data: ${e.message}")
             throw e
         }
     }
 
+    companion object {
+        const val ERROR_FETCHING_DATA = "Error fetching data: response body is null"
+        const val ERROR_UNKNOWN = "Unknown error"
+    }
 }

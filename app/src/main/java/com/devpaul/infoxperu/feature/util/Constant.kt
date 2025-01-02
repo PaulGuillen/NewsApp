@@ -6,6 +6,7 @@ object Constant {
 
     //Collections
     const val USERS_COLLECTION = "users"
+    const val COUNTRY_COLLECTION = "country"
 
     // Fields
     const val ID_FIELD = "id"
@@ -27,6 +28,9 @@ object Constant {
 
     // Other constants
     const val LOGIN_DELAY = 3000L
+    const val COUNTRY_PERU = "Perú"
+    const val COUNTRY_ARGENTINA = "Argentina"
+    const val COUNTRY_MEXICO = "Mexico"
 
     //Collections
     const val GRATITUDE = "gratitude"
@@ -36,4 +40,5 @@ object Constant {
     const val NEWS_LANGUAGE = "es"
     const val NEWS_MODE = "ArtList"
     const val NEWS_FORMAT = "json"
+
 }

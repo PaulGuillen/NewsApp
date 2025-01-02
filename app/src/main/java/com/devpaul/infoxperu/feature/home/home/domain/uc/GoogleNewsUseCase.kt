@@ -4,7 +4,7 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
-import com.devpaul.infoxperu.feature.home.home.data.repository.GoogleNewsMapper
+import com.devpaul.infoxperu.feature.home.home.data.mapper.GoogleNewsMapper
 import com.devpaul.infoxperu.feature.home.home.data.repository.NewsRepository
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat

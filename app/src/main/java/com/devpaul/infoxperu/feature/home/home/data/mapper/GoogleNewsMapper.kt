@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.home.data.repository
+package com.devpaul.infoxperu.feature.home.home.data.mapper
 
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsXML
@@ -27,14 +27,14 @@ class GoogleNewsMapper {
             guid = newsItem.guid,
             pubDate = newsItem.pubDate,
             description = newsItem.description,
-            source = mapToNewsSourceJSON(newsItem.source)
+            source = mapToNewsSourceJSON(newsItem.source),
         )
     }
 
     private fun mapToNewsSourceJSON(newsSource: NewsSource?): NewsSourceJSON {
         return NewsSourceJSON(
             url = newsSource!!.url,
-            name = newsSource.name
+            name = newsSource.name,
         )
     }
 }
