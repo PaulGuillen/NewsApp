@@ -2,18 +2,14 @@ package com.devpaul.infoxperu.feature.home.news.ui
 
 import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -43,10 +39,6 @@ import com.devpaul.infoxperu.core.mocks.GoogleNewsMock
 import com.devpaul.infoxperu.core.mocks.NewsMock
 import com.devpaul.infoxperu.core.mocks.RedditMock
 import com.devpaul.infoxperu.domain.models.res.Country
-import com.devpaul.infoxperu.domain.models.res.GDELProject
-import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
-import com.devpaul.infoxperu.domain.models.res.NewsResponse
-import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
 import com.devpaul.infoxperu.domain.ui.news_screen.GDELTCards
@@ -56,11 +48,9 @@ import com.devpaul.infoxperu.domain.ui.news_screen.RedditCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
 import com.devpaul.infoxperu.feature.util.Constant
-import com.devpaul.infoxperu.ui.theme.SlateGray
 
 @Composable
 fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hiltViewModel()) {
-
     val context = LocalContext.current
     val countryState by viewModel.countryState.collectAsState()
     val googleNews by viewModel.googleNewsState.collectAsState()
@@ -70,12 +60,42 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
 
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
+    val state = NewsUiState(
+        countryState = countryState,
+        googleNewsState = googleNews,
+        projectGDELTState = projectGDELTNews,
+        redditState = redditState,
+        newsAPIState = newsAPIState,
+        selectedCountry = selectedCountry,
+    )
+
+    val callbacks = NewsContentCallbacks(
+        onCountrySelected = { country ->
+            selectedCountry = country
+            viewModel.getGoogleNews(
+                query = country.category,
+                language = Constant.NEWS_LANGUAGE,
+                limit = 20,
+            )
+            viewModel.getProjectGDELTNews(
+                limit = 10,
+                query = country.category,
+                mode = Constant.NEWS_MODE,
+                format = Constant.NEWS_FORMAT,
+            )
+            viewModel.getRedditNews(limit = 20, country = country.category)
+            viewModel.getNewsAPI(limit = 20, initLetters = country.initLetters)
+        }
+    )
+
     Scaffold(
         topBar = {
-            TopBar(title = stringResource(R.string.app_name),
+            TopBar(
+                title = stringResource(R.string.app_name),
                 onLogoutClick = {
                     viewModel.logOut(navController)
-                })
+                }
+            )
         },
         bottomBar = {
             BottomNavigationBar(navController)
@@ -85,25 +105,9 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             context = context,
             navController = navController,
             modifier = Modifier.fillMaxSize(),
-            countryState = countryState,
             innerPadding = innerPadding,
-            googleNewsState = googleNews,
-            projectGDELTNews = projectGDELTNews,
-            redditState = redditState,
-            newsAPIState = newsAPIState,
-            selectedCountry = selectedCountry,
-            onCountrySelected = { country ->
-                selectedCountry = country
-                viewModel.getGoogleNews(query = country.category, language = Constant.NEWS_LANGUAGE, limit = 20)
-                viewModel.getProjectGDELTNews(
-                    limit = 10,
-                    query = country.category,
-                    mode = Constant.NEWS_MODE,
-                    format = Constant.NEWS_FORMAT,
-                )
-                viewModel.getRedditNews(limit = 20, country = country.category)
-                viewModel.getNewsAPI(limit = 20, initLetters = country.initLetters)
-            }
+            state = state,
+            callbacks = callbacks,
         )
     }
 }
@@ -113,16 +117,10 @@ fun NewsContent(
     context: Context,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    countryState: ResultState<List<Country>>,
     innerPadding: PaddingValues = PaddingValues(),
-    googleNewsState: ResultState<GoogleNewsJSON>,
-    projectGDELTNews: ResultState<GDELProject>,
-    redditState: ResultState<RedditResponse>,
-    newsAPIState: ResultState<NewsResponse>,
-    selectedCountry: Country?,
-    onCountrySelected: (Country) -> Unit
+    state: NewsUiState,
+    callbacks: NewsContentCallbacks,
 ) {
-
     Column(
         modifier = modifier
             .padding(innerPadding)
@@ -130,15 +128,14 @@ fun NewsContent(
     ) {
         Spacer(modifier = Modifier.padding(top = 16.dp))
         CountryCards(
-            countryState = countryState,
+            countryState = state.countryState,
             context = context,
-            onCountrySelected = {
-                onCountrySelected(it)
-            }
+            onCountrySelected = callbacks.onCountrySelected,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         DividerView()
-        if (selectedCountry == null) {
+
+        if (state.selectedCountry == null) {
             Spacer(modifier = Modifier.weight(1f))
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -152,7 +149,7 @@ fun NewsContent(
                 )
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(
-                    text = "Seleccione un país para ver las noticias",
+                    text = stringResource(R.string.select_country_to_see_news),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -160,65 +157,34 @@ fun NewsContent(
         } else {
             GoogleNewsCards(
                 navController = navController,
-                selectedCountry = selectedCountry,
-                googleNewsState = googleNewsState,
-                context = context
-            )
-
-            Spacer(modifier = Modifier.padding(top = 16.dp))
-
-            Box(
-                modifier = Modifier
-                    .width(160.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .height(0.6.dp)
-                    .background(SlateGray)
+                selectedCountry = state.selectedCountry,
+                googleNewsState = state.googleNewsState,
+                context = context,
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
             NewsAPICards(
                 navController = navController,
-                selectedCountry = selectedCountry,
-                newsAPIState = newsAPIState,
-                context = context
+                selectedCountry = state.selectedCountry,
+                newsAPIState = state.newsAPIState,
+                context = context,
             )
-
             Spacer(modifier = Modifier.padding(top = 16.dp))
-
-            Box(
-                modifier = Modifier
-                    .width(160.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .height(0.6.dp)
-                    .background(SlateGray)
-            )
 
             GDELTCards(
                 navController = navController,
-                selectedCountry = selectedCountry,
-                projectGDELTState = projectGDELTNews,
-                context = context
+                selectedCountry = state.selectedCountry,
+                projectGDELTState = state.projectGDELTState,
+                context = context,
             )
-
-            Spacer(modifier = Modifier.padding(top = 16.dp))
-
-            Box(
-                modifier = Modifier
-                    .width(160.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .height(0.6.dp)
-                    .background(SlateGray)
-            )
-
             Spacer(modifier = Modifier.padding(top = 16.dp))
 
             RedditCards(
                 navController = navController,
-                selectedCountry = selectedCountry,
-                redditState = redditState,
-                context = context
+                selectedCountry = state.selectedCountry,
+                redditState = state.redditState,
+                context = context,
             )
-
             Spacer(modifier = Modifier.padding(top = 16.dp))
         }
     }
@@ -230,6 +196,19 @@ fun NewsScreenPreviewWithOutCountrySelected() {
     val navController = rememberNavController()
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
+    val state = NewsUiState(
+        countryState = ResultState.Success(data = CountryMock().countryListMock),
+        googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
+        projectGDELTState = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
+        redditState = ResultState.Success(data = RedditMock().redditMock),
+        newsAPIState = ResultState.Success(data = NewsMock().newsMock),
+        selectedCountry = selectedCountry,
+    )
+
+    val callbacks = NewsContentCallbacks(
+        onCountrySelected = { selectedCountry = it }
+    )
+
     Scaffold(
         topBar = {
             TopBar(title = "InfoPerú")
@@ -242,14 +221,9 @@ fun NewsScreenPreviewWithOutCountrySelected() {
             context = LocalContext.current,
             navController = navController,
             modifier = Modifier.fillMaxSize(),
-            countryState = ResultState.Success(data = CountryMock().countryListMock),
             innerPadding = innerPadding,
-            googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
-            projectGDELTNews = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
-            redditState = ResultState.Success(data = RedditMock().redditMock),
-            newsAPIState = ResultState.Success(data = NewsMock().newsMock),
-            selectedCountry = selectedCountry,
-            onCountrySelected = { selectedCountry = it }
+            state = state,
+            callbacks = callbacks,
         )
     }
 }
@@ -260,6 +234,19 @@ fun NewsScreenPreviewWithCountrySelected() {
     val navController = rememberNavController()
     val selectedCountry = CountryMock().countryListMock.first()
 
+    val state = NewsUiState(
+        countryState = ResultState.Success(data = CountryMock().countryListMock),
+        googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
+        projectGDELTState = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
+        redditState = ResultState.Success(data = RedditMock().redditMock),
+        newsAPIState = ResultState.Success(data = NewsMock().newsMock),
+        selectedCountry = selectedCountry,
+    )
+
+    val callbacks = NewsContentCallbacks(
+        onCountrySelected = { }
+    )
+
     Scaffold(
         topBar = {
             TopBar(title = "InfoPerú")
@@ -270,16 +257,11 @@ fun NewsScreenPreviewWithCountrySelected() {
     ) { innerPadding ->
         NewsContent(
             context = LocalContext.current,
-            modifier = Modifier.fillMaxSize(),
             navController = navController,
-            countryState = ResultState.Success(data = CountryMock().countryListMock),
+            modifier = Modifier.fillMaxSize(),
             innerPadding = innerPadding,
-            googleNewsState = ResultState.Success(data = GoogleNewsMock().googleNewsMock),
-            projectGDELTNews = ResultState.Success(data = GDELProjectMock().deltaProjectMock),
-            redditState = ResultState.Success(data = RedditMock().redditMock),
-            newsAPIState = ResultState.Success(data = NewsMock().newsMock),
-            selectedCountry = selectedCountry,
-            onCountrySelected = { }
+            state = state,
+            callbacks = callbacks,
         )
     }
 }
