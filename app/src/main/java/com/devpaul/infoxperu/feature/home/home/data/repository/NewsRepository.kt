@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.home_view.repository
+package com.devpaul.infoxperu.feature.home.home.data.repository
 
 import com.devpaul.infoxperu.core.urls.ApiService
 import com.devpaul.infoxperu.core.urls.ApiServiceGoogleNews

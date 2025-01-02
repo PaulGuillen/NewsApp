@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.home_view.ui
+package com.devpaul.infoxperu.feature.home.home.ui
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
@@ -7,8 +7,8 @@ import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.DollarQuoteUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.UITUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.DollarQuoteUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.UITUseCase
 import com.devpaul.infoxperu.feature.util.Constant
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel

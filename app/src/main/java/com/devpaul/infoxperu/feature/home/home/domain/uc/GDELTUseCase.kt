@@ -1,10 +1,10 @@
-package com.devpaul.infoxperu.feature.home.home_view.uc
+package com.devpaul.infoxperu.feature.home.home.domain.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.Article
 import com.devpaul.infoxperu.domain.models.res.GDELProject
-import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
+import com.devpaul.infoxperu.feature.home.home.data.repository.NewsRepository
 import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

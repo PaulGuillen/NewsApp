@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devpaul.infoxperu.domain.ui.news_screen.AllNews
-import com.devpaul.infoxperu.feature.home.home_view.ui.HomeScreen
+import com.devpaul.infoxperu.feature.home.home.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news.ui.NewsScreen
 import com.devpaul.infoxperu.feature.home.profile_view.ProfileScreen
 import com.devpaul.infoxperu.feature.home.services_view.ui.ContactScreen

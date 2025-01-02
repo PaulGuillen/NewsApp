@@ -1,8 +1,6 @@
-package com.devpaul.infoxperu.feature.home.home_view.ui
+package com.devpaul.infoxperu.feature.home.home.ui
 
-sealed class HomeUiEvent {
-
-}
+sealed class HomeUiEvent
 
 sealed class HomeUiIntent {
     data object DollarQuote : HomeUiIntent()

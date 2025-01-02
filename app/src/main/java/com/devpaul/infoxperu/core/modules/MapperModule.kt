@@ -1,6 +1,6 @@
 package com.devpaul.infoxperu.core.modules
 
-import com.devpaul.infoxperu.feature.home.home_view.repository.GoogleNewsMapper
+import com.devpaul.infoxperu.feature.home.home.data.repository.GoogleNewsMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,9 +1,9 @@
-package com.devpaul.infoxperu.feature.home.home_view.uc
+package com.devpaul.infoxperu.feature.home.home.domain.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.DollarQuoteResponse
-import com.devpaul.infoxperu.feature.home.home_view.repository.HomeRepository
+import com.devpaul.infoxperu.feature.home.home.data.repository.HomeRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

@@ -10,10 +10,10 @@ import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.GDELTUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.GoogleNewsUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.NewsAPIUseCase
-import com.devpaul.infoxperu.feature.home.home_view.uc.RedditUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.GDELTUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.GoogleNewsUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.NewsAPIUseCase
+import com.devpaul.infoxperu.feature.home.home.domain.uc.RedditUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

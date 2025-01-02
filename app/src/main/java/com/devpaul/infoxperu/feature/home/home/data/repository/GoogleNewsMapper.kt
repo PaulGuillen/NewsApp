@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.home_view.repository
+package com.devpaul.infoxperu.feature.home.home.data.repository
 
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsXML

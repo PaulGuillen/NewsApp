@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.home_view.ui
+package com.devpaul.infoxperu.feature.home.home.ui
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column

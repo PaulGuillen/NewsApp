@@ -1,11 +1,11 @@
-package com.devpaul.infoxperu.feature.home.home_view.uc
+package com.devpaul.infoxperu.feature.home.home.domain.uc
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
 import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
-import com.devpaul.infoxperu.feature.home.home_view.repository.GoogleNewsMapper
-import com.devpaul.infoxperu.feature.home.home_view.repository.NewsRepository
+import com.devpaul.infoxperu.feature.home.home.data.repository.GoogleNewsMapper
+import com.devpaul.infoxperu.feature.home.home.data.repository.NewsRepository
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
