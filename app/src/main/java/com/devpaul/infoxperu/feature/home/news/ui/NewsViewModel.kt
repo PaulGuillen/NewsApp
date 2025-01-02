@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.news_view
+package com.devpaul.infoxperu.feature.home.news.ui
 
 import androidx.lifecycle.viewModelScope
 import com.devpaul.infoxperu.core.extension.ResultState

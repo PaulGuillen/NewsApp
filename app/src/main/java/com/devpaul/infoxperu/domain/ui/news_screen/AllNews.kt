@@ -44,7 +44,7 @@ import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.AllNewsSkeleton
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
-import com.devpaul.infoxperu.feature.home.news_view.NewsViewModel
+import com.devpaul.infoxperu.feature.home.news.ui.NewsViewModel
 import com.devpaul.infoxperu.ui.theme.Taupe
 import com.devpaul.infoxperu.ui.theme.White
 import com.google.gson.Gson

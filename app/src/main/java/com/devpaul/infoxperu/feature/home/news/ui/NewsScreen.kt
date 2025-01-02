@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.news_view
+package com.devpaul.infoxperu.feature.home.news.ui
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -55,6 +55,7 @@ import com.devpaul.infoxperu.domain.ui.news_screen.NewsAPICards
 import com.devpaul.infoxperu.domain.ui.news_screen.RedditCards
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.feature.util.Constant
 import com.devpaul.infoxperu.ui.theme.SlateGray
 
 @Composable
@@ -93,12 +94,12 @@ fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hilt
             selectedCountry = selectedCountry,
             onCountrySelected = { country ->
                 selectedCountry = country
-                viewModel.getGoogleNews(query = country.category, language = "es", limit = 20)
+                viewModel.getGoogleNews(query = country.category, language = Constant.NEWS_LANGUAGE, limit = 20)
                 viewModel.getProjectGDELTNews(
                     limit = 10,
                     query = country.category,
-                    mode = "ArtList",
-                    format = "json"
+                    mode = Constant.NEWS_MODE,
+                    format = Constant.NEWS_FORMAT,
                 )
                 viewModel.getRedditNews(limit = 20, country = country.category)
                 viewModel.getNewsAPI(limit = 20, initLetters = country.initLetters)

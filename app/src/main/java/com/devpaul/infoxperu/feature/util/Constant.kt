@@ -31,4 +31,9 @@ object Constant {
     //Collections
     const val GRATITUDE = "gratitude"
     const val SECTION_ITEMS = "sectionItems"
+
+    // NewsScreen
+    const val NEWS_LANGUAGE = "es"
+    const val NEWS_MODE = "ArtList"
+    const val NEWS_FORMAT = "json"
 }
