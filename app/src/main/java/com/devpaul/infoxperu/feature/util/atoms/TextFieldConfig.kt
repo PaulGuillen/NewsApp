@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login.components.atoms
+package com.devpaul.infoxperu.feature.util.atoms
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
