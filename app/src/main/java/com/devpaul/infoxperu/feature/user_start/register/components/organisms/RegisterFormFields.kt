@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.register_screen
+package com.devpaul.infoxperu.feature.user_start.register.components.organisms
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.domain.ui.utils.CustomOutlinedTextField
+import com.devpaul.infoxperu.feature.util.components.atoms.RegisterFormCallbacks
+import com.devpaul.infoxperu.feature.util.components.atoms.RegisterFormState
+import com.devpaul.infoxperu.feature.util.components.molecules.PasswordField
 
 @Composable
 fun RegisterFormFields(
@@ -49,7 +52,7 @@ fun RegisterFormFields(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    PasswordTextField(
+    PasswordField(
         value = state.password,
         onValueChange = callbacks.onPasswordChange,
         label = stringResource(id = R.string.register_screen_password),
@@ -59,7 +62,7 @@ fun RegisterFormFields(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    PasswordTextField(
+    PasswordField(
         value = state.confirmPassword,
         onValueChange = callbacks.onConfirmPasswordChange,
         label = stringResource(id = R.string.register_screen_confirm_password),

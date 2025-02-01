@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.validateEmail
 import com.devpaul.infoxperu.core.extension.validateStartSession
-import com.devpaul.infoxperu.feature.user_start.login.components.molecules.EmailField
-import com.devpaul.infoxperu.feature.user_start.login.components.molecules.PasswordField
+import com.devpaul.infoxperu.feature.util.components.molecules.EmailField
+import com.devpaul.infoxperu.feature.util.components.molecules.PasswordField
 import com.devpaul.infoxperu.ui.theme.BrickRed
 import com.devpaul.infoxperu.ui.theme.White
 
@@ -41,11 +41,12 @@ fun LoginForm(
     onLoginClick: (String, String) -> Unit,
     onForgotPasswordClick: (String) -> Unit,
     onRegisterClick: () -> Unit,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     // Validar email y contraseña
     fun validateLogin() {
@@ -91,7 +92,13 @@ fun LoginForm(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Campo de contraseña
-        PasswordField(value = password, onValueChange = { password = it })
+        PasswordField(
+            value = password,
+            onValueChange = { password = it },
+            label = "Contraseña",
+            passwordVisible = passwordVisible,
+            onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -133,6 +140,6 @@ fun LoginFormPreview() {
         onLoginClick = { _, _ -> },
         onForgotPasswordClick = { _ -> },
         onRegisterClick = { },
-        showSnackBar = { _ -> }
+        showSnackBar = { _ -> },
     )
 }

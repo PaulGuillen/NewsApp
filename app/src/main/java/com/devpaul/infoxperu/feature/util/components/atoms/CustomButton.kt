@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.util.atoms
+package com.devpaul.infoxperu.feature.util.components.atoms
 
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button

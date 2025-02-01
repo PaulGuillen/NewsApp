@@ -1,9 +1,9 @@
-package com.devpaul.infoxperu.feature.user_start.login.components.molecules
+package com.devpaul.infoxperu.feature.util.components.molecules
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import com.devpaul.infoxperu.feature.util.atoms.CustomTextField
-import com.devpaul.infoxperu.feature.util.atoms.TextFieldConfig
+import com.devpaul.infoxperu.feature.util.components.atoms.CustomTextField
+import com.devpaul.infoxperu.feature.util.components.atoms.TextFieldConfig
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.infoxperu.R

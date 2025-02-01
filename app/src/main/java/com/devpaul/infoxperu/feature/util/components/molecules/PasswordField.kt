@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.register_screen
+package com.devpaul.infoxperu.feature.util.components.molecules
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,13 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.ui.theme.BrickRed
 
 @Composable
-fun PasswordTextField(
+fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -32,7 +32,7 @@ fun PasswordTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisible) None else PasswordVisualTransformation(),
         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
         trailingIcon = {
             val icon = if (passwordVisible)
@@ -60,7 +60,7 @@ fun PasswordTextField(
 @Preview(showBackground = true, name = "Password Text Field Preview")
 @Composable
 fun PreviewPasswordTextField() {
-    PasswordTextField(
+    PasswordField(
         value = "password",
         onValueChange = {},
         label = "Password",

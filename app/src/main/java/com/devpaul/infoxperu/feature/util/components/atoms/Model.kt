@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.ui.register_screen
+package com.devpaul.infoxperu.feature.util.components.atoms
 
 data class RegisterFormState(
     val name: String = "",
