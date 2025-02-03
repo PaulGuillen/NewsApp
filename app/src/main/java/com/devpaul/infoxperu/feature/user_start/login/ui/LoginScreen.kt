@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login
+package com.devpaul.infoxperu.feature.user_start.login.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
 import com.devpaul.infoxperu.feature.user_start.Screen
-import com.devpaul.infoxperu.feature.user_start.login.components.organisms.LoginForm
+import com.devpaul.infoxperu.feature.user_start.login.ui.organisms.LoginForm
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = hiltViewModel()) {

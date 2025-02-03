@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login
+package com.devpaul.infoxperu.feature.user_start.login.ui
 
 sealed class LoginUiEvent {
     data class LoginSuccess(val message: String) : LoginUiEvent()

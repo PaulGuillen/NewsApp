@@ -6,9 +6,13 @@ import com.devpaul.infoxperu.domain.models.res.NewsPeruResponse
 import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.models.res.UITResponse
+import com.devpaul.infoxperu.feature.user_start.login.data.datasource.dto.request.RequestLogin
+import com.devpaul.infoxperu.feature.user_start.login.data.datasource.dto.response.ResponseLogin
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -40,4 +44,8 @@ interface ApiService {
         @Query("country") initLetters: String
     ): Call<NewsResponse>
 
+    @POST("http://192.168.100.13:3000/users/login")
+    suspend fun login(
+        @Body requestLogin: RequestLogin
+    ): Response<ResponseLogin>
 }

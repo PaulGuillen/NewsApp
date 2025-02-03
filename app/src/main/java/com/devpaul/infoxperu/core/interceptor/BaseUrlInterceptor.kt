@@ -11,25 +11,30 @@ class BaseUrlInterceptor : Interceptor {
         val request = chain.request()
         val originalUrl = request.url
 
+        // Aquí usamos la URL original si no hay coincidencia con los casos previos
         val newBaseUrl = when {
             originalUrl.encodedPath.containsRegex("r/.+/new.json") -> BuildConfig.BASE_URL_REDDIT
             originalUrl.encodedPath.contains("top-headline") -> BuildConfig.BASE_URL_NEWS
             originalUrl.encodedPath.contains("rss/search") -> BuildConfig.BASE_URL_GOOGLE_NEWS
             originalUrl.encodedPath.contains("v2/doc/doc") -> BuildConfig.BASE_URL_GDELT_PROJECT
-            else -> BuildConfig.BASE_URL_PERU
+            else -> originalUrl.toString() // No modificamos la URL base, usamos la original
         }.toHttpUrlOrNull()
 
+        // Si no se modificó la URL, simplemente usamos la original
         val newUrl = newBaseUrl?.newBuilder()
             ?.encodedPath(originalUrl.encodedPath)
             ?.query(originalUrl.query)
-            ?.build() ?: originalUrl
+            ?.build() ?: originalUrl  // Si no se cambió la URL, mantén la original
 
+        // Construir la nueva solicitud con la URL modificada
         val newRequestBuilder = request.newBuilder().url(newUrl)
 
+        // Agregar encabezados adicionales si la URL base es la predeterminada (por ejemplo, Perú)
         if (newBaseUrl?.toString()?.contains(BuildConfig.BASE_URL_PERU) == true) {
             newRequestBuilder.addHeader("User-Agent", "devpaul")
         }
 
+        // Agregar encabezado "Accept-Encoding" si la URL contiene "rss/search" o coincide con el patrón de Reddit
         if (originalUrl.encodedPath.contains("rss/search") || originalUrl.encodedPath.containsRegex(
                 "r/.+/new.json"
             )
@@ -37,6 +42,7 @@ class BaseUrlInterceptor : Interceptor {
             newRequestBuilder.addHeader("Accept-Encoding", "identity")
         }
 
+        // Continuar con la solicitud con la nueva configuración
         return chain.proceed(newRequestBuilder.build())
     }
 }
