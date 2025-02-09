@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,34 +23,13 @@ class LoginViewModel @Inject constructor(
 
     override fun handleIntent(intent: LoginUiIntent) {
         when (intent) {
-            is LoginUiIntent.Login -> login2(email = intent.email, password = intent.password)
-            is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)
             is LoginUiIntent.CheckUserLoggedIn -> checkUserLoggedIn()
+            is LoginUiIntent.Login -> login(email = intent.email)
+            is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)
         }
     }
 
-    private fun login(email: String, password: String) {
-        setLoading(true)
-        executeInScope(
-            block = {
-                val result = auth.signInWithEmailAndPassword(email, password).await()
-                if (result.user != null) {
-                    dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                    setUiEvent(LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS))
-                } else {
-                    setUiEvent(LoginUiEvent.LoginError(error = Constant.LOGIN_FAILURE))
-                }
-            },
-            onError = { error ->
-                setUiEvent(LoginUiEvent.LoginError(error = "${Constant.LOGIN_ERROR} ${error.message}"))
-            },
-            onComplete = {
-                setLoading(false)
-            }
-        )
-    }
-
-    private fun login2(email: String, password: String) {
+    private fun login(email: String) {
         setLoading(true)
         executeInScope(
             block = {
@@ -61,6 +41,7 @@ class LoginViewModel @Inject constructor(
                 val result = loginUseCase(LoginUseCase.Params(requestLogin))
                 if (result is ResultState.Success) {
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
+                    Timber.d("DataStore: $LOG_IN_KEY = true")
                     setUiEvent(LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS))
                 } else {
                     setUiEvent(LoginUiEvent.LoginError(error = Constant.LOGIN_FAILURE))
@@ -96,11 +77,10 @@ class LoginViewModel @Inject constructor(
         executeInScope(
             block = {
                 val logIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) ?: false
+                Timber.d("DataStore: $LOG_IN_KEY = $logIn")
                 if (logIn) {
                     delay(Constant.LOGIN_DELAY)
-                    if (auth.currentUser != null) {
-                        setUiEvent(LoginUiEvent.LoginSuccess(Constant.USER_ALREADY_LOGGED_IN))
-                    }
+                    setUiEvent(LoginUiEvent.LoginSuccess(Constant.USER_ALREADY_LOGGED_IN))
                 }
             },
             onComplete = {
