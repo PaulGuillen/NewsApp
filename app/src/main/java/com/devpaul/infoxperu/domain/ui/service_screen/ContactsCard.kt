@@ -30,7 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
 import com.devpaul.infoxperu.domain.ui.skeleton.ContactSkeleton
-import com.devpaul.infoxperu.feature.user_start.Screen
+import com.devpaul.infoxperu.feature.Screen
 import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White

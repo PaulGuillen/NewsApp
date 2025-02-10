@@ -27,7 +27,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.devpaul.infoxperu.core.extension.EMPTY
 import com.devpaul.infoxperu.core.mocks.ServiceMock
 import com.devpaul.infoxperu.domain.models.res.Service
-import com.devpaul.infoxperu.feature.user_start.Screen
+import com.devpaul.infoxperu.feature.Screen
 import com.devpaul.infoxperu.ui.theme.BackgroundBlack
 import com.devpaul.infoxperu.ui.theme.White
 
