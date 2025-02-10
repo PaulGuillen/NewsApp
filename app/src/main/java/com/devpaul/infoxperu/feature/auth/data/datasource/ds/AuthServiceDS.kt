@@ -15,26 +15,33 @@ class AuthServiceDS @Inject constructor(
 ) {
 
     suspend fun login(request: RequestLogin): LoginE {
-        val response = apiService.login(request)
 
-        if (response.isSuccessful) {
-            val responseLogin = response.body() ?: throw Exception(ERROR_FETCHING_DATA)
-            return LoginMapper().mapResponseToEntity(responseLogin)
-        } else {
-            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
-            throw ApiException(response.code(), errorMessage)
+        try {
+            val response = apiService.login(request)
+            if (response.isSuccessful) {
+                val responseLogin = response.body() ?: throw Exception(ERROR_FETCHING_DATA)
+                return LoginMapper().mapResponseToEntity(responseLogin)
+            } else {
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
+                throw ApiException(response.code(), errorMessage)
+            }
+        } catch (e: Exception) {
+            throw ApiException(500, e.message ?: ERROR_UNKNOWN)
         }
     }
 
     suspend fun register(request: RequestRegister): RegisterE {
-        val response = apiService.register(request)
-
-        if (response.isSuccessful) {
-            val responseRegister = response.body() ?: throw Exception(ERROR_FETCHING_DATA)
-            return RegisterMapper().mapResponseToEntity(responseRegister)
-        } else {
-            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
-            throw ApiException(response.code(), errorMessage)
+        try {
+            val response = apiService.register(request)
+            if (response.isSuccessful) {
+                val responseRegister = response.body() ?: throw Exception(ERROR_FETCHING_DATA)
+                return RegisterMapper().mapResponseToEntity(responseRegister)
+            } else {
+                val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
+                throw ApiException(response.code(), errorMessage)
+            }
+        } catch (e: Exception) {
+            throw ApiException(500, e.message ?: ERROR_UNKNOWN)
         }
     }
 

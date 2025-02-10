@@ -51,7 +51,7 @@ interface ApiService {
         @Body requestLogin: RequestLogin
     ): Response<ResponseLogin>
 
-    @POST("http://192.168.100.13:3000/users/login")
+    @POST("http://192.168.100.13:3000/users/register")
     suspend fun register(
         @Body requestLogin: RequestRegister
     ): Response<ResponseRegister>

@@ -12,22 +12,21 @@ class AuthRepositoryImpl @Inject constructor(
     private val serviceDS: AuthServiceDS
 ) : AuthRepository {
 
-    override suspend fun login(requestLogin: RequestLogin): LoginE {
+    override suspend fun login(login: RequestLogin): LoginE {
         val request = RequestLogin(
-            email = requestLogin.email,
-            type = requestLogin.type,
-            googleToken = requestLogin.googleToken,
+            email = login.email,
+            type = login.type,
+            googleToken = login.googleToken,
         )
         return serviceDS.login(request)
     }
 
-    override suspend fun register(requestLogin: RequestRegister): RegisterE {
+    override suspend fun register(register: RequestRegister): RegisterE {
         val request = RequestRegister(
-            userUID = requestLogin.userUID,
-            name = requestLogin.name,
-            lastName = requestLogin.lastName,
-            email = requestLogin.email,
-            password = requestLogin.password,
+            name = register.name,
+            lastname = register.lastname,
+            email = register.email,
+            password = register.password,
         )
         return serviceDS.register(request)
     }
