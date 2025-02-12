@@ -9,7 +9,7 @@ class LoginMapper {
         return LoginE(
             status = responseLogin.status,
             message = responseLogin.message,
-            uid = responseLogin.uid // Aquí se maneja el campo que es nullable
+            uid = responseLogin.uid
         )
     }
 }

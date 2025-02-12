@@ -20,6 +20,7 @@ object Constant {
     const val LOGIN_FAILURE = "Inicio de sesión fallido"
     const val LOGIN_ERROR = "Error en el inicio de sesión: "
     const val PASSWORD_RECOVERY_SUCCESS = "Correo de recuperación enviado"
+    const val PASSWORD_RECOVERY_ERROR = "Correo de recuperación no enviado"
     const val PASSWORD_RECOVERY_FAILURE = "Error al enviar el correo: "
     const val USER_ALREADY_LOGGED_IN = "Usuario ya autenticado"
     const val REGISTER_SUCCESS = "Registro exitoso"

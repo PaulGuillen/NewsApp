@@ -4,20 +4,20 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestLogin
-import com.devpaul.infoxperu.feature.auth.domain.usecase.LoginUseCase
+import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestRecoveryPassword
+import com.devpaul.infoxperu.feature.auth.domain.usecase.LoginUC
+import com.devpaul.infoxperu.feature.auth.domain.usecase.RecoveryPasswordUC
 import com.devpaul.infoxperu.feature.util.Constant
 import com.devpaul.infoxperu.feature.util.Constant.LOG_IN_KEY
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
     private val dataStoreUseCase: DataStoreUseCase,
-    private val loginUseCase: LoginUseCase,
+    private val loginUC: LoginUC,
+    private val recoverPasswordUC: RecoveryPasswordUC,
 ) : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
     override fun handleIntent(intent: LoginUiIntent) {
@@ -38,7 +38,7 @@ class LoginViewModel @Inject constructor(
                         type = "classic",
                         googleToken = ""
                     )
-                val result = loginUseCase(LoginUseCase.Params(requestLogin))
+                val result = loginUC(LoginUC.Params(requestLogin))
                 if (result is ResultState.Success) {
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
                     setUiEvent(LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS))
@@ -59,8 +59,16 @@ class LoginViewModel @Inject constructor(
         setLoading(true)
         executeInScope(
             block = {
-                auth.sendPasswordResetEmail(email).await()
-                setUiEvent(LoginUiEvent.RecoveryPasswordSuccess(message = Constant.PASSWORD_RECOVERY_SUCCESS))
+                val requestRecoveryPassword =
+                    RequestRecoveryPassword(
+                        email = email,
+                    )
+                val result = recoverPasswordUC(RecoveryPasswordUC.Params(requestRecoveryPassword))
+                if (result is ResultState.Success) {
+                    setUiEvent(LoginUiEvent.RecoveryPasswordSuccess(message = Constant.PASSWORD_RECOVERY_SUCCESS))
+                } else {
+                    setUiEvent(LoginUiEvent.RecoveryPasswordError(error = Constant.PASSWORD_RECOVERY_ERROR))
+                }
             },
             onError = { error ->
                 setUiEvent(LoginUiEvent.RecoveryPasswordError(error = "${Constant.PASSWORD_RECOVERY_FAILURE} ${error.message}"))

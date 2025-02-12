@@ -4,7 +4,7 @@ import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestRegister
-import com.devpaul.infoxperu.feature.auth.domain.usecase.RegisterUseCase
+import com.devpaul.infoxperu.feature.auth.domain.usecase.RegisterUC
 import com.devpaul.infoxperu.feature.util.Constant
 import com.devpaul.infoxperu.feature.util.Constant.LOG_IN_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val dataStoreUseCase: DataStoreUseCase,
-    private val registerUseCase: RegisterUseCase,
+    private val registerUC: RegisterUC,
 ) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
 
     override fun handleIntent(intent: RegisterUiIntent) {
@@ -43,7 +43,7 @@ class RegisterViewModel @Inject constructor(
                         email = email,
                         password = password
                     )
-                val result = registerUseCase(RegisterUseCase.Params(requestRegister))
+                val result = registerUC(RegisterUC.Params(requestRegister))
                 if (result is ResultState.Success) {
                     dataStoreUseCase.setValue(LOG_IN_KEY, true)
                     setUiEvent(RegisterUiEvent.RegisterSuccess(message = Constant.REGISTER_SUCCESS))

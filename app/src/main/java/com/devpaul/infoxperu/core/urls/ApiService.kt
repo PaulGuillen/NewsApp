@@ -7,8 +7,10 @@ import com.devpaul.infoxperu.domain.models.res.NewsResponse
 import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestLogin
+import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestRecoveryPassword
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.request.RequestRegister
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.response.ResponseLogin
+import com.devpaul.infoxperu.feature.auth.data.datasource.dto.response.ResponseRecoveryPassword
 import com.devpaul.infoxperu.feature.auth.data.datasource.dto.response.ResponseRegister
 import retrofit2.Call
 import retrofit2.Response
@@ -48,11 +50,16 @@ interface ApiService {
 
     @POST("http://192.168.100.13:3000/users/login")
     suspend fun login(
-        @Body requestLogin: RequestLogin
+        @Body login: RequestLogin
     ): Response<ResponseLogin>
 
     @POST("http://192.168.100.13:3000/users/register")
     suspend fun register(
-        @Body requestLogin: RequestRegister
+        @Body register: RequestRegister
     ): Response<ResponseRegister>
+
+    @POST("http://192.168.100.13:3000/users/recoveryPassword")
+    suspend fun recoveryPassword(
+        @Body recoveryPassword: RequestRecoveryPassword
+    ): Response<ResponseRecoveryPassword>
 }
