@@ -9,10 +9,10 @@ import androidx.navigation.navArgument
 import com.devpaul.infoxperu.domain.ui.news_screen.AllNews
 import com.devpaul.infoxperu.feature.home.home.ui.HomeScreen
 import com.devpaul.infoxperu.feature.home.news.ui.NewsScreen
-import com.devpaul.infoxperu.feature.home.profile_view.ProfileScreen
-import com.devpaul.infoxperu.feature.home.services_view.ui.ContactScreen
-import com.devpaul.infoxperu.feature.home.services_view.ui.district_screen.DistrictsScreen
-import com.devpaul.infoxperu.feature.home.services_view.ui.management.DistrictManagement
+import com.devpaul.infoxperu.feature.home.profile.ProfileScreen
+import com.devpaul.infoxperu.feature.home.services.ui.ContactScreen
+import com.devpaul.infoxperu.feature.home.services.ui.district_screen.DistrictsScreen
+import com.devpaul.infoxperu.feature.home.services.ui.management.DistrictManagement
 import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
 import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
 

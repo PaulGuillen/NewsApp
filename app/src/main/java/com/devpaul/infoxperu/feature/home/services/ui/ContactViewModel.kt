@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.services_view.ui
+package com.devpaul.infoxperu.feature.home.services.ui
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel

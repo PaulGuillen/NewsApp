@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.home.services_view.ui
+package com.devpaul.infoxperu.feature.home.services.ui.district_screen
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -9,6 +9,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,53 +21,63 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.ui.service_screen.ContactsCard
+import com.devpaul.infoxperu.domain.models.res.District
+import com.devpaul.infoxperu.domain.ui.service_screen.DistrictGrid
 import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.domain.ui.utils.TopBarWithSearch
 
 @Composable
-fun ContactScreen(
-    viewModel: ContactViewModel = hiltViewModel(),
+fun DistrictsScreen(
+    viewModel: DistrictViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
-    val contactState by viewModel.contactState.collectAsState()
     val context = LocalContext.current
+    val districtState by viewModel.districtState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            TopBar(title = stringResource(R.string.app_name),
-                onLogoutClick = {
-                    viewModel.logOut(navController)
-                })
+            TopBarWithSearch(
+                title = stringResource(R.string.app_name),
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { searchQuery = it }
+            )
         },
         bottomBar = {
             BottomNavigationBar(navController)
         }
+
     ) { innerPadding ->
-        ContentScreenContent(
+        DistrictScreenContent(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             innerPadding = innerPadding,
             context = context,
-            contactState = contactState,
+            districtState = districtState,
+            searchQuery = searchQuery
         )
     }
 }
 
 @Composable
-fun ContentScreenContent(
+fun DistrictScreenContent(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     innerPadding: PaddingValues = PaddingValues(),
     context: Context,
-    contactState: ResultState<List<Contact>>
+    districtState: ResultState<List<District>>,
+    searchQuery: String
 ) {
     Column(
         modifier = modifier
             .padding(innerPadding)
     ) {
-        ContactsCard(navController = navController, contactState = contactState)
+        DistrictGrid(
+            navController = navController,
+            searchQuery = searchQuery,
+            context = context,
+            districtState = districtState,
+        )
     }
 }
 
@@ -74,31 +87,20 @@ fun ServiceScreenPreview() {
     val navController = rememberNavController()
     Scaffold(
         topBar = {
-            TopBar(title = "InfoPerú")
-        },
-        bottomBar = {
-            BottomNavigationBar(navController = navController)
+            TopBarWithSearch(title = "InfoPerú", "", onSearchQueryChanged = {})
         }
     ) { innerPadding ->
-        ContentScreenContent(
+        DistrictScreenContent(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
             innerPadding = innerPadding,
             context = LocalContext.current,
-            contactState = ResultState.Success(
+            searchQuery = "",
+            districtState = ResultState.Success(
                 listOf(
-                    Contact(
-                        title = "Policia Nacional del Perú",
-                        type = "policia",
-                        imageUrl = "https://www.deperu.com"
-                    ),
-                    Contact(
-                        title = "Bomberos",
-                        type = "bombero",
-                        imageUrl = "https://www.deperu.com"
-                    )
+                    District("Lima", "lima")
                 )
-            )
+            ),
         )
     }
 }

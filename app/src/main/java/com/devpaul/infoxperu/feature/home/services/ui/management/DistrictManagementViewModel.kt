@@ -1,11 +1,11 @@
-package com.devpaul.infoxperu.feature.home.services_view.ui.management
+package com.devpaul.infoxperu.feature.home.services.ui.management
 
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.core.viewmodel.BaseViewModel
 import com.devpaul.infoxperu.domain.models.res.Contact
 import com.devpaul.infoxperu.domain.models.res.Service
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase
-import com.devpaul.infoxperu.feature.home.services_view.ui.ContactUiEvent
+import com.devpaul.infoxperu.feature.home.services.ui.ContactUiEvent
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
