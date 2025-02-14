@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
@@ -37,7 +36,7 @@ import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.GoogleNewsSkeleton
-import com.devpaul.infoxperu.feature.user_start.Screen
+import com.devpaul.infoxperu.feature.auth.Screen
 import com.google.gson.Gson
 
 @Composable

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login.components.organisms
+package com.devpaul.infoxperu.feature.auth.login.components.organisms
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

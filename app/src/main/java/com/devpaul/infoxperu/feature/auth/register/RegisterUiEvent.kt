@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.register
+package com.devpaul.infoxperu.feature.auth.register
 
 sealed class RegisterUiEvent {
     data class RegisterSuccess(val message: String) : RegisterUiEvent()

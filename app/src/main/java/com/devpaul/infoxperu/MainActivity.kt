@@ -9,7 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.extension.setStatusBarColor
-import com.devpaul.infoxperu.feature.user_start.StartNavHost
+import com.devpaul.infoxperu.feature.auth.StartNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

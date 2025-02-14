@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.login
+package com.devpaul.infoxperu.feature.auth.login
 
 import com.devpaul.infoxperu.core.viewmodel.StatelessViewModel
 import com.devpaul.infoxperu.domain.use_case.DataStoreUseCase

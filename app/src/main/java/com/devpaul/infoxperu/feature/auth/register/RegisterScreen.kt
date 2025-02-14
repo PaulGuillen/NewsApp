@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.register
+package com.devpaul.infoxperu.feature.auth.register
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +15,8 @@ import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.screen.ShowDialogSuccessRegister
 import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
-import com.devpaul.infoxperu.feature.user_start.Screen
-import com.devpaul.infoxperu.feature.user_start.register.components.organisms.RegisterForm
+import com.devpaul.infoxperu.feature.auth.Screen
+import com.devpaul.infoxperu.feature.auth.register.components.organisms.RegisterForm
 
 @Composable
 fun RegisterScreen(

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start
+package com.devpaul.infoxperu.feature.auth
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -13,8 +13,8 @@ import com.devpaul.infoxperu.feature.home.profile.ProfileScreen
 import com.devpaul.infoxperu.feature.home.services.ui.ContactScreen
 import com.devpaul.infoxperu.feature.home.services.ui.district_screen.DistrictsScreen
 import com.devpaul.infoxperu.feature.home.services.ui.management.DistrictManagement
-import com.devpaul.infoxperu.feature.user_start.login.LoginScreen
-import com.devpaul.infoxperu.feature.user_start.register.RegisterScreen
+import com.devpaul.infoxperu.feature.auth.login.LoginScreen
+import com.devpaul.infoxperu.feature.auth.register.RegisterScreen
 
 sealed class Screen(val route: String) {
     data object Login : Screen("login")

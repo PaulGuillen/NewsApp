@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.user_start.register.components.organisms
+package com.devpaul.infoxperu.feature.auth.register.components.organisms
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
