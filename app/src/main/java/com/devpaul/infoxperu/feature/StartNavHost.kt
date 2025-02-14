@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.auth
+package com.devpaul.infoxperu.feature
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

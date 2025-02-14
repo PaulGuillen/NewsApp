@@ -36,7 +36,7 @@ import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.domain.ui.news_screen.errors.NoNewsAvailableCard
 import com.devpaul.infoxperu.domain.ui.skeleton.GoogleNewsSkeleton
-import com.devpaul.infoxperu.feature.auth.Screen
+import com.devpaul.infoxperu.feature.Screen
 import com.google.gson.Gson
 
 @Composable

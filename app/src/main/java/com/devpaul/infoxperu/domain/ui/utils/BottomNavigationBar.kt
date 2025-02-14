@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
-import com.devpaul.infoxperu.feature.auth.Screen
+import com.devpaul.infoxperu.feature.Screen
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.BrickRed
 import com.devpaul.infoxperu.ui.theme.White

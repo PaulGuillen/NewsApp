@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.EMPTY
 import com.devpaul.infoxperu.domain.models.res.District
-import com.devpaul.infoxperu.feature.auth.Screen
+import com.devpaul.infoxperu.feature.Screen
 import com.devpaul.infoxperu.ui.theme.Black
 import com.devpaul.infoxperu.ui.theme.White
 
