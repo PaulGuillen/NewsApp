@@ -14,9 +14,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.devpaul.infoxperu.domain.screen.BaseScreen
 import com.devpaul.infoxperu.domain.screen.ShowDialogSuccessRegister
-import com.devpaul.infoxperu.domain.ui.utils.ScreenLoading
 import com.devpaul.infoxperu.feature.Screen
 import com.devpaul.infoxperu.feature.auth.register.components.organisms.RegisterForm
+import com.devpaul.infoxperu.feature.util.ui.utils.ScreenLoading
 
 @Composable
 fun RegisterScreen(

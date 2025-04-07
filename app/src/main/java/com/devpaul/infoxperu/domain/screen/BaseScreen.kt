@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import com.devpaul.infoxperu.domain.ui.utils.CenteredSnackBarHost
+import com.devpaul.infoxperu.feature.util.ui.utils.CenteredSnackBarHost
 import kotlinx.coroutines.launch
 
 @Composable

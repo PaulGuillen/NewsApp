@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
-import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.feature.util.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {

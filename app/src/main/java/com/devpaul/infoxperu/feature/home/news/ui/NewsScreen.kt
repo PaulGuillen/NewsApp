@@ -41,14 +41,14 @@ import com.devpaul.infoxperu.core.mocks.NewsMock
 import com.devpaul.infoxperu.core.mocks.RedditMock
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
-import com.devpaul.infoxperu.domain.ui.news_screen.CountryCards
-import com.devpaul.infoxperu.domain.ui.news_screen.GDELTCards
-import com.devpaul.infoxperu.domain.ui.news_screen.GoogleNewsCards
-import com.devpaul.infoxperu.domain.ui.news_screen.NewsAPICards
-import com.devpaul.infoxperu.domain.ui.news_screen.RedditCards
-import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
 import com.devpaul.infoxperu.feature.util.Constant
+import com.devpaul.infoxperu.feature.util.ui.news_screen.CountryCards
+import com.devpaul.infoxperu.feature.util.ui.news_screen.GDELTCards
+import com.devpaul.infoxperu.feature.util.ui.news_screen.GoogleNewsCards
+import com.devpaul.infoxperu.feature.util.ui.news_screen.NewsAPICards
+import com.devpaul.infoxperu.feature.util.ui.news_screen.RedditCards
+import com.devpaul.infoxperu.feature.util.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
 @Composable
 fun NewsScreen(navController: NavHostController, viewModel: NewsViewModel = hiltViewModel()) {

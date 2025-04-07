@@ -30,13 +30,13 @@ import com.devpaul.infoxperu.domain.models.res.Gratitude
 import com.devpaul.infoxperu.domain.models.res.SectionItem
 import com.devpaul.infoxperu.domain.models.res.UITResponse
 import com.devpaul.infoxperu.domain.screen.BaseScreen
-import com.devpaul.infoxperu.domain.ui.home_screen.AcknowledgmentSection
-import com.devpaul.infoxperu.domain.ui.home_screen.InformationCard
-import com.devpaul.infoxperu.domain.ui.home_screen.SectionsRow
-import com.devpaul.infoxperu.domain.ui.home_screen.UITCard
-import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.utils.SectionHeader
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.feature.util.ui.home_screen.AcknowledgmentSection
+import com.devpaul.infoxperu.feature.util.ui.home_screen.InformationCard
+import com.devpaul.infoxperu.feature.util.ui.home_screen.SectionsRow
+import com.devpaul.infoxperu.feature.util.ui.home_screen.UITCard
+import com.devpaul.infoxperu.feature.util.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.feature.util.ui.utils.SectionHeader
+import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
 @Composable
 fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {

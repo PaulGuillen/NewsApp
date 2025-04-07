@@ -29,9 +29,9 @@ import com.devpaul.infoxperu.core.mocks.ServiceMock
 import com.devpaul.infoxperu.domain.models.res.Contact
 import com.devpaul.infoxperu.domain.models.res.Service
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
-import com.devpaul.infoxperu.domain.ui.service_screen.SectionsRowContact
-import com.devpaul.infoxperu.domain.ui.service_screen.ServicesCards
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.feature.util.ui.service_screen.SectionsRowContact
+import com.devpaul.infoxperu.feature.util.ui.service_screen.ServicesCards
+import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
 @Composable
 fun DistrictManagement(

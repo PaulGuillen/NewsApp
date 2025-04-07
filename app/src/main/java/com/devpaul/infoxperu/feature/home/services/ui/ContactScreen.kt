@@ -19,9 +19,9 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.R
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Contact
-import com.devpaul.infoxperu.domain.ui.service_screen.ContactsCard
-import com.devpaul.infoxperu.domain.ui.utils.BottomNavigationBar
-import com.devpaul.infoxperu.domain.ui.utils.TopBar
+import com.devpaul.infoxperu.feature.util.ui.service_screen.ContactsCard
+import com.devpaul.infoxperu.feature.util.ui.utils.BottomNavigationBar
+import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
 @Composable
 fun ContactScreen(
