@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.util.ui.news_screen
+package com.devpaul.infoxperu.feature.home.news.ui.components
 
 import android.content.Context
 import android.net.Uri
@@ -29,58 +29,60 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.ArticleNewsResponse
 import com.devpaul.infoxperu.domain.models.res.Country
-import com.devpaul.infoxperu.domain.models.res.NewsResponse
-import com.devpaul.infoxperu.domain.models.res.SourceResponse
+import com.devpaul.infoxperu.domain.models.res.ListingData
+import com.devpaul.infoxperu.domain.models.res.PostData
+import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
+import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.infoxperu.feature.Screen
+import com.devpaul.infoxperu.feature.util.ui.news_screen.RedditCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.NoNewsAvailableCard
-import com.devpaul.infoxperu.feature.util.ui.skeleton.NewsAPISkeleton
+import com.devpaul.infoxperu.feature.util.ui.skeleton.RedditSkeleton
 import com.google.gson.Gson
 
 @Composable
-fun NewsAPICards(
+fun RedditCards(
     navController: NavController,
     selectedCountry: Country,
-    newsAPIState: ResultState<NewsResponse>,
+    redditState: ResultState<RedditResponse>,
     context: Context
 ) {
     var showSkeleton by remember { mutableStateOf(true) }
 
-    LaunchedEffect(newsAPIState) {
-        showSkeleton = newsAPIState is ResultState.Loading
+    LaunchedEffect(redditState) {
+        showSkeleton = redditState is ResultState.Loading
     }
 
     if (showSkeleton) {
-        NewsAPISkeleton()
+        RedditSkeleton()
     } else {
-        NewsAPICardsContent(
+        RedditContent(
             navController = navController,
             selectedCountry = selectedCountry,
-            newsAPIState = newsAPIState,
+            redditState = redditState,
             context = context
         )
     }
 }
 
 @Composable
-fun NewsAPICardsContent(
+fun RedditContent(
     navController: NavController,
     selectedCountry: Country,
-    newsAPIState: ResultState<NewsResponse>,
+    redditState: ResultState<RedditResponse>?,
     context: Context
 ) {
-    when (newsAPIState) {
+
+    when (redditState) {
         is ResultState.Loading -> {
-            NewsAPISkeleton()
+            RedditSkeleton()
         }
 
         is ResultState.Success -> {
-            if (newsAPIState.data.articles.isNotEmpty()) {
+            if (redditState.data.data.children.isNotEmpty()) {
                 Column(
-                    modifier = Modifier
-                        .padding(8.dp)
+                    modifier = Modifier.padding(8.dp)
                 ) {
                     Row(
                         modifier = Modifier
@@ -90,7 +92,7 @@ fun NewsAPICardsContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "NewsAPI Noticias",
+                            text = "Reddit Posts",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
@@ -106,7 +108,7 @@ fun NewsAPICardsContent(
                             modifier = Modifier.clickable {
                                 navController.navigate(
                                     Screen.AllNews.createRoute(
-                                        "newsAPI",
+                                        "reddit",
                                         countryJson
                                     )
                                 )
@@ -117,13 +119,13 @@ fun NewsAPICardsContent(
                     LazyRow(
                         modifier = Modifier
                     ) {
-                        items(newsAPIState.data.articles) { newsItem ->
-                            NewsSingleCard(newsItem, context)
+                        items(redditState.data.data.children) { redditItems ->
+                            RedditCard(redditChildren = redditItems, context = context)
                         }
                     }
 
                     Text(
-                        text = "Cantidad: ${newsAPIState.data.articles.size}",
+                        text = "Cantidad: ${redditState.data.data.children.size}",
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
@@ -136,78 +138,45 @@ fun NewsAPICardsContent(
             }
         }
 
-        is ResultState.Error -> {
+        else -> {
             ErrorCard()
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Loading State")
 @Composable
-fun NewsAPICardsPreview() {
-    val newsAPIState = ResultState.Success(
-        NewsResponse(
-            status = "ok",
-            totalResults = 1,
-            articles = listOf(
-                ArticleNewsResponse(
-                    source = SourceResponse(
-                        id = "1",
-                        name = "Fuente 1"
-                    ),
-                    author = "Autor 1",
-                    title = "Título 1",
-                    articleDescription = "Descripción 1",
-                    url = "https://www.google.com",
-                    imageUrl = "https://www.google.com",
-                    publishDate = "2021-09-01T00:00:00Z",
-                    content = "Contenido 1"
-                ),
-                ArticleNewsResponse(
-                    source = SourceResponse(
-                        id = "1",
-                        name = "Fuente 1"
-                    ),
-                    author = "Autor 1",
-                    title = "Título 1",
-                    articleDescription = "Descripción 1",
-                    url = "https://www.google.com",
-                    imageUrl = "https://www.google.com",
-                    publishDate = "2021-09-01T00:00:00Z",
-                    content = "Contenido 1"
-                )
-            )
-        )
-    )
-
-    NewsAPICardsContent(
+fun PreviewRedditLoading() {
+    RedditCards(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        newsAPIState = newsAPIState,
+        redditState = ResultState.Loading,
         context = LocalContext.current
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Success State")
 @Composable
-fun NewsAPICardsContentEmptyList() {
-    NoNewsAvailableCard()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsAPICardsNewsError() {
-    ErrorCard()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsAPICardsLoading() {
-    NewsAPICardsContent(
+fun PreviewRedditSuccess() {
+    val samplePostData = PostData(subreddit = "news", title = "Sample News Title")
+    val postDataWrapper = PostDataWrapper(kind = "Listing", data = samplePostData)
+    val listingData = ListingData(children = listOf(postDataWrapper))
+    val redditResponse = RedditResponse(kind = "Listing", data = listingData)
+    RedditCards(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        newsAPIState = ResultState.Loading,
+        redditState = ResultState.Success(redditResponse),
         context = LocalContext.current
     )
 }
 
+@Preview(showBackground = true, name = "Error State")
+@Composable
+fun PreviewRedditError() {
+    RedditCards(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
+        redditState = ResultState.Error(Exception("Network Error")),
+        context = LocalContext.current
+    )
+}

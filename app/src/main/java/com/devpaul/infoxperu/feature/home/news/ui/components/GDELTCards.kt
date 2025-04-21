@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.util.ui.news_screen
+package com.devpaul.infoxperu.feature.home.news.ui.components
 
 import android.content.Context
 import android.net.Uri
@@ -29,59 +29,59 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
+import com.devpaul.infoxperu.domain.models.res.Article
 import com.devpaul.infoxperu.domain.models.res.Country
-import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
-import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
-import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
-
+import com.devpaul.infoxperu.domain.models.res.GDELProject
 import com.devpaul.infoxperu.feature.Screen
+import com.devpaul.infoxperu.feature.util.ui.news_screen.GDELTCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.NoNewsAvailableCard
-import com.devpaul.infoxperu.feature.util.ui.skeleton.GoogleNewsSkeleton
+import com.devpaul.infoxperu.feature.util.ui.skeleton.RedditSkeleton
 import com.google.gson.Gson
 
 @Composable
-fun GoogleNewsCards(
+fun GDELTCards(
     navController: NavController,
     selectedCountry: Country,
-    googleNewsState: ResultState<GoogleNewsJSON>,
+    projectGDELTState: ResultState<GDELProject>,
     context: Context
 ) {
     var showSkeleton by remember { mutableStateOf(true) }
 
-    LaunchedEffect(googleNewsState) {
-        showSkeleton = googleNewsState is ResultState.Loading
+    LaunchedEffect(projectGDELTState) {
+        showSkeleton = projectGDELTState is ResultState.Loading
     }
 
     if (showSkeleton) {
-        GoogleNewsSkeleton()
+        RedditSkeleton()
     } else {
-        GoogleNewsContent(
+        GDELTCardsContent(
             navController = navController,
             selectedCountry = selectedCountry,
-            googleNewsState = googleNewsState,
+            projectGDELTState = projectGDELTState,
             context = context
         )
     }
+
 }
 
 @Composable
-fun GoogleNewsContent(
+fun GDELTCardsContent(
     navController: NavController,
     selectedCountry: Country,
-    googleNewsState: ResultState<GoogleNewsJSON>,
+    projectGDELTState: ResultState<GDELProject>?,
     context: Context
 ) {
-    when (googleNewsState) {
+
+    when (projectGDELTState) {
         is ResultState.Loading -> {
-            GoogleNewsSkeleton()
+            RedditSkeleton()
         }
 
         is ResultState.Success -> {
-            if (googleNewsState.data.newsItems.isNotEmpty()) {
+            if (projectGDELTState.data.articles.isNotEmpty()) {
                 Column(
-                    modifier = Modifier
-                        .padding(8.dp)
+                    modifier = Modifier.padding(8.dp)
                 ) {
                     Row(
                         modifier = Modifier
@@ -91,12 +91,13 @@ fun GoogleNewsContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = selectedCountry.title + " " + googleNewsState.data.description,
+                            text = "GDELT Noticias",
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
+
                         val gson = Gson()
                         val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
@@ -107,7 +108,7 @@ fun GoogleNewsContent(
                             modifier = Modifier.clickable {
                                 navController.navigate(
                                     Screen.AllNews.createRoute(
-                                        "googleNews",
+                                        "projectGDELT",
                                         countryJson
                                     )
                                 )
@@ -118,13 +119,13 @@ fun GoogleNewsContent(
                     LazyRow(
                         modifier = Modifier
                     ) {
-                        items(googleNewsState.data.newsItems) { newsItem ->
-                            GoogleNewsCard(newsItem, context)
+                        items(projectGDELTState.data.articles) { articleItem ->
+                            GDELTCard(article = articleItem, context = context)
                         }
                     }
 
                     Text(
-                        text = "Cantidad: ${googleNewsState.data.newsItems.size}",
+                        text = "Cantidad: ${projectGDELTState.data.articles.size}",
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
@@ -137,70 +138,66 @@ fun GoogleNewsContent(
             }
         }
 
-        is ResultState.Error -> {
+        else -> {
             ErrorCard()
         }
+
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "GDELTCards Content - Success")
 @Composable
-fun GoogleNewsSectionPreview() {
-    val googleNewsState = ResultState.Success(
-        GoogleNewsJSON(
-            title = "Titulo",
-            link = "https://www.google.com",
-            language = "es",
-            lastBuildDate = "2021-09-01T00:00:00Z",
-            description = "Google Noticias",
-            newsItems = listOf(
-                NewsItemJSON(
-                    title = "Alerta roja desde mañana en 12 regiones del Perú",
-                    link = "https://www.google.com",
-                    guid = "1",
-                    pubDate = "2021-09-01T00:00:00Z",
-                    description = "Senamhi pronostica fenómeno de gran magnitud",
-                    source = NewsSourceJSON("https://www.google.com", "Infobae Perú")
-                ),
-                NewsItemJSON(
-                    title = "Perú inició su participación en el Campeonato Sudamericano de Atletismo Sub-20",
-                    link = "https://www.google.com",
-                    guid = "2",
-                    pubDate = "2021-09-01T00:00:00Z",
-                    description = "Primera jornada con buenas expectativas",
-                    source = NewsSourceJSON("https://www.google.com", "Andina")
-                )
-            )
+fun PreviewGDELTCardsSuccess() {
+    val sampleData = GDELProject(
+        listOf(
+            Article(
+                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
+                "",
+                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
+                "20240707T020000Z",
+                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
+                "deperu.com",
+                "Galician",
+                "United States",
+            ),
+            Article(
+                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
+                "",
+                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
+                "20240707T020000Z",
+                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
+                "deperu.com",
+                "Galician",
+                "United",
+            ),
         )
     )
-
-    GoogleNewsContent(
+    GDELTCardsContent(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        googleNewsState = googleNewsState,
+        projectGDELTState = ResultState.Success(sampleData),
         context = LocalContext.current
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "GDELTCards Content - Error")
 @Composable
-fun PreviewGoogleNewsCardsContentEmptyList() {
-    NoNewsAvailableCard()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewGoogleNewsError() {
-    ErrorCard()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewGoogleNewsLoading() {
-    GoogleNewsContent(
+fun PreviewGDELTCardsError() {
+    GDELTCardsContent(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        googleNewsState = ResultState.Loading,
+        projectGDELTState = ResultState.Error(Exception("Error de prueba")),
+        context = LocalContext.current
+    )
+}
+
+@Preview(showBackground = true, name = "GDELTCards Content - Loading")
+@Composable
+fun PreviewGDELTCardsLoading() {
+    GDELTCardsContent(
+        navController = rememberNavController(),
+        selectedCountry = Country("Perú", "pe", "general"),
+        projectGDELTState = ResultState.Loading,
         context = LocalContext.current
     )
 }

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.util.ui.news_screen
+package com.devpaul.infoxperu.feature.home.news.ui.components
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.infoxperu.core.extension.ResultState
 import com.devpaul.infoxperu.domain.models.res.Country
+import com.devpaul.infoxperu.feature.util.ui.news_screen.CountryCard
 import com.devpaul.infoxperu.feature.util.ui.skeleton.CountryCardSkeleton
 
 @Composable

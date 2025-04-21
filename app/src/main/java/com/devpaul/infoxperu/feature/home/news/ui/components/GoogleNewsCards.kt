@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.feature.util.ui.news_screen
+package com.devpaul.infoxperu.feature.home.news.ui.components
 
 import android.content.Context
 import android.net.Uri
@@ -29,58 +29,60 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.core.extension.ResultState
-import com.devpaul.infoxperu.domain.models.res.Article
 import com.devpaul.infoxperu.domain.models.res.Country
-import com.devpaul.infoxperu.domain.models.res.GDELProject
+import com.devpaul.infoxperu.domain.models.res.GoogleNewsJSON
+import com.devpaul.infoxperu.domain.models.res.NewsItemJSON
+import com.devpaul.infoxperu.domain.models.res.NewsSourceJSON
+
 import com.devpaul.infoxperu.feature.Screen
+import com.devpaul.infoxperu.feature.util.ui.news_screen.GoogleNewsCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.ErrorCard
 import com.devpaul.infoxperu.feature.util.ui.news_screen.errors.NoNewsAvailableCard
-import com.devpaul.infoxperu.feature.util.ui.skeleton.RedditSkeleton
+import com.devpaul.infoxperu.feature.util.ui.skeleton.GoogleNewsSkeleton
 import com.google.gson.Gson
 
 @Composable
-fun GDELTCards(
+fun GoogleNewsCards(
     navController: NavController,
     selectedCountry: Country,
-    projectGDELTState: ResultState<GDELProject>,
+    googleNewsState: ResultState<GoogleNewsJSON>,
     context: Context
 ) {
     var showSkeleton by remember { mutableStateOf(true) }
 
-    LaunchedEffect(projectGDELTState) {
-        showSkeleton = projectGDELTState is ResultState.Loading
+    LaunchedEffect(googleNewsState) {
+        showSkeleton = googleNewsState is ResultState.Loading
     }
 
     if (showSkeleton) {
-        RedditSkeleton()
+        GoogleNewsSkeleton()
     } else {
-        GDELTCardsContent(
+        GoogleNewsContent(
             navController = navController,
             selectedCountry = selectedCountry,
-            projectGDELTState = projectGDELTState,
+            googleNewsState = googleNewsState,
             context = context
         )
     }
-
 }
 
 @Composable
-fun GDELTCardsContent(
+fun GoogleNewsContent(
     navController: NavController,
     selectedCountry: Country,
-    projectGDELTState: ResultState<GDELProject>?,
+    googleNewsState: ResultState<GoogleNewsJSON>,
     context: Context
 ) {
-
-    when (projectGDELTState) {
+    when (googleNewsState) {
         is ResultState.Loading -> {
-            RedditSkeleton()
+            GoogleNewsSkeleton()
         }
 
         is ResultState.Success -> {
-            if (projectGDELTState.data.articles.isNotEmpty()) {
+            if (googleNewsState.data.newsItems.isNotEmpty()) {
                 Column(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier
+                        .padding(8.dp)
                 ) {
                     Row(
                         modifier = Modifier
@@ -90,13 +92,12 @@ fun GDELTCardsContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "GDELT Noticias",
+                            text = selectedCountry.title + " " + googleNewsState.data.description,
                             fontSize = 15.sp,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
-
                         val gson = Gson()
                         val countryJson = Uri.encode(gson.toJson(selectedCountry))
                         Text(
@@ -107,7 +108,7 @@ fun GDELTCardsContent(
                             modifier = Modifier.clickable {
                                 navController.navigate(
                                     Screen.AllNews.createRoute(
-                                        "projectGDELT",
+                                        "googleNews",
                                         countryJson
                                     )
                                 )
@@ -118,13 +119,13 @@ fun GDELTCardsContent(
                     LazyRow(
                         modifier = Modifier
                     ) {
-                        items(projectGDELTState.data.articles) { articleItem ->
-                            GDELTCard(article = articleItem, context = context)
+                        items(googleNewsState.data.newsItems) { newsItem ->
+                            GoogleNewsCard(newsItem, context)
                         }
                     }
 
                     Text(
-                        text = "Cantidad: ${projectGDELTState.data.articles.size}",
+                        text = "Cantidad: ${googleNewsState.data.newsItems.size}",
                         fontSize = 14.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
@@ -137,66 +138,70 @@ fun GDELTCardsContent(
             }
         }
 
-        else -> {
+        is ResultState.Error -> {
             ErrorCard()
         }
-
     }
 }
 
-@Preview(showBackground = true, name = "GDELTCards Content - Success")
+@Preview(showBackground = true)
 @Composable
-fun PreviewGDELTCardsSuccess() {
-    val sampleData = GDELProject(
-        listOf(
-            Article(
-                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                "",
-                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                "20240707T020000Z",
-                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                "deperu.com",
-                "Galician",
-                "United States",
-            ),
-            Article(
-                "https://www.deperu.com/tv/wQfz0Keo-Os.venezuela-vs-canada-penales-resumen-y-goles-copa-america-2024-libero.UCk2OZrA0E6q6xp4bBKtf9KA.html",
-                "",
-                "Video : ? VENEZUELA VS CANADÁ PENALES , RESUMEN Y GOLES - COPA AMÉRICA 2024",
-                "20240707T020000Z",
-                "https://i.ytimg.com/vi/wQfz0Keo-Os/hqdefault.jpg",
-                "deperu.com",
-                "Galician",
-                "United",
-            ),
+fun GoogleNewsSectionPreview() {
+    val googleNewsState = ResultState.Success(
+        GoogleNewsJSON(
+            title = "Titulo",
+            link = "https://www.google.com",
+            language = "es",
+            lastBuildDate = "2021-09-01T00:00:00Z",
+            description = "Google Noticias",
+            newsItems = listOf(
+                NewsItemJSON(
+                    title = "Alerta roja desde mañana en 12 regiones del Perú",
+                    link = "https://www.google.com",
+                    guid = "1",
+                    pubDate = "2021-09-01T00:00:00Z",
+                    description = "Senamhi pronostica fenómeno de gran magnitud",
+                    source = NewsSourceJSON("https://www.google.com", "Infobae Perú")
+                ),
+                NewsItemJSON(
+                    title = "Perú inició su participación en el Campeonato Sudamericano de Atletismo Sub-20",
+                    link = "https://www.google.com",
+                    guid = "2",
+                    pubDate = "2021-09-01T00:00:00Z",
+                    description = "Primera jornada con buenas expectativas",
+                    source = NewsSourceJSON("https://www.google.com", "Andina")
+                )
+            )
         )
     )
-    GDELTCardsContent(
+
+    GoogleNewsContent(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        projectGDELTState = ResultState.Success(sampleData),
+        googleNewsState = googleNewsState,
         context = LocalContext.current
     )
 }
 
-@Preview(showBackground = true, name = "GDELTCards Content - Error")
+@Preview(showBackground = true)
 @Composable
-fun PreviewGDELTCardsError() {
-    GDELTCardsContent(
-        navController = rememberNavController(),
-        selectedCountry = Country("Perú", "pe", "general"),
-        projectGDELTState = ResultState.Error(Exception("Error de prueba")),
-        context = LocalContext.current
-    )
+fun PreviewGoogleNewsCardsContentEmptyList() {
+    NoNewsAvailableCard()
 }
 
-@Preview(showBackground = true, name = "GDELTCards Content - Loading")
+@Preview(showBackground = true)
 @Composable
-fun PreviewGDELTCardsLoading() {
-    GDELTCardsContent(
+fun PreviewGoogleNewsError() {
+    ErrorCard()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewGoogleNewsLoading() {
+    GoogleNewsContent(
         navController = rememberNavController(),
         selectedCountry = Country("Perú", "pe", "general"),
-        projectGDELTState = ResultState.Loading,
+        googleNewsState = ResultState.Loading,
         context = LocalContext.current
     )
 }

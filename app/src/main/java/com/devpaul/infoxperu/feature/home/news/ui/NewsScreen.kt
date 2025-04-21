@@ -42,11 +42,11 @@ import com.devpaul.infoxperu.core.mocks.RedditMock
 import com.devpaul.infoxperu.domain.models.res.Country
 import com.devpaul.infoxperu.domain.screen.atomic.DividerView
 import com.devpaul.infoxperu.feature.util.Constant
-import com.devpaul.infoxperu.feature.util.ui.news_screen.CountryCards
-import com.devpaul.infoxperu.feature.util.ui.news_screen.GDELTCards
-import com.devpaul.infoxperu.feature.util.ui.news_screen.GoogleNewsCards
-import com.devpaul.infoxperu.feature.util.ui.news_screen.NewsAPICards
-import com.devpaul.infoxperu.feature.util.ui.news_screen.RedditCards
+import com.devpaul.infoxperu.feature.home.news.ui.components.CountryCards
+import com.devpaul.infoxperu.feature.home.news.ui.components.GDELTCards
+import com.devpaul.infoxperu.feature.home.news.ui.components.GoogleNewsCards
+import com.devpaul.infoxperu.feature.home.news.ui.components.NewsAPICards
+import com.devpaul.infoxperu.feature.home.news.ui.components.RedditCards
 import com.devpaul.infoxperu.feature.util.ui.utils.BottomNavigationBar
 import com.devpaul.infoxperu.feature.util.ui.utils.TopBar
 
