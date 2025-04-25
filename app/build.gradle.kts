@@ -14,6 +14,12 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":navigation"))
+    implementation(project(":core-platform"))
+    implementation(project(":core-data"))
+    implementation(project(":core-domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

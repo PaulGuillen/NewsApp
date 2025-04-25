@@ -21,5 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "InfoXPeru"
 include(":app")
+include(":core-data")
+include(":core-domain")
 include(":core-platform")
 include(":session")
+include(":navigation")
