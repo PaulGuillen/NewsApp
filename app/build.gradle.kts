@@ -1,104 +1,16 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    id("plugin.application")
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
     namespace = "com.devpaul.infoxperu"
-    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.devpaul.infoxperu"
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
-    flavorDimensions += "environment"
-
-    productFlavors {
-        create("dev") {
-            dimension = "environment"
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "-dev"
-
-            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
-            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/\"")
-            buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
-            buildConfigField(
-                "String",
-                "BASE_URL_GDELT_PROJECT",
-                "\"https://api.gdeltproject.org/\""
-            )
-            buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
-
-        }
-
-        create("prod") {
-            dimension = "environment"
-            buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
-            buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/\"")
-            buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
-            buildConfigField(
-                "String",
-                "BASE_URL_GDELT_PROJECT",
-                "\"https://api.gdeltproject.org/\""
-            )
-            buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        debug {
-            isDebuggable = true
-            isShrinkResources = false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            "-Xuse-ir",
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.21"
-        )
-    }
-
-    buildFeatures {
-        buildConfig = true
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
@@ -115,7 +27,6 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.junit)
     testImplementation(libs.coroutines.test) // Coroutines test library
     testImplementation(libs.mockito.core) // Mockito core library
     testImplementation(libs.kotlin.test) // Kotlin test library
