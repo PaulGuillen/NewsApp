@@ -95,7 +95,7 @@ fun Project.retrofitImplementation() {
     val libs: VersionCatalog = getLibs()
     dependencies {
         "implementation"(libs["retrofit"])
-        "implementation"(libs["retrofit-converter-gson"])
+        "implementation"(libs["retrofit-gson-converter"])
         "implementation"(libs["okhttp3-loggin-interceptor"])
     }
 }
