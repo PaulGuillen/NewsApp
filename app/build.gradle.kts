@@ -20,36 +20,6 @@ dependencies {
     implementation(project(":core-data"))
     implementation(project(":core-domain"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    implementation(libs.androidx.runtime.livedata)
-
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.coroutines.test) // Coroutines test library
-    testImplementation(libs.mockito.core) // Mockito core library
-    testImplementation(libs.kotlin.test) // Kotlin test library
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.hilt.navigation.compose)
-
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
@@ -58,12 +28,6 @@ dependencies {
     // Lifecycle
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
-
-    // Coroutines
-    implementation(libs.coroutines.android)
-
-    //Timber
-    implementation(libs.timber)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))

@@ -4,6 +4,7 @@ import Config
 import dependence.androidCoreImplementation
 import dependence.androidTestingImplementation
 import dependence.composeImplementation
+import dependence.hiltImplementation
 import dependence.koinImplementation
 import dependence.uiCoreLibsImplementation
 
@@ -77,6 +78,7 @@ dependencies {
     androidCoreImplementation()
     uiCoreLibsImplementation()
     koinImplementation()
+    hiltImplementation()
     androidTestingImplementation()
     composeImplementation()
 }

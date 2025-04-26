@@ -25,6 +25,7 @@ fun Project.composeImplementation() {
         "implementation"(libs["androidx-ui-tooling"])
         "implementation"(libs["androidx-ui-tooling-preview"])
         "implementation"(libs["androidx-material3"])
+        "implementation"(libs["androidx-runtime-livedata"])
         "implementation"(libs["navigation-compose"])
         "androidTestImplementation"(platform(libs["androidx-compose-bom"]))
         "androidTestImplementation"(libs["androidx-ui-test-junit4"])
@@ -50,6 +51,15 @@ fun Project.koinImplementation() {
     }
 }
 
+fun Project.hiltImplementation() {
+    val libs: VersionCatalog = getLibs()
+    dependencies {
+        "implementation"(libs["hilt-android"])
+        "implementation"(libs["hilt-navigation-compose"])
+        "ksp"(libs["hilt-android-compiler"])
+    }
+}
+
 fun Project.uiCoreLibsImplementation() {
     val libs: VersionCatalog = getLibs()
     dependencies {
@@ -68,6 +78,7 @@ fun Project.androidCoreImplementation() {
         "implementation"(libs["timber"])
         "implementation"(libs["androidx-core-ktx"])
         "implementation"(libs["androidx-lifecycle-runtime-ktx"])
+        "implementation"(libs["coroutines-android"])
     }
 }
 
