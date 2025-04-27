@@ -79,6 +79,22 @@ fun Project.androidCoreImplementation() {
         "implementation"(libs["androidx-core-ktx"])
         "implementation"(libs["androidx-lifecycle-runtime-ktx"])
         "implementation"(libs["coroutines-android"])
+        "implementation"(libs["lifecycle-livedata-ktx"])
+        "implementation"(libs["lifecycle-viewmodel-ktx"])
+        "implementation"(libs["coil-compose"])
+        "implementation"(libs["shimmer-compose"])
+    }
+}
+
+fun Project.firebaseImplementation() {
+    val libs: VersionCatalog = getLibs()
+    dependencies {
+        "implementation"(platform(libs["firebase-bom"]))
+        "implementation"(libs["firebase-analytics"])
+        "implementation"(libs["firebase-auth"])
+        "implementation"(libs["firebase-firestore"])
+        "implementation"(libs["firebase-messaging"])
+        "implementation"(libs["firebase-storage"])
     }
 }
 
@@ -107,6 +123,7 @@ fun Project.retrofitImplementation() {
     dependencies {
         "implementation"(libs["retrofit"])
         "implementation"(libs["retrofit-gson-converter"])
+        "implementation"(libs["converter-simplexml"])
         "implementation"(libs["okhttp3-loggin-interceptor"])
     }
 }

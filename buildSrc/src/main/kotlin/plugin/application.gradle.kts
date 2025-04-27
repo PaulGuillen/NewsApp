@@ -4,8 +4,11 @@ import Config
 import dependence.androidCoreImplementation
 import dependence.androidTestingImplementation
 import dependence.composeImplementation
+import dependence.datastoreImplementation
+import dependence.firebaseImplementation
 import dependence.hiltImplementation
 import dependence.koinImplementation
+import dependence.retrofitImplementation
 import dependence.uiCoreLibsImplementation
 
 plugins {
@@ -81,4 +84,7 @@ dependencies {
     hiltImplementation()
     androidTestingImplementation()
     composeImplementation()
+    firebaseImplementation()
+    retrofitImplementation()
+    datastoreImplementation()
 }
