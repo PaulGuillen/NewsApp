@@ -7,6 +7,7 @@ import okhttp3.Response
 import java.util.regex.Pattern
 
 class BaseUrlInterceptor : Interceptor {
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val originalUrl = request.url
