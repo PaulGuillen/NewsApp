@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core-platform"))
     implementation(project(":core-data"))
     implementation(project(":core-domain"))
+    implementation(project(":feature:auth"))
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.activity)
     implementation(libs.navigation.fragment)

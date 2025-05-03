@@ -11,7 +11,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 fun isValidEmail(email: String): Boolean {
-    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
 }
 
 fun validateRegistration(
