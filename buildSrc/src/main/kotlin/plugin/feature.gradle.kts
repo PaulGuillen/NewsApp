@@ -59,4 +59,5 @@ dependencies {
     retrofitImplementation()
     koinImplementation()
     composeImplementation()
+    datastoreImplementation()
 }
