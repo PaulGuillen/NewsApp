@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Base colors-->
+    <color name="colorPrimary">#019df4</color>
+    <color name="colorAccent">#000000</color>
+    <color name="colorSecondary">#7f1a18</color>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextSecondary">#7f1a18</color>
+    <color name="translucentBackground">#ED000000</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#000050</color>
+    <color name="blue_dark">#000033</color>
+    <color name="blue_bright">#07acdc </color>
+    <color name="blue_light">#00A9E0</color>
+    <color name="dark">#000000</color>
+    <color name="gray">#686868</color>
+    <color name="gray_dark">#484848</color>
+    <color name="gray_light">#E9EAE8</color>
+    <color name="green">#088A29</color>
+    <color name="green_bright">#5BC500</color>
+    <color name="highlight">#117ABB</color>
+    <color name="pink">#E9426D</color>
+    <color name="red_bright">#CD2D10</color>
+    <color name="red_soft">#FB6F6F</color>
+    <color name="red_dark">#9F1F11</color>
+    <color name="red_smp">#980000</color>
+    <color name="silver">#E0DDDD</color>
+    <color name="silver_dark">#383838</color>
+    <color name="silver_medium">#A1A1A1</color>
+    <color name="status_text">#FFFFFFFF</color>
+    <color name="status_view">#50000000</color>
+    <color name="text">#404040</color>
+    <color name="text_bold">#4B4C4C</color>
+    <color name="text_gray">#86888C</color>
+    <color name="transparent">@android:color/transparent</color>
+
+    <!-- Scanner colors -->
+    <color name="result_image_border">#FF526F35</color>
+    <color name="result_minor_text">#000000</color>
+    <color name="result_points">#C07FFF00</color>
+    <color name="result_view">#B0000000</color>
+    <color name="possible_result_points">#C07FFF00</color>
+    <color name="viewfinder_frame">#FF526F35</color>
+    <color name="viewfinder_laser">#FF7FFF00</color>
+    <color name="viewfinder_mask">#607CFC00</color>
+
+    <!-- Accent colors -->
+    <color name="accent">#2196F3</color>
+    <color name="primary">#CAEAEE</color>
+    <color name="secondary">#C8EAFF</color>
+
+    <color name="colorTransparent">#00FFFFFF</color>
+    <color name="line_view_card">#D3D4D3</color>
+    <color name="colorError">#E63780</color>
+    <color name="camera_color">#F8F8F8</color>
+
+</resources>
