@@ -1,8 +1,41 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="todo">todo\n</string>
-    <string name="label_code">Code</string>
-    <string name="label_subtitle">Subttile</string>
-    <string name="btn_accept">Aceptar</string>
+    <string name="app_name">InfoPerú</string>
+    <string name="login_title">Podrás visualizar los principales números de emergencia por distrito en la zona Lima</string>
+    <string name="email_label">Correo</string>
+    <string name="password_label">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="forgot_password">Has olvidado tu contraseña?</string>
+    <string name="not_registered">Aún no te has registrado?</string>
+    <string name="register_screen_description">Si te registras podrás mantenerte al tanto de los cambios realizados</string>
+    <string name="register_screen_name">Nombre</string>
+    <string name="register_screen_last_name">Apellido</string>
+    <string name="register_screen_email">Correo</string>
+    <string name="register_screen_password">Contraseña</string>
+    <string name="register_screen_confirm_password">Confirmar contraseña</string>
+    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_screen_already_have_account">¿Ya tienes cuenta?</string>
+    <string name="register_success">Registro exitoso</string>
+    <string name="register_error">Error en el registro</string>
+    <string name="accept">Aceptar</string>
+    <string name="error_name_empty">El nombre no puede estar vacío</string>
+    <string name="error_lastname_empty">El apellido no puede estar vacío</string>
+    <string name="error_email_empty">El correo no puede estar vacío</string>
+    <string name="error_email_invalid">El correo no es válido</string>
+    <string name="error_password_empty">La contraseña no puede estar vacía</string>
+    <string name="error_confirm_password_empty">La confirmación de contraseña no puede estar vacía</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="section_gratitude_header">Agradecimientos</string>
+    <string name="section_available_sections_header">Secciones disponibles</string>
+    <string name="section_daily_info_header">Información diaria</string>
+    <string name="icon_search">Icono de busquedad</string>
+
+    <!--BottomNavigationBar-->
+    <string name="bottom_nav_home">Inicio</string>
+    <string name="bottom_nav_news">Noticias</string>
+    <string name="bottom_nav_districts">Distritos</string>
+    <string name="bottom_nav_profile">Perfil</string>
+
+    <!--News Screen-->
+    <string name="news_screen_title">Noticias</string>
+    <string name="select_country_to_see_news">Seleccione un país para ver las noticias</string>
 </resources>
