@@ -8,6 +8,7 @@ import org.koin.core.annotation.Module
 
 @Module([
     CoreDataModule::class,
+    NavigationModule::class,
     AuthModule::class,
 ])
 

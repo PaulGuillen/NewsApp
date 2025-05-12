@@ -13,6 +13,7 @@ android {
 dependencies {
     implementation(project(":session"))
     implementation(project(":core-data"))
+    implementation(project(":core-domain"))
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.activity)
     implementation(libs.navigation.fragment)

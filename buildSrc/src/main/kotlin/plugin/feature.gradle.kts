@@ -29,8 +29,8 @@ android {
         viewBinding = true
         buildConfig = true
         dataBinding = true
+        compose = true
     }
-
 
     compileOptions {
         sourceCompatibility = Config.javaVersion
@@ -40,6 +40,11 @@ android {
     kotlinOptions {
         jvmTarget = Config.javaVersion.toString()
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
 }
 
 ksp {

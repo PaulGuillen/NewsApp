@@ -5,12 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.infoxperu.domain.extension.setStatusBarColor
-import com.devpaul.infoxperu.feature.StartNavHost
+import com.devpaul.navigation.core.jetpack.AppNavigator
 import dagger.hilt.android.AndroidEntryPoint
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -23,7 +27,14 @@ class MainActivity : ComponentActivity() {
             setStatusBarColor(statusBarColor, darkIcons = !isDarkTheme)
             Surface(color = MaterialTheme.colorScheme.background) {
                 val navController = rememberNavController()
-                StartNavHost(navController)
+                //  StartNavHost(navController)
+                val appNavigator: AppNavigator = remember(navController) {
+                    getKoin().get<AppNavigator> { parametersOf(navController) }
+                }
+                MainGraph(
+                    navController = navController,
+                    appNavigator = appNavigator
+                )
             }
         }
     }

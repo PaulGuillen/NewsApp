@@ -27,6 +27,7 @@ fun Project.composeImplementation() {
         "implementation"(libs["androidx-material3"])
         "implementation"(libs["androidx-runtime-livedata"])
         "implementation"(libs["navigation-compose"])
+        "implementation"(libs["koin-androidx-compose"])
         "androidTestImplementation"(platform(libs["androidx-compose-bom"]))
         "androidTestImplementation"(libs["androidx-ui-test-junit4"])
         "debugImplementation"(libs["androidx-ui-tooling"])
