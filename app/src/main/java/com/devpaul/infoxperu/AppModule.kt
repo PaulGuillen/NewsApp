@@ -2,6 +2,7 @@ package com.devpaul.infoxperu
 
 import com.devpaul.auth.AuthModule
 import com.devpaul.core_data.CoreDataModule
+import com.devpaul.core_data.manager.FirebaseModule
 import com.devpaul.navigation.NavigationModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -9,6 +10,7 @@ import org.koin.core.annotation.Module
 @Module([
     CoreDataModule::class,
     NavigationModule::class,
+    FirebaseModule::class,
     AuthModule::class,
 ])
 

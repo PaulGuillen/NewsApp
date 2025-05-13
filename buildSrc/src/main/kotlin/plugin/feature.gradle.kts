@@ -65,4 +65,5 @@ dependencies {
     koinImplementation()
     composeImplementation()
     datastoreImplementation()
+    firebaseImplementation()
 }
