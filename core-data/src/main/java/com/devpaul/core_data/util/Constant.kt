@@ -1,4 +1,4 @@
-package com.devpaul.util
+package com.devpaul.core_data.util
 
 object Constant {
     // DataStore Keys
@@ -40,5 +40,4 @@ object Constant {
     const val NEWS_LANGUAGE = "es"
     const val NEWS_MODE = "ArtList"
     const val NEWS_FORMAT = "json"
-
 }

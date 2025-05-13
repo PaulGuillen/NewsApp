@@ -17,4 +17,5 @@ dependencies {
     retrofitImplementation()
     koinImplementation()
     datastoreImplementation()
+    firebaseImplementation()
 }

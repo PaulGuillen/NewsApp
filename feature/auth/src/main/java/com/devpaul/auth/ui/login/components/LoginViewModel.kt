@@ -1,12 +1,11 @@
 package com.devpaul.auth.ui.login.components
 
-import androidx.lifecycle.ViewModel
+import com.devpaul.core_data.viewmodel.StatelessViewModel
 import org.koin.android.annotation.KoinViewModel
-import org.koin.core.annotation.Factory
 import timber.log.Timber
 
 @KoinViewModel
-class LoginViewModel() : ViewModel() {
+class LoginViewModel() : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
     init {
         Timber.d("LoginViewModel initialized")
