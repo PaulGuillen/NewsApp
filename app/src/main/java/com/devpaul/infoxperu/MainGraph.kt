@@ -16,7 +16,6 @@ fun MainGraph(
         navController = navController,
         startDestination = Screen.Login.route
     ) {
-        // extensiones de features
         authGraph(navController, appNavigator)
     }
 }

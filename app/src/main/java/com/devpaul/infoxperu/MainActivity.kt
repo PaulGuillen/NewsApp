@@ -27,14 +27,10 @@ class MainActivity : ComponentActivity() {
             setStatusBarColor(statusBarColor, darkIcons = !isDarkTheme)
             Surface(color = MaterialTheme.colorScheme.background) {
                 val navController = rememberNavController()
-                //  StartNavHost(navController)
-                val appNavigator: AppNavigator = remember(navController) {
+                val appNavigator: AppNavigator = remember {
                     getKoin().get<AppNavigator> { parametersOf(navController) }
                 }
-                MainGraph(
-                    navController = navController,
-                    appNavigator = appNavigator
-                )
+                MainGraph(navController = navController, appNavigator = appNavigator)
             }
         }
     }

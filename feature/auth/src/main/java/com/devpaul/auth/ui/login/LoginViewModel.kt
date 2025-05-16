@@ -1,9 +1,11 @@
-package com.devpaul.auth.ui.login.components
+package com.devpaul.auth.ui.login
 
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_data.viewmodel.StatelessViewModel
+import com.devpaul.core_domain.Screen
 import com.devpaul.core_domain.use_case.DataStoreUseCase
+import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await

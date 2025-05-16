@@ -3,7 +3,8 @@ package com.devpaul.auth
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.devpaul.auth.ui.login.components.LoginScreen
+import com.devpaul.auth.ui.login.LoginScreen
+import com.devpaul.auth.ui.register.components.RegisterScreen
 import com.devpaul.core_domain.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 
@@ -12,6 +13,9 @@ fun NavGraphBuilder.authGraph(
     appNavigator: AppNavigator
 ) {
     composable(Screen.Login.route) {
-       LoginScreen(navController)
+        LoginScreen(appNavigator)
+    }
+    composable(Screen.Register.route) {
+        RegisterScreen(navController)
     }
 }

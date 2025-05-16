@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.login.components
+package com.devpaul.auth.ui.login
 
 sealed class LoginUiEvent {
     data class LoginSuccess(val message: String) : LoginUiEvent()
