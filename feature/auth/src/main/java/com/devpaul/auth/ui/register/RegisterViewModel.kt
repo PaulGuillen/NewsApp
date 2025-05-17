@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.register.components
+package com.devpaul.auth.ui.register
 
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY

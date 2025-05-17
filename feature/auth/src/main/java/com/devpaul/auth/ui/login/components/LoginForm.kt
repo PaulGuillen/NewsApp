@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.login.components.organisms
+package com.devpaul.auth.ui.login.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

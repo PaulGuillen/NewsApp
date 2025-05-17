@@ -7,7 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.devpaul.auth.ui.login.components.organisms.LoginForm
+import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_domain.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.util.screen.BaseScreen

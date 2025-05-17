@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.register.components
+package com.devpaul.auth.ui.register
 
 sealed class RegisterUiEvent {
     data class RegisterSuccess(val message: String) : RegisterUiEvent()

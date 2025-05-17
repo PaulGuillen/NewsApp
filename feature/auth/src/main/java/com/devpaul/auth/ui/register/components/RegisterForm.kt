@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.register.components.organisms
+package com.devpaul.auth.ui.register.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

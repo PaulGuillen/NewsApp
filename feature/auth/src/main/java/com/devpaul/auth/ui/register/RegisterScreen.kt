@@ -1,4 +1,4 @@
-package com.devpaul.auth.ui.register.components
+package com.devpaul.auth.ui.register
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.devpaul.auth.ui.register.components.organisms.RegisterForm
+import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_domain.Screen
 import com.devpaul.util.screen.BaseScreen
 import com.devpaul.util.screen.ShowDialogSuccessRegister
