@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.devpaul.auth.authGraph
 import com.devpaul.core_domain.Screen
+import com.devpaul.home.homeGraph
 import com.devpaul.navigation.core.jetpack.AppNavigator
 
 @Composable
@@ -17,5 +18,6 @@ fun MainGraph(
         startDestination = Screen.Login.route
     ) {
         authGraph(navController, appNavigator)
+        homeGraph(navController, appNavigator)
     }
 }

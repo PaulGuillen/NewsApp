@@ -1,7 +1,7 @@
 package com.devpaul.infoxperu.core.modules
 
 import com.devpaul.infoxperu.BuildConfig
-import com.devpaul.infoxperu.core.interceptor.BaseUrlInterceptor
+import com.devpaul.core_data.interceptor.BaseUrlInterceptor
 import com.devpaul.infoxperu.core.urls.ApiService
 import com.devpaul.infoxperu.core.urls.ApiServiceGoogleNews
 import dagger.Module
