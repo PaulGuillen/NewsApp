@@ -5,7 +5,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.core_platform.R
-import com.devpaul.util.ui.CustomDialog
+import com.devpaul.util.ui.extension.CustomDialog
 
 @Composable
 fun ShowDialogSuccessRegister(

@@ -1,4 +1,4 @@
-package com.devpaul.util.ui
+package com.devpaul.util.ui.extension
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

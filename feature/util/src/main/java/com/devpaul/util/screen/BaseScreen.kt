@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import com.devpaul.util.ui.CenteredSnackBarHost
+import com.devpaul.util.ui.extension.CenteredSnackBarHost
 import kotlinx.coroutines.launch
 
 @Composable
@@ -25,7 +25,7 @@ fun BaseScreen(
 
     Scaffold(
         snackbarHost = { CenteredSnackBarHost(hostState = snackBarHostState) },
-        containerColor = Color.Transparent // Asegura fondo transparente
+        containerColor = Color.Transparent
     ) { paddingValues ->
         content(paddingValues, showSnackBar)
     }

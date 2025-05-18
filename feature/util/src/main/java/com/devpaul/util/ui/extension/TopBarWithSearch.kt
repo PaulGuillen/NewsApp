@@ -1,4 +1,4 @@
-package com.devpaul.util.ui
+package com.devpaul.util.ui.extension
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,9 +23,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.devpaul.core_platform.R
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
+import com.devpaul.core_platform.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

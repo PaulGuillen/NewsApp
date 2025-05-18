@@ -18,7 +18,7 @@ import com.devpaul.core_platform.R
 import com.devpaul.util.components.atoms.RegisterFormCallbacks
 import com.devpaul.util.components.atoms.RegisterFormState
 import com.devpaul.util.components.molecules.PasswordField
-import com.devpaul.util.ui.CustomOutlinedTextField
+import com.devpaul.util.ui.extension.CustomOutlinedTextField
 
 @Composable
 fun RegisterFormFields(

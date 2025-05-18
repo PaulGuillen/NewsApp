@@ -1,4 +1,4 @@
-package com.devpaul.util.ui
+package com.devpaul.util.ui.extension
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth

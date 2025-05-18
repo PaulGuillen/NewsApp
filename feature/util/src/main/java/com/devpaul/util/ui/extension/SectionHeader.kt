@@ -1,4 +1,4 @@
-package com.devpaul.util.ui.utils
+package com.devpaul.util.ui.extension
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme

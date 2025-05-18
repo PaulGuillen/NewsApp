@@ -29,13 +29,13 @@ import com.devpaul.util.mocks.GratitudeMock
 import com.devpaul.util.mocks.SectionMock
 import com.devpaul.util.mocks.UITMock
 import com.devpaul.util.screen.BaseScreen
-import com.devpaul.util.ui.BottomNavigationBar
-import com.devpaul.util.ui.SectionHeader
-import com.devpaul.util.ui.TopBar
-import com.devpaul.util.ui.home_screen.AcknowledgmentSection
-import com.devpaul.util.ui.home_screen.InformationCard
-import com.devpaul.util.ui.home_screen.SectionsRow
-import com.devpaul.util.ui.home_screen.UITCard
+import com.devpaul.util.ui.extension.BottomNavigationBar
+import com.devpaul.util.ui.extension.SectionHeader
+import com.devpaul.util.ui.extension.TopBar
+import com.devpaul.home.ui.home.components.AcknowledgmentSection
+import com.devpaul.home.ui.home.components.InformationCard
+import com.devpaul.home.ui.home.components.SectionsRow
+import com.devpaul.home.ui.home.components.UITCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

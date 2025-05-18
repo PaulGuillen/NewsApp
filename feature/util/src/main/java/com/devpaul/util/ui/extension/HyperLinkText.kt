@@ -1,4 +1,4 @@
-package com.devpaul.util.ui
+package com.devpaul.util.ui.extension
 
 import android.content.Intent
 import android.net.Uri

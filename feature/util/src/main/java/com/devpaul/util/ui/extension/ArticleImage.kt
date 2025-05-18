@@ -1,4 +1,4 @@
-package com.devpaul.util.ui.utils
+package com.devpaul.util.ui.extension
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth

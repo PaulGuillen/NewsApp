@@ -11,7 +11,7 @@ import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_domain.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.util.screen.BaseScreen
-import com.devpaul.util.ui.ScreenLoading
+import com.devpaul.util.ui.extension.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
