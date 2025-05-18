@@ -2,6 +2,10 @@ package com.devpaul.core_data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import com.devpaul.core_data.util.Constant
+import com.devpaul.core_domain.use_case.DataStoreUseCase
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class StatelessViewModel<T, I> : ViewModel() {
+abstract class StatelessViewModel<T, I>(
+    private val dataStoreUseCase: DataStoreUseCase? = null,
+) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     open val isLoading: StateFlow<Boolean> = _isLoading
@@ -67,4 +73,13 @@ abstract class StatelessViewModel<T, I> : ViewModel() {
         // Subclasses should override to handle intents
     }
 
+    fun logOut(navHostController: NavHostController) {
+        viewModelScope.launch {
+            FirebaseAuth.getInstance().signOut()
+            dataStoreUseCase?.setValue(Constant.LOG_IN_KEY, false)
+            navHostController.navigate(Constant.LOG_IN_KEY) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
 }

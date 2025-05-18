@@ -1,6 +1,5 @@
 package com.devpaul.home.ui.home
 
-import androidx.navigation.NavHostController
 import com.devpaul.core_data.model.DollarQuoteResponse
 import com.devpaul.core_data.model.Gratitude
 import com.devpaul.core_data.model.SectionItem
@@ -19,7 +18,7 @@ import org.koin.android.annotation.KoinViewModel
 class HomeViewModel(
     private val dollarQuoteUseCase: DollarQuoteUseCase,
     private val uitUseCase: UITUseCase,
-    private val firestore: FirebaseFirestore,
+    private val firestore: FirebaseFirestore
 ) : StatelessViewModel<HomeUiEvent, HomeUiIntent>() {
 
     private val _dollarQuoteState = MutableStateFlow<ResultState<DollarQuoteResponse>?>(null)
@@ -120,9 +119,5 @@ class HomeViewModel(
                     ResultState.Error(exception = error as? Exception ?: Exception(error))
             }
         )
-    }
-
-    fun logOut(navHostController: NavHostController) {
-
     }
 }
