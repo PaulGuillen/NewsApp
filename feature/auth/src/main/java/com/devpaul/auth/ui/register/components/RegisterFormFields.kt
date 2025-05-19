@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.R
-import com.devpaul.util.components.atoms.RegisterFormCallbacks
-import com.devpaul.util.components.atoms.RegisterFormState
-import com.devpaul.util.components.molecules.PasswordField
-import com.devpaul.util.ui.extension.CustomOutlinedTextField
+import com.devpaul.shared.components.atoms.RegisterFormCallbacks
+import com.devpaul.shared.components.atoms.RegisterFormState
+import com.devpaul.shared.components.molecules.PasswordField
+import com.devpaul.shared.ui.extension.CustomOutlinedTextField
 
 @Composable
 fun RegisterFormFields(

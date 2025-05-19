@@ -7,5 +7,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:util"))
+    implementation(project(":feature:shared"))
 }

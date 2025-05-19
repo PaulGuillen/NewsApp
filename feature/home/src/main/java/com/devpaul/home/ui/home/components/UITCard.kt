@@ -39,8 +39,8 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
-import com.devpaul.util.screen.atomic.DividerView
-import com.devpaul.util.ui.skeleton.UITCardSkeleton
+import com.devpaul.shared.screen.atomic.DividerView
+import com.devpaul.shared.ui.skeleton.UITCardSkeleton
 
 @Composable
 fun UITCard(uitState: ResultState<UITResponse>?, context: Context) {

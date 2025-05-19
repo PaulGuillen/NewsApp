@@ -104,14 +104,3 @@ fun <T> argument(
         (thisRef.arguments?.get(key) ?: defaultValue) as T
     }
 }
-
-inline fun <reified Args : NavArgs> StatefulViewModel<*, *, *>.getArgs(): Args {
-    return Args::class.java.getMethod(
-        "fromSavedStateHandle",
-        SavedStateHandle::class.java
-    ).invoke(null, savedStateHandle!!) as Args
-}
-
-inline fun <reified Args> StatefulViewModel<*, *, *>.getSafeArgs(): Args? {
-    return savedStateHandle?.getSafeArgs()
-}

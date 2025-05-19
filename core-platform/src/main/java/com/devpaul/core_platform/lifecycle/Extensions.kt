@@ -20,7 +20,3 @@ fun ViewModel.launch(
         block = block
     )
 }
-
-inline fun <E> StatefulViewModel<E, *, *>.setUiState(update: E.() -> E) {
-    setUiState(update(uiState))
-}

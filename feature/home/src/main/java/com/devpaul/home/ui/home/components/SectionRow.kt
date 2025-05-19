@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_data.model.SectionItem
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.util.ui.skeleton.SectionsRowSkeleton
+import com.devpaul.shared.ui.skeleton.SectionsRowSkeleton
 
 @Composable
 fun SectionsRow(sectionItemsState: ResultState<List<SectionItem>>, context: Context) {

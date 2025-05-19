@@ -3,67 +3,55 @@ package com.devpaul.auth.ui.login
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_domain.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
-import com.devpaul.util.screen.BaseScreen
-import com.devpaul.util.ui.extension.ScreenLoading
+import com.devpaul.shared.screen.BaseScreenWithState
+import com.devpaul.shared.ui.extension.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(
-    appNavigator: AppNavigator,
-) {
+fun LoginScreen(appNavigator: AppNavigator) {
     val viewModel: LoginViewModel = koinViewModel()
 
-    val uiEvent by viewModel.uiEvent.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    BaseScreenWithState(
+        viewModel = viewModel,
+        onInit = { LoginUiIntent.CheckUserLoggedIn },
+        onUiEvent = { event, showSnackBar ->
+            when (event) {
+                is LoginUiEvent.LoginSuccess -> appNavigator.navigateTo(
+                    screen = Screen.Home,
+                    popUpTo = Screen.Login,
+                    inclusive = true
+                )
 
-    BaseScreen { _, showSnackBar ->
-        LaunchedEffect(Unit) {
-            viewModel.executeUiIntent(LoginUiIntent.CheckUserLoggedIn)
-        }
-
-        LaunchedEffect(uiEvent) {
-            when (uiEvent) {
-                is LoginUiEvent.LoginSuccess -> {
-                    appNavigator.navigateTo(
-                        screen = Screen.Home,
-                        popUpTo = Screen.Login,
-                        inclusive = true,
-                    )
-                }
-                is LoginUiEvent.LoginError -> showSnackBar((uiEvent as LoginUiEvent.LoginError).error)
-                is LoginUiEvent.RecoveryPasswordSuccess -> showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordSuccess).message)
-                is LoginUiEvent.RecoveryPasswordError -> showSnackBar((uiEvent as LoginUiEvent.RecoveryPasswordError).error)
+                is LoginUiEvent.LoginError -> showSnackBar(event.error)
+                is LoginUiEvent.RecoveryPasswordSuccess -> showSnackBar(event.message)
+                is LoginUiEvent.RecoveryPasswordError -> showSnackBar(event.error)
                 else -> Unit
             }
-            viewModel.resetUiEvent()
         }
-
+    ) { _, uiState, onIntent, showSnackBar ->
         Box(modifier = Modifier.fillMaxSize()) {
-            if (isLoading) {
+            if (uiState.isLoading) {
                 ScreenLoading()
+            } else {
+                LoginForm(
+                    onLoginClick = { email, password ->
+                        onIntent(LoginUiIntent.Login(email.trim(), password.trim()))
+                    },
+                    onForgotPasswordClick = { email ->
+                        onIntent(LoginUiIntent.ResetPassword(email.trim()))
+                    },
+                    onRegisterClick = {
+                        appNavigator.navigateTo(Screen.Register)
+                    },
+                    showSnackBar = { message ->
+                        showSnackBar(message)
+                    },
+                )
             }
-
-            LoginForm(
-                onLoginClick = { email, password ->
-                    viewModel.executeUiIntent(LoginUiIntent.Login(email.trim(), password.trim()))
-                },
-                onForgotPasswordClick = { email ->
-                    viewModel.executeUiIntent(LoginUiIntent.ResetPassword(email.trim()))
-                },
-                onRegisterClick = {
-                    appNavigator.navigateTo(screen = Screen.Register)
-                },
-                showSnackBar = { message ->
-                    showSnackBar(message)
-                },
-            )
         }
     }
 }

@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_domain.Screen
-import com.devpaul.util.screen.BaseScreen
-import com.devpaul.util.screen.ShowDialogSuccessRegister
-import com.devpaul.util.ui.extension.ScreenLoading
+import com.devpaul.shared.screen.BaseScreen
+import com.devpaul.shared.screen.ShowDialogSuccessRegister
+import com.devpaul.shared.ui.extension.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

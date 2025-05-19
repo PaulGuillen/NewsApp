@@ -37,7 +37,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BackgroundBlack
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
-import com.devpaul.util.ui.skeleton.AcknowledgmentSkeleton
+import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
 
 @Composable
 fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context: Context) {
