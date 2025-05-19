@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.annotation.Single
 
 @Single
-class DataStoreUseCaseImpl(private val context: Context) : DataStoreUseCase {
+class DataStoreUseCaseImpl(context: Context) : DataStoreUseCase {
 
     private val dataStore = DataStoreSingleton.getInstance(context)
 

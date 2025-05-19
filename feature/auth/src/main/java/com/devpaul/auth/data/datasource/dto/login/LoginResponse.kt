@@ -8,5 +8,5 @@ data class LoginResponse(
     @SerializedName("message")
     val message: String,
     @SerializedName("uid")
-    val uid: String?,
+    val uid: String,
 )

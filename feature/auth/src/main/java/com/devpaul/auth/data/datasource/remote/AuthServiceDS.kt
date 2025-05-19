@@ -1,30 +1,22 @@
 package com.devpaul.auth.data.datasource.remote
 
 import com.devpaul.auth.data.datasource.dto.login.LoginRequest
-import com.devpaul.auth.data.datasource.mapper.LoginMapper
 import com.devpaul.auth.domain.entity.Login
+import com.devpaul.core_data.DefaultOutput
+import com.devpaul.core_data.safeApiCall
+import com.devpaul.core_domain.entity.transform
 import org.koin.core.annotation.Factory
+import com.devpaul.auth.data.datasource.mapper.toDomain
 
 @Factory
 class AuthServiceDS (
     private val authServiceDS: AuthService,
 ) {
 
-    suspend fun loginService(request: LoginRequest): Login {
-        val response = authServiceDS.login(request)
-
-        if (response.isSuccessful) {
-            val responseLogin = response.body() ?: throw Exception(ERROR_FETCHING_DATA)
-            return LoginMapper().mapResponseToEntity(responseLogin)
-        } else {
-            val errorBody = response.errorBody()?.string()
-            val errorMessage = errorBody ?: ERROR_UNKNOWN
-            throw Exception(errorMessage)
-        }
+    suspend fun loginService(request: LoginRequest): DefaultOutput<Login> {
+        return safeApiCall {
+            authServiceDS.login(request)
+        }.transform { it.toDomain() }
     }
 
-    companion object {
-        const val ERROR_FETCHING_DATA = "Error fetching data: response body is null"
-        const val ERROR_UNKNOWN = "Unknown error"
-    }
 }

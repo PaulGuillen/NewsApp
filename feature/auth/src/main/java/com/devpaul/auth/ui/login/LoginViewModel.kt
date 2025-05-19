@@ -1,5 +1,6 @@
 package com.devpaul.auth.ui.login
 
+import com.devpaul.auth.domain.usecase.LoginUC
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_data.viewmodel.StatelessViewModel
@@ -15,6 +16,7 @@ import org.koin.android.annotation.KoinViewModel
 class LoginViewModel(
     private val auth: FirebaseAuth,
     private val dataStoreUseCase: DataStoreUseCase,
+    private val loginUC : LoginUC,
 ) : StatelessViewModel<LoginUiEvent, LoginUiIntent>() {
 
     override fun handleIntent(intent: LoginUiIntent) {

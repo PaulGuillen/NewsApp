@@ -11,8 +11,14 @@ import org.koin.core.annotation.Factory
 class AuthRepositoryImpl(
     private val serviceDS: AuthServiceDS
 ) : AuthRepository {
+
     override suspend fun login(requestLogin: LoginRequest): DefaultOutput<Login> {
-        TODO("Not yet implemented")
+        val request = LoginRequest(
+            email = requestLogin.email,
+            type = requestLogin.type,
+            googleToken = requestLogin.googleToken,
+        )
+        return serviceDS.loginService(request)
     }
 
 }

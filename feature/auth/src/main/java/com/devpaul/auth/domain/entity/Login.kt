@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class Login(
     val status: Int,
     val message: String,
-    val uid: String?,
+    val uid: String,
 ) : Parcelable
