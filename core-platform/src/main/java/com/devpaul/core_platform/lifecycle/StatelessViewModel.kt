@@ -8,6 +8,7 @@ import com.devpaul.core_platform.lifecycle.base.UiIntentHolder
 import com.devpaul.core_platform.lifecycle.base.ViewModelLoadable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -17,6 +18,8 @@ abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolde
     private val uiEventChannel = Channel<UiEvent>(Channel.BUFFERED)
     private val uiIntentChannel = Channel<UiIntent>(Channel.BUFFERED)
     private val defaultsChannel = Channel<Defaults<Nothing>>(Channel.BUFFERED)
+
+    val uiEvent: Flow<UiEvent> = uiEventChannel.receiveAsFlow()
     private val _isLoading = MutableStateFlow(false)
     override var isLoading: Boolean
         get() = _isLoading.value

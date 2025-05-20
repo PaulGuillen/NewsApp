@@ -1,45 +1,42 @@
 package com.devpaul.core_platform.lifecycle
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
+import android.os.Parcelable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
+import com.devpaul.core_platform.lifecycle.base.UiStateHolder
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.stateIn
 
 abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
-    private val defaultUIState: () -> UiState
-) : ViewModel() {
+    defaultUIState: () -> UiState,
+    private val keySavedUIState: String = "UiState",
+    private val savedStateHandle: SavedStateHandle? = null,
+) : StatelessViewModel<UiIntent, UiEvent>(), UiStateHolder<UiState> {
 
-    private val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val _changeUiStateLiveData = MutableLiveData<Pair<UiState?, UiState>>(
+        Pair(null, savedStateHandle?.get<UiState>(keySavedUIState) ?: defaultUIState())
+    )
+    private val _uiStateLiveData = MutableLiveData(_changeUiStateLiveData.value!!.second)
 
-    // --- STATE ---
-    private val _uiState = MutableStateFlow(defaultUIState())
-    val uiState: StateFlow<UiState> = _uiState
+    override val changeUiStateLiveData: LiveData<Pair<UiState?, UiState>> get() = _changeUiStateLiveData
+    override val uiStateLiveData: LiveData<UiState> get() = _uiStateLiveData
+    override val uiState: UiState get() = uiStateLiveData.value!!
 
-    fun setUiState(state: UiState) {
-        _uiState.value = state
-    }
-
-    // --- EVENT (one-shot) ---
-    private val _uiEvent = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
-    val uiEvent: SharedFlow<UiEvent> = _uiEvent
-
-    fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.emit(event)
+    override fun setUiState(uiState: UiState) {
+        val oldValue = this.uiState
+        if (oldValue === uiState) return
+        _changeUiStateLiveData.value = oldValue to uiState
+        _uiStateLiveData.value = uiState
+        if (uiState is Parcelable) {
+            savedStateHandle?.set(keySavedUIState, uiState)
         }
     }
 
-    // --- INTENT ---
-    abstract suspend fun onUiIntent(intent: UiIntent)
-
-    fun executeUiIntent(intent: UiIntent) {
-        viewModelScope.launch {
-            onUiIntent(intent)
-        }
+    val uiStateFlow: StateFlow<UiState> by lazy {
+        uiStateLiveData.asFlow().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), uiState)
     }
 }

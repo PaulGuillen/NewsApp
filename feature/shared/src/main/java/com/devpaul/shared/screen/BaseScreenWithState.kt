@@ -3,11 +3,7 @@ package com.devpaul.shared.screen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.shared.ui.extension.CenteredSnackBarHost
@@ -28,8 +24,8 @@ fun <UiState, UiIntent, UiEvent> BaseScreenWithState(
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    val uiState = viewModel.uiState.collectAsState().value
-    val uiEvent = viewModel.uiEvent.collectAsState(initial = null).value
+    val uiState by viewModel.uiStateFlow.collectAsState()
+    val uiEvent by viewModel.uiEvent.collectAsState(initial = null)
 
     val showSnackBar: (String) -> Unit = { message ->
         coroutineScope.launch {
