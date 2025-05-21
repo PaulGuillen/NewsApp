@@ -1,23 +1,23 @@
 package com.devpaul.auth.ui.register
 
+import com.devpaul.auth.data.datasource.dto.register.RegisterRequest
+import com.devpaul.auth.domain.usecase.RegisterUC
 import com.devpaul.core_data.util.Constant
-import com.devpaul.core_data.util.Constant.LOG_IN_KEY
-import com.devpaul.core_data.viewmodel.StatelessViewModel
 import com.devpaul.core_domain.use_case.DataStoreUseCase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import org.koin.android.annotation.KoinViewModel
-import javax.inject.Inject
 
 @KoinViewModel
-class RegisterViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
+class RegisterViewModel(
     private val dataStoreUseCase: DataStoreUseCase,
-) : StatelessViewModel<RegisterUiEvent, RegisterUiIntent>() {
+    private val registerUC: RegisterUC,
+) : StatefulViewModel<RegisterUiState, RegisterUiIntent, RegisterUiEvent>(
+    defaultUIState = {
+        RegisterUiState()
+    }
+) {
 
-    override fun handleIntent(intent: RegisterUiIntent) {
+    override suspend fun onUiIntent(intent: RegisterUiIntent) {
         when (intent) {
             is RegisterUiIntent.Register -> register(
                 name = intent.name,
@@ -28,38 +28,39 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun register(
+    suspend fun register(
         name: String,
         lastName: String,
         email: String,
         password: String,
     ) {
-        setLoading(true)
-        executeInScope(
-            block = {
-                val result = auth.createUserWithEmailAndPassword(email, password).await()
-                val userId = result.user?.uid
-                if (userId != null) {
-                    val user = hashMapOf(
-                        Constant.ID_FIELD to userId,
-                        Constant.NAME_FIELD to name,
-                        Constant.LAST_NAME_FIELD to lastName,
-                        Constant.EMAIL_FIELD to email,
-                        Constant.PASSWORD_FIELD to password
-                    )
-                    firestore.collection(Constant.USERS_COLLECTION).document(userId).set(user).await()
-                    dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                    setUiEvent(RegisterUiEvent.RegisterSuccess(message = Constant.REGISTER_SUCCESS))
-                } else {
-                    setUiEvent(RegisterUiEvent.RegisterError(error = Constant.REGISTER_ERROR))
-                }
-            },
-            onError = { error ->
-                setUiEvent(RegisterUiEvent.RegisterError(error = "${Constant.REGISTER_FAILURE} ${error.message}"))
-            },
-            onComplete = {
-                setLoading(false)
-            }
+
+        val requestRegister = RegisterRequest(
+            name = name,
+            lastName = lastName,
+            email = email,
+            password = password
         )
+        setUiState(uiState.copy(isLoading = true))
+        val result = registerUC(RegisterUC.Params(requestRegister))
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is RegisterUC.Success.RegisterSuccess -> {
+                        setUiState(uiState.copy(showDialog = true))
+                    }
+                }
+            }
+            .onFailure<RegisterUC.Failure> {
+                when (it) {
+                    is RegisterUC.Failure.RegisterError -> {
+                        RegisterUiEvent.RegisterError(error = Constant.REGISTER_ERROR).send()
+                    }
+                }
+            }
+            .also {
+                setUiState(uiState.copy(isLoading = false))
+            }
     }
+
 }

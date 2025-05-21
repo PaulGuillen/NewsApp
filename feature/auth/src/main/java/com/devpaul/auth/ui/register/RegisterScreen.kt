@@ -3,72 +3,53 @@ package com.devpaul.auth.ui.register
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_domain.Screen
-import com.devpaul.shared.screen.BaseScreen
+import com.devpaul.navigation.core.jetpack.AppNavigator
+import com.devpaul.shared.extension.handleDefaultErrors
+import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.screen.ShowDialogSuccessRegister
 import com.devpaul.shared.ui.extension.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 @Composable
-fun RegisterScreen(
-    navController: NavHostController,
-) {
+fun RegisterScreen(appNavigator: AppNavigator) {
 
     val viewModel: RegisterViewModel = koinViewModel()
 
-    val uiEvent by viewModel.uiEvent.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    var showDialog by remember { mutableStateOf(false) }
-
-    BaseScreen { _, showSnackBar ->
-        LaunchedEffect(uiEvent) {
-            when (uiEvent) {
-                is RegisterUiEvent.RegisterSuccess -> {
-                    showDialog = true
-                }
-
-                is RegisterUiEvent.RegisterError -> {
-                    showSnackBar((uiEvent as RegisterUiEvent.RegisterError).error)
-                }
-
-                else -> Unit
-            }
-
-            viewModel.resetUiEvent()
+    BaseScreenWithState(
+        viewModel = viewModel,
+        onUiEvent = { event, showSnackBar ->
+            handleRegisterUiEvent(event, showSnackBar)
+        },
+        onDefaultError = { error, showSnackBar ->
+            handleDefaultErrors(error, showSnackBar)
         }
-
-        if (showDialog) {
-            ShowDialogSuccessRegister {
-                showDialog = false
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Register.route) { inclusive = true }
-                }
-            }
-        }
+    ) { _, uiState, onIntent, showSnackBar ->
 
         Box(modifier = Modifier.fillMaxSize()) {
-            if (isLoading) {
+            if (uiState.isLoading) {
                 ScreenLoading()
             }
 
+            if (uiState.showDialog) {
+                ShowDialogSuccessRegister {
+                    viewModel.setUiState(uiState.copy(showDialog = false))
+                    appNavigator.navigateTo(Screen.Home, popUpTo = Screen.Login, inclusive = true)
+                }
+            }
+
             RegisterForm(
-                navController = navController,
+                appNavigator = appNavigator,
                 onRegister = { name, lastName, email, password ->
-                    viewModel.executeUiIntent(
+                    onIntent(
                         RegisterUiIntent.Register(
-                            name,
-                            lastName,
-                            email,
-                            password
+                            name = name,
+                            lastname = lastName,
+                            email = email,
+                            password = password,
                         )
                     )
                 },
@@ -76,6 +57,18 @@ fun RegisterScreen(
                     showSnackBar(message)
                 }
             )
+        }
+    }
+}
+
+private fun handleRegisterUiEvent(
+    event: RegisterUiEvent,
+    showSnackBar: (String) -> Unit,
+) {
+    when (event) {
+        is RegisterUiEvent.RegisterError -> {
+            showSnackBar(event.error)
+            Timber.d("Error: ${event.error}")
         }
     }
 }

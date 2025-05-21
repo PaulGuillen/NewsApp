@@ -27,7 +27,6 @@ class LoginViewModel(
     }
 
     private suspend fun login(email: String, password: String) {
-        // Activar loading
         val requestLogin =
             LoginRequest(
                 email = email,

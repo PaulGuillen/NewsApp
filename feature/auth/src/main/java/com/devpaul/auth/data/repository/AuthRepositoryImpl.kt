@@ -25,7 +25,6 @@ class AuthRepositoryImpl(
 
     override suspend fun register(requestRegister: RegisterRequest): DefaultOutput<Register> {
         val request = RegisterRequest(
-            userUID = requestRegister.userUID,
             name = requestRegister.name,
             lastName = requestRegister.lastName,
             email = requestRegister.email,

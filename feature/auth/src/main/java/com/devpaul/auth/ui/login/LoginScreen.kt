@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_domain.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
+import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.ui.extension.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
@@ -19,20 +20,13 @@ fun LoginScreen(appNavigator: AppNavigator) {
         viewModel = viewModel,
         onInit = { LoginUiIntent.CheckUserLoggedIn },
         onUiEvent = { event, showSnackBar ->
-            when (event) {
-                is LoginUiEvent.LoginSuccess -> appNavigator.navigateTo(
-                    screen = Screen.Home,
-                    popUpTo = Screen.Login,
-                    inclusive = true
-                )
-
-                is LoginUiEvent.LoginError -> showSnackBar(event.error)
-                is LoginUiEvent.RecoveryPasswordSuccess -> showSnackBar(event.message)
-                is LoginUiEvent.RecoveryPasswordError -> showSnackBar(event.error)
-                else -> Unit
-            }
+            handleLoginUiEvent(event, showSnackBar, appNavigator)
+        },
+        onDefaultError = { error, showSnackBar ->
+            handleDefaultErrors(error, showSnackBar)
         }
     ) { _, uiState, onIntent, showSnackBar ->
+
         Box(modifier = Modifier.fillMaxSize()) {
             if (uiState.isLoading) {
                 ScreenLoading()
@@ -47,11 +41,29 @@ fun LoginScreen(appNavigator: AppNavigator) {
                     onRegisterClick = {
                         appNavigator.navigateTo(Screen.Register)
                     },
-                    showSnackBar = { message ->
-                        showSnackBar(message)
-                    },
+                    showSnackBar = showSnackBar
                 )
             }
         }
+    }
+}
+
+private fun handleLoginUiEvent(
+    event: LoginUiEvent,
+    showSnackBar: (String) -> Unit,
+    navigator: AppNavigator
+) {
+    when (event) {
+        is LoginUiEvent.LoginSuccess -> {
+            navigator.navigateTo(
+                screen = Screen.Home,
+                popUpTo = Screen.Login,
+                inclusive = true
+            )
+        }
+
+        is LoginUiEvent.LoginError -> showSnackBar(event.error)
+        is LoginUiEvent.RecoveryPasswordSuccess -> showSnackBar(event.message)
+        is LoginUiEvent.RecoveryPasswordError -> showSnackBar(event.error)
     }
 }

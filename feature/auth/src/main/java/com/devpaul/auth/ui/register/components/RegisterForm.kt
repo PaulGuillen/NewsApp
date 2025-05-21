@@ -34,12 +34,13 @@ import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
+import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.shared.components.atoms.RegisterFormCallbacks
 import com.devpaul.shared.components.atoms.RegisterFormState
 
 @Composable
 fun RegisterForm(
-    navController: NavHostController,
+    appNavigator: AppNavigator,
     onRegister: (String, String, String, String) -> Unit,
     showSnackBar: (String) -> Unit
 ) {
@@ -126,7 +127,7 @@ fun RegisterForm(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = { navController.popBackStack() }) {
+        TextButton(onClick = { appNavigator.popBack() }) {
             Text(
                 stringResource(id = R.string.register_screen_already_have_account),
                 color = BrickRed
