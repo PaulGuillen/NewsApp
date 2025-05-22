@@ -27,7 +27,7 @@ object Constant {
     const val REGISTER_FAILURE = "Error en el registro: "
 
     // Other constants
-    const val LOGIN_DELAY = 3000L
+    const val LOGIN_DELAY = 1500L
     const val COUNTRY_PERU = "Perú"
     const val COUNTRY_ARGENTINA = "Argentina"
     const val COUNTRY_MEXICO = "Mexico"

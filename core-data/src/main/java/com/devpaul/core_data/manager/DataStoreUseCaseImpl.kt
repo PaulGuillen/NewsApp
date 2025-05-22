@@ -127,18 +127,19 @@ class DataStoreUseCaseImpl(context: Context) : DataStoreUseCase {
     }
 
     override fun remove(key: String?) {
-        if (key != null) {
-            val dataStoreKey = stringPreferencesKey(key)
-            runBlocking {
-                dataStore.edit { preferences ->
-                    preferences.remove(dataStoreKey)
-                }
+        if (key == null) return
+
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences.remove(stringPreferencesKey(key))
+                preferences.remove(intPreferencesKey(key))
+                preferences.remove(booleanPreferencesKey(key))
+                preferences.remove(floatPreferencesKey(key))
+                preferences.remove(longPreferencesKey(key))
             }
         }
     }
 
     override fun getAllPreference() {
-        // DataStore no proporciona un método directo para obtener todas las preferencias.
-        // Si necesitas esto, puedes iterar sobre todas las claves conocidas.
     }
 }

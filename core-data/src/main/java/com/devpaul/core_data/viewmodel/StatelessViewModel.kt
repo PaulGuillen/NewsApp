@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.devpaul.core_data.util.Constant
+import com.devpaul.core_data.util.Constant.LOG_IN_KEY
+import com.devpaul.core_domain.Screen
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
@@ -12,9 +14,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 abstract class StatelessViewModel<T, I>(
-    private val dataStoreUseCase: DataStoreUseCase? = null,
+    private val dataStoreUseCase: DataStoreUseCase,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -76,8 +79,9 @@ abstract class StatelessViewModel<T, I>(
     fun logOut(navHostController: NavHostController) {
         viewModelScope.launch {
             FirebaseAuth.getInstance().signOut()
-            dataStoreUseCase?.setValue(Constant.LOG_IN_KEY, false)
-            navHostController.navigate(Constant.LOG_IN_KEY) {
+            dataStoreUseCase?.setValue(LOG_IN_KEY,false)
+            Timber.d("UserLogged ${dataStoreUseCase?.getBoolean(LOG_IN_KEY)}")
+            navHostController.navigate(Screen.Login.route) {
                 popUpTo(0) { inclusive = true }
             }
         }

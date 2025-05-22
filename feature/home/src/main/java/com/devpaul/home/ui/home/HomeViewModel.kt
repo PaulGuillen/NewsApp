@@ -6,6 +6,7 @@ import com.devpaul.core_data.model.SectionItem
 import com.devpaul.core_data.model.UITResponse
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.viewmodel.StatelessViewModel
+import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.domain.usecase.DollarQuoteUseCase
 import com.devpaul.home.domain.usecase.UITUseCase
@@ -18,8 +19,9 @@ import org.koin.android.annotation.KoinViewModel
 class HomeViewModel(
     private val dollarQuoteUseCase: DollarQuoteUseCase,
     private val uitUseCase: UITUseCase,
-    private val firestore: FirebaseFirestore
-) : StatelessViewModel<HomeUiEvent, HomeUiIntent>() {
+    private val firestore: FirebaseFirestore,
+    dataStoreUseCase: DataStoreUseCase
+) : StatelessViewModel<HomeUiEvent, HomeUiIntent>(dataStoreUseCase) {
 
     private val _dollarQuoteState = MutableStateFlow<ResultState<DollarQuoteResponse>?>(null)
     val dollarQuoteState: StateFlow<ResultState<DollarQuoteResponse>?> = _dollarQuoteState

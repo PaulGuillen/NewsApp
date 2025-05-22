@@ -1,16 +1,19 @@
 package com.devpaul.auth.ui.login
 
+import androidx.lifecycle.viewModelScope
 import com.devpaul.auth.data.datasource.dto.login.LoginRequest
 import com.devpaul.auth.domain.usecase.LoginUC
 import com.devpaul.core_data.util.Constant
+import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import timber.log.Timber
 
 @KoinViewModel
 class LoginViewModel(
-    private val auth: FirebaseAuth,
     private val dataStoreUseCase: DataStoreUseCase,
     private val loginUC: LoginUC,
 ) : StatefulViewModel<LoginUIState, LoginUiIntent, LoginUiEvent>(
@@ -39,6 +42,7 @@ class LoginViewModel(
             .onSuccessful {
                 when (it) {
                     is LoginUC.Success.LoginSuccess -> {
+                        dataStoreUseCase.setValue(LOG_IN_KEY, true)
                         LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS).send()
                     }
                 }
@@ -60,7 +64,16 @@ class LoginViewModel(
     }
 
     private fun checkUserLoggedIn() {
-        //  setUiState(uiState.copy(isLoading = true))
-
+        Timber.d("UserLogged ${dataStoreUseCase.getBoolean(LOG_IN_KEY)}")
+        viewModelScope.launch {
+            setUiState(uiState.copy(isLoading = true))
+            delay(Constant.LOGIN_DELAY)
+            val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
+            setUiState(uiState.copy(isLoading = false))
+            if (isLoggedIn) {
+                LoginUiEvent.LoginSuccess(Constant.LOGIN_SUCCESS).send()
+            }
+        }
     }
+
 }
