@@ -1,12 +1,14 @@
 package com.devpaul.home.data.repository
 
-import com.devpaul.core_data.model.DollarQuoteResponse
+import com.devpaul.core_data.DefaultOutput
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.core_data.model.GDELProject
 import com.devpaul.core_data.model.GoogleNewsXML
 import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
-import com.devpaul.core_data.model.UITResponse
+import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.data.datasource.remote.HomeServiceDS
+import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.domain.repository.HomeRepository
 import org.koin.core.annotation.Factory
 
@@ -19,8 +21,8 @@ class HomeRepositoryImpl(
         return serviceDS.dollarQuote()
     }
 
-    override suspend fun dataUIT(): UITResponse {
-        return serviceDS.uit()
+    override suspend fun uit(): DefaultOutput<UITEntity> {
+        return serviceDS.uitService()
     }
 
     override suspend fun googleNews(query: String, language: String): GoogleNewsXML {

@@ -47,7 +47,7 @@ fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context:
         }
 
         is ResultState.Success -> {
-            if (gratitudeState.data.isNotEmpty()) {
+            if (gratitudeState.response.isNotEmpty()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -55,7 +55,7 @@ fun AcknowledgmentSection(gratitudeState: ResultState<List<Gratitude>>, context:
                         .horizontalScroll(rememberScrollState())
                         .padding(horizontal = 10.dp)
                 ) {
-                    gratitudeState.data.forEach { gratitude ->
+                    gratitudeState.response.forEach { gratitude ->
                         Card(
                             modifier = Modifier
                                 .width(320.dp)

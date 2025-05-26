@@ -1,6 +1,6 @@
 package com.devpaul.home.domain.usecase
 
-import com.devpaul.core_data.model.DollarQuoteResponse
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.core_data.viewmodel.CoroutineDispatcherProvider
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.domain.repository.HomeRepository

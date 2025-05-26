@@ -2,7 +2,6 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,13 +32,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devpaul.core_data.model.CotizacionItem
-import com.devpaul.core_data.model.DollarQuoteResponse
+import androidx.core.net.toUri
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteData
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
+import com.devpaul.home.data.datasource.dto.response.PriceItem
 import com.devpaul.shared.screen.atomic.DividerView
 import com.devpaul.shared.ui.skeleton.SkeletonInformationCard
 
@@ -76,7 +77,8 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
         },
         onClick = {
             if (dollarQuoteState is ResultState.Success) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(dollarQuoteState.data.enlace))
+                val intent =
+                    Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
                 context.startActivity(intent)
             }
         }
@@ -120,7 +122,7 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
 
                 when (dollarQuoteState) {
                     is ResultState.Success -> {
-                        val data = dollarQuoteState.data
+                        val dollarQuote = dollarQuoteState.response
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -136,7 +138,8 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = data.cotizacion?.firstOrNull()?.compra?.toString() ?: "N/A",
+                                text = dollarQuote.data.prices?.firstOrNull()?.buy?.toString()
+                                    ?: "N/A",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -157,7 +160,7 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
                             Spacer(modifier = Modifier.width(4.dp))
 
                             Text(
-                                text = data.cotizacion?.firstOrNull()?.venta.toString(),
+                                text = dollarQuote.data.prices?.firstOrNull()?.sell.toString(),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -165,7 +168,7 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = data.sitio ?: "Sitio no disponible",
+                            text = dollarQuote.data.site ?: "Sitio no disponible",
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
@@ -176,7 +179,7 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
                         DividerView()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = data.fecha ?: "Fecha no disponible",
+                            text = dollarQuote.data.date ?: "Fecha no disponible",
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
@@ -223,14 +226,18 @@ fun InformationCardPreview() {
     InformationCardContent(
         dollarQuoteState = ResultState.Success(
             DollarQuoteResponse(
-                cotizacion = listOf(
-                    CotizacionItem(
-                        compra = 3.61,
-                        venta = 3.72
-                    )
+                status = 200,
+                message = "Exitoso",
+                data = DollarQuoteData(
+                    prices = listOf(
+                        PriceItem(
+                            buy = 3.61,
+                            sell = 3.72
+                        )
+                    ),
+                    date = "2021-10-10",
+                    site = "https://www.google.com"
                 ),
-                fecha = "2021-10-10",
-                sitio = "https://www.google.com"
             )
         ),
         context = LocalContext.current

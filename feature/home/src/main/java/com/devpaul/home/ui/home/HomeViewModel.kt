@@ -1,9 +1,9 @@
 package com.devpaul.home.ui.home
 
-import com.devpaul.core_data.model.DollarQuoteResponse
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.core_data.model.Gratitude
 import com.devpaul.core_data.model.SectionItem
-import com.devpaul.core_data.model.UITResponse
+import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.viewmodel.StatelessViewModel
 import com.devpaul.core_domain.use_case.DataStoreUseCase
@@ -62,17 +62,7 @@ class HomeViewModel(
     }
 
     private fun fetchUit() {
-        _uitState.value = ResultState.Loading
-        executeInScope(
-            block = {
-                val result = uitUseCase()
-                _uitState.value = result
-            },
-            onError = { error ->
-                _uitState.value =
-                    ResultState.Error(exception = error as? Exception ?: Exception(error))
-            }
-        )
+
     }
 
     private fun fetchGratitude() {
@@ -86,7 +76,7 @@ class HomeViewModel(
                         val gratitudeList = documents.map { document ->
                             document.toObject(Gratitude::class.java)
                         }
-                        _gratitudeState.value = ResultState.Success(data = gratitudeList)
+                        _gratitudeState.value = ResultState.Success(response = gratitudeList)
                     }
                     .addOnFailureListener { exception ->
                         _gratitudeState.value = ResultState.Error(exception = exception)
@@ -110,7 +100,7 @@ class HomeViewModel(
                         val sectionList = result.map { document ->
                             document.toObject(SectionItem::class.java)
                         }
-                        _sectionsState.value = ResultState.Success(data = sectionList)
+                        _sectionsState.value = ResultState.Success(response = sectionList)
                     }
                     .addOnFailureListener { exception ->
                         _sectionsState.value = ResultState.Error(exception = exception)

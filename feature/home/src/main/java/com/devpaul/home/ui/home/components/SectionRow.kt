@@ -28,13 +28,13 @@ fun SectionsRowContent(sectionItemsState: ResultState<List<SectionItem>>, contex
         }
 
         is ResultState.Success -> {
-            if (sectionItemsState.data.isNotEmpty()) {
+            if (sectionItemsState.response.isNotEmpty()) {
                 Row(
                     modifier = Modifier
                         .horizontalScroll(rememberScrollState())
                         .padding(horizontal = 10.dp)
                 ) {
-                    sectionItemsState.data.forEach { sectionItem ->
+                    sectionItemsState.response.forEach { sectionItem ->
                         ItemSection(sectionItem, context)
                     }
                 }

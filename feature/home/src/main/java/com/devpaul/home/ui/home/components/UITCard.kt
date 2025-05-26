@@ -2,7 +2,6 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,12 +32,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devpaul.core_data.model.UITResponse
+import androidx.core.net.toUri
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
+import com.devpaul.home.data.datasource.dto.response.UITData
+import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.shared.screen.atomic.DividerView
 import com.devpaul.shared.ui.skeleton.UITCardSkeleton
 
@@ -71,7 +72,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
         ),
         onClick = {
             if (uitState is ResultState.Success) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uitState.data.enlace))
+                val intent = Intent(Intent.ACTION_VIEW, uitState.response.data.link?.toUri())
                 context.startActivity(intent)
             }
         }
@@ -83,7 +84,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
             Spacer(modifier = Modifier.height(8.dp))
             when (uitState) {
                 is ResultState.Success -> {
-                    val data = uitState.data
+                    val uitResponse = uitState.response
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -98,7 +99,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = data.servicio ?: "Servicio no disponible",
+                            text = uitResponse.data.service ?: "Servicio no disponible",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
@@ -123,14 +124,14 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = data.UIT.toString(),
+                            text = uitResponse.data.value.toString(),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = data.sitio ?: "Sitio no disponible",
+                        text = uitResponse.data.site ?: "Sitio no disponible",
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.End,
                         modifier = Modifier
@@ -141,7 +142,7 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
                     DividerView()
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = data.periodo.toString(),
+                        text = uitResponse.data.year.toString(),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.End,
@@ -179,10 +180,15 @@ fun UITCardSuccessPreview() {
     UITCardContent(
         ResultState.Success(
             UITResponse(
-                servicio = "Valor del UIT",
-                UIT = 5150.0,
-                periodo = 2024,
-                sitio = "DePeru.com"
+                status = 200,
+                message = "Success",
+                data = UITData(
+                    service = "Servicio de UIT",
+                    site = "DePeru.com",
+                    link = "https://deperu.com",
+                    year = 2024,
+                    value = 5150.20
+                )
             )
         ),
         context = LocalContext.current

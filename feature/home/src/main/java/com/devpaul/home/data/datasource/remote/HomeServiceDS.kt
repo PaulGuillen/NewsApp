@@ -1,12 +1,16 @@
 package com.devpaul.home.data.datasource.remote
 
+import com.devpaul.core_data.DefaultOutput
 import com.devpaul.core_data.model.ApiException
-import com.devpaul.core_data.model.DollarQuoteResponse
 import com.devpaul.core_data.model.GDELProject
 import com.devpaul.core_data.model.GoogleNewsXML
 import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
-import com.devpaul.core_data.model.UITResponse
+import com.devpaul.core_data.safeApiCall
+import com.devpaul.core_domain.entity.transform
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
+import com.devpaul.home.data.datasource.mapper.toDomain
+import com.devpaul.home.domain.entity.UITEntity
 import org.koin.core.annotation.Factory
 
 @Factory
@@ -16,16 +20,6 @@ class HomeServiceDS (
 
     suspend fun dollarQuote(): DollarQuoteResponse {
         val response = homeService.dollarQuote()
-        if (response.isSuccessful) {
-            return response.body() ?: throw Exception(ERROR_FETCHING_DATA)
-        } else {
-            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
-            throw ApiException(response.code(), errorMessage)
-        }
-    }
-
-    suspend fun uit(): UITResponse {
-        val response = homeService.dataUIT()
         if (response.isSuccessful) {
             return response.body() ?: throw Exception(ERROR_FETCHING_DATA)
         } else {
@@ -92,6 +86,12 @@ class HomeServiceDS (
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    suspend fun uitService(): DefaultOutput<UITEntity> {
+        return safeApiCall {
+            homeService.uit()
+        }.transform { it.toDomain() }
     }
 
     companion object {
