@@ -7,6 +7,7 @@ import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
 import com.devpaul.home.data.datasource.remote.HomeServiceDS
 import com.devpaul.home.domain.entity.DollarQuoteEntity
+import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.domain.repository.HomeRepository
@@ -27,6 +28,10 @@ class HomeRepositoryImpl(
 
     override suspend fun sectionService(): DefaultOutput<SectionEntity> {
         return serviceDS.sectionService()
+    }
+
+    override suspend fun gratitudeService(): DefaultOutput<GratitudeEntity> {
+        return serviceDS.gratitudeService()
     }
 
     override suspend fun googleNews(query: String, language: String): GoogleNewsXML {

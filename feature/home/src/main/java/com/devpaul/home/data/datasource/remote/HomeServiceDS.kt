@@ -10,6 +10,7 @@ import com.devpaul.core_data.safeApiCall
 import com.devpaul.core_domain.entity.transform
 import com.devpaul.home.data.datasource.mapper.toDomain
 import com.devpaul.home.domain.entity.DollarQuoteEntity
+import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.home.domain.entity.UITEntity
 import org.koin.core.annotation.Factory
@@ -34,6 +35,12 @@ class HomeServiceDS (
     suspend fun sectionService(): DefaultOutput<SectionEntity> {
         return safeApiCall {
             homeService.sections()
+        }.transform { it.toDomain() }
+    }
+
+    suspend fun gratitudeService(): DefaultOutput<GratitudeEntity> {
+        return safeApiCall {
+            homeService.gratitude()
         }.transform { it.toDomain() }
     }
 

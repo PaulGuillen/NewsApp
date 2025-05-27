@@ -2,16 +2,15 @@ package com.devpaul.home.ui.home
 
 import com.devpaul.core_data.model.Gratitude
 import com.devpaul.core_data.model.SectionItem
-import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.viewmodel.StatelessViewModel
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.domain.usecase.DollarQuoteUC
+import com.devpaul.home.domain.usecase.GratitudeUC
 import com.devpaul.home.domain.usecase.SectionUC
 import com.devpaul.home.domain.usecase.UITValueUC
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.android.annotation.KoinViewModel
@@ -21,7 +20,7 @@ class HomeViewModel(
     private val dollarQuoteUC: DollarQuoteUC,
     private val uitValueUC: UITValueUC,
     private val sectionUC: SectionUC,
-    private val firestore: FirebaseFirestore,
+    private val gratitudeUC: GratitudeUC,
     dataStoreUseCase: DataStoreUseCase
 ) : StatelessViewModel<HomeUiEvent, HomeUiIntent>(dataStoreUseCase) {
 
@@ -61,27 +60,7 @@ class HomeViewModel(
     }
 
     private fun fetchGratitude() {
-        _gratitudeState.value = ResultState.Loading
 
-        executeInScope(
-            block = {
-                firestore.collection(Constant.GRATITUDE)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        val gratitudeList = documents.map { document ->
-                            document.toObject(Gratitude::class.java)
-                        }
-                        _gratitudeState.value = ResultState.Success(response = gratitudeList)
-                    }
-                    .addOnFailureListener { exception ->
-                        _gratitudeState.value = ResultState.Error(exception = exception)
-                    }
-            },
-            onError = { error ->
-                _gratitudeState.value =
-                    ResultState.Error(exception = error as? Exception ?: Exception(error))
-            }
-        )
     }
 
 }
