@@ -10,6 +10,7 @@ import com.devpaul.core_data.safeApiCall
 import com.devpaul.core_domain.entity.transform
 import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.home.data.datasource.mapper.toDomain
+import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.UITEntity
 import org.koin.core.annotation.Factory
 
@@ -18,14 +19,16 @@ class HomeServiceDS (
     private val homeService: HomeService,
 ) {
 
-    suspend fun dollarQuote(): DollarQuoteResponse {
-        val response = homeService.dollarQuote()
-        if (response.isSuccessful) {
-            return response.body() ?: throw Exception(ERROR_FETCHING_DATA)
-        } else {
-            val errorMessage = response.errorBody()?.string() ?: ERROR_UNKNOWN
-            throw ApiException(response.code(), errorMessage)
-        }
+    suspend fun dollarQuoteService(): DefaultOutput<DollarQuoteEntity> {
+        return safeApiCall {
+            homeService.dollarQuote()
+        }.transform { it.toDomain() }
+    }
+
+    suspend fun uitService(): DefaultOutput<UITEntity> {
+        return safeApiCall {
+            homeService.uit()
+        }.transform { it.toDomain() }
     }
 
     fun googleNews(query: String, language: String): GoogleNewsXML {
@@ -86,12 +89,6 @@ class HomeServiceDS (
         } catch (e: Exception) {
             throw e
         }
-    }
-
-    suspend fun uitService(): DefaultOutput<UITEntity> {
-        return safeApiCall {
-            homeService.uit()
-        }.transform { it.toDomain() }
     }
 
     companion object {

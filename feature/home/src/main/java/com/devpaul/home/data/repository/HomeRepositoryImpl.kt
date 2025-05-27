@@ -8,6 +8,7 @@ import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
 import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.data.datasource.remote.HomeServiceDS
+import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.domain.repository.HomeRepository
 import org.koin.core.annotation.Factory
@@ -17,11 +18,11 @@ class HomeRepositoryImpl(
     private val serviceDS: HomeServiceDS
 ) : HomeRepository {
 
-    override suspend fun dollarQuote(): DollarQuoteResponse {
-        return serviceDS.dollarQuote()
+    override suspend fun dollarQuoteService(): DefaultOutput<DollarQuoteEntity> {
+        return serviceDS.dollarQuoteService()
     }
 
-    override suspend fun uit(): DefaultOutput<UITEntity> {
+    override suspend fun uitService(): DefaultOutput<UITEntity> {
         return serviceDS.uitService()
     }
 

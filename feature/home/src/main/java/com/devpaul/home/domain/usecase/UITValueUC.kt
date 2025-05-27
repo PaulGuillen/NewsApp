@@ -10,12 +10,12 @@ import com.devpaul.home.domain.repository.HomeRepository
 import org.koin.core.annotation.Factory
 
 @Factory
-class UITUseCase(
+class UITValueUC(
     private val homeRepository: HomeRepository,
-) : SimpleUC.OnlyResult<DefaultOutput<UITUseCase.Success>> {
+) : SimpleUC.OnlyResult<DefaultOutput<UITValueUC.Success>> {
 
     override suspend fun invoke(): DefaultOutput<Success> {
-        return homeRepository.uit()
+        return homeRepository.uitService()
             .transformHttpError {
                 Failure.UITError(it)
             }

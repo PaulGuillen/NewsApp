@@ -64,7 +64,6 @@ class LoginViewModel(
     }
 
     private fun checkUserLoggedIn() {
-        Timber.d("UserLogged ${dataStoreUseCase.getBoolean(LOG_IN_KEY)}")
         viewModelScope.launch {
             setUiState(uiState.copy(isLoading = true))
             delay(Constant.LOGIN_DELAY)

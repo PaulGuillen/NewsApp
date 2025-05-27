@@ -1,15 +1,15 @@
 package com.devpaul.home.ui.home
 
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.core_data.model.Gratitude
 import com.devpaul.core_data.model.SectionItem
-import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.viewmodel.StatelessViewModel
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.home.domain.usecase.DollarQuoteUseCase
-import com.devpaul.home.domain.usecase.UITUseCase
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
+import com.devpaul.home.data.datasource.dto.response.UITResponse
+import com.devpaul.home.domain.usecase.DollarQuoteUC
+import com.devpaul.home.domain.usecase.UITValueUC
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,8 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class HomeViewModel(
-    private val dollarQuoteUseCase: DollarQuoteUseCase,
-    private val uitUseCase: UITUseCase,
+    private val dollarQuoteUC: DollarQuoteUC,
+    private val uitValueUC: UITValueUC,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
 ) : StatelessViewModel<HomeUiEvent, HomeUiIntent>(dataStoreUseCase) {
@@ -47,18 +47,7 @@ class HomeViewModel(
     }
 
     private fun fetchDollarQuote() {
-        _dollarQuoteState.value = ResultState.Loading
 
-        executeInScope(
-            block = {
-                val result = dollarQuoteUseCase()
-                _dollarQuoteState.value = result
-            },
-            onError = { error ->
-                _dollarQuoteState.value =
-                    ResultState.Error(exception = error as? Exception ?: Exception(error))
-            }
-        )
     }
 
     private fun fetchUit() {
