@@ -8,6 +8,7 @@ import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
 import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.domain.entity.DollarQuoteEntity
+import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.home.domain.entity.UITEntity
 
 interface HomeRepository {
@@ -15,6 +16,8 @@ interface HomeRepository {
     suspend fun dollarQuoteService(): DefaultOutput<DollarQuoteEntity>
 
     suspend fun uitService(): DefaultOutput<UITEntity>
+
+    suspend fun sectionService(): DefaultOutput<SectionEntity>
 
     suspend fun googleNews(query: String, language: String): GoogleNewsXML
 

@@ -9,6 +9,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.domain.usecase.DollarQuoteUC
+import com.devpaul.home.domain.usecase.SectionUC
 import com.devpaul.home.domain.usecase.UITValueUC
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import org.koin.android.annotation.KoinViewModel
 class HomeViewModel(
     private val dollarQuoteUC: DollarQuoteUC,
     private val uitValueUC: UITValueUC,
+    private val sectionUC: SectionUC,
     private val firestore: FirebaseFirestore,
     dataStoreUseCase: DataStoreUseCase
 ) : StatelessViewModel<HomeUiEvent, HomeUiIntent>(dataStoreUseCase) {
@@ -54,6 +56,10 @@ class HomeViewModel(
 
     }
 
+    private fun fetchSections() {
+
+    }
+
     private fun fetchGratitude() {
         _gratitudeState.value = ResultState.Loading
 
@@ -78,27 +84,4 @@ class HomeViewModel(
         )
     }
 
-    private fun fetchSections() {
-        _sectionsState.value = ResultState.Loading
-
-        executeInScope(
-            block = {
-                firestore.collection(Constant.SECTION_ITEMS)
-                    .get()
-                    .addOnSuccessListener { result ->
-                        val sectionList = result.map { document ->
-                            document.toObject(SectionItem::class.java)
-                        }
-                        _sectionsState.value = ResultState.Success(response = sectionList)
-                    }
-                    .addOnFailureListener { exception ->
-                        _sectionsState.value = ResultState.Error(exception = exception)
-                    }
-            },
-            onError = { error ->
-                _sectionsState.value =
-                    ResultState.Error(exception = error as? Exception ?: Exception(error))
-            }
-        )
-    }
 }
