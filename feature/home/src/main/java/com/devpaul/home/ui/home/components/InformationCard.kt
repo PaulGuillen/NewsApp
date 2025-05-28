@@ -18,11 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,36 +29,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteData
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
-import com.devpaul.home.data.datasource.dto.response.PriceItem
+import com.devpaul.home.data.datasource.mock.DollarQuoteMock
+import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.shared.screen.atomic.DividerView
 import com.devpaul.shared.ui.skeleton.SkeletonInformationCard
 
 @Composable
 fun InformationCard(
-    dollarQuoteState: ResultState<DollarQuoteResponse>?,
-    context: Context
+    context: Context,
+    dollarQuote: DollarQuoteEntity?,
+    dollarQuoteError: String? = null,
+    dollarQuoteLoading: Boolean = false,
 ) {
-    var showSkeleton by remember { mutableStateOf(true) }
-
-    LaunchedEffect(dollarQuoteState) {
-        showSkeleton = dollarQuoteState is ResultState.Loading
-    }
-
-    if (showSkeleton) {
+    if (dollarQuoteLoading) {
         SkeletonInformationCard()
     } else {
-        InformationCardContent(dollarQuoteState, context)
+        InformationCardContent(
+            context = context,
+            dollarQuote = dollarQuote,
+            dollarQuoteError = dollarQuoteError
+        )
     }
 }
 
 @Composable
-fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, context: Context) {
+fun InformationCardContent(
+    context: Context,
+    dollarQuote: DollarQuoteEntity?,
+    dollarQuoteError: String?
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,9 +73,8 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
             )
         },
         onClick = {
-            if (dollarQuoteState is ResultState.Success) {
-                val intent =
-                    Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
+            if (dollarQuote != null) {
+                val intent = Intent(Intent.ACTION_VIEW, dollarQuote.data.link?.toUri())
                 context.startActivity(intent)
             }
         }
@@ -120,100 +116,81 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                when (dollarQuoteState) {
-                    is ResultState.Success -> {
-                        val dollarQuote = dollarQuoteState.response
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Compra:",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
-                                ),
-                                color = BlueDark
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = dollarQuote.data.prices?.firstOrNull()?.buy?.toString()
-                                    ?: "N/A",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Venta:",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                color = BlueDark
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = dollarQuote.data.prices?.firstOrNull()?.sell.toString(),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
+                if (dollarQuote != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Text(
-                            text = dollarQuote.data.site ?: "Sitio no disponible",
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 20.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        DividerView()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = dollarQuote.data.date ?: "Fecha no disponible",
-                            style = MaterialTheme.typography.bodySmall,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 20.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-
-                    is ResultState.Error -> {
-                        Text(
-                            text = "Error al obtener datos del dólar.",
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
+                            text = "Compra:",
                             style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             ),
+                            color = BlueDark
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = dollarQuote.data.prices?.firstOrNull()?.buy?.toString()
+                                ?: "N/A",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
 
-                    else -> {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Text(
-                            text = "Sin datos disponibles",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
+                            text = "Venta:",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp
+                                fontWeight = FontWeight.Bold
                             ),
+                            color = BlueDark
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = dollarQuote.data.prices?.firstOrNull()?.sell.toString(),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = dollarQuote.data.site ?: "Sitio no disponible",
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 20.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DividerView()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = dollarQuote.data.date ?: "Fecha no disponible",
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 20.dp)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                } else {
+                    Text(
+                        text = dollarQuoteError ?: "Error al obtener datos del dólar.",
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 15.sp
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
@@ -224,23 +201,9 @@ fun InformationCardContent(dollarQuoteState: ResultState<DollarQuoteResponse>?, 
 @Composable
 fun InformationCardPreview() {
     InformationCardContent(
-        dollarQuoteState = ResultState.Success(
-            DollarQuoteResponse(
-                status = 200,
-                message = "Exitoso",
-                data = DollarQuoteData(
-                    prices = listOf(
-                        PriceItem(
-                            buy = 3.61,
-                            sell = 3.72
-                        )
-                    ),
-                    date = "2021-10-10",
-                    site = "https://www.google.com"
-                ),
-            )
-        ),
-        context = LocalContext.current
+        context = LocalContext.current,
+        dollarQuote = DollarQuoteMock().dollarQuoteMock,
+        dollarQuoteError = null
     )
 }
 
@@ -248,16 +211,8 @@ fun InformationCardPreview() {
 @Composable
 fun InformationCardErrorPreview() {
     InformationCardContent(
-        dollarQuoteState = ResultState.Error(Exception("Simulated Error")),
-        context = LocalContext.current
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InformationCardNoDataPreview() {
-    InformationCardContent(
-        dollarQuoteState = null,
-        context = LocalContext.current
+        context = LocalContext.current,
+        dollarQuote = null,
+        dollarQuoteError = "Error al cargar el valor del dólar."
     )
 }

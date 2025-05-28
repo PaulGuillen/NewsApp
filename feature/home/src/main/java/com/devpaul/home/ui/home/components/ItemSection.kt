@@ -20,12 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.devpaul.core_data.model.SectionItem
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
+import com.devpaul.home.domain.entity.SectionDataEntity
 
 @Composable
-fun ItemSection(sectionItem: SectionItem, context: Context) {
+fun ItemSection(
+    context: Context,
+    sectionItem: SectionDataEntity,
+) {
     Card(
         modifier = Modifier
             .width(140.dp)
@@ -59,7 +62,11 @@ fun ItemSection(sectionItem: SectionItem, context: Context) {
 @Composable
 fun SectionItemPreview() {
     ItemSection(
-        SectionItem("Noticias", "https://www.infoxperu.com/noticias"),
-        context = LocalContext.current
+        context = LocalContext.current,
+        sectionItem = SectionDataEntity(
+            id = "1",
+            title = "Noticias",
+            type = "https://www.infoxperu.com/noticias",
+        )
     )
 }

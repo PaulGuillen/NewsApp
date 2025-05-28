@@ -1,23 +1,26 @@
 package com.devpaul.home.data.datasource.mock
 
-import com.devpaul.core_data.model.Gratitude
 import com.devpaul.core_data.model.SectionItem
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteData
-import com.devpaul.home.data.datasource.dto.response.PriceItem
-import com.devpaul.home.data.datasource.dto.response.UITData
-import com.devpaul.home.data.datasource.dto.response.UITResponse
+import com.devpaul.home.domain.entity.DollarQuoteDataEntity
+import com.devpaul.home.domain.entity.DollarQuoteEntity
+import com.devpaul.home.domain.entity.GratitudeDataEntity
+import com.devpaul.home.domain.entity.GratitudeEntity
+import com.devpaul.home.domain.entity.PriceItemEntity
+import com.devpaul.home.domain.entity.SectionDataEntity
+import com.devpaul.home.domain.entity.SectionEntity
+import com.devpaul.home.domain.entity.UITDataEntity
+import com.devpaul.home.domain.entity.UITEntity
 
 data class DollarQuoteMock(
-    val dollarQuoteMock: DollarQuoteResponse = DollarQuoteResponse(
+    val dollarQuoteMock: DollarQuoteEntity = DollarQuoteEntity(
         status = 200,
         message = "Success",
-        data = DollarQuoteData(
+        data = DollarQuoteDataEntity(
             service = "Mock Service",
             site = "Mock Site",
             link = "https:example.com",
             prices = listOf(
-                PriceItem(
+                PriceItemEntity(
                     buy = 3.61,
                     sell = 3.72
                 )
@@ -30,10 +33,10 @@ data class DollarQuoteMock(
 )
 
 data class UITMock(
-    val uitMock: UITResponse = UITResponse(
+    val uitMock: UITEntity = UITEntity(
         status = 200,
         message = "Success",
-        data = UITData(
+        data = UITDataEntity(
             value = 123.45,
             year = 1,
             service = "Mock Service"
@@ -42,23 +45,33 @@ data class UITMock(
 )
 
 data class GratitudeMock(
-    val gratitudeMock: List<Gratitude> = listOf(
-        Gratitude(
-            image = "https:via.placeholder.com/150",
-            title = "Mock Title 1",
-            url = "https:example.com",
-        ),
-        Gratitude(
-            image = "https:via.placeholder.com/150",
-            title = "Mock Title 2",
-            url = "https:example.com",
+    val gratitudeMock: GratitudeEntity = GratitudeEntity(
+        status = 200,
+        message = "Success",
+        data = listOf(
+            GratitudeDataEntity(
+                id = "1",
+                imageUrl = "https:via.placeholder.com/150",
+                title = "Mock Title 1",
+                link = "https:example.com"
+            ),
+            GratitudeDataEntity(
+                id = "2",
+                imageUrl = "https:via.placeholder.com/150",
+                title = "Mock Title 2",
+                link = "https:example.com"
+            )
         )
     )
 )
 
 data class SectionMock(
-    val sectionMock: List<SectionItem> = listOf(
-        SectionItem(title = "Noticias", type = "news"),
-        SectionItem(title = "Distritos", type = "districts")
+    val sectionMock: SectionEntity = SectionEntity(
+        status = 200,
+        message = "Success",
+        data = listOf(
+            SectionDataEntity(id = "1", title = "Noticias", type = "news"),
+            SectionDataEntity(id = "2", title = "Distritos", type = "districts")
+        )
     )
 )

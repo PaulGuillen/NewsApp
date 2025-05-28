@@ -18,11 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,33 +29,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
-import com.devpaul.home.data.datasource.dto.response.UITData
-import com.devpaul.home.data.datasource.dto.response.UITResponse
+import com.devpaul.home.data.datasource.mock.UITMock
+import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.shared.screen.atomic.DividerView
 import com.devpaul.shared.ui.skeleton.UITCardSkeleton
 
 @Composable
-fun UITCard(uitState: ResultState<UITResponse>?, context: Context) {
-    var showSkeleton by remember { mutableStateOf(true) }
-
-    LaunchedEffect(uitState) {
-        showSkeleton = uitState is ResultState.Loading
-    }
-
-    if (showSkeleton) {
+fun UITCard(
+    context: Context,
+    uit: UITEntity?,
+    uitError: String? = null,
+    uitLoading: Boolean = false,
+) {
+    if (uitLoading) {
         UITCardSkeleton()
     } else {
-        UITCardContent(uitState, context)
+        UITCardContent(
+            context = context,
+            uitEntity = uit,
+            uitError = uitError,
+        )
     }
 }
 
 @Composable
-fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
-
+fun UITCardContent(
+    context: Context,
+    uitEntity: UITEntity?,
+    uitError: String? = null,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,8 +71,8 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
             contentColor = Black
         ),
         onClick = {
-            if (uitState is ResultState.Success) {
-                val intent = Intent(Intent.ACTION_VIEW, uitState.response.data.link?.toUri())
+            if (uitEntity != null) {
+                val intent = Intent(Intent.ACTION_VIEW, uitEntity.data.link?.toUri())
                 context.startActivity(intent)
             }
         }
@@ -80,95 +80,79 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
         Column(
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
         ) {
-
             Spacer(modifier = Modifier.height(8.dp))
-            when (uitState) {
-                is ResultState.Success -> {
-                    val uitResponse = uitState.response
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(modifier = Modifier.size(24.dp)) {
-                            Image(
-                                painter = painterResource(id = R.drawable.change_management),
-                                contentDescription = "Icono del dólar"
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = uitResponse.data.service ?: "Servicio no disponible",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp
-                            ),
-                            color = BlueDark,
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "UIT:",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = BlueDark
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        Text(
-                            text = uitResponse.data.value.toString(),
-                            style = MaterialTheme.typography.bodyMedium
+            if (uitEntity != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(modifier = Modifier.size(24.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.change_management),
+                            contentDescription = "Icono del dólar"
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = uitResponse.data.site ?: "Sitio no disponible",
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 16.dp)
+                        text = uitEntity.data.service ?: "Servicio no disponible",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        ),
+                        color = BlueDark,
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    DividerView()
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = uitResponse.data.year.toString(),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 16.dp)
-                    )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "UIT:",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = BlueDark
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
 
-                is ResultState.Error -> {
                     Text(
-                        text = "Error al obtener el UIT",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        text = uitEntity.data.value.toString(),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
 
-                else -> {
-                    Text(
-                        text = "No hay información disponible",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                Text(
+                    text = uitEntity.data.site ?: "Sitio no disponible",
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                DividerView()
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = uitEntity.data.year.toString(),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp)
+                )
+            } else {
+                Text(
+                    text = uitError ?: "Error al obtener el UIT",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -178,20 +162,9 @@ fun UITCardContent(uitState: ResultState<UITResponse>?, context: Context) {
 @Composable
 fun UITCardSuccessPreview() {
     UITCardContent(
-        ResultState.Success(
-            UITResponse(
-                status = 200,
-                message = "Success",
-                data = UITData(
-                    service = "Servicio de UIT",
-                    site = "DePeru.com",
-                    link = "https://deperu.com",
-                    year = 2024,
-                    value = 5150.20
-                )
-            )
-        ),
-        context = LocalContext.current
+        context = LocalContext.current,
+        uitEntity = UITMock().uitMock,
+        uitError = null
     )
 }
 
@@ -199,16 +172,8 @@ fun UITCardSuccessPreview() {
 @Composable
 fun UITCardErrorPreview() {
     UITCardContent(
-        uitState = ResultState.Error(Exception("Simulated Error")),
-        context = LocalContext.current
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun UITCardNotDataAvailablePreview() {
-    UITCardContent(
-        uitState = null,
-        context = LocalContext.current
+        context = LocalContext.current,
+        uitEntity = null,
+        uitError = "Error al obtener el UIT"
     )
 }
