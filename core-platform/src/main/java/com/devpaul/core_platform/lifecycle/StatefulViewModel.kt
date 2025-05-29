@@ -7,9 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.devpaul.core_platform.lifecycle.base.UiStateHolder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withContext
 
 abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
     defaultUIState: () -> UiState,
@@ -38,5 +40,11 @@ abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
 
     val uiStateFlow: StateFlow<UiState> by lazy {
         uiStateLiveData.asFlow().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), uiState)
+    }
+
+    protected suspend fun updateUiStateOnMain(block: (UiState) -> UiState) {
+        withContext(Dispatchers.Main) {
+            setUiState(block(uiState))
+        }
     }
 }

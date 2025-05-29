@@ -6,6 +6,7 @@ import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.lifecycle.base.UiEventHolder
 import com.devpaul.core_platform.lifecycle.base.UiIntentHolder
 import com.devpaul.core_platform.lifecycle.base.ViewModelLoadable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.withContext
 
 abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolder<UiEvent>, UiIntentHolder<UiIntent>, ViewModelLoadable {
 
@@ -76,4 +78,13 @@ abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolde
         }
         return this
     }
+
+    protected fun launchIO(block: suspend () -> Unit) {
+        launch {
+            withContext(Dispatchers.IO) {
+                block()
+            }
+        }
+    }
+
 }

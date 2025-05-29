@@ -21,22 +21,27 @@ class LoginViewModel(
         LoginUIState()
     }
 ) {
+
+    init {
+        LoginUiIntent.CheckUserLoggedIn.execute()
+    }
+
     override suspend fun onUiIntent(intent: LoginUiIntent) {
         when (intent) {
-            is LoginUiIntent.Login -> login(email = intent.email, password = intent.password)
+            is LoginUiIntent.Login -> login(email = intent.email)
             is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)
-            is LoginUiIntent.CheckUserLoggedIn -> checkUserLoggedIn()
+            is LoginUiIntent.CheckUserLoggedIn -> launchIO { checkUserLoggedIn() }
         }
     }
 
-    private suspend fun login(email: String, password: String) {
+    private suspend fun login(email: String) {
         val requestLogin =
             LoginRequest(
                 email = email,
                 type = "classic",
                 googleToken = ""
             )
-        setUiState(uiState.copy(isLoading = true))
+        updateUiStateOnMain { it.copy(isLoading = true) }
         val result = loginUC(LoginUC.Params(requestLogin))
         result.handleNetworkDefault()
             .onSuccessful {
@@ -55,7 +60,7 @@ class LoginViewModel(
                 }
             }
             .also {
-                setUiState(uiState.copy(isLoading = false))
+                updateUiStateOnMain { it.copy(isLoading = false) }
             }
     }
 
@@ -65,14 +70,13 @@ class LoginViewModel(
 
     private fun checkUserLoggedIn() {
         viewModelScope.launch {
-            setUiState(uiState.copy(isLoading = true))
+            updateUiStateOnMain { it.copy(isLoading = true) }
             delay(Constant.LOGIN_DELAY)
             val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
-            setUiState(uiState.copy(isLoading = false))
+            updateUiStateOnMain { it.copy(isLoading = false) }
             if (isLoggedIn) {
                 LoginUiEvent.LoginSuccess(Constant.LOGIN_SUCCESS).send()
             }
         }
     }
-
 }

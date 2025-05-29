@@ -18,7 +18,6 @@ fun LoginScreen(appNavigator: AppNavigator) {
 
     BaseScreenWithState(
         viewModel = viewModel,
-        onInit = { LoginUiIntent.CheckUserLoggedIn },
         onUiEvent = { event, showSnackBar ->
             handleLoginUiEvent(event, showSnackBar, appNavigator)
         },

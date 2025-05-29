@@ -29,6 +29,6 @@ class DollarQuoteUC(
     }
 
     sealed class Success {
-        data class DollarQuoteSuccess(val uit: DollarQuoteEntity) : Success()
+        data class DollarQuoteSuccess(val dollarQuote: DollarQuoteEntity) : Success()
     }
 }

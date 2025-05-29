@@ -1,19 +1,10 @@
 package com.devpaul.home.ui.home
 
-import com.devpaul.core_data.model.Gratitude
-import com.devpaul.core_data.model.SectionItem
-import com.devpaul.core_data.viewmodel.StatelessViewModel
-import com.devpaul.core_domain.use_case.DataStoreUseCase
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
-import com.devpaul.home.data.datasource.dto.response.UITResponse
 import com.devpaul.home.domain.usecase.DollarQuoteUC
 import com.devpaul.home.domain.usecase.GratitudeUC
 import com.devpaul.home.domain.usecase.SectionUC
 import com.devpaul.home.domain.usecase.UITValueUC
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -28,17 +19,43 @@ class HomeViewModel(
     }
 ) {
 
+    init {
+        HomeUiIntent.GetDollarQuote.execute()
+        HomeUiIntent.GetUIT.execute()
+        HomeUiIntent.GetGratitude.execute()
+        HomeUiIntent.GetSections.execute()
+    }
+
     override suspend fun onUiIntent(intent: HomeUiIntent) {
         when (intent) {
-            is HomeUiIntent.DollarQuote -> fetchDollarQuote()
-            is HomeUiIntent.UIT -> fetchUit()
-            is HomeUiIntent.Gratitude -> fetchGratitude()
-            is HomeUiIntent.Sections -> fetchSections()
+            is HomeUiIntent.GetDollarQuote -> launchIO { fetchDollarQuote() }
+            is HomeUiIntent.GetUIT -> launchIO { fetchUit() }
+            is HomeUiIntent.GetGratitude -> launchIO { fetchGratitude() }
+            is HomeUiIntent.GetSections -> launchIO { fetchSections() }
         }
     }
 
-    private fun fetchDollarQuote() {
-
+    private suspend fun fetchDollarQuote() {
+        updateUiStateOnMain { it.copy(isDollarQuoteLoading = true) }
+        val result = dollarQuoteUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is DollarQuoteUC.Success.DollarQuoteSuccess -> {
+                        HomeUiEvent.DollarQuoteSuccess(it.dollarQuote).send()
+                    }
+                }
+            }
+            .onFailure<DollarQuoteUC.Failure> {
+                when (it) {
+                    is DollarQuoteUC.Failure.DollarQuoteError -> {
+                        HomeUiEvent.DollarQuoteError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isDollarQuoteLoading = false) }
+            }
     }
 
     private fun fetchUit() {

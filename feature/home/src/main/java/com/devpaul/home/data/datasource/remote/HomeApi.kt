@@ -1,17 +1,18 @@
 package com.devpaul.home.data.datasource.remote
 
-import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.core_data.model.GDELProject
 import com.devpaul.core_data.model.GoogleNewsXML
 import com.devpaul.core_data.model.NewsPeruResponse
 import com.devpaul.core_data.model.NewsResponse
 import com.devpaul.core_data.model.RedditResponse
+import com.devpaul.home.data.datasource.dto.response.DollarQuoteResponse
 import com.devpaul.home.data.datasource.dto.response.GratitudeResponse
 import com.devpaul.home.data.datasource.dto.response.SectionResponse
 import com.devpaul.home.data.datasource.dto.response.UITResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 

@@ -41,7 +41,7 @@ class RegisterViewModel(
             email = email,
             password = password
         )
-        setUiState(uiState.copy(isLoading = true))
+        updateUiStateOnMain { it.copy(isLoading = true) }
         val result = registerUC(RegisterUC.Params(requestRegister))
         result.handleNetworkDefault()
             .onSuccessful {
@@ -59,7 +59,7 @@ class RegisterViewModel(
                 }
             }
             .also {
-                setUiState(uiState.copy(isLoading = false))
+                updateUiStateOnMain { it.copy(isLoading = false) }
             }
     }
 

@@ -53,12 +53,6 @@ fun HomeScreen(navController: NavHostController) {
 
     BaseScreenWithState(
         viewModel = viewModel,
-        onInit = {
-            HomeUiIntent.DollarQuote
-            HomeUiIntent.UIT
-            HomeUiIntent.Gratitude
-            HomeUiIntent.Sections
-        },
         onUiEvent = { event, _ ->
             when (event) {
                 is HomeUiEvent.DollarQuoteSuccess -> {
