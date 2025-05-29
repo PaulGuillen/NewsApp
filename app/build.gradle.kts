@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":feature:shared"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:news"))
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.activity)
     implementation(libs.navigation.fragment)

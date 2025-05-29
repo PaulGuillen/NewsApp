@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home.components
+package com.devpaul.home.ui.components
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll

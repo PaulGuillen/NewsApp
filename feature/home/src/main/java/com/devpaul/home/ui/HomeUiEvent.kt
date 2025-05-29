@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.home.domain.entity.DollarQuoteEntity

@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -22,10 +22,10 @@ import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.data.datasource.mock.UITMock
-import com.devpaul.home.ui.home.components.AcknowledgmentSection
-import com.devpaul.home.ui.home.components.InformationCard
-import com.devpaul.home.ui.home.components.SectionsRow
-import com.devpaul.home.ui.home.components.UITCard
+import com.devpaul.home.ui.components.AcknowledgmentSection
+import com.devpaul.home.ui.components.InformationCard
+import com.devpaul.home.ui.components.SectionsRow
+import com.devpaul.home.ui.components.UITCard
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.ui.extension.BottomNavigationBar

@@ -1,6 +1,5 @@
 package com.devpaul.home.data.datasource.mock
 
-import com.devpaul.core_data.model.SectionItem
 import com.devpaul.home.domain.entity.DollarQuoteDataEntity
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.GratitudeDataEntity

@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.GratitudeEntity

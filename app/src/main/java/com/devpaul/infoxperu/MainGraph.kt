@@ -7,6 +7,7 @@ import com.devpaul.auth.authGraph
 import com.devpaul.core_domain.Screen
 import com.devpaul.home.homeGraph
 import com.devpaul.navigation.core.jetpack.AppNavigator
+import com.devpaul.news.newsGraph
 
 @Composable
 fun MainGraph(
@@ -19,5 +20,6 @@ fun MainGraph(
     ) {
         authGraph(navController, appNavigator)
         homeGraph(navController, appNavigator)
+        newsGraph(navController, appNavigator)
     }
 }

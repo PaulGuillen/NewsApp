@@ -3,10 +3,9 @@ plugins {
 }
 
 android {
-    namespace = "com.devpaul.home"
+    namespace = "com.devpaul.news"
 }
 
 dependencies {
-    implementation(project(":feature:news"))
     implementation(project(":feature:shared"))
 }

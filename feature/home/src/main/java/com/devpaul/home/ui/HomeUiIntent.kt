@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 sealed class HomeUiIntent {
     data object GetDollarQuote : HomeUiIntent()

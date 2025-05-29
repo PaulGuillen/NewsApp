@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 data class HomeUiState(
     val isDollarQuoteLoading: Boolean = false,

@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.home
+package com.devpaul.home.ui
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.home.domain.usecase.DollarQuoteUC
