@@ -58,8 +58,27 @@ class HomeViewModel(
             }
     }
 
-    private fun fetchUit() {
-
+    private suspend fun fetchUit() {
+        updateUiStateOnMain { it.copy(isUITLoading = true) }
+        val result = uitValueUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is UITValueUC.Success.UITSuccess -> {
+                        HomeUiEvent.UITSuccess(it.uit).send()
+                    }
+                }
+            }
+            .onFailure<UITValueUC.Failure> {
+                when (it) {
+                    is UITValueUC.Failure.UITError -> {
+                        HomeUiEvent.UITError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isUITLoading = false) }
+            }
     }
 
     private fun fetchSections() {
