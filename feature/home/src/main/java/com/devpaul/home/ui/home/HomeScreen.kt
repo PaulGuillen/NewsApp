@@ -22,10 +22,6 @@ import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.data.datasource.mock.UITMock
-import com.devpaul.home.domain.entity.DollarQuoteEntity
-import com.devpaul.home.domain.entity.GratitudeEntity
-import com.devpaul.home.domain.entity.SectionEntity
-import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.ui.home.components.AcknowledgmentSection
 import com.devpaul.home.ui.home.components.InformationCard
 import com.devpaul.home.ui.home.components.SectionsRow
@@ -42,50 +38,20 @@ fun HomeScreen(navController: NavHostController) {
     val viewModel: HomeViewModel = koinViewModel()
 
     val context = LocalContext.current
-    val dollarQuoteState = remember { mutableStateOf<DollarQuoteEntity?>(null) }
-    val uitState = remember { mutableStateOf<UITEntity?>(null) }
-    val gratitudeState = remember { mutableStateOf<GratitudeEntity?>(null) }
-    val sectionItemsState = remember { mutableStateOf<SectionEntity?>(null) }
-    val dollarQuoteErrorState = remember { mutableStateOf<String?>(null) }
-    val uitErrorState = remember { mutableStateOf<String?>(null) }
-    val gratitudeErrorState = remember { mutableStateOf<String?>(null) }
-    val sectionItemsErrorState = remember { mutableStateOf<String?>(null) }
+    val uiModel = remember { mutableStateOf(HomeUiModel()) }
 
     BaseScreenWithState(
         viewModel = viewModel,
         onUiEvent = { event, _ ->
-            when (event) {
-                is HomeUiEvent.DollarQuoteSuccess -> {
-                    dollarQuoteState.value = event.response
-                }
-
-                is HomeUiEvent.UITSuccess -> {
-                    uitState.value = event.response
-                }
-
-                is HomeUiEvent.GratitudeSuccess -> {
-                    gratitudeState.value = event.response
-                }
-
-                is HomeUiEvent.SectionSuccess -> {
-                    sectionItemsState.value = event.response
-                }
-
-                is HomeUiEvent.DollarQuoteError -> {
-                    dollarQuoteErrorState.value = event.error.apiErrorResponse?.message
-                }
-
-                is HomeUiEvent.UITError -> {
-                    uitErrorState.value = event.error.apiErrorResponse?.message
-                }
-
-                is HomeUiEvent.GratitudeError -> {
-                    gratitudeErrorState.value = event.error.apiErrorResponse?.message
-                }
-
-                is HomeUiEvent.SectionError -> {
-                    sectionItemsErrorState.value = event.error.apiErrorResponse?.message
-                }
+            uiModel.value = when (event) {
+                is HomeUiEvent.DollarQuoteSuccess -> uiModel.value.copy(dollarQuote = event.response)
+                is HomeUiEvent.UITSuccess -> uiModel.value.copy(uit = event.response)
+                is HomeUiEvent.GratitudeSuccess -> uiModel.value.copy(gratitude = event.response)
+                is HomeUiEvent.SectionSuccess -> uiModel.value.copy(section = event.response)
+                is HomeUiEvent.DollarQuoteError -> uiModel.value.copy(dollarQuoteError = event.error.apiErrorResponse?.message)
+                is HomeUiEvent.UITError -> uiModel.value.copy(uitError = event.error.apiErrorResponse?.message)
+                is HomeUiEvent.GratitudeError -> uiModel.value.copy(gratitudeError = event.error.apiErrorResponse?.message)
+                is HomeUiEvent.SectionError -> uiModel.value.copy(sectionError = event.error.apiErrorResponse?.message)
             }
         },
         onDefaultError = { error, showSnackBar ->
@@ -106,20 +72,10 @@ fun HomeScreen(navController: NavHostController) {
         ) { innerPadding ->
             HomeContent(
                 modifier = Modifier.fillMaxSize(),
-                dollarQuote = dollarQuoteState.value,
-                dollarQuoteError = dollarQuoteErrorState.value,
-                dollarQuoteLoading = uiState.isDollarQuoteLoading,
-                uit = uitState.value,
-                uitError = uitErrorState.value,
-                uitLoading = uiState.isUITLoading,
-                gratitude = gratitudeState.value,
-                gratitudeError = gratitudeErrorState.value,
-                gratitudeLoading = uiState.isGratitudeLoading,
-                section = sectionItemsState.value,
-                sectionError = sectionItemsErrorState.value,
-                sectionLoading = uiState.isSectionsLoading,
+                uiModel = uiModel.value,
                 innerPadding = innerPadding,
-                context = context,
+                uiState = uiState,
+                context = context
             )
         }
     }
@@ -128,18 +84,8 @@ fun HomeScreen(navController: NavHostController) {
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    dollarQuote: DollarQuoteEntity?,
-    dollarQuoteError: String?,
-    dollarQuoteLoading: Boolean,
-    uit: UITEntity?,
-    uitError: String?,
-    uitLoading: Boolean,
-    gratitude: GratitudeEntity?,
-    gratitudeError: String?,
-    gratitudeLoading: Boolean,
-    section: SectionEntity?,
-    sectionError: String?,
-    sectionLoading: Boolean,
+    uiModel: HomeUiModel,
+    uiState: HomeUiState,
     innerPadding: PaddingValues,
     context: Context
 ) {
@@ -151,33 +97,32 @@ fun HomeContent(
         SectionHeader(stringResource(R.string.section_gratitude_header))
         AcknowledgmentSection(
             context = context,
-            gratitude = gratitude,
-            gratitudeError = gratitudeError,
-            gratitudeLoading = gratitudeLoading,
+            gratitude = uiModel.gratitude,
+            gratitudeError = uiModel.gratitudeError,
+            gratitudeLoading = uiState.isGratitudeLoading,
         )
 
         SectionHeader(stringResource(R.string.section_available_sections_header))
         SectionsRow(
             context = context,
-            section = section,
-            sectionError = sectionError,
-            sectionLoading = sectionLoading,
+            section = uiModel.section,
+            sectionError = uiModel.sectionError,
+            sectionLoading = uiState.isSectionsLoading,
         )
 
         SectionHeader(stringResource(R.string.section_daily_info_header))
-
         InformationCard(
             context = context,
-            dollarQuote = dollarQuote,
-            dollarQuoteError = dollarQuoteError,
-            dollarQuoteLoading = dollarQuoteLoading,
+            dollarQuote = uiModel.dollarQuote,
+            dollarQuoteError = uiModel.dollarQuoteError,
+            dollarQuoteLoading = uiState.isDollarQuoteLoading,
         )
 
         UITCard(
             context = context,
-            uit = uit,
-            uitError = uitError,
-            uitLoading = uitLoading,
+            uit = uiModel.uit,
+            uitError = uiModel.uitError,
+            uitLoading = uiState.isUITLoading,
         )
     }
 }
@@ -197,18 +142,18 @@ fun HomeScreenPreview() {
     ) { innerPadding ->
         HomeContent(
             modifier = Modifier.fillMaxSize(),
-            dollarQuote = DollarQuoteMock().dollarQuoteMock,
-            dollarQuoteError = null,
-            dollarQuoteLoading = false,
-            uit = UITMock().uitMock,
-            uitError = null,
-            uitLoading = false,
-            gratitude = GratitudeMock().gratitudeMock,
-            gratitudeError = null,
-            gratitudeLoading = false,
-            section = SectionMock().sectionMock,
-            sectionError = null,
-            sectionLoading = false,
+            uiModel = HomeUiModel(
+                dollarQuote = DollarQuoteMock().dollarQuoteMock,
+                uit = UITMock().uitMock,
+                gratitude = GratitudeMock().gratitudeMock,
+                section = SectionMock().sectionMock,
+            ),
+            uiState = HomeUiState(
+                isDollarQuoteLoading = false,
+                isUITLoading = false,
+                isGratitudeLoading = false,
+                isSectionsLoading = false
+            ),
             innerPadding = innerPadding,
             context = LocalContext.current,
         )
