@@ -29,6 +29,6 @@ class GratitudeUC(
     }
 
     sealed class Success {
-        data class GratitudeSuccess(val uit: GratitudeEntity) : Success()
+        data class GratitudeSuccess(val gratitude: GratitudeEntity) : Success()
     }
 }

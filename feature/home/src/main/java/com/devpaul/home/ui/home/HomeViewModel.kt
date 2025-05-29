@@ -104,9 +104,26 @@ class HomeViewModel(
             }
     }
 
-    private fun fetchGratitude() {
-
+    private suspend fun fetchGratitude() {
+        updateUiStateOnMain { it.copy(isGratitudeLoading = true) }
+        val result = gratitudeUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is GratitudeUC.Success.GratitudeSuccess -> {
+                        HomeUiEvent.GratitudeSuccess(it.gratitude).send()
+                    }
+                }
+            }
+            .onFailure<GratitudeUC.Failure> {
+                when (it) {
+                    is GratitudeUC.Failure.GratitudeError -> {
+                        HomeUiEvent.GratitudeError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isGratitudeLoading = false) }
+            }
     }
-
-
 }
