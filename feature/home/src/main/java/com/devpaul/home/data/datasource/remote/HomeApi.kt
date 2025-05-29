@@ -47,9 +47,9 @@ internal interface HomeApi {
     @GET("http://192.168.100.13:3000/home/uit")
     suspend fun uit(): Response<UITResponse>
 
-    @GET("http://192.168.100.13:3000/home/uit")
+    @GET("http://192.168.100.13:3000/home/section")
     suspend fun sections(): Response<SectionResponse>
 
-    @GET("http://192.168.100.13:3000/home/uit")
+    @GET("http://192.168.100.13:3000/home/gratitude")
     suspend fun gratitude(): Response<GratitudeResponse>
 }

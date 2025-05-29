@@ -29,6 +29,6 @@ class SectionUC(
     }
 
     sealed class Success {
-        data class SectionSuccess(val uit: SectionEntity) : Success()
+        data class SectionSuccess(val section: SectionEntity) : Success()
     }
 }

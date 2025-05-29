@@ -23,7 +23,7 @@ class HomeViewModel(
         HomeUiIntent.GetDollarQuote.execute()
         HomeUiIntent.GetUIT.execute()
         HomeUiIntent.GetGratitude.execute()
-        HomeUiIntent.GetSections.execute()
+        HomeUiIntent.GetSection.execute()
     }
 
     override suspend fun onUiIntent(intent: HomeUiIntent) {
@@ -31,7 +31,7 @@ class HomeViewModel(
             is HomeUiIntent.GetDollarQuote -> launchIO { fetchDollarQuote() }
             is HomeUiIntent.GetUIT -> launchIO { fetchUit() }
             is HomeUiIntent.GetGratitude -> launchIO { fetchGratitude() }
-            is HomeUiIntent.GetSections -> launchIO { fetchSections() }
+            is HomeUiIntent.GetSection -> launchIO { fetchSection() }
         }
     }
 
@@ -81,8 +81,27 @@ class HomeViewModel(
             }
     }
 
-    private fun fetchSections() {
-
+    private suspend fun fetchSection() {
+        updateUiStateOnMain { it.copy(isSectionsLoading = true) }
+        val result = sectionUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is SectionUC.Success.SectionSuccess -> {
+                        HomeUiEvent.SectionSuccess(it.section).send()
+                    }
+                }
+            }
+            .onFailure<SectionUC.Failure> {
+                when (it) {
+                    is SectionUC.Failure.SectionError -> {
+                        HomeUiEvent.SectionError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isSectionsLoading = false) }
+            }
     }
 
     private fun fetchGratitude() {
