@@ -36,5 +36,5 @@ data class Guid(
 )
 
 data class GuidMeta(
-    @SerializedName("isPermaLink") val isPermaLink: String
+    @SerializedName("isPermaLink") val isPermLink: String
 )

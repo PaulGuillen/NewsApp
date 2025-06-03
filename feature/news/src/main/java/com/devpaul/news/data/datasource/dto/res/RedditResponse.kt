@@ -63,6 +63,6 @@ data class RedditPost(
     @SerializedName("distinguished") val distinguished: String?,
     @SerializedName("numCrossposts") val numCrossposts: Int,
     @SerializedName("isRedditMediaDomain") val isRedditMediaDomain: Boolean,
-    @SerializedName("media") val media: Any?,
-    @SerializedName("mediaMetadata") val mediaMetadata: Any?
+    @SerializedName("media") val media: String?,
+    @SerializedName("mediaMetadata") val mediaMetadata: String?
 )

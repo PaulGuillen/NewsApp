@@ -18,9 +18,6 @@ import retrofit2.http.Query
 
 internal interface HomeApi {
 
-    @GET("api/rest/noticias.json")
-    suspend fun newsFromPeru(): Response<MutableList<NewsPeruResponse>>
-
     @GET("api/v2/doc/doc")
     fun deltaProject(
         @Query("query") query: String,
