@@ -20,22 +20,52 @@ class NewsServiceDS(
         }.transform { it.toDomain() }
     }
 
-    suspend fun googleService() : DefaultOutput<GoogleEntity> {
+    suspend fun googleService(
+        q: String,
+        hl: String,
+        page: Int,
+        perPage: Int,
+    ): DefaultOutput<GoogleEntity> {
         return safeApiCall {
-            newsService.google()
+            newsService.google(
+                query = q,
+                mode = hl,
+                page = page,
+                perPage = perPage
+            )
         }.transform { it.toDomain() }
     }
 
-    suspend fun deltaProjectService() : DefaultOutput<DeltaProjectEntity> {
+    suspend fun deltaProjectService(
+        q: String,
+        mode: String,
+        format: String,
+        page: Int,
+        perPage: Int,
+    ): DefaultOutput<DeltaProjectEntity> {
         return safeApiCall {
-            newsService.deltaProject()
+            newsService.deltaProject(
+                query = q,
+                mode = mode,
+                format = format,
+                page = page,
+                perPage = perPage,
+            )
         }.transform { it.toDomain() }
     }
 
-    suspend fun redditService(): DefaultOutput<RedditEntity> {
+    suspend fun redditService(
+        country: String,
+        page: Int,
+        perPage: Int,
+    ): DefaultOutput<RedditEntity> {
         return safeApiCall {
-            newsService.reddit()
-        }.transform { it.toDomain()  }
+            newsService.reddit(
+                country = country,
+                page = page,
+                perPage = perPage
+            )
+        }.transform { it.toDomain() }
     }
 
 }
