@@ -38,15 +38,15 @@ internal interface HomeApi {
     @GET("rss/search")
     fun googleNews(@Query("q") query: String, @Query("hl") language: String): Call<GoogleNewsXML>
 
-    @GET("http://192.168.100.13:3000/home/dollarQuote")
+    @GET("http://192.168.100.137:3000/home/dollarQuote")
     suspend fun dollarQuote(): Response<DollarQuoteResponse>
 
-    @GET("http://192.168.100.13:3000/home/uit")
+    @GET("http://192.168.100.137:3000/home/uit")
     suspend fun uit(): Response<UITResponse>
 
-    @GET("http://192.168.100.13:3000/home/section")
+    @GET("http://192.168.100.137:3000/home/section")
     suspend fun sections(): Response<SectionResponse>
 
-    @GET("http://192.168.100.13:3000/home/gratitude")
+    @GET("http://192.168.100.137:3000/home/gratitude")
     suspend fun gratitude(): Response<GratitudeResponse>
 }

@@ -10,12 +10,12 @@ import retrofit2.http.POST
 
 internal interface AuthApi {
 
-    @POST("http://192.168.100.13:3000/users/login")
+    @POST("http://192.168.100.137:3000/users/login")
     suspend fun login(
         @Body login: LoginRequest
     ): Response<LoginResponse>
 
-    @POST("http://192.168.100.13:3000/users/register")
+    @POST("http://192.168.100.137:3000/users/register")
     suspend fun register(
         @Body register: RegisterRequest
     ): Response<RegisterResponse>
