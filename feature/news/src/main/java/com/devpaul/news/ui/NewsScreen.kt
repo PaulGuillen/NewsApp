@@ -1,6 +1,7 @@
 package com.devpaul.news.ui
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
+import com.devpaul.news.ui.components.CountryCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.ui.extension.BottomNavigationBar
@@ -39,7 +41,7 @@ fun NewsScreen(navController: NavHostController) {
                     uiModel.value = uiModel.value.copy(country = event.response)
                 }
                 is NewsUiEvent.CountryError -> {
-                    uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
+                    uiModel.value = uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
                 }
             }
         },
@@ -62,7 +64,6 @@ fun NewsScreen(navController: NavHostController) {
         ) { innerPadding ->
             NewsContent(
                 context = context,
-                navController = navController,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
@@ -75,7 +76,6 @@ fun NewsScreen(navController: NavHostController) {
 @Composable
 fun NewsContent(
     context: Context,
-    navController: NavHostController,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
@@ -87,6 +87,13 @@ fun NewsContent(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.padding(top = 16.dp))
-
+        CountryCards(
+            country = uiModel.country,
+            countryError = uiModel.countryError,
+            countryLoading = uiState.isCountryLoading,
+            onCountrySelected = { countryItem ->
+                Toast.makeText(context,"${countryItem.title} selected", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 }
