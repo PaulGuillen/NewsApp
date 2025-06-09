@@ -3,6 +3,7 @@ package com.devpaul.news.ui
 import com.devpaul.news.domain.entity.CountryEntity
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.news.domain.entity.GoogleEntity
+import com.devpaul.news.domain.entity.RedditEntity
 
 data class NewsUiModel(
     val country: CountryEntity? = null,
@@ -11,4 +12,6 @@ data class NewsUiModel(
     val googleError: String? = null,
     val deltaProject: DeltaProjectEntity? = null,
     val deltaProjectError: String? = null,
+    val reddit: RedditEntity ? = null,
+    val redditError: String? = null
 )

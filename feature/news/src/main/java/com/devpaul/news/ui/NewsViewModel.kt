@@ -33,6 +33,7 @@ class NewsViewModel(
                 launchConcurrentRequests(
                     { fetchGoogleNews(intent.country) },
                     { fetchDeltaNews(intent.country) },
+                    { fetchRedditNews(intent.country) }
                 )
             }
         }
@@ -119,6 +120,35 @@ class NewsViewModel(
             }
             .also {
                 updateUiStateOnMain { it.copy(isDeltaProjectLoading = false) }
+            }
+    }
+
+    private suspend fun fetchRedditNews(country: CountryItemEntity) {
+        updateUiStateOnMain { it.copy(isRedditLoading = true) }
+        val result = redditUC(
+            RedditUC.Params(
+                country = country.category,
+                page = 1,
+                perPage = 10
+            )
+        )
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is RedditUC.Success.RedditSuccess -> {
+                        NewsUiEvent.RedditSuccess(it.reddit).send()
+                    }
+                }
+            }
+            .onFailure<RedditUC.Failure> {
+                when (it) {
+                    is RedditUC.Failure.RedditError -> {
+                        NewsUiEvent.RedditError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isRedditLoading = false) }
             }
     }
 

@@ -64,6 +64,12 @@ fun NewsScreen(navController: NavHostController) {
                 is NewsUiEvent.DeltaProjectError -> {
                     uiModel.value = uiModel.value.copy(deltaProjectError = event.error.apiErrorResponse?.message)
                 }
+                is NewsUiEvent.RedditSuccess -> {
+                    uiModel.value = uiModel.value.copy(reddit = event.response)
+                }
+                is NewsUiEvent.RedditError -> {
+                    uiModel.value = uiModel.value.copy(redditError = event.error.apiErrorResponse?.message)
+                }
             }
         },
         onDefaultError = { error, showSnackBar ->

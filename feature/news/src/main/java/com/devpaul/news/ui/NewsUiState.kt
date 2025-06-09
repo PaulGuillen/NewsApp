@@ -6,5 +6,6 @@ data class NewsUiState(
     val isCountryLoading: Boolean = false,
     val isGoogleLoading: Boolean = false,
     val isDeltaProjectLoading: Boolean = false,
-    val selectedCountry: CountryItemEntity? = null
+    val isRedditLoading: Boolean = false,
+    val selectedCountry: CountryItemEntity? = null,
 )
