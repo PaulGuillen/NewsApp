@@ -1,5 +1,8 @@
 package com.devpaul.news.ui
 
+import com.devpaul.news.domain.entity.CountryItemEntity
+
 data class NewsUiState(
-   val isCountryLoading : Boolean = false,
+    val isCountryLoading: Boolean = false,
+    val selectedCountry: CountryItemEntity? = null
 )

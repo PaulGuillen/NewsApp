@@ -1,6 +1,7 @@
 package com.devpaul.news.ui
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
+import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.usecase.CountryUC
 import org.koin.android.annotation.KoinViewModel
 
@@ -14,13 +15,16 @@ class NewsViewModel(
 ) {
 
     init {
-       NewsUiIntent.GetCountries.execute()
+        NewsUiIntent.GetCountries.execute()
     }
 
     override suspend fun onUiIntent(intent: NewsUiIntent) {
-      when(intent){
-          NewsUiIntent.GetCountries -> fetchCountry()
-      }
+        when (intent) {
+            is NewsUiIntent.GetCountries -> fetchCountry()
+            is NewsUiIntent.SelectCountry -> {
+                fetchNews(intent.country)
+            }
+        }
     }
 
     private suspend fun fetchCountry() {
@@ -44,6 +48,10 @@ class NewsViewModel(
             .also {
                 updateUiStateOnMain { it.copy(isCountryLoading = false) }
             }
+    }
+
+    private suspend fun fetchNews(country: CountryItemEntity) {
+        updateUiStateOnMain { it.copy(selectedCountry = country) }
     }
 
 }

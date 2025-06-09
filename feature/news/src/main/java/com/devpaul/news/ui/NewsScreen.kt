@@ -1,34 +1,42 @@
 package com.devpaul.news.ui
 
 import android.content.Context
-import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
+import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.components.CountryCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
+import com.devpaul.shared.screen.atomic.DividerView
 import com.devpaul.shared.ui.extension.BottomNavigationBar
 import com.devpaul.shared.ui.extension.TopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NewsScreen(navController: NavHostController) {
-
     val viewModel: NewsViewModel = koinViewModel()
     val context = LocalContext.current
     val uiModel = remember { mutableStateOf(NewsUiModel()) }
@@ -40,21 +48,23 @@ fun NewsScreen(navController: NavHostController) {
                 is NewsUiEvent.CountrySuccess -> {
                     uiModel.value = uiModel.value.copy(country = event.response)
                 }
+
                 is NewsUiEvent.CountryError -> {
-                    uiModel.value = uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
+                    uiModel.value =
+                        uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
                 }
             }
         },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         }
-    ) { _, uiState, callbacks, _ ->
+    ) { _, uiState, onIntent, _ ->
         Scaffold(
             topBar = {
                 TopBar(
                     title = stringResource(R.string.app_name),
                     onLogoutClick = {
-                        //   viewModel.logOut(navController)
+                        // viewModel.logOut(navController)
                     }
                 )
             },
@@ -68,10 +78,14 @@ fun NewsScreen(navController: NavHostController) {
                 innerPadding = innerPadding,
                 uiState = uiState,
                 uiModel = uiModel.value,
+                onCountrySelected = { countryItem ->
+                    onIntent(NewsUiIntent.SelectCountry(countryItem))
+                }
             )
         }
     }
 }
+
 
 @Composable
 fun NewsContent(
@@ -80,6 +94,7 @@ fun NewsContent(
     innerPadding: PaddingValues,
     uiState: NewsUiState,
     uiModel: NewsUiModel,
+    onCountrySelected: (CountryItemEntity) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -87,13 +102,43 @@ fun NewsContent(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.padding(top = 16.dp))
+
         CountryCards(
             country = uiModel.country,
             countryError = uiModel.countryError,
             countryLoading = uiState.isCountryLoading,
             onCountrySelected = { countryItem ->
-                Toast.makeText(context,"${countryItem.title} selected", Toast.LENGTH_SHORT).show()
+                onCountrySelected(countryItem)
             }
         )
+        Spacer(modifier = Modifier.padding(8.dp))
+        DividerView()
+
+        if (uiState.selectedCountry == null) {
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.no_country_selected),
+                    contentDescription = null,
+                    modifier = Modifier.size(128.dp)
+                )
+                Spacer(modifier = Modifier.padding(16.dp))
+                Text(
+                    text = stringResource(R.string.select_country_to_see_news),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+        } else {
+            Text(
+                text = "${uiState.selectedCountry.title} News",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }
