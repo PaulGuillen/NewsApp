@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -92,12 +91,11 @@ abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolde
         launch {
             coroutineScope {
                 requests.forEach { request ->
-                    launch {
+                    launch(Dispatchers.IO) {
                         request()
                     }
                 }
             }
         }
     }
-
 }

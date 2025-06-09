@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.components.CountryCards
+import com.devpaul.news.ui.components.GDELTCards
 import com.devpaul.news.ui.components.GoogleNewsCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
@@ -159,7 +160,18 @@ fun NewsContent(
                 selectedCountry = uiState.selectedCountry,
                 google = uiModel.google,
                 googleError = uiModel.googleError,
-                googleLoading = uiState.isGoogleLoading
+                googleLoading = uiState.isGoogleLoading,
+            )
+
+            Spacer(modifier = Modifier.padding(top = 16.dp))
+
+            GDELTCards(
+                navController = navController,
+                context = context,
+                selectedCountry = uiState.selectedCountry,
+                deltaProject = uiModel.deltaProject,
+                deltaProjectError = uiModel.deltaProjectError,
+                deltaProjectLoading = uiState.isDeltaProjectLoading,
             )
         }
     }
