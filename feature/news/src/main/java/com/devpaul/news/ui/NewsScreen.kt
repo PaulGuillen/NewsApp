@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.components.CountryCards
+import com.devpaul.news.ui.components.GoogleNewsCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.screen.atomic.DividerView
@@ -48,10 +49,14 @@ fun NewsScreen(navController: NavHostController) {
                 is NewsUiEvent.CountrySuccess -> {
                     uiModel.value = uiModel.value.copy(country = event.response)
                 }
-
                 is NewsUiEvent.CountryError -> {
-                    uiModel.value =
-                        uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
+                    uiModel.value = uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
+                }
+                is NewsUiEvent.GoogleSuccess -> {
+                    uiModel.value = uiModel.value.copy(google = event.response)
+                }
+                is NewsUiEvent.GoogleError -> {
+                    uiModel.value = uiModel.value.copy(googleError = event.error.apiErrorResponse?.message)
                 }
             }
         },
@@ -74,6 +79,7 @@ fun NewsScreen(navController: NavHostController) {
         ) { innerPadding ->
             NewsContent(
                 context = context,
+                navController = navController,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
@@ -90,6 +96,7 @@ fun NewsScreen(navController: NavHostController) {
 @Composable
 fun NewsContent(
     context: Context,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
@@ -134,10 +141,13 @@ fun NewsContent(
             }
             Spacer(modifier = Modifier.weight(1f))
         } else {
-            Text(
-                text = "${uiState.selectedCountry.title} News",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(16.dp)
+            GoogleNewsCards(
+                navController = navController,
+                context = context,
+                selectedCountry = uiState.selectedCountry,
+                google = uiModel.google,
+                googleError = uiModel.googleError,
+                googleLoading = uiState.isGoogleLoading
             )
         }
     }

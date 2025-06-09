@@ -1,4 +1,4 @@
-package com.devpaul.util.ui.skeleton
+package com.devpaul.shared.ui.skeleton
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.RepeatMode
