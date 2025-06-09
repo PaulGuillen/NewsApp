@@ -30,6 +30,7 @@ import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.components.CountryCards
 import com.devpaul.news.ui.components.GDELTCards
 import com.devpaul.news.ui.components.GoogleNewsCards
+import com.devpaul.news.ui.components.RedditCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.screen.atomic.DividerView
@@ -133,7 +134,6 @@ fun NewsContent(
         )
         Spacer(modifier = Modifier.padding(8.dp))
         DividerView()
-
         if (uiState.selectedCountry == null) {
             Spacer(modifier = Modifier.weight(1f))
             Column(
@@ -162,9 +162,16 @@ fun NewsContent(
                 googleError = uiModel.googleError,
                 googleLoading = uiState.isGoogleLoading,
             )
-
             Spacer(modifier = Modifier.padding(top = 16.dp))
-
+            RedditCards(
+                navController = navController,
+                context = context,
+                selectedCountry = uiState.selectedCountry,
+                reddit = uiModel.reddit,
+                redditError = uiModel.redditError,
+                redditLoading = uiState.isRedditLoading,
+            )
+            Spacer(modifier = Modifier.padding(top = 16.dp))
             GDELTCards(
                 navController = navController,
                 context = context,
@@ -173,6 +180,7 @@ fun NewsContent(
                 deltaProjectError = uiModel.deltaProjectError,
                 deltaProjectLoading = uiState.isDeltaProjectLoading,
             )
+            Spacer(modifier = Modifier.padding(top = 16.dp))
         }
     }
 }

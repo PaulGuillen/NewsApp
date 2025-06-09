@@ -100,7 +100,7 @@ class NewsViewModel(
                 mode = "ArtList",
                 format = "json",
                 page = 1,
-                perPage = 10
+                perPage = 5
             )
         )
         result.handleNetworkDefault()
@@ -151,5 +151,4 @@ class NewsViewModel(
                 updateUiStateOnMain { it.copy(isRedditLoading = false) }
             }
     }
-
 }

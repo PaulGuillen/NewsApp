@@ -1,6 +1,7 @@
 package com.devpaul.news.domain.entity
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -12,7 +13,7 @@ data class RedditEntity(
 
 @Parcelize
 data class RedditDataEntity(
-    val items: List<RedditPostEntity>,
+    val items: List<RedditPostItemEntity>,
     val totalItems: Int,
     val totalPages: Int,
     val currentPage: Int,
@@ -20,7 +21,7 @@ data class RedditDataEntity(
 ) : Parcelable
 
 @Parcelize
-data class RedditPostEntity(
+data class RedditPostItemEntity(
     val id: String,
     val title: String,
     val author: String,
@@ -67,6 +68,30 @@ data class RedditPostEntity(
     val distinguished: String?,
     val numCrossposts: Int,
     val isRedditMediaDomain: Boolean,
-    val media: String?,
-    val mediaMetadata: String?
+    val media: MediaEmbedEntity?,
+    val mediaMetadata: MediaMetaDataEntity?
 ) : Parcelable
+
+@Parcelize
+data class MediaEmbedEntity(
+    val content: String?,
+    val width: Int?,
+    val height: Int?
+) : Parcelable
+
+@Parcelize
+data class MediaMetaDataEntity(
+    val status: String?,
+    val e: String?,
+    val m: String? = "",
+    val p: List<ImageResolutionEntity>?,
+    val s: ImageResolutionEntity?,
+    val id: String?,
+) : Parcelable
+
+@Parcelize
+data class ImageResolutionEntity(
+    val y: Int?,
+    val x: Int?,
+    val u: String?,
+): Parcelable

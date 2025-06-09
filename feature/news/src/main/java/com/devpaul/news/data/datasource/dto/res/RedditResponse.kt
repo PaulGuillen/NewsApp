@@ -63,6 +63,27 @@ data class RedditPost(
     @SerializedName("distinguished") val distinguished: String?,
     @SerializedName("numCrossposts") val numCrossposts: Int,
     @SerializedName("isRedditMediaDomain") val isRedditMediaDomain: Boolean,
-    @SerializedName("media") val media: String?,
-    @SerializedName("mediaMetadata") val mediaMetadata: String?
+    @SerializedName("media") val media: MediaEmbed?,
+    @SerializedName("mediaMetadata") val mediaMetadata: MediaMetaData?
+)
+
+data class MediaMetaData(
+    @SerializedName("status") val status: String? = "",
+    @SerializedName("e") val e: String? = "",
+    @SerializedName("m") val m: String? = "",
+    @SerializedName("p") val p: List<ImageResolution>? = listOf(),
+    @SerializedName("s") val s: ImageResolution? = null,
+    @SerializedName("id") val id: String? = ""
+)
+
+data class ImageResolution(
+    @SerializedName("y") val y: Int? = 0,
+    @SerializedName("x") val x: Int? = 0,
+    @SerializedName("u") val u: String? = ""
+)
+
+data class MediaEmbed(
+    @SerializedName("content") val content: String? = "",
+    @SerializedName("width") val width: Int? = 0,
+    @SerializedName("height") val height: Int? = 0
 )
