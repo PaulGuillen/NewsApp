@@ -1,15 +1,20 @@
 package com.devpaul.news.ui
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
+import com.devpaul.core_platform.lifecycle.launch
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.usecase.CountryUC
+import com.devpaul.news.domain.usecase.DeltaProjectUC
 import com.devpaul.news.domain.usecase.GoogleUC
+import com.devpaul.news.domain.usecase.RedditUC
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class NewsViewModel(
     private val countryUC: CountryUC,
     private val googleUC: GoogleUC,
+    private val deltaProjectUC: DeltaProjectUC,
+    private val redditUC: RedditUC,
 ) : StatefulViewModel<NewsUiState, NewsUiIntent, NewsUiEvent>(
     defaultUIState = {
         NewsUiState()
@@ -24,7 +29,11 @@ class NewsViewModel(
         when (intent) {
             is NewsUiIntent.GetCountries -> fetchCountry()
             is NewsUiIntent.SelectCountry -> {
-                fetchNews(intent.country)
+                updateUiStateOnMain { it.copy(selectedCountry = intent.country) }
+                launchConcurrentRequests(
+                    { fetchGoogleNews(intent.country) },
+                    { fetchDeltaNews(intent.country) },
+                )
             }
         }
     }
@@ -52,8 +61,7 @@ class NewsViewModel(
             }
     }
 
-    private suspend fun fetchNews(country: CountryItemEntity) {
-        updateUiStateOnMain { it.copy(selectedCountry = country) }
+    private suspend fun fetchGoogleNews(country: CountryItemEntity) {
         updateUiStateOnMain { it.copy(isGoogleLoading = true) }
         val result = googleUC(
             GoogleUC.Params(
@@ -80,6 +88,37 @@ class NewsViewModel(
             }
             .also {
                 updateUiStateOnMain { it.copy(isGoogleLoading = false) }
+            }
+    }
+
+    private suspend fun fetchDeltaNews(country: CountryItemEntity) {
+        updateUiStateOnMain { it.copy(isDeltaProjectLoading = true) }
+        val result = deltaProjectUC(
+            DeltaProjectUC.Params(
+                q = country.category,
+                mode = "ArtList",
+                format = "json",
+                page = 1,
+                perPage = 10
+            )
+        )
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is DeltaProjectUC.Success.DeltaProjectSuccess -> {
+                        NewsUiEvent.DeltaProjectSuccess(it.deltaProject).send()
+                    }
+                }
+            }
+            .onFailure<DeltaProjectUC.Failure> {
+                when (it) {
+                    is DeltaProjectUC.Failure.DeltaProjectError -> {
+                        NewsUiEvent.DeltaProjectError(it.error).send()
+                    }
+                }
+            }
+            .also {
+                updateUiStateOnMain { it.copy(isDeltaProjectLoading = false) }
             }
     }
 
