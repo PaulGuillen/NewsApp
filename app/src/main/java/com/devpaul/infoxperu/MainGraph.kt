@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.devpaul.auth.authGraph
-import com.devpaul.core_domain.Screen
+import com.devpaul.core_data.Screen
 import com.devpaul.home.homeGraph
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.newsGraph

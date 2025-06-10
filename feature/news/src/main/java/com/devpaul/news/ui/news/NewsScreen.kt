@@ -1,4 +1,4 @@
-package com.devpaul.news.ui
+package com.devpaul.news.ui.news
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,13 +25,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
+import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.ui.components.CountryCards
-import com.devpaul.news.ui.components.GDELTCards
-import com.devpaul.news.ui.components.GoogleNewsCards
-import com.devpaul.news.ui.components.RedditCards
+import com.devpaul.news.ui.news.components.country.CountryCards
+import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
+import com.devpaul.news.ui.news.components.google.GoogleNewsCards
+import com.devpaul.news.ui.news.components.reddit.RedditCards
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.screen.atomic.DividerView
@@ -39,10 +44,12 @@ import com.devpaul.shared.ui.extension.TopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NewsScreen(navController: NavHostController) {
+fun NewsScreen(navController: NavHostController, appNavigator: AppNavigator) {
+
     val viewModel: NewsViewModel = koinViewModel()
     val context = LocalContext.current
     val uiModel = remember { mutableStateOf(NewsUiModel()) }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     BaseScreenWithState(
         viewModel = viewModel,
@@ -51,26 +58,37 @@ fun NewsScreen(navController: NavHostController) {
                 is NewsUiEvent.CountrySuccess -> {
                     uiModel.value = uiModel.value.copy(country = event.response)
                 }
+
                 is NewsUiEvent.CountryError -> {
-                    uiModel.value = uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
+                    uiModel.value =
+                        uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
                 }
+
                 is NewsUiEvent.GoogleSuccess -> {
                     uiModel.value = uiModel.value.copy(google = event.response)
                 }
+
                 is NewsUiEvent.GoogleError -> {
-                    uiModel.value = uiModel.value.copy(googleError = event.error.apiErrorResponse?.message)
+                    uiModel.value =
+                        uiModel.value.copy(googleError = event.error.apiErrorResponse?.message)
                 }
+
                 is NewsUiEvent.DeltaProjectSuccess -> {
                     uiModel.value = uiModel.value.copy(deltaProject = event.response)
                 }
+
                 is NewsUiEvent.DeltaProjectError -> {
-                    uiModel.value = uiModel.value.copy(deltaProjectError = event.error.apiErrorResponse?.message)
+                    uiModel.value =
+                        uiModel.value.copy(deltaProjectError = event.error.apiErrorResponse?.message)
                 }
+
                 is NewsUiEvent.RedditSuccess -> {
                     uiModel.value = uiModel.value.copy(reddit = event.response)
                 }
+
                 is NewsUiEvent.RedditError -> {
-                    uiModel.value = uiModel.value.copy(redditError = event.error.apiErrorResponse?.message)
+                    uiModel.value =
+                        uiModel.value.copy(redditError = event.error.apiErrorResponse?.message)
                 }
             }
         },
@@ -94,6 +112,7 @@ fun NewsScreen(navController: NavHostController) {
             NewsContent(
                 context = context,
                 navController = navController,
+                appNavigator = appNavigator,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
@@ -111,6 +130,7 @@ fun NewsScreen(navController: NavHostController) {
 fun NewsContent(
     context: Context,
     navController: NavHostController,
+    appNavigator: AppNavigator,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
@@ -156,6 +176,7 @@ fun NewsContent(
         } else {
             GoogleNewsCards(
                 navController = navController,
+                appNavigator = appNavigator,
                 context = context,
                 selectedCountry = uiState.selectedCountry,
                 google = uiModel.google,

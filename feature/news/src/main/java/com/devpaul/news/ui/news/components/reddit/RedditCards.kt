@@ -1,7 +1,6 @@
-package com.devpaul.news.ui.components
+package com.devpaul.news.ui.news.components.reddit
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,27 +29,24 @@ import androidx.navigation.NavController
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.domain.entity.GoogleEntity
-import com.devpaul.shared.ui.skeleton.GoogleNewsSkeleton
-import com.google.gson.Gson
+import com.devpaul.news.domain.entity.RedditEntity
+import com.devpaul.shared.ui.skeleton.RedditSkeleton
 
 @Composable
-fun GoogleNewsCards(
+fun RedditCards(
     navController: NavController,
     context: Context,
     selectedCountry: CountryItemEntity,
-    google: GoogleEntity?,
-    googleError: String? = null,
-    googleLoading: Boolean = false
+    reddit: RedditEntity?,
+    redditError: String? = null,
+    redditLoading: Boolean = false,
 ) {
-
-    if (googleLoading) {
-        GoogleNewsSkeleton()
+    if (redditLoading) {
+        RedditSkeleton()
     } else {
-        if (google != null && google.data.items.isNotEmpty()) {
+        if (reddit != null && reddit.data.items.isNotEmpty()) {
             Column(
-                modifier = Modifier
-                    .padding(8.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -60,14 +56,12 @@ fun GoogleNewsCards(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = selectedCountry.title + " " + google.message,
+                        text = "Reddit Posts",
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-                    val gson = Gson()
-                    val countryJson = Uri.encode(gson.toJson(selectedCountry))
                     Text(
                         text = "Ver Más",
                         fontSize = 15.sp,
@@ -76,7 +70,7 @@ fun GoogleNewsCards(
                         modifier = Modifier.clickable {
 //                            navController.navigate(
 //                                Screen.AllNews.createRoute(
-//                                    "googleNews",
+//                                    "reddit",
 //                                    countryJson
 //                                )
 //                            )
@@ -87,12 +81,16 @@ fun GoogleNewsCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(google.data.items) { newsItem ->
-                        GoogleNewsCard(context = context, googleItem = newsItem)
+                    items(reddit.data.items) { redditItems ->
+                        RedditCard(
+                            context = context,
+                            redditPost = redditItems
+                        )
                     }
                 }
+
                 Text(
-                    text = "Cantidad: ${google.data.totalItems}",
+                    text = "Cantidad: ${reddit.data.totalItems}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -125,7 +123,7 @@ fun GoogleNewsCards(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = googleError ?: "No hay noticias disponibles",
+                            text = redditError ?: "No hay noticias disponibles",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Black,
                         )

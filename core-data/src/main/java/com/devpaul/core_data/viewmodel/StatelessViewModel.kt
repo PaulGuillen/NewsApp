@@ -3,9 +3,8 @@ package com.devpaul.core_data.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
-import com.devpaul.core_domain.Screen
+import com.devpaul.core_data.Screen
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel

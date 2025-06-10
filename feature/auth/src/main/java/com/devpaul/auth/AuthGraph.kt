@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.devpaul.auth.ui.login.LoginScreen
 import com.devpaul.auth.ui.register.RegisterScreen
-import com.devpaul.core_domain.Screen
+import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 
 fun NavGraphBuilder.authGraph(

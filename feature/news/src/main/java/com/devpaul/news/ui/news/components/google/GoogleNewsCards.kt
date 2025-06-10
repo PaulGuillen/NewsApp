@@ -1,6 +1,7 @@
-package com.devpaul.news.ui.components
+package com.devpaul.news.ui.news.components.google
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,27 +27,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
+import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.domain.entity.RedditEntity
-import com.devpaul.shared.ui.skeleton.RedditSkeleton
+import com.devpaul.news.domain.entity.GoogleEntity
+import com.devpaul.shared.ui.skeleton.GoogleNewsSkeleton
+import com.google.gson.Gson
 
 @Composable
-fun RedditCards(
+fun GoogleNewsCards(
     navController: NavController,
+    appNavigator: AppNavigator,
     context: Context,
     selectedCountry: CountryItemEntity,
-    reddit: RedditEntity?,
-    redditError: String? = null,
-    redditLoading: Boolean = false,
+    google: GoogleEntity?,
+    googleError: String? = null,
+    googleLoading: Boolean = false
 ) {
-    if (redditLoading) {
-        RedditSkeleton()
+
+    if (googleLoading) {
+        GoogleNewsSkeleton()
     } else {
-        if (reddit != null && reddit.data.items.isNotEmpty()) {
+        if (google != null && google.data.items.isNotEmpty()) {
             Column(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .padding(8.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -56,7 +63,7 @@ fun RedditCards(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Reddit Posts",
+                        text = selectedCountry.title + " " + google.message,
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
@@ -68,12 +75,12 @@ fun RedditCards(
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Blue,
                         modifier = Modifier.clickable {
-//                            navController.navigate(
-//                                Screen.AllNews.createRoute(
-//                                    "reddit",
-//                                    countryJson
-//                                )
-//                            )
+                            navController.navigate(
+                                Screen.NewsDetail.createRoute(
+                                    newsType = "googleNews",
+                                    country =  selectedCountry,
+                                )
+                            )
                         }
                     )
                 }
@@ -81,16 +88,12 @@ fun RedditCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(reddit.data.items) { redditItems ->
-                        RedditCard(
-                            context = context,
-                            redditPost = redditItems
-                        )
+                    items(google.data.items) { newsItem ->
+                        GoogleNewsCard(context = context, googleItem = newsItem)
                     }
                 }
-
                 Text(
-                    text = "Cantidad: ${reddit.data.totalItems}",
+                    text = "Cantidad: ${google.data.totalItems}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -123,7 +126,7 @@ fun RedditCards(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = redditError ?: "No hay noticias disponibles",
+                            text = googleError ?: "No hay noticias disponibles",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Black,
                         )

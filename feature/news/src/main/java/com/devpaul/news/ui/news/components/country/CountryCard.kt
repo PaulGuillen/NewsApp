@@ -1,4 +1,4 @@
-package com.devpaul.news.ui.components
+package com.devpaul.news.ui.news.components.country
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

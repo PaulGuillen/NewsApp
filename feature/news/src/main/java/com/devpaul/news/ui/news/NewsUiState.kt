@@ -1,4 +1,4 @@
-package com.devpaul.news.ui
+package com.devpaul.news.ui.news
 
 import com.devpaul.news.domain.entity.CountryItemEntity
 

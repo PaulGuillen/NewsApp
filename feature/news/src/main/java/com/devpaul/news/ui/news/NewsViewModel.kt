@@ -1,7 +1,6 @@
-package com.devpaul.news.ui
+package com.devpaul.news.ui.news
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import com.devpaul.core_platform.lifecycle.launch
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.usecase.CountryUC
 import com.devpaul.news.domain.usecase.DeltaProjectUC

@@ -1,8 +1,7 @@
-package com.devpaul.news.ui.components
+package com.devpaul.news.ui.news.components.reddit
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import com.devpaul.core_platform.extension.limitText
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
-import com.devpaul.news.domain.entity.GoogleNewsItemEntity
+import com.devpaul.news.domain.entity.RedditPostItemEntity
 
 @Composable
-fun GoogleNewsCard(
+fun RedditCard(
     context: Context,
-    googleItem: GoogleNewsItemEntity,
+    redditPost: RedditPostItemEntity,
 ) {
     Card(
         modifier = Modifier
@@ -46,8 +47,8 @@ fun GoogleNewsCard(
             containerColor = White,
         ),
         onClick = {
-            googleItem.link.let { url ->
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            redditPost.url.let { url ->
+                context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
             }
         }
     ) {
@@ -62,15 +63,18 @@ fun GoogleNewsCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
+
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = googleItem.source.name,
+                    text = limitText(redditPost.linkFlairText.toString(), 20),
                     style = MaterialTheme.typography.labelSmall,
-                    textAlign = TextAlign.Right
+                    textAlign = TextAlign.Right,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
             Text(
-                text = googleItem.title,
+                text = redditPost.title,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Black,
@@ -81,7 +85,7 @@ fun GoogleNewsCard(
                     .padding(top = 10.dp, bottom = 10.dp)
             )
             Text(
-                text = googleItem.pubDate,
+                text = limitText(redditPost.authorFullname, 10),
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.align(Alignment.Start)
             )

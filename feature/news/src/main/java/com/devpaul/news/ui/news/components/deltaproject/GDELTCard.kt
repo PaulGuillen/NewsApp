@@ -1,4 +1,4 @@
-package com.devpaul.news.ui.components
+package com.devpaul.news.ui.news.components.deltaproject
 
 import android.content.Context
 import android.content.Intent

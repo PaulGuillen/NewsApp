@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.devpaul.auth.ui.login.components.LoginForm
-import com.devpaul.core_domain.Screen
+import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.shared.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
