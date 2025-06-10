@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
@@ -15,19 +16,20 @@ import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
 @Composable
-fun RegisterScreen(appNavigator: AppNavigator) {
+fun RegisterScreen(navHostController: NavHostController, appNavigator: AppNavigator) {
 
     val viewModel: RegisterViewModel = koinViewModel()
 
     BaseScreenWithState(
         viewModel = viewModel,
+        navController = navHostController,
         onUiEvent = { event, showSnackBar ->
             handleRegisterUiEvent(event, showSnackBar)
         },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         }
-    ) { _, uiState, onIntent, showSnackBar ->
+    ) { _, uiState, onIntent, showSnackBar, _ ->
 
         Box(modifier = Modifier.fillMaxSize()) {
             if (uiState.isLoading) {

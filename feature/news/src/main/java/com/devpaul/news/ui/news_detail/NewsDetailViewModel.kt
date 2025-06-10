@@ -33,7 +33,6 @@ class NewsDetailViewModel(
             "googleNews" -> NewsDetailUiIntent.GetGoogleNews(country = selectedCountry).execute()
             "deltaProjectNews" -> NewsDetailUiIntent.GetDeltaProjectNews(country = selectedCountry)
                 .execute()
-
             "redditNews" -> NewsDetailUiIntent.GetRedditNews(country = selectedCountry).execute()
             else -> {
                 //

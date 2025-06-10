@@ -49,6 +49,7 @@ fun NewsScreen(navController: NavHostController) {
 
     BaseScreenWithState(
         viewModel = viewModel,
+        navController = navController,
         onUiEvent = { event, _ ->
             when (event) {
                 is NewsUiEvent.CountrySuccess -> {
@@ -90,25 +91,16 @@ fun NewsScreen(navController: NavHostController) {
         },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
-        }
-    ) { _, uiState, onIntent, _ ->
-
-        val shouldReloadState = navController
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>("shouldReload")
-            ?.observeAsState()
-
-        val shouldReload = shouldReloadState?.value
-
-        LaunchedEffect(shouldReload) {
-            if (shouldReload == true && uiState.selectedCountry != null) {
+        },
+        observeBackKeys = listOf("shouldReload"),
+        onBackResults = { results, uiState, onIntent ->
+            if (results["shouldReload"] == true && uiState.selectedCountry != null) {
                 onIntent(NewsUiIntent.GetCountries)
                 onIntent(NewsUiIntent.SelectCountry(uiState.selectedCountry))
-                navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("shouldReload")
             }
-        }
+        },
 
+    ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
                 TopBar(

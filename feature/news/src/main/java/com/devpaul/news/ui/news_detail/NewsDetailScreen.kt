@@ -1,10 +1,9 @@
 package com.devpaul.news.ui.news_detail
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
-import com.devpaul.shared.screen.goBackWithReload
+import com.devpaul.shared.screen.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -19,8 +18,23 @@ fun NewsDetailsScreen(
         viewModel.setNewsData(newsType, country)
     }
 
+    BaseScreenWithState(
+        viewModel = viewModel,
+        navController = navController,
+        onUiEvent = { event, _ ->
+            when (event) {
+                is NewsDetailUiEvent.DeltaProjectError -> {}
+                is NewsDetailUiEvent.DeltaProjectSuccess -> {}
+                is NewsDetailUiEvent.GoogleError -> {}
+                is NewsDetailUiEvent.GoogleSuccess -> {}
+                is NewsDetailUiEvent.RedditError -> {}
+                is NewsDetailUiEvent.RedditSuccess -> {}
+            }
+        },
+        onBackPressed = { onBackWithResult ->
+            onBackWithResult("shouldReload", true)
+        }
+    ) { _, _, _, _, _ ->
 
-    BackHandler {
-        goBackWithReload(navController)
     }
 }

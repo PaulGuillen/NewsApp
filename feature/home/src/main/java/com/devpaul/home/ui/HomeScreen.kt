@@ -42,6 +42,7 @@ fun HomeScreen(navController: NavHostController) {
 
     BaseScreenWithState(
         viewModel = viewModel,
+        navController = navController,
         onUiEvent = { event, _ ->
             uiModel.value = when (event) {
                 is HomeUiEvent.DollarQuoteSuccess -> uiModel.value.copy(dollarQuote = event.response)
@@ -57,7 +58,7 @@ fun HomeScreen(navController: NavHostController) {
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         }
-    ) { _, uiState, _, _ ->
+    ) { _, uiState, _, _,_ ->
         Scaffold(
             topBar = {
                 TopBar(
