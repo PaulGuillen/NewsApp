@@ -16,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
-import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.news.components.country.CountryCards
 import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
@@ -91,6 +92,23 @@ fun NewsScreen(navController: NavHostController) {
             handleDefaultErrors(error, showSnackBar)
         }
     ) { _, uiState, onIntent, _ ->
+
+        val shouldReloadState = navController
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>("shouldReload")
+            ?.observeAsState()
+
+        val shouldReload = shouldReloadState?.value
+
+        LaunchedEffect(shouldReload) {
+            if (shouldReload == true && uiState.selectedCountry != null) {
+                onIntent(NewsUiIntent.GetCountries)
+                onIntent(NewsUiIntent.SelectCountry(uiState.selectedCountry))
+                navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("shouldReload")
+            }
+        }
+
         Scaffold(
             topBar = {
                 TopBar(
@@ -141,10 +159,12 @@ fun NewsContent(
             country = uiModel.country,
             countryError = uiModel.countryError,
             countryLoading = uiState.isCountryLoading,
+            selectedCountry = uiState.selectedCountry,
             onCountrySelected = { countryItem ->
                 onCountrySelected(countryItem)
             }
         )
+
         Spacer(modifier = Modifier.padding(8.dp))
         DividerView()
         if (uiState.selectedCountry == null) {

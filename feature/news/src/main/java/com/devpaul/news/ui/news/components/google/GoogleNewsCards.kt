@@ -29,7 +29,6 @@ import androidx.navigation.NavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
-import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.shared.ui.skeleton.GoogleNewsSkeleton

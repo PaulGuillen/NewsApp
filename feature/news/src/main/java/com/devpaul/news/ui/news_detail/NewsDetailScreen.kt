@@ -1,7 +1,10 @@
 package com.devpaul.news.ui.news_detail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import com.devpaul.shared.screen.goBackWithReload
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -11,6 +14,13 @@ fun NewsDetailsScreen(
     country: String?,
 ) {
     val viewModel: NewsDetailViewModel = koinViewModel()
-    viewModel.setNewsData(newsType, country)
 
+    LaunchedEffect(newsType, country) {
+        viewModel.setNewsData(newsType, country)
+    }
+
+
+    BackHandler {
+        goBackWithReload(navController)
+    }
 }

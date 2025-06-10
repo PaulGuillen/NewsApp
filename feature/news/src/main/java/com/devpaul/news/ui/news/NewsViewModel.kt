@@ -26,7 +26,7 @@ class NewsViewModel(
 
     override suspend fun onUiIntent(intent: NewsUiIntent) {
         when (intent) {
-            is NewsUiIntent.GetCountries -> fetchCountry()
+            is NewsUiIntent.GetCountries -> launchIO { fetchCountry() }
             is NewsUiIntent.SelectCountry -> {
                 updateUiStateOnMain { it.copy(selectedCountry = intent.country) }
                 launchConcurrentRequests(

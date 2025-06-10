@@ -21,10 +21,9 @@ fun CountryCards(
     country: CountryEntity?,
     countryError: String? = null,
     countryLoading: Boolean,
+    selectedCountry: CountryItemEntity?,
     onCountrySelected: (CountryItemEntity) -> Unit,
 ) {
-
-    var selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
 
     if (countryLoading) {
         CountryCardSkeleton()
@@ -38,9 +37,8 @@ fun CountryCards(
                 country.data.forEach { countryItem ->
                     CountryCard(
                         country = countryItem,
-                        isSelected = selectedCountry == countryItem,
+                        isSelected = selectedCountry?.id == countryItem.id,
                         onClick = {
-                            selectedCountry = countryItem
                             onCountrySelected(countryItem)
                         }
                     )

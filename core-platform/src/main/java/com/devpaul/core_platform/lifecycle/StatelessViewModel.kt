@@ -9,13 +9,15 @@ import com.devpaul.core_platform.lifecycle.base.ViewModelLoadable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 
 abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolder<UiEvent>, UiIntentHolder<UiIntent>, ViewModelLoadable {
 
@@ -87,15 +89,20 @@ abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolde
         }
     }
 
-    protected fun launchConcurrentRequests(vararg requests: suspend () -> Unit) {
-        launch {
-            coroutineScope {
-                requests.forEach { request ->
-                    launch(Dispatchers.IO) {
+    suspend fun launchConcurrentRequests(vararg requests: suspend () -> Unit) {
+        supervisorScope {
+            requests.forEach { request ->
+                launch {
+                    try {
                         request()
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        Timber.e("ConcurrentRequests", "Request failed", e)
                     }
                 }
             }
         }
     }
+
 }

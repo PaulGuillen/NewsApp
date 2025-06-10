@@ -12,7 +12,6 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class NewsDetailViewModel(
-    private val countryUC: CountryUC,
     private val googleUC: GoogleUC,
     private val deltaProjectUC: DeltaProjectUC,
     private val redditUC: RedditUC,
@@ -30,10 +29,32 @@ class NewsDetailViewModel(
         val gson = Gson()
         val decodedCountryJson = Uri.decode(country)
         val selectedCountry = gson.fromJson(decodedCountryJson, CountryItemEntity::class.java)
+        when (newsType) {
+            "googleNews" -> NewsDetailUiIntent.GetGoogleNews(country = selectedCountry).execute()
+            "deltaProjectNews" -> NewsDetailUiIntent.GetDeltaProjectNews(country = selectedCountry)
+                .execute()
+
+            "redditNews" -> NewsDetailUiIntent.GetRedditNews(country = selectedCountry).execute()
+            else -> {
+                //
+            }
+        }
     }
 
     override suspend fun onUiIntent(intent: NewsDetailUiIntent) {
-        TODO("Not yet implemented")
+        when (intent) {
+            is NewsDetailUiIntent.GetGoogleNews -> {
+                launchIO { fetchGoogleNews(intent.country) }
+            }
+
+            is NewsDetailUiIntent.GetDeltaProjectNews -> {
+                launchIO { fetchDeltaNews(intent.country) }
+            }
+
+            is NewsDetailUiIntent.GetRedditNews -> {
+                launchIO { fetchRedditNews(intent.country) }
+            }
+        }
     }
 
     private suspend fun fetchGoogleNews(country: CountryItemEntity) {
@@ -74,7 +95,7 @@ class NewsDetailViewModel(
                 mode = "ArtList",
                 format = "json",
                 page = 1,
-                perPage = 5
+                perPage = 10
             )
         )
         result.handleNetworkDefault()

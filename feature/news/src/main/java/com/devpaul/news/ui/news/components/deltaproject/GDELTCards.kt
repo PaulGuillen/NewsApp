@@ -1,7 +1,6 @@
 package com.devpaul.news.ui.news.components.deltaproject
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,12 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.shared.ui.skeleton.RedditSkeleton
-import com.google.gson.Gson
 
 @Composable
 fun GDELTCards(
@@ -65,21 +64,18 @@ fun GDELTCards(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-
-                    val gson = Gson()
-                    val countryJson = Uri.encode(gson.toJson(selectedCountry))
                     Text(
                         text = "Ver Más",
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Blue,
                         modifier = Modifier.clickable {
-//                            navController.navigate(
-//                                Screen.AllNews.createRoute(
-//                                    "projectGDELT",
-//                                    countryJson
-//                                )
-//                            )
+                            navController.navigate(
+                                Screen.NewsDetail.createRoute(
+                                    newsType = "deltaProjectNews",
+                                    country =  selectedCountry,
+                                )
+                            )
                         }
                     )
                 }

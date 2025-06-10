@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.CountryItemEntity
@@ -68,12 +69,12 @@ fun RedditCards(
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Blue,
                         modifier = Modifier.clickable {
-//                            navController.navigate(
-//                                Screen.AllNews.createRoute(
-//                                    "reddit",
-//                                    countryJson
-//                                )
-//                            )
+                            navController.navigate(
+                                Screen.NewsDetail.createRoute(
+                                    newsType = "redditNews",
+                                    country =  selectedCountry,
+                                )
+                            )
                         }
                     )
                 }
