@@ -1,4 +1,3 @@
 package com.devpaul.news.ui.news_detail
 
-class NewsDetailUiIntent {
-}
+sealed  class NewsDetailUiIntent {}
