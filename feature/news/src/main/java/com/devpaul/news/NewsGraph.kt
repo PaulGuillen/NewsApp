@@ -12,12 +12,11 @@ import com.devpaul.news.ui.news_detail.NewsDetailsScreen
 
 fun NavGraphBuilder.newsGraph(
     navController: NavHostController,
-    appNavigator: AppNavigator
+    appNavigator: AppNavigator,
 ) {
     composable(Screen.News.route) {
         NewsScreen(
             navController = navController,
-            appNavigator = appNavigator,
         )
     }
 

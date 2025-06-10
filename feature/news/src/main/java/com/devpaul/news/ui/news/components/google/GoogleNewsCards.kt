@@ -1,7 +1,6 @@
 package com.devpaul.news.ui.news.components.google
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,12 +33,10 @@ import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.shared.ui.skeleton.GoogleNewsSkeleton
-import com.google.gson.Gson
 
 @Composable
 fun GoogleNewsCards(
     navController: NavController,
-    appNavigator: AppNavigator,
     context: Context,
     selectedCountry: CountryItemEntity,
     google: GoogleEntity?,

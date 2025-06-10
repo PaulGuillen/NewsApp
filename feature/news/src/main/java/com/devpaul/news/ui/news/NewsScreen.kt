@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,9 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
 import com.devpaul.navigation.core.jetpack.AppNavigator
@@ -44,12 +40,11 @@ import com.devpaul.shared.ui.extension.TopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NewsScreen(navController: NavHostController, appNavigator: AppNavigator) {
+fun NewsScreen(navController: NavHostController) {
 
     val viewModel: NewsViewModel = koinViewModel()
     val context = LocalContext.current
     val uiModel = remember { mutableStateOf(NewsUiModel()) }
-    val lifecycleOwner = LocalLifecycleOwner.current
 
     BaseScreenWithState(
         viewModel = viewModel,
@@ -112,7 +107,6 @@ fun NewsScreen(navController: NavHostController, appNavigator: AppNavigator) {
             NewsContent(
                 context = context,
                 navController = navController,
-                appNavigator = appNavigator,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
@@ -130,7 +124,6 @@ fun NewsScreen(navController: NavHostController, appNavigator: AppNavigator) {
 fun NewsContent(
     context: Context,
     navController: NavHostController,
-    appNavigator: AppNavigator,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
@@ -176,7 +169,6 @@ fun NewsContent(
         } else {
             GoogleNewsCards(
                 navController = navController,
-                appNavigator = appNavigator,
                 context = context,
                 selectedCountry = uiState.selectedCountry,
                 google = uiModel.google,
