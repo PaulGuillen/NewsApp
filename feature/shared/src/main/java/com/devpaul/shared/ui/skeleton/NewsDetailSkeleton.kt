@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AllNewsSkeleton(modifier: Modifier = Modifier) {
+fun NewsDetailSkeleton(modifier: Modifier = Modifier) {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -47,6 +47,20 @@ fun AllNewsSkeleton(modifier: Modifier = Modifier) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color)
+            )
+        }
         repeat(8) {
             Card(
                 modifier = Modifier
@@ -68,6 +82,6 @@ fun AllNewsSkeleton(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun AllNewsSkeletonPreview() {
-    AllNewsSkeleton()
+fun SkeletonPreview() {
+    NewsDetailSkeleton()
 }

@@ -36,7 +36,7 @@ import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.ui.extension.TopBar
-import com.devpaul.shared.ui.skeleton.AllNewsSkeleton
+import com.devpaul.shared.ui.skeleton.NewsDetailSkeleton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -109,7 +109,7 @@ fun NewsDetailContent(
     newsType: String?
 ) {
     if (uiState.isNewsDetailLoading) {
-        AllNewsSkeleton(modifier = Modifier.padding(innerPadding))
+        NewsDetailSkeleton(modifier = Modifier.padding(innerPadding))
         return
     }
 
