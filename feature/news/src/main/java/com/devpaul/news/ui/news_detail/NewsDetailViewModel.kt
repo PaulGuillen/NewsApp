@@ -3,7 +3,6 @@ package com.devpaul.news.ui.news_detail
 import android.net.Uri
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.domain.usecase.CountryUC
 import com.devpaul.news.domain.usecase.DeltaProjectUC
 import com.devpaul.news.domain.usecase.GoogleUC
 import com.devpaul.news.domain.usecase.RedditUC
@@ -21,7 +20,6 @@ class NewsDetailViewModel(
         NewsDetailUiState()
     }
 ) {
-
     fun setNewsData(
         newsType: String?,
         country: String?
@@ -33,6 +31,7 @@ class NewsDetailViewModel(
             "googleNews" -> NewsDetailUiIntent.GetGoogleNews(country = selectedCountry).execute()
             "deltaProjectNews" -> NewsDetailUiIntent.GetDeltaProjectNews(country = selectedCountry)
                 .execute()
+
             "redditNews" -> NewsDetailUiIntent.GetRedditNews(country = selectedCountry).execute()
             else -> {
                 //
