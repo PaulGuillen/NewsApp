@@ -23,6 +23,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:news"))
     implementation(project(":feature:districts"))
+    implementation(project(":feature:profile"))
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.activity)
     implementation(libs.navigation.fragment)
