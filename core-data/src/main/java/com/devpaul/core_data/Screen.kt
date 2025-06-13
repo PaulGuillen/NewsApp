@@ -15,4 +15,6 @@ sealed class Screen(val route: String) {
             return "all_news/$newsType/$encodedCountry"
         }
     }
+    data object Districts : Screen("districts")
+    data object Profile : Screen("profile")
 }
