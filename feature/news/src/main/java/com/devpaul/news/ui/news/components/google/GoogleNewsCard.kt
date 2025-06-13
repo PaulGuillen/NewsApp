@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.GoogleNewsItemEntity
+import androidx.core.net.toUri
 
 @Composable
 fun GoogleNewsCard(
@@ -47,7 +48,7 @@ fun GoogleNewsCard(
         ),
         onClick = {
             googleItem.link.let { url ->
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
             }
         }
     ) {
