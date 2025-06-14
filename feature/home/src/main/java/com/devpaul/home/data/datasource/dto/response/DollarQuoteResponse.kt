@@ -16,6 +16,8 @@ data class DollarQuoteData(
     @SerializedName("importante") val note: String? = null,
     @SerializedName("DolaresxEuro") val usdToEuro: String? = null,
     @SerializedName("fecha") val date: String? = null,
+    @SerializedName("imageUrl") val imageUrl: String? = null,
+    @SerializedName("iconImage") val iconImage: String? = null,
 )
 
 data class PriceItem(

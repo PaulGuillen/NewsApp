@@ -28,16 +28,6 @@
 -keep interface retrofit2.** { *; }
 -keepattributes RuntimeVisibleAnnotations
 
-# ==========================
-# 🧠 Hilt (Dagger Hilt)
-# ==========================
--keep class dagger.** { *; }
--dontwarn dagger.**
--keep class javax.inject.** { *; }
--dontwarn javax.inject.**
--keep class * {
-    @dagger.* <methods>;
-}
 
 # ==========================
 # 🧪 Koin

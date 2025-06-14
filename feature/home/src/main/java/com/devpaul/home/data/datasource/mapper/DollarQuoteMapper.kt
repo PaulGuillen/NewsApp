@@ -23,7 +23,9 @@ fun DollarQuoteData.toDomain(): DollarQuoteDataEntity {
         prices = prices?.map { it.toDomain() },
         note = note,
         usdToEuro = usdToEuro,
-        date = date
+        date = date,
+        imageUrl = imageUrl,
+        iconImage = iconImage
     )
 }
 

@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class DollarQuoteEntity(
     val status: Int,
     val message: String,
-    val data: DollarQuoteDataEntity
+    val data: DollarQuoteDataEntity,
 ) : Parcelable
 
 @Parcelize
@@ -18,11 +18,13 @@ data class DollarQuoteDataEntity(
     val prices: List<PriceItemEntity>? = null,
     val note: String? = null,
     val usdToEuro: String? = null,
-    val date: String? = null
+    val date: String? = null,
+    val imageUrl : String? = null,
+    val iconImage: String? = null,
 ) : Parcelable
 
 @Parcelize
 data class PriceItemEntity(
     val buy: Double? = null,
-    val sell: Double? = null
+    val sell: Double? = null,
 ) : Parcelable
