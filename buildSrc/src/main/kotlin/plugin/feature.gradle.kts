@@ -66,5 +66,4 @@ dependencies {
     composeImplementation()
     datastoreImplementation()
     firebaseImplementation()
-    hiltImplementation()
 }
