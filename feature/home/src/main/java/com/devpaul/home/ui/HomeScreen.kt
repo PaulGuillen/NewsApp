@@ -23,7 +23,7 @@ import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.ui.components.AcknowledgmentSection
-import com.devpaul.home.ui.components.InformationCard
+import com.devpaul.home.ui.components.DollarQuoteCard
 import com.devpaul.home.ui.components.SectionsRow
 import com.devpaul.home.ui.components.UITCard
 import com.devpaul.shared.ui.extension.handleDefaultErrors
@@ -112,7 +112,7 @@ fun HomeContent(
         )
 
         SectionHeader(stringResource(R.string.section_daily_info_header))
-        InformationCard(
+        DollarQuoteCard(
             context = context,
             dollarQuote = uiModel.dollarQuote,
             dollarQuoteError = uiModel.dollarQuoteError,

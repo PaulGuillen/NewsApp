@@ -36,7 +36,7 @@ import com.devpaul.shared.components.atoms.DividerView
 import com.devpaul.shared.ui.skeleton.SkeletonInformationCard
 
 @Composable
-fun InformationCard(
+fun DollarQuoteCard(
     context: Context,
     dollarQuote: DollarQuoteEntity?,
     dollarQuoteError: String? = null,

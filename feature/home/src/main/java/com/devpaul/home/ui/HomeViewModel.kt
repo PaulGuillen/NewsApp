@@ -20,19 +20,19 @@ class HomeViewModel(
 ) {
 
     init {
-        HomeUiIntent.GetHomeSection.execute()
+        HomeUiIntent.GetDollarQuote.execute()
+        HomeUiIntent.GetUIT.execute()
+        HomeUiIntent.GetGratitude.execute()
+        HomeUiIntent.GetSection.execute()
     }
 
     override suspend fun onUiIntent(intent: HomeUiIntent) {
         when (intent) {
-            is HomeUiIntent.GetHomeSection -> {
-                launchConcurrentRequests(
-                    { fetchDollarQuote() },
-                    { fetchUit() },
-                    { fetchGratitude() },
-                    { fetchSection() }
-                )
-            }
+            is HomeUiIntent.GetDollarQuote -> launchIO { fetchDollarQuote() }
+            is HomeUiIntent.GetUIT -> launchIO { fetchUit() }
+            is HomeUiIntent.GetGratitude -> launchIO { fetchGratitude() }
+            is HomeUiIntent.GetSection -> launchIO { fetchSection() }
+
         }
     }
 

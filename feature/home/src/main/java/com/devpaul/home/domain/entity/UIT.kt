@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class UITEntity(
     val status: Int,
     val message: String,
-    val data: UITDataEntity
+    val data: UITDataEntity,
 ) : Parcelable
 
 @Parcelize
@@ -16,5 +16,7 @@ data class UITDataEntity(
     val site: String? = null,
     val link: String? = null,
     val year: Int? = null,
-    val value: Double? = null
+    val value: Double? = null,
+    val imageUrl: String? = null,
+    val iconImage: String? = null,
 ) : Parcelable

@@ -9,7 +9,7 @@ fun UITResponse.toDomain(): UITEntity {
     return UITEntity(
         status = status,
         message = message,
-        data = data.toDomain()
+        data = data.toDomain(),
     )
 }
 
@@ -19,6 +19,8 @@ fun UITData.toDomain(): UITDataEntity {
         site = site,
         link = link,
         year = year,
-        value = value
+        value = value,
+        imageUrl = imageUrl,
+        iconImage = iconImage,
     )
 }

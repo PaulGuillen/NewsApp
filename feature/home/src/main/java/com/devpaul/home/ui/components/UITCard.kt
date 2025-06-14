@@ -21,14 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.devpaul.core_platform.R
+import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
@@ -61,27 +60,25 @@ fun UITCardContent(
     uitEntity: UITEntity?,
     uitError: String? = null,
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = White,
-            contentColor = Black
-        ),
-        onClick = {
-            if (uitEntity != null) {
+    if (uitEntity != null) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = White,
+                contentColor = Black
+            ),
+            onClick = {
                 val intent = Intent(Intent.ACTION_VIEW, uitEntity.data.link?.toUri())
                 context.startActivity(intent)
             }
-        }
-    ) {
-        Column(
-            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            if (uitEntity != null) {
+            Column(
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -89,7 +86,7 @@ fun UITCardContent(
                 ) {
                     Box(modifier = Modifier.size(24.dp)) {
                         Image(
-                            painter = painterResource(id = R.drawable.change_management),
+                            painter = rememberAsyncImagePainter(uitEntity.data.iconImage),
                             contentDescription = "Icono del dólar"
                         )
                     }
@@ -146,15 +143,16 @@ fun UITCardContent(
                         .fillMaxWidth()
                         .padding(end = 16.dp)
                 )
-            } else {
-                Text(
-                    text = uitError ?: "Error al obtener el UIT",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+
             }
         }
+    } else {
+        Text(
+            text = uitError ?: "Error al obtener el UIT",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

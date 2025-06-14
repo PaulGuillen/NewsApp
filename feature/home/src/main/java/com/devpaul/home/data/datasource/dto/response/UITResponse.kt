@@ -14,4 +14,6 @@ data class UITData(
     @SerializedName("enlace") val link: String? = null,
     @SerializedName("periodo") val year: Int? = null,
     @SerializedName("UIT") val value: Double? = null,
+    @SerializedName("imageUrl") val imageUrl: String? = null,
+    @SerializedName("iconImage") val iconImage: String? = null,
 )
