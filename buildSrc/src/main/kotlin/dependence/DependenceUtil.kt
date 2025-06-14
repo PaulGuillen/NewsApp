@@ -124,7 +124,6 @@ fun Project.retrofitImplementation() {
     dependencies {
         "implementation"(libs["retrofit"])
         "implementation"(libs["retrofit-gson-converter"])
-        "implementation"(libs["converter-simplexml"])
         "implementation"(libs["okhttp3-loggin-interceptor"])
     }
 }

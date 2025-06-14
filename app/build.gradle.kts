@@ -1,6 +1,5 @@
 plugins {
     id("plugin.application")
-    alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.services)
 }
 

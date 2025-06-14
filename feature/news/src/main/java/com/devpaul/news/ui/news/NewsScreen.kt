@@ -16,8 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,9 +31,9 @@ import com.devpaul.news.ui.news.components.country.CountryCards
 import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
 import com.devpaul.news.ui.news.components.google.GoogleNewsCards
 import com.devpaul.news.ui.news.components.reddit.RedditCards
-import com.devpaul.shared.extension.handleDefaultErrors
+import com.devpaul.shared.ui.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
-import com.devpaul.shared.screen.atomic.DividerView
+import com.devpaul.shared.components.atoms.DividerView
 import com.devpaul.shared.ui.extension.BottomNavigationBar
 import com.devpaul.shared.ui.extension.TopBar
 import org.koin.androidx.compose.koinViewModel

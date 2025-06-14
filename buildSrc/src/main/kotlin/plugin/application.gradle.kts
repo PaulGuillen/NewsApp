@@ -44,11 +44,15 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        getByName("release") {
+            isShrinkResources = true
         }
     }
 
@@ -81,7 +85,6 @@ dependencies {
     androidCoreImplementation()
     uiCoreLibsImplementation()
     koinImplementation()
-    hiltImplementation()
     androidTestingImplementation()
     composeImplementation()
     firebaseImplementation()

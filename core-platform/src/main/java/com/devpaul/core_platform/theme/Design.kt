@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.extension
+package com.devpaul.core_platform.theme
 
 import android.app.Activity
 import android.view.Window

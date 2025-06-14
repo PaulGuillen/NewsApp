@@ -59,49 +59,10 @@ fun validateStartSession(
     }
 }
 
-fun formatPubDate(dateStr: String?): String {
-    return try {
-        val parser = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)
-        val formatter = SimpleDateFormat("dd 'de' MMMM, hh:mm a", Locale("es", "ES"))
-        val parsedDate = parser.parse(dateStr.toString())
-        formatter.format(parsedDate ?: Date())
-    } catch (e: Exception) {
-        dateStr ?: ""
-    }
-}
-
-fun formatIsoDate(isoDate: String): String {
-    val inputFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US)
-    inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-    val date: Date? = inputFormat.parse(isoDate)
-    val outputFormat = SimpleDateFormat("dd 'de' MMMM, hh:mm a", Locale("es", "ES"))
-    outputFormat.timeZone = TimeZone.getDefault()
-    return if (date != null) {
-        outputFormat.format(date)
-    } else {
-        "Formato no soportado"
-    }
-}
-
 fun limitText(text: String, maxCharacters: Int): String {
     return if (text.length > maxCharacters) {
         text.take(maxCharacters) + "…"
     } else {
         text
     }
-}
-
-fun formatPublishedAt(publishedAt: String): String {
-    return try {
-        val zonedDateTime = ZonedDateTime.parse(publishedAt)
-        val formatter = DateTimeFormatter.ofPattern("d 'de' MMMM, h:mm a", Locale("es", "ES"))
-        zonedDateTime.format(formatter)
-    } catch (e: Exception) {
-        ""
-    }
-}
-
-fun removeAccents(input: String): String {
-    val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
-    return normalized.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
 }

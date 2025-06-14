@@ -26,7 +26,7 @@ import com.devpaul.home.ui.components.AcknowledgmentSection
 import com.devpaul.home.ui.components.InformationCard
 import com.devpaul.home.ui.components.SectionsRow
 import com.devpaul.home.ui.components.UITCard
-import com.devpaul.shared.extension.handleDefaultErrors
+import com.devpaul.shared.ui.extension.handleDefaultErrors
 import com.devpaul.shared.screen.BaseScreenWithState
 import com.devpaul.shared.ui.extension.BottomNavigationBar
 import com.devpaul.shared.ui.extension.SectionHeader

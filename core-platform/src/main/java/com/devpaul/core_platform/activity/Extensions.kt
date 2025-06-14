@@ -32,14 +32,14 @@ var Fragment.isLoading: Boolean
         }
     }
 
-fun Fragment.handleLoading(viewModel: ViewModelLoadable){
+fun Fragment.handleLoading(viewModel: ViewModelLoadable) {
     viewLifecycleOwner.lifecycleScope.launch {
         try {
             viewModel.onLoading {
                 isLoading = it
             }
         } finally {
-            if(!viewModel.isLoading){
+            if (!viewModel.isLoading) {
                 isLoading = false
             }
         }

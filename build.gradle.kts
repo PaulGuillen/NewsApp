@@ -7,6 +7,5 @@ plugins {
     id("org.jetbrains.kotlin.jvm") apply false
     id("androidx.navigation.safeargs.kotlin") apply false
     id("org.jetbrains.kotlin.plugin.serialization") apply false
-    alias(libs.plugins.dagger.hilt.android) apply false
     alias(libs.plugins.google.services) apply false
 }

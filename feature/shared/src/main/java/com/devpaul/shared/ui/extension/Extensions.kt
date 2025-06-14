@@ -1,4 +1,4 @@
-package com.devpaul.shared.extension
+package com.devpaul.shared.ui.extension
 
 import com.devpaul.core_domain.entity.Defaults
 

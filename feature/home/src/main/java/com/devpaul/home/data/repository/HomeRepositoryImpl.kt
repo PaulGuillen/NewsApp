@@ -1,10 +1,6 @@
 package com.devpaul.home.data.repository
 
 import com.devpaul.core_data.DefaultOutput
-import com.devpaul.core_data.model.GDELProject
-import com.devpaul.core_data.model.GoogleNewsXML
-import com.devpaul.core_data.model.NewsResponse
-import com.devpaul.core_data.model.RedditResponse
 import com.devpaul.home.data.datasource.remote.HomeServiceDS
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.GratitudeEntity
@@ -32,21 +28,5 @@ class HomeRepositoryImpl(
 
     override suspend fun gratitudeService(): DefaultOutput<GratitudeEntity> {
         return serviceDS.gratitudeService()
-    }
-
-    override suspend fun googleNews(query: String, language: String): GoogleNewsXML {
-        return serviceDS.googleNews(query, language)
-    }
-
-    override suspend fun deltaProject(query: String, mode: String, format: String): GDELProject {
-        return serviceDS.deltaProject(query, mode, format)
-    }
-
-    override suspend fun redditNews(country: String): RedditResponse {
-        return serviceDS.redditNews(country)
-    }
-
-    override suspend fun newsAPI(initLetters: String): NewsResponse {
-        return serviceDS.newsAPI(initLetters)
     }
 }
