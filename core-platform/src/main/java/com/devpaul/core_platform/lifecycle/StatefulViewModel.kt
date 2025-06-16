@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.devpaul.core_domain.entity.Defaults
+import com.devpaul.core_domain.entity.Output
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.base.UiStateHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +25,7 @@ abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
 ) : StatelessViewModel<UiIntent, UiEvent>(), UiStateHolder<UiState> {
 
     private val _changeUiStateLiveData = MutableLiveData<Pair<UiState?, UiState>>(
-        Pair(null, savedStateHandle?.get<UiState>(keySavedUIState) ?: defaultUIState())
+        Pair(null, savedStateHandle?.get(keySavedUIState) ?: defaultUIState())
     )
     private val _uiStateLiveData = MutableLiveData(_changeUiStateLiveData.value!!.second)
 
@@ -32,39 +35,41 @@ abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
 
     override fun setUiState(uiState: UiState) {
         val oldValue = this.uiState
-        if (oldValue === uiState) return
+        if (oldValue == uiState) {
+            Timber.d("🟡 setUiState: no change detected.")
+            return
+        }
+        Timber.d("🟢 UiState changed:\nFrom: $oldValue\nTo:   $uiState")
         _changeUiStateLiveData.value = oldValue to uiState
         _uiStateLiveData.value = uiState
+
         if (uiState is Parcelable) {
             savedStateHandle?.set(keySavedUIState, uiState)
         }
     }
 
     val uiStateFlow: StateFlow<UiState> by lazy {
-        uiStateLiveData.asFlow().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), uiState)
+        uiStateLiveData.asFlow().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = uiState
+        )
     }
 
     protected suspend fun updateUiStateOnMain(block: (UiState) -> UiState) {
-        withContext(Dispatchers.Main) {
-            setUiState(block(uiState))
+        withContext(Dispatchers.Main.immediate) {
+            try {
+                val oldState = uiState
+                val newState = block(oldState)
+                if (newState != oldState) {
+                    Timber.d("🔄 updateUiStateOnMain:\nFrom: $oldState\nTo:   $newState")
+                    setUiState(newState)
+                } else {
+                    Timber.d("🟡 updateUiStateOnMain: no state change.")
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "❌ Error in updateUiStateOnMain")
+            }
         }
     }
-
-    protected suspend fun runWithUiStateUpdate(
-        onLoading: suspend () -> Unit = {},
-        block: suspend () -> Unit,
-        onError: suspend (Throwable) -> Unit = { e ->
-            Timber.e(e, "Unhandled error")
-        }
-    ) {
-        try {
-            onLoading()
-            block()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Throwable) {
-            onError(e)
-        }
-    }
-
 }

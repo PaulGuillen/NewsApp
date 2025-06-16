@@ -3,6 +3,7 @@ package com.devpaul.core_platform.lifecycle
 import androidx.lifecycle.ViewModel
 import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.core_domain.entity.Output
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.base.UiEventHolder
 import com.devpaul.core_platform.lifecycle.base.UiIntentHolder
 import com.devpaul.core_platform.lifecycle.base.ViewModelLoadable
@@ -104,5 +105,4 @@ abstract class StatelessViewModel<UiIntent, UiEvent> : ViewModel(), UiEventHolde
             }
         }
     }
-
 }

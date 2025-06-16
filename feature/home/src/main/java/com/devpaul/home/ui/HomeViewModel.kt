@@ -39,183 +39,105 @@ class HomeViewModel(
                     { fetchGratitude() }
                 )
             }
+
+            is HomeUiIntent.GetGratitudeServices -> {
+                fetchGratitude()
+            }
         }
     }
 
     private suspend fun fetchDollarQuote() {
-        runWithUiStateUpdate(
-            onLoading = {
-                updateUiStateOnMain { it.copy(dollarQuote = ResultState.Loading) }
-            },
-            block = {
-                val result = dollarQuoteUC()
-
-                result.handleNetworkDefault()
-                    .onSuccessful {
-                        when (it) {
-                            is DollarQuoteUC.Success.DollarQuoteSuccess -> {
-                                HomeUiEvent.DollarQuoteSuccess(it.dollarQuote).send()
-                            }
+        updateUiStateOnMain { it.copy(dollarQuote = ResultState.Loading) }
+        val result = dollarQuoteUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is DollarQuoteUC.Success.DollarQuoteSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(dollarQuote = ResultState.Success(it.dollarQuote))
                         }
                     }
-                    .onFailure<DollarQuoteUC.Failure> {
-                        when (it) {
-                            is DollarQuoteUC.Failure.DollarQuoteError -> {
-                                HomeUiEvent.DollarQuoteError(it.error).send()
-                            }
-                        }
-                    }
-            },
-            onError = { e ->
-                updateUiStateOnMain {
-                    it.copy(dollarQuote = ResultState.Error("Error inesperado: ${e.localizedMessage}"))
                 }
             }
-        )
+            .onFailure<DollarQuoteUC.Failure> {
+                when (it) {
+                    is DollarQuoteUC.Failure.DollarQuoteError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(dollarQuote = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                        }
+                    }
+                }
+            }
     }
 
     private suspend fun fetchUit() {
-        runWithUiStateUpdate(
-            onLoading = {
-                updateUiStateOnMain { it.copy(uitValue = ResultState.Loading) }
-            },
-            block = {
-                val result = uitValueUC()
-
-                result.handleNetworkDefault()
-                    .onSuccessful {
-                        when (it) {
-                            is UITValueUC.Success.UITSuccess -> {
-                                HomeUiEvent.UITSuccess(it.uit).send()
-                            }
+        updateUiStateOnMain { it.copy(uitValue = ResultState.Loading) }
+        val result = uitValueUC()
+        result.handleNetworkDefault()
+            .onSuccessful { it ->
+                when (it) {
+                    is UITValueUC.Success.UITSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(uitValue = ResultState.Success(it.uit))
                         }
                     }
-                    .onFailure<UITValueUC.Failure> {
-                        when (it) {
-                            is UITValueUC.Failure.UITError -> {
-                                HomeUiEvent.UITError(it.error).send()
-                            }
-                        }
-                    }
-            },
-            onError = { e ->
-                updateUiStateOnMain {
-                    it.copy(uitValue = ResultState.Error("Error inesperado: ${e.localizedMessage}"))
                 }
             }
-        )
+            .onFailure<UITValueUC.Failure> {
+                when (it) {
+                    is UITValueUC.Failure.UITError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(uitValue = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                        }
+                    }
+                }
+            }
     }
 
     private suspend fun fetchSection() {
-        runWithUiStateUpdate(
-            onLoading = {
-                updateUiStateOnMain { it.copy(section = ResultState.Loading) }
-            },
-            block = {
-                val result = sectionUC()
-
-                result.handleNetworkDefault()
-                    .onSuccessful {
-                        when (it) {
-                            is SectionUC.Success.SectionSuccess -> {
-                                HomeUiEvent.SectionSuccess(it.section).send()
-                            }
+        val result = sectionUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is SectionUC.Success.SectionSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(section = ResultState.Success(it.section))
                         }
                     }
-                    .onFailure<SectionUC.Failure> {
-                        when (it) {
-                            is SectionUC.Failure.SectionError -> {
-                                HomeUiEvent.SectionError(it.error).send()
-                            }
-                        }
-                    }
-            },
-            onError = { e ->
-                updateUiStateOnMain {
-                    it.copy(section = ResultState.Error("Error inesperado: ${e.localizedMessage}"))
                 }
             }
-        )
+            .onFailure<SectionUC.Failure> {
+                when (it) {
+                    is SectionUC.Failure.SectionError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(section = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                        }
+                    }
+                }
+            }
     }
 
     private suspend fun fetchGratitude() {
-        runWithUiStateUpdate(
-            onLoading = {
-                updateUiStateOnMain { it.copy(gratitude = ResultState.Loading) }
-            },
-            block = {
-                val result = gratitudeUC()
-                result.handleNetworkDefault()
-                    .onSuccessful {
-                        when (it) {
-                            is GratitudeUC.Success.GratitudeSuccess -> {
-                                HomeUiEvent.GratitudeSuccess(it.gratitude).send()
-                            }
+        updateUiStateOnMain { it.copy(gratitude = ResultState.Loading) }
+        val result = gratitudeUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is GratitudeUC.Success.GratitudeSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(gratitude = ResultState.Success(it.gratitude))
                         }
                     }
-                    .onFailure<GratitudeUC.Failure> {
-                        when (it) {
-                            is GratitudeUC.Failure.GratitudeError -> {
-                                HomeUiEvent.GratitudeError(it.error).send()
-                            }
+                }
+            }
+            .onFailure<GratitudeUC.Failure> {
+                when (it) {
+                    is GratitudeUC.Failure.GratitudeError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(gratitude = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
                         }
                     }
-            },
-            onError = { e ->
-                updateUiStateOnMain {
-                    it.copy(gratitude = ResultState.Error("Error inesperado: ${e.localizedMessage}"))
                 }
             }
-        )
     }
-
-    suspend fun openDollarQuote(response: DollarQuoteEntity) {
-        updateUiStateOnMain {
-            it.copy(dollarQuote = ResultState.Success(response))
-        }
-    }
-
-    suspend fun openUIT(response: UITEntity) {
-        updateUiStateOnMain {
-            it.copy(uitValue = ResultState.Success(response))
-        }
-    }
-
-    suspend fun openGratitude(response: GratitudeEntity) {
-        updateUiStateOnMain {
-            it.copy(gratitude = ResultState.Success(response))
-        }
-    }
-
-    suspend fun openSection(response: SectionEntity) {
-        updateUiStateOnMain {
-            it.copy(section = ResultState.Success(response))
-        }
-    }
-
-    suspend fun handleErrorEvents(type: String, error: Defaults.HttpError<String>) {
-        when (type) {
-            "dollarQuote" -> {
-               updateUiStateOnMain {
-                     it.copy(dollarQuote = ResultState.Error(error.apiErrorResponse?.message ?: "Error inesperado"))
-               }
-            }
-            "uit" -> {
-                updateUiStateOnMain {
-                    it.copy(uitValue = ResultState.Error(error.apiErrorResponse?.message ?: "Error inesperado"))
-                }
-            }
-            "gratitude" -> {
-                updateUiStateOnMain {
-                    it.copy(gratitude = ResultState.Error(error.apiErrorResponse?.message ?: "Error inesperado"))
-                }
-            }
-            "section" -> {
-                updateUiStateOnMain {
-                    it.copy(section = ResultState.Error(error.apiErrorResponse?.message ?: "Error inesperado"))
-                }
-            }
-        }
-    }
-
 }

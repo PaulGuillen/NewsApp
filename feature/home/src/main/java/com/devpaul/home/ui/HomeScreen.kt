@@ -41,45 +41,10 @@ fun HomeScreen(navController: NavHostController) {
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navController,
-        onUiEvent = { event, _ ->
-            when (event) {
-                is HomeUiEvent.DollarQuoteSuccess -> {
-                   viewModel.openDollarQuote(event.response)
-                }
-
-                is HomeUiEvent.UITSuccess -> {
-                    viewModel.openUIT(event.response)
-                }
-
-                is HomeUiEvent.GratitudeSuccess -> {
-                    viewModel.openGratitude(event.response)
-                }
-
-                is HomeUiEvent.SectionSuccess -> {
-                    viewModel.openSection(event.response)
-                }
-
-                is HomeUiEvent.DollarQuoteError -> {
-                    viewModel.handleErrorEvents(type = "dollarQuote", error = event.error)
-                }
-
-                is HomeUiEvent.UITError -> {
-                    viewModel.handleErrorEvents(type = "uit", error= event.error)
-                }
-
-                is HomeUiEvent.GratitudeError -> {
-                    viewModel.handleErrorEvents(type = "gratitude", error= event.error)
-                }
-
-                is HomeUiEvent.SectionError -> {
-                    viewModel.handleErrorEvents(type = "section", error = event.error)
-                }
-            }
-        },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         }
-    ) { _, uiState, _, _, _ ->
+    ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
                 TopBar(
@@ -93,10 +58,11 @@ fun HomeScreen(navController: NavHostController) {
             }
         ) { innerPadding ->
             HomeContent(
+                context = context,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
-                context = context
+                onIntent = onIntent,
             )
         }
     }
@@ -104,10 +70,11 @@ fun HomeScreen(navController: NavHostController) {
 
 @Composable
 fun HomeContent(
+    context: Context,
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     innerPadding: PaddingValues,
-    context: Context
+    onIntent: (HomeUiIntent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -118,6 +85,9 @@ fun HomeContent(
         AcknowledgmentSection(
             context = context,
             gratitudeState = uiState.gratitude,
+            onRetry = {
+                onIntent(HomeUiIntent.GetGratitudeServices)
+            }
         )
 
         SectionHeader(stringResource(R.string.section_available_sections_header))
@@ -162,6 +132,7 @@ fun HomeScreenPreview() {
             ),
             innerPadding = innerPadding,
             context = LocalContext.current,
+            onIntent =  { _ -> }
         )
     }
 }

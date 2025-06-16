@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +46,7 @@ import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
 fun AcknowledgmentSection(
     context: Context,
     gratitudeState: ResultState<GratitudeEntity>,
+    onRetry: () -> Unit,
 ) {
 
     when (gratitudeState) {
@@ -152,6 +155,61 @@ fun AcknowledgmentSection(
                 }
             }
         }
+
+        else -> {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 10.dp)
+            ) {
+                Card(
+                    modifier = Modifier
+                        .width(320.dp)
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = White,
+                        contentColor = Black
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(BackgroundBlack.copy(alpha = 0.25f))
+                        )
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                        ) {
+                            Text(
+                                text = "Error al cargar los agradecimientos",
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = Black,
+                                fontSize = 15.sp,
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                textAlign = TextAlign.Center
+                            )
+
+                            Button(
+                                onClick = onRetry,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Text("Reintentar")
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
 
@@ -160,7 +218,8 @@ fun AcknowledgmentSection(
 fun AcknowledgmentSectionSuccessPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitudeState = ResultState.Success(GratitudeMock().gratitudeMock)
+        gratitudeState = ResultState.Success(GratitudeMock().gratitudeMock),
+        onRetry = {}
     )
 }
 
@@ -169,7 +228,8 @@ fun AcknowledgmentSectionSuccessPreview() {
 fun AcknowledgmentSectionLoadingPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitudeState = ResultState.Loading
+        gratitudeState = ResultState.Loading,
+        onRetry = {}
     )
 }
 
@@ -178,6 +238,7 @@ fun AcknowledgmentSectionLoadingPreview() {
 fun AcknowledgmentSectionErrorPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitudeState = ResultState.Error("Error al cargar los agradecimientos")
+        gratitudeState = ResultState.Error("Error al cargar los agradecimientos"),
+        onRetry = {}
     )
 }
