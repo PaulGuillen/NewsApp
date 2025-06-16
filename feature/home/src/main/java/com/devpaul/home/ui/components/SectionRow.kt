@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.domain.entity.SectionDataEntity
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.shared.ui.skeleton.SectionsRowSkeleton
@@ -17,24 +18,26 @@ import com.devpaul.shared.ui.skeleton.SectionsRowSkeleton
 @Composable
 fun SectionsRow(
     context: Context,
-    section: SectionEntity?,
-    sectionError: String? = null,
-    sectionLoading: Boolean,
+    sectionState: ResultState<SectionEntity>,
 ) {
-    if (sectionLoading) {
-        SectionsRowSkeleton()
-    } else {
-        if (section != null) {
+    when (sectionState) {
+        is ResultState.Loading -> {
+            SectionsRowSkeleton()
+        }
+
+        is ResultState.Success -> {
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 10.dp)
             ) {
-                section.data.forEach { sectionItem ->
+                sectionState.response.data.forEach { sectionItem ->
                     ItemSection(context = context, sectionItem = sectionItem)
                 }
             }
-        } else {
+        }
+
+        is ResultState.Error -> {
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
@@ -45,7 +48,7 @@ fun SectionsRow(
                         context = context,
                         sectionItem = SectionDataEntity(
                             id = "0",
-                            title = sectionError ?: "Error",
+                            title = sectionState.message,
                             type = "error"
                         )
                     )
@@ -53,6 +56,7 @@ fun SectionsRow(
             }
         }
     }
+
 }
 
 @Preview(showBackground = true)
@@ -60,17 +64,17 @@ fun SectionsRow(
 fun SectionsRowSuccessPreview() {
     SectionsRow(
         context = LocalContext.current,
-        section = SectionEntity(
-            status = 200,
-            message = "Success",
-            data = SectionDataEntity(
-                id = "1",
-                title = "Section Title",
-                type = "type"
-            ).let { listOf(it, it, it) }
-        ),
-        sectionError = null,
-        sectionLoading = false,
+        sectionState = ResultState.Success(
+            SectionEntity(
+                status = 200,
+                message = "Success",
+                data = SectionDataEntity(
+                    id = "1",
+                    title = "Section Title",
+                    type = "type"
+                ).let { listOf(it, it, it) }
+            ),
+        )
     )
 }
 
@@ -79,9 +83,7 @@ fun SectionsRowSuccessPreview() {
 fun SectionsRowLoadingPreview() {
     SectionsRow(
         context = LocalContext.current,
-        section = null,
-        sectionError = null,
-        sectionLoading = true,
+        sectionState = ResultState.Loading,
     )
 }
 
@@ -90,8 +92,6 @@ fun SectionsRowLoadingPreview() {
 fun SectionsRowErrorPreview() {
     SectionsRow(
         context = LocalContext.current,
-        section = null,
-        sectionError = "Error loading sections",
-        sectionLoading = false,
+        sectionState = ResultState.Error(message = "Error loading sections"),
     )
 }

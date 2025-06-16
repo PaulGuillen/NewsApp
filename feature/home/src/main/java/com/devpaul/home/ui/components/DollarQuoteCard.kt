@@ -28,24 +28,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.shared.components.atoms.DividerView
-import com.devpaul.shared.ui.skeleton.SkeletonInformationCard
+import com.devpaul.shared.ui.skeleton.SkeletonDollarQuote
 
 @Composable
 fun DollarQuoteCard(
     context: Context,
-    dollarQuote: DollarQuoteEntity?,
-    dollarQuoteError: String? = null,
-    dollarQuoteLoading: Boolean = false,
+    dollarQuoteState: ResultState<DollarQuoteEntity>,
 ) {
-    if (dollarQuoteLoading) {
-        SkeletonInformationCard()
-    } else {
-        if (dollarQuote != null) {
+    when(dollarQuoteState) {
+        is ResultState.Loading -> {
+            SkeletonDollarQuote()
+        }
+        is ResultState.Success -> {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,13 +58,13 @@ fun DollarQuoteCard(
                     )
                 },
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, dollarQuote.data.link?.toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
                     context.startActivity(intent)
                 }
             ) {
                 Column {
                     Image(
-                        painter = rememberAsyncImagePainter(dollarQuote.data.imageUrl),
+                        painter = rememberAsyncImagePainter(dollarQuoteState.response.data.imageUrl),
                         contentDescription = "Imagen del dólar",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -83,7 +83,7 @@ fun DollarQuoteCard(
                         ) {
                             Box(modifier = Modifier.size(24.dp)) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(dollarQuote.data.iconImage),
+                                    painter = rememberAsyncImagePainter(dollarQuoteState.response.data.iconImage),
                                     contentDescription = "Icono del dólar"
                                 )
                             }
@@ -116,7 +116,7 @@ fun DollarQuoteCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = dollarQuote.data.prices?.firstOrNull()?.buy?.toString()
+                                text = dollarQuoteState.response.data.prices?.firstOrNull()?.buy?.toString()
                                     ?: "N/A",
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -138,7 +138,7 @@ fun DollarQuoteCard(
                             Spacer(modifier = Modifier.width(4.dp))
 
                             Text(
-                                text = dollarQuote.data.prices?.firstOrNull()?.sell.toString(),
+                                text = dollarQuoteState.response.data.prices?.firstOrNull()?.sell.toString(),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -146,7 +146,7 @@ fun DollarQuoteCard(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = dollarQuote.data.site ?: "Sitio no disponible",
+                            text = dollarQuoteState.response.data.site ?: "Sitio no disponible",
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
@@ -157,7 +157,7 @@ fun DollarQuoteCard(
                         DividerView()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = dollarQuote.data.date ?: "Fecha no disponible",
+                            text = dollarQuoteState.response.data.date ?: "Fecha no disponible",
                             style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.End,
                             modifier = Modifier
@@ -168,9 +168,10 @@ fun DollarQuoteCard(
                     }
                 }
             }
-        } else {
+        }
+        is ResultState.Error -> {
             Text(
-                text = dollarQuoteError ?: "Error al obtener datos del dólar.",
+                text = dollarQuoteState.message,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
@@ -180,6 +181,5 @@ fun DollarQuoteCard(
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
-
     }
 }

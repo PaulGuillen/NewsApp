@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BackgroundBlack
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
@@ -42,15 +43,15 @@ import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
 @Composable
 fun AcknowledgmentSection(
     context: Context,
-    gratitude: GratitudeEntity?,
-    gratitudeError: String? = null,
-    gratitudeLoading: Boolean,
+    gratitudeState: ResultState<GratitudeEntity>,
 ) {
 
-    if (gratitudeLoading) {
-        AcknowledgmentSkeleton()
-    } else {
-        if (gratitude != null) {
+    when (gratitudeState) {
+        is ResultState.Loading -> {
+            AcknowledgmentSkeleton()
+        }
+
+        is ResultState.Success -> {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,7 +59,7 @@ fun AcknowledgmentSection(
                     .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 10.dp)
             ) {
-                gratitude.data.forEach { gratitude ->
+                gratitudeState.response.data.forEach { gratitude ->
                     Card(
                         modifier = Modifier
                             .width(320.dp)
@@ -107,7 +108,9 @@ fun AcknowledgmentSection(
                     }
                 }
             }
-        } else {
+        }
+
+        is ResultState.Error -> {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,7 +140,7 @@ fun AcknowledgmentSection(
                                     .background(BackgroundBlack.copy(alpha = 0.25f))
                             )
                             Text(
-                                text = gratitudeError ?: "Error al cargar los agradecimientos",
+                                text = gratitudeState.message,
                                 style = MaterialTheme.typography.headlineMedium,
                                 color = Black,
                                 fontSize = 15.sp,
@@ -157,13 +160,7 @@ fun AcknowledgmentSection(
 fun AcknowledgmentSectionSuccessPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitude = GratitudeEntity(
-            status = 200,
-            message = "Success",
-            data = GratitudeMock().gratitudeMock.data
-        ),
-        gratitudeError = null,
-        gratitudeLoading = false,
+        gratitudeState = ResultState.Success(GratitudeMock().gratitudeMock)
     )
 }
 
@@ -172,9 +169,7 @@ fun AcknowledgmentSectionSuccessPreview() {
 fun AcknowledgmentSectionLoadingPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitude = null,
-        gratitudeError = null,
-        gratitudeLoading = true,
+        gratitudeState = ResultState.Loading
     )
 }
 
@@ -183,8 +178,6 @@ fun AcknowledgmentSectionLoadingPreview() {
 fun AcknowledgmentSectionErrorPreview() {
     AcknowledgmentSection(
         context = LocalContext.current,
-        gratitude = null,
-        gratitudeError = "Error al cargar los agradecimientos",
-        gratitudeLoading = false,
+        gratitudeState = ResultState.Error("Error al cargar los agradecimientos")
     )
 }

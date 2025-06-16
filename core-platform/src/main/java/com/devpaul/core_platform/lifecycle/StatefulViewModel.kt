@@ -12,11 +12,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 
 abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
     defaultUIState: () -> UiState,
     private val keySavedUIState: String = "UiState",
-    val savedStateHandle: SavedStateHandle? = null,
+    private val savedStateHandle: SavedStateHandle? = null,
 ) : StatelessViewModel<UiIntent, UiEvent>(), UiStateHolder<UiState> {
 
     private val _changeUiStateLiveData = MutableLiveData<Pair<UiState?, UiState>>(
@@ -47,4 +49,22 @@ abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
             setUiState(block(uiState))
         }
     }
+
+    protected suspend fun runWithUiStateUpdate(
+        onLoading: suspend () -> Unit = {},
+        block: suspend () -> Unit,
+        onError: suspend (Throwable) -> Unit = { e ->
+            Timber.e(e, "Unhandled error")
+        }
+    ) {
+        try {
+            onLoading()
+            block()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            onError(e)
+        }
+    }
+
 }

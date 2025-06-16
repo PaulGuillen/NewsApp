@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
@@ -39,139 +40,144 @@ import com.devpaul.shared.ui.skeleton.UITCardSkeleton
 @Composable
 fun UITCard(
     context: Context,
-    uit: UITEntity?,
-    uitError: String? = null,
-    uitLoading: Boolean = false,
+    uitState: ResultState<UITEntity>
 ) {
-    if (uitLoading) {
-        UITCardSkeleton()
-    } else {
-        UITCardContent(
-            context = context,
-            uitEntity = uit,
-            uitError = uitError,
-        )
-    }
-}
+    when (uitState) {
+        is ResultState.Loading -> {
+            UITCardSkeleton()
+        }
 
-@Composable
-fun UITCardContent(
-    context: Context,
-    uitEntity: UITEntity?,
-    uitError: String? = null,
-) {
-    if (uitEntity != null) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = White,
-                contentColor = Black
-            ),
-            onClick = {
-                val intent = Intent(Intent.ACTION_VIEW, uitEntity.data.link?.toUri())
-                context.startActivity(intent)
-            }
-        ) {
-            Column(
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+        is ResultState.Success -> {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = White,
+                    contentColor = Black
+                ),
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, uitState.response.data.link?.toUri())
+                    context.startActivity(intent)
+                }
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
                 ) {
-                    Box(modifier = Modifier.size(24.dp)) {
-                        Image(
-                            painter = rememberAsyncImagePainter(uitEntity.data.iconImage),
-                            contentDescription = "Icono del dólar"
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(modifier = Modifier.size(24.dp)) {
+                            Image(
+                                painter = rememberAsyncImagePainter(uitState.response.data.iconImage),
+                                contentDescription = "Icono del dólar"
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = uitState.response.data.service ?: "Servicio no disponible",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp
+                            ),
+                            color = BlueDark,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "UIT:",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = BlueDark
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = uitState.response.data.value.toString(),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     Text(
-                        text = uitEntity.data.service ?: "Servicio no disponible",
+                        text = uitState.response.data.site ?: "Sitio no disponible",
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DividerView()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = uitState.response.data.year.toString(),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp)
+                    )
+
+                }
+            }
+        }
+
+        is ResultState.Error -> {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = White,
+                    contentColor = Black
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = uitState.message,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         ),
                         color = BlueDark,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "UIT:",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = BlueDark
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    Text(
-                        text = uitEntity.data.value.toString(),
-                        style = MaterialTheme.typography.bodyMedium
+                        textAlign = TextAlign.Center
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = uitEntity.data.site ?: "Sitio no disponible",
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                DividerView()
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = uitEntity.data.year.toString(),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    textAlign = TextAlign.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 16.dp)
-                )
-
             }
         }
-    } else {
-        Text(
-            text = uitError ?: "Error al obtener el UIT",
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun UITCardSuccessPreview() {
-    UITCardContent(
+    UITCard(
         context = LocalContext.current,
-        uitEntity = UITMock().uitMock,
-        uitError = null
+        uitState = ResultState.Success(UITMock().uitMock)
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun UITCardErrorPreview() {
-    UITCardContent(
+    UITCard(
         context = LocalContext.current,
-        uitEntity = null,
-        uitError = "Error al obtener el UIT"
+        uitState = ResultState.Error("Error al cargar la UIT")
     )
 }

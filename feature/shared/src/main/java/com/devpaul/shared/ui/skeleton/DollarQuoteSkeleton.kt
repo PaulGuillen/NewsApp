@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SkeletonInformationCard() {
+fun SkeletonDollarQuote() {
     val shimmerColor = listOf(
         Color.LightGray.copy(alpha = 0.9f),
         Color.LightGray.copy(alpha = 0.3f),
@@ -59,5 +59,5 @@ fun SkeletonInformationCard() {
 @Preview(showBackground = true)
 @Composable
 fun SkeletonScreenPreview() {
-    SkeletonInformationCard()
+    SkeletonDollarQuote()
 }

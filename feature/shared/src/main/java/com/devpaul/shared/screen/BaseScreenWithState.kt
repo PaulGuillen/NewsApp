@@ -26,7 +26,7 @@ fun <UiState, UiIntent, UiEvent> BaseScreenWithState(
     viewModel: StatefulViewModel<UiState, UiIntent, UiEvent>,
     navController: NavHostController,
     onInit: ((uiState: UiState, onIntent: (UiIntent) -> Unit) -> Unit)? = null,
-    onUiEvent: (UiEvent, (String) -> Unit) -> Unit = { _, _ -> },
+    onUiEvent: suspend (UiEvent, (String) -> Unit) -> Unit = { _, _ -> },
     onDefaultError: (Defaults<Nothing>, (String) -> Unit) -> Unit = { _, _ -> },
     observeBackKeys: List<String>? = null,
     onBackResults: ((results: Map<String, Any?>, uiState: UiState, onIntent: (UiIntent) -> Unit) -> Unit)? = null,
@@ -71,8 +71,10 @@ fun <UiState, UiIntent, UiEvent> BaseScreenWithState(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.uiEvent.collectLatest {
-            onUiEvent(it, showSnackBar)
+        viewModel.uiEvent.collectLatest { event ->
+            launch {
+                onUiEvent(event, showSnackBar)
+            }
         }
     }
 
