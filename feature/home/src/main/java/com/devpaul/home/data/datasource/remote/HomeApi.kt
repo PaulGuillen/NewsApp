@@ -13,7 +13,8 @@ internal interface HomeApi {
     //@GET("http://192.168.100.137:3000/home/dollarQuote")
     suspend fun dollarQuote(): Response<DollarQuoteResponse>
 
-    @GET("http://192.168.100.137:3000/home/uit")
+    @GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
+    //@GET("http://192.168.100.137:3000/home/uit")
     suspend fun uit(): Response<UITResponse>
 
     @GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")

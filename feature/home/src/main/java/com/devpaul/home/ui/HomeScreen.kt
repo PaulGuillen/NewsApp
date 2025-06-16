@@ -108,7 +108,10 @@ fun HomeContent(
 
         UITCard(
             context = context,
-            uitState = uiState.uitValue
+            uitState = uiState.uitValue,
+            onRetry = {
+                onIntent(HomeUiIntent.GetUITValue)
+            }
         )
     }
 }

@@ -46,6 +46,10 @@ class HomeViewModel(
             is HomeUiIntent.GetDollarQuote -> {
                 fetchDollarQuote()
             }
+
+            is HomeUiIntent.GetUITValue -> {
+                fetchUit()
+            }
         }
     }
 
