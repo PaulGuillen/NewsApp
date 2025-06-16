@@ -101,6 +101,9 @@ fun HomeContent(
         DollarQuoteCard(
             context = context,
             dollarQuoteState = uiState.dollarQuote,
+            onRetry = {
+                onIntent(HomeUiIntent.GetDollarQuote)
+            }
         )
 
         UITCard(

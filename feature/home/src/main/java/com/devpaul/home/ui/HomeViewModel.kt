@@ -42,6 +42,10 @@ class HomeViewModel(
             is HomeUiIntent.GetSections -> {
                 fetchSection()
             }
+
+            is HomeUiIntent.GetDollarQuote -> {
+                fetchDollarQuote()
+            }
         }
     }
 
@@ -62,7 +66,12 @@ class HomeViewModel(
                 when (it) {
                     is DollarQuoteUC.Failure.DollarQuoteError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(dollarQuote = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                            uiState.copy(
+                                dollarQuote = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar el valor del dólar"
+                                )
+                            )
                         }
                     }
                 }
@@ -73,7 +82,7 @@ class HomeViewModel(
         updateUiStateOnMain { it.copy(uitValue = ResultState.Loading) }
         val result = uitValueUC()
         result.handleNetworkDefault()
-            .onSuccessful { it ->
+            .onSuccessful {
                 when (it) {
                     is UITValueUC.Success.UITSuccess -> {
                         updateUiStateOnMain { uiState ->
@@ -86,7 +95,12 @@ class HomeViewModel(
                 when (it) {
                     is UITValueUC.Failure.UITError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(uitValue = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                            uiState.copy(
+                                uitValue = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar el valor de la UIT"
+                                )
+                            )
                         }
                     }
                 }
@@ -110,7 +124,12 @@ class HomeViewModel(
                 when (it) {
                     is SectionUC.Failure.SectionError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(section = ResultState.Error(it.error.apiErrorResponse?.message ?: "Error al cargar las secciones"))
+                            uiState.copy(
+                                section = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar las secciones"
+                                )
+                            )
                         }
                     }
                 }
@@ -134,7 +153,12 @@ class HomeViewModel(
                 when (it) {
                     is GratitudeUC.Failure.GratitudeError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(gratitude = ResultState.Error(it.error.apiErrorResponse?.message ?: "Error al cargar los agradecimientos"))
+                            uiState.copy(
+                                gratitude = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar los agradecimientos"
+                                )
+                            )
                         }
                     }
                 }

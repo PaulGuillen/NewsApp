@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BrickRed
+import com.devpaul.core_platform.theme.BlueDark
+import com.devpaul.core_platform.theme.White
 import com.devpaul.home.domain.entity.SectionDataEntity
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.shared.ui.skeleton.SectionsRowSkeleton
@@ -93,8 +94,8 @@ fun SectionsRow(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BrickRed,
-                                contentColor = Color.White
+                                containerColor = BlueDark,
+                                contentColor = White,
                             ),
                             modifier = Modifier.padding(start = 8.dp)
                         ) {

@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -32,6 +37,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
+import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.shared.components.atoms.DividerView
 import com.devpaul.shared.ui.skeleton.SkeletonDollarQuote
@@ -40,11 +46,13 @@ import com.devpaul.shared.ui.skeleton.SkeletonDollarQuote
 fun DollarQuoteCard(
     context: Context,
     dollarQuoteState: ResultState<DollarQuoteEntity>,
+    onRetry: () -> Unit,
 ) {
-    when(dollarQuoteState) {
+    when (dollarQuoteState) {
         is ResultState.Loading -> {
             SkeletonDollarQuote()
         }
+
         is ResultState.Success -> {
             Card(
                 modifier = Modifier
@@ -58,7 +66,8 @@ fun DollarQuoteCard(
                     )
                 },
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
+                    val intent =
+                        Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
                     context.startActivity(intent)
                 }
             ) {
@@ -169,17 +178,81 @@ fun DollarQuoteCard(
                 }
             }
         }
+
         is ResultState.Error -> {
-            Text(
-                text = dollarQuoteState.message,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 15.sp
-                ),
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(380.dp)
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = White,
+                    contentColor = Black
+                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = dollarQuoteState.message,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
+                            color = Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+
+                        Button(
+                            onClick = onRetry,
+                            elevation = ButtonDefaults.buttonElevation(4.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BlueDark,
+                                contentColor = White
+                            )
+                        ) {
+                            Text(text = "Reintentar", fontSize = 14.sp)
+                        }
+                    }
+                }
+            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DollarQuoteLoadingCardPreview() {
+    DollarQuoteCard(
+        context = LocalContext.current,
+        dollarQuoteState = ResultState.Loading,
+        onRetry = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DollarQuoteSuccessCardPreview() {
+    DollarQuoteCard(
+        context = LocalContext.current,
+        dollarQuoteState = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
+        onRetry = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DollarQuoteErrorCardPreview() {
+    DollarQuoteCard(
+        context = LocalContext.current,
+        dollarQuoteState = ResultState.Error("Error al cargar el valor del dólar"),
+        onRetry = {}
+    )
 }

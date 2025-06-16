@@ -4,4 +4,5 @@ sealed class HomeUiIntent {
     data object GetHomeServices : HomeUiIntent()
     data object GetGratitudeServices : HomeUiIntent()
     data object GetSections : HomeUiIntent()
+    data object GetDollarQuote : HomeUiIntent()
 }

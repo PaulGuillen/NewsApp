@@ -41,7 +41,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BackgroundBlack
 import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BrickRed
+import com.devpaul.core_platform.theme.BlueDark
+import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
@@ -152,8 +153,8 @@ fun AcknowledgmentSection(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BrickRed,
-                                contentColor = Color.White
+                                containerColor = BlueDark,
+                                contentColor = White
                             ),
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
