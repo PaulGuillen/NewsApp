@@ -1,12 +1,7 @@
 package com.devpaul.home.ui
 
-import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import com.devpaul.home.domain.entity.DollarQuoteEntity
-import com.devpaul.home.domain.entity.GratitudeEntity
-import com.devpaul.home.domain.entity.SectionEntity
-import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.domain.usecase.DollarQuoteUC
 import com.devpaul.home.domain.usecase.GratitudeUC
 import com.devpaul.home.domain.usecase.SectionUC
@@ -134,7 +129,7 @@ class HomeViewModel(
                 when (it) {
                     is GratitudeUC.Failure.GratitudeError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(gratitude = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                            uiState.copy(gratitude = ResultState.Error(it.error.apiErrorResponse?.message ?: "Error al cargar los agradecimientos"))
                         }
                     }
                 }

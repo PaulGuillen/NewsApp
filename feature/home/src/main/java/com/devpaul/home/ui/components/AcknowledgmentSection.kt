@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +41,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BackgroundBlack
 import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.White
+import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
@@ -114,55 +118,11 @@ fun AcknowledgmentSection(
         }
 
         is ResultState.Error -> {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 10.dp)
-            ) {
-                repeat(3) {
-                    Card(
-                        modifier = Modifier
-                            .width(320.dp)
-                            .padding(8.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = White,
-                            contentColor = Black
-                        )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(BackgroundBlack.copy(alpha = 0.25f))
-                            )
-                            Text(
-                                text = gratitudeState.message,
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = Black,
-                                fontSize = 15.sp,
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        else -> {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 10.dp)
+                    .height(220.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Card(
                     modifier = Modifier
@@ -170,40 +130,34 @@ fun AcknowledgmentSection(
                         .padding(8.dp),
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = White,
-                        contentColor = Black
-                    )
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(BackgroundBlack.copy(alpha = 0.25f))
+                        Text(
+                            text = gratitudeState.message,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Black,
+                            fontSize = 15.sp,
+                            textAlign = TextAlign.Center
                         )
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        ) {
-                            Text(
-                                text = "Error al cargar los agradecimientos",
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = Black,
-                                fontSize = 15.sp,
-                                modifier = Modifier
-                                    .padding(8.dp),
-                                textAlign = TextAlign.Center
-                            )
 
-                            Button(
-                                onClick = onRetry,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            ) {
-                                Text("Reintentar")
-                            }
+                        Button(
+                            onClick = onRetry,
+                            shape = RectangleShape,
+                            elevation = ButtonDefaults.buttonElevation(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BrickRed,
+                                contentColor = Color.White
+                            ),
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text("Reintentar")
                         }
                     }
                 }
