@@ -38,6 +38,10 @@ class HomeViewModel(
             is HomeUiIntent.GetGratitudeServices -> {
                 fetchGratitude()
             }
+
+            is HomeUiIntent.GetSections -> {
+                fetchSection()
+            }
         }
     }
 
@@ -90,6 +94,7 @@ class HomeViewModel(
     }
 
     private suspend fun fetchSection() {
+        updateUiStateOnMain { it.copy(section = ResultState.Loading) }
         val result = sectionUC()
         result.handleNetworkDefault()
             .onSuccessful {
@@ -105,7 +110,7 @@ class HomeViewModel(
                 when (it) {
                     is SectionUC.Failure.SectionError -> {
                         updateUiStateOnMain { uiState ->
-                            uiState.copy(section = ResultState.Error(it.error.apiErrorResponse?.message.toString()))
+                            uiState.copy(section = ResultState.Error(it.error.apiErrorResponse?.message ?: "Error al cargar las secciones"))
                         }
                     }
                 }

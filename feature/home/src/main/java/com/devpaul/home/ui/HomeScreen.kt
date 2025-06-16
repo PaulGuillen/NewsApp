@@ -92,6 +92,9 @@ fun HomeContent(
         SectionsRow(
             context = context,
             sectionState = uiState.section,
+            onRetry = {
+                onIntent(HomeUiIntent.GetSections)
+            }
         )
 
         SectionHeader(stringResource(R.string.section_daily_info_header))
