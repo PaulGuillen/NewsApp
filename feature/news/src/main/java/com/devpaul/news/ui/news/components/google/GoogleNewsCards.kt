@@ -19,16 +19,24 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
+import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.shared.ui.components.atoms.skeleton.GoogleNewsSkeleton
@@ -37,16 +45,15 @@ import com.devpaul.shared.ui.components.atoms.skeleton.GoogleNewsSkeleton
 fun GoogleNewsCards(
     navController: NavController,
     context: Context,
+    googleState: ResultState<GoogleEntity>,
     selectedCountry: CountryItemEntity,
-    google: GoogleEntity?,
-    googleError: String? = null,
-    googleLoading: Boolean = false
 ) {
+    when (googleState) {
+        is ResultState.Loading -> {
+            GoogleNewsSkeleton()
+        }
 
-    if (googleLoading) {
-        GoogleNewsSkeleton()
-    } else {
-        if (google != null && google.data.items.isNotEmpty()) {
+        is ResultState.Success -> {
             Column(
                 modifier = Modifier
                     .padding(8.dp)
@@ -59,7 +66,7 @@ fun GoogleNewsCards(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = selectedCountry.title + " " + google.message,
+                        text = selectedCountry.title + " " + googleState.response.message,
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
@@ -74,7 +81,7 @@ fun GoogleNewsCards(
                             navController.navigate(
                                 Screen.NewsDetail.createRoute(
                                     newsType = "googleNews",
-                                    country =  selectedCountry,
+                                    country = selectedCountry,
                                 )
                             )
                         }
@@ -84,12 +91,12 @@ fun GoogleNewsCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(google.data.items) { newsItem ->
+                    items(googleState.response.data.items) { newsItem ->
                         GoogleNewsCard(context = context, googleItem = newsItem)
                     }
                 }
                 Text(
-                    text = "Cantidad: ${google.data.totalItems}",
+                    text = "Cantidad: ${googleState.response.data.totalItems}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -97,7 +104,9 @@ fun GoogleNewsCards(
                         .padding(top = 8.dp, end = 8.dp),
                 )
             }
-        } else {
+        }
+
+        is ResultState.Error -> {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,7 +131,7 @@ fun GoogleNewsCards(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = googleError ?: "No hay noticias disponibles",
+                            text = googleState.message,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Black,
                         )
@@ -130,5 +139,47 @@ fun GoogleNewsCards(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GoogleNewsCardsPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GoogleNewsCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            googleState = ResultState.Success(NewsMock().googleMock),
+            selectedCountry = it
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GoogleNewsCardsLoadingPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GoogleNewsCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            googleState = ResultState.Loading,
+            selectedCountry = it,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GoogleNewsCardsErrorPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GoogleNewsCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            googleState = ResultState.Error("Error loading news"),
+            selectedCountry = it,
+        )
     }
 }

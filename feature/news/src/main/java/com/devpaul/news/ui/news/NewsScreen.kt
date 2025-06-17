@@ -16,8 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,10 +30,10 @@ import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
 import com.devpaul.news.ui.news.components.google.GoogleNewsCards
 import com.devpaul.news.ui.news.components.reddit.RedditCards
 import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.atoms.DividerView
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,50 +41,10 @@ fun NewsScreen(navController: NavHostController) {
 
     val viewModel: NewsViewModel = koinViewModel()
     val context = LocalContext.current
-    val uiModel = remember { mutableStateOf(NewsUiModel()) }
 
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navController,
-        onUiEvent = { event, _ ->
-            when (event) {
-                is NewsUiEvent.CountrySuccess -> {
-                    uiModel.value = uiModel.value.copy(country = event.response)
-                }
-
-                is NewsUiEvent.CountryError -> {
-                    uiModel.value =
-                        uiModel.value.copy(countryError = event.error.apiErrorResponse?.message)
-                }
-
-                is NewsUiEvent.GoogleSuccess -> {
-                    uiModel.value = uiModel.value.copy(google = event.response)
-                }
-
-                is NewsUiEvent.GoogleError -> {
-                    uiModel.value =
-                        uiModel.value.copy(googleError = event.error.apiErrorResponse?.message)
-                }
-
-                is NewsUiEvent.DeltaProjectSuccess -> {
-                    uiModel.value = uiModel.value.copy(deltaProject = event.response)
-                }
-
-                is NewsUiEvent.DeltaProjectError -> {
-                    uiModel.value =
-                        uiModel.value.copy(deltaProjectError = event.error.apiErrorResponse?.message)
-                }
-
-                is NewsUiEvent.RedditSuccess -> {
-                    uiModel.value = uiModel.value.copy(reddit = event.response)
-                }
-
-                is NewsUiEvent.RedditError -> {
-                    uiModel.value =
-                        uiModel.value.copy(redditError = event.error.apiErrorResponse?.message)
-                }
-            }
-        },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         },
@@ -98,7 +56,7 @@ fun NewsScreen(navController: NavHostController) {
             }
         },
 
-    ) { _, uiState, onIntent, _, _ ->
+        ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
                 TopBar(
@@ -118,7 +76,6 @@ fun NewsScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
-                uiModel = uiModel.value,
                 onCountrySelected = { countryItem ->
                     onIntent(NewsUiIntent.SelectCountry(countryItem))
                 }
@@ -135,7 +92,6 @@ fun NewsContent(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
-    uiModel: NewsUiModel,
     onCountrySelected: (CountryItemEntity) -> Unit
 ) {
     Column(
@@ -146,9 +102,7 @@ fun NewsContent(
         Spacer(modifier = Modifier.padding(top = 16.dp))
 
         CountryCards(
-            country = uiModel.country,
-            countryError = uiModel.countryError,
-            countryLoading = uiState.isCountryLoading,
+            countryState = uiState.country,
             selectedCountry = uiState.selectedCountry,
             onCountrySelected = { countryItem ->
                 onCountrySelected(countryItem)
@@ -180,28 +134,22 @@ fun NewsContent(
             GoogleNewsCards(
                 navController = navController,
                 context = context,
+                googleState = uiState.google,
                 selectedCountry = uiState.selectedCountry,
-                google = uiModel.google,
-                googleError = uiModel.googleError,
-                googleLoading = uiState.isGoogleLoading,
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             RedditCards(
                 navController = navController,
                 context = context,
+                redditState = uiState.reddit,
                 selectedCountry = uiState.selectedCountry,
-                reddit = uiModel.reddit,
-                redditError = uiModel.redditError,
-                redditLoading = uiState.isRedditLoading,
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             GDELTCards(
                 navController = navController,
                 context = context,
+                deltaProjectState = uiState.deltaProject,
                 selectedCountry = uiState.selectedCountry,
-                deltaProject = uiModel.deltaProject,
-                deltaProjectError = uiModel.deltaProjectError,
-                deltaProjectLoading = uiState.isDeltaProjectLoading,
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
         }

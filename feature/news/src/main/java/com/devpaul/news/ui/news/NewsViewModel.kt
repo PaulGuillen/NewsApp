@@ -1,5 +1,6 @@
 package com.devpaul.news.ui.news
 
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.usecase.CountryUC
@@ -39,30 +40,36 @@ class NewsViewModel(
     }
 
     private suspend fun fetchCountry() {
-        updateUiStateOnMain { it.copy(isCountryLoading = true) }
+        updateUiStateOnMain { it.copy(country = ResultState.Loading) }
         val result = countryUC()
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
                     is CountryUC.Success.CountrySuccess -> {
-                        NewsUiEvent.CountrySuccess(it.country).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(country = ResultState.Success(it.country))
+                        }
                     }
                 }
             }
             .onFailure<CountryUC.Failure> {
                 when (it) {
                     is CountryUC.Failure.CountryError -> {
-                        NewsUiEvent.CountryError(it.error).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                country = ResultState.Error(
+                                    it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar los países"
+                                )
+                            )
+                        }
                     }
                 }
-            }
-            .also {
-                updateUiStateOnMain { it.copy(isCountryLoading = false) }
             }
     }
 
     private suspend fun fetchGoogleNews(country: CountryItemEntity) {
-        updateUiStateOnMain { it.copy(isGoogleLoading = true) }
+        updateUiStateOnMain { it.copy(google = ResultState.Loading) }
         val result = googleUC(
             GoogleUC.Params(
                 q = country.category,
@@ -75,24 +82,30 @@ class NewsViewModel(
             .onSuccessful {
                 when (it) {
                     is GoogleUC.Success.GoogleSuccess -> {
-                        NewsUiEvent.GoogleSuccess(it.google).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(google = ResultState.Success(it.google))
+                        }
                     }
                 }
             }
             .onFailure<GoogleUC.Failure> {
                 when (it) {
                     is GoogleUC.Failure.GoogleError -> {
-                        NewsUiEvent.GoogleError(it.error).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                google = ResultState.Error(
+                                    it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar las noticias de Google"
+                                )
+                            )
+                        }
                     }
                 }
-            }
-            .also {
-                updateUiStateOnMain { it.copy(isGoogleLoading = false) }
             }
     }
 
     private suspend fun fetchDeltaNews(country: CountryItemEntity) {
-        updateUiStateOnMain { it.copy(isDeltaProjectLoading = true) }
+        updateUiStateOnMain { it.copy(deltaProject = ResultState.Loading) }
         val result = deltaProjectUC(
             DeltaProjectUC.Params(
                 q = country.category,
@@ -106,24 +119,30 @@ class NewsViewModel(
             .onSuccessful {
                 when (it) {
                     is DeltaProjectUC.Success.DeltaProjectSuccess -> {
-                        NewsUiEvent.DeltaProjectSuccess(it.deltaProject).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(deltaProject = ResultState.Success(it.deltaProject))
+                        }
                     }
                 }
             }
             .onFailure<DeltaProjectUC.Failure> {
                 when (it) {
                     is DeltaProjectUC.Failure.DeltaProjectError -> {
-                        NewsUiEvent.DeltaProjectError(it.error).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                deltaProject = ResultState.Error(
+                                    it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar las noticias de Delta Project"
+                                )
+                            )
+                        }
                     }
                 }
-            }
-            .also {
-                updateUiStateOnMain { it.copy(isDeltaProjectLoading = false) }
             }
     }
 
     private suspend fun fetchRedditNews(country: CountryItemEntity) {
-        updateUiStateOnMain { it.copy(isRedditLoading = true) }
+        updateUiStateOnMain { it.copy(reddit = ResultState.Loading) }
         val result = redditUC(
             RedditUC.Params(
                 country = country.category,
@@ -135,19 +154,25 @@ class NewsViewModel(
             .onSuccessful {
                 when (it) {
                     is RedditUC.Success.RedditSuccess -> {
-                        NewsUiEvent.RedditSuccess(it.reddit).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(reddit = ResultState.Success(it.reddit))
+                        }
                     }
                 }
             }
             .onFailure<RedditUC.Failure> {
                 when (it) {
                     is RedditUC.Failure.RedditError -> {
-                        NewsUiEvent.RedditError(it.error).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                reddit = ResultState.Error(
+                                    it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar las noticias de Reddit"
+                                )
+                            )
+                        }
                     }
                 }
-            }
-            .also {
-                updateUiStateOnMain { it.copy(isRedditLoading = false) }
             }
     }
 }

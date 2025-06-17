@@ -19,16 +19,24 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
+import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
@@ -37,16 +45,16 @@ import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
 fun GDELTCards(
     navController: NavController,
     context: Context,
+    deltaProjectState: ResultState<DeltaProjectEntity>,
     selectedCountry: CountryItemEntity,
-    deltaProject: DeltaProjectEntity?,
-    deltaProjectError: String? = null,
-    deltaProjectLoading: Boolean = false,
 ) {
 
-    if (deltaProjectLoading) {
-        RedditSkeleton()
-    } else {
-        if (deltaProject != null && deltaProject.data.items.isNotEmpty()) {
+    when (deltaProjectState) {
+        is ResultState.Loading -> {
+            RedditSkeleton()
+        }
+
+        is ResultState.Success -> {
             Column(
                 modifier = Modifier.padding(8.dp)
             ) {
@@ -73,7 +81,7 @@ fun GDELTCards(
                             navController.navigate(
                                 Screen.NewsDetail.createRoute(
                                     newsType = "deltaProjectNews",
-                                    country =  selectedCountry,
+                                    country = selectedCountry,
                                 )
                             )
                         }
@@ -83,13 +91,13 @@ fun GDELTCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(deltaProject.data.items) { articleItem ->
+                    items(deltaProjectState.response.data.items) { articleItem ->
                         GDELTCard(context = context, deltaProject = articleItem)
                     }
                 }
 
                 Text(
-                    text = "Cantidad: ${deltaProject.data.totalItems}",
+                    text = "Cantidad: ${deltaProjectState.response.data.totalItems}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -97,7 +105,9 @@ fun GDELTCards(
                         .padding(top = 8.dp, end = 8.dp),
                 )
             }
-        } else {
+        }
+
+        is ResultState.Error -> {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,7 +132,7 @@ fun GDELTCards(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = deltaProjectError ?: "No hay noticias disponibles",
+                            text = deltaProjectState.message,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Black,
                         )
@@ -130,5 +140,47 @@ fun GDELTCards(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GDELTCardsLoadingPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GDELTCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            deltaProjectState = ResultState.Loading,
+            selectedCountry = it
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GDELTCardsSuccessPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GDELTCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            deltaProjectState = ResultState.Success(NewsMock().deltaMock),
+            selectedCountry = it
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GDELTCardsErrorPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        GDELTCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            deltaProjectState = ResultState.Error("Error loading GDELT news"),
+            selectedCountry = it
+        )
     }
 }

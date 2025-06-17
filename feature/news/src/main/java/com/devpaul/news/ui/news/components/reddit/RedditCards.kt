@@ -19,16 +19,24 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
+import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
@@ -37,15 +45,16 @@ import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
 fun RedditCards(
     navController: NavController,
     context: Context,
+    redditState: ResultState<RedditEntity>,
     selectedCountry: CountryItemEntity,
-    reddit: RedditEntity?,
-    redditError: String? = null,
-    redditLoading: Boolean = false,
 ) {
-    if (redditLoading) {
-        RedditSkeleton()
-    } else {
-        if (reddit != null && reddit.data.items.isNotEmpty()) {
+
+    when (redditState) {
+        is ResultState.Loading -> {
+            RedditSkeleton()
+        }
+
+        is ResultState.Success -> {
             Column(
                 modifier = Modifier.padding(8.dp)
             ) {
@@ -72,7 +81,7 @@ fun RedditCards(
                             navController.navigate(
                                 Screen.NewsDetail.createRoute(
                                     newsType = "redditNews",
-                                    country =  selectedCountry,
+                                    country = selectedCountry,
                                 )
                             )
                         }
@@ -82,7 +91,7 @@ fun RedditCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(reddit.data.items) { redditItems ->
+                    items(redditState.response.data.items) { redditItems ->
                         RedditCard(
                             context = context,
                             redditPost = redditItems
@@ -91,7 +100,7 @@ fun RedditCards(
                 }
 
                 Text(
-                    text = "Cantidad: ${reddit.data.totalItems}",
+                    text = "Cantidad: ${redditState.response.data.totalItems}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -99,7 +108,9 @@ fun RedditCards(
                         .padding(top = 8.dp, end = 8.dp),
                 )
             }
-        } else {
+        }
+
+        is ResultState.Error -> {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,7 +135,7 @@ fun RedditCards(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = redditError ?: "No hay noticias disponibles",
+                            text = redditState.message,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Black,
                         )
@@ -132,5 +143,47 @@ fun RedditCards(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RedditCardsLoadingPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        RedditCards(
+        navController = rememberNavController(),
+        context = LocalContext.current,
+        redditState = ResultState.Loading,
+        selectedCountry = it
+    )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RedditCardsSuccessPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        RedditCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            redditState = ResultState.Success(NewsMock().redditMock),
+            selectedCountry = it
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RedditCardsErrorPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    selectedCountry?.let {
+        RedditCards(
+            navController = rememberNavController(),
+            context = LocalContext.current,
+            redditState = ResultState.Error("Error loading Reddit posts"),
+            selectedCountry = it
+        )
     }
 }
