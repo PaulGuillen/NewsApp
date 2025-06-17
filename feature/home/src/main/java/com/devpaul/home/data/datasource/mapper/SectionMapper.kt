@@ -17,6 +17,9 @@ fun SectionItem.toDomain(): SectionDataEntity {
     return SectionDataEntity(
         id = id,
         title = title,
-        type = type
+        type = type,
+        imageUrl = imageUrl,
+        description = description,
+        destination = destination
     )
 }

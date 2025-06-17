@@ -31,7 +31,7 @@ import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
-import com.devpaul.shared.ui.skeleton.GoogleNewsSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.GoogleNewsSkeleton
 
 @Composable
 fun GoogleNewsCards(

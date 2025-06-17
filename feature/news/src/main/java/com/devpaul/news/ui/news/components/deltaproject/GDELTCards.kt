@@ -31,7 +31,7 @@ import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.DeltaProjectEntity
-import com.devpaul.shared.ui.skeleton.RedditSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
 
 @Composable
 fun GDELTCards(

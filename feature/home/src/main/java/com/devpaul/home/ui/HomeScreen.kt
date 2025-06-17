@@ -25,11 +25,11 @@ import com.devpaul.home.ui.components.AcknowledgmentSection
 import com.devpaul.home.ui.components.DollarQuoteCard
 import com.devpaul.home.ui.components.SectionsRow
 import com.devpaul.home.ui.components.UITCard
-import com.devpaul.shared.screen.BaseScreenWithState
-import com.devpaul.shared.ui.extension.BottomNavigationBar
-import com.devpaul.shared.ui.extension.SectionHeader
-import com.devpaul.shared.ui.extension.TopBar
-import com.devpaul.shared.ui.extension.handleDefaultErrors
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
+import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.atoms.SectionHeader
+import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.domain.handleDefaultErrors
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,6 +61,7 @@ fun HomeScreen(navController: NavHostController) {
                 innerPadding = innerPadding,
                 uiState = uiState,
                 onIntent = onIntent,
+                navController = navController,
             )
         }
     }
@@ -72,7 +73,8 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     innerPadding: PaddingValues,
-    onIntent: (HomeUiIntent) -> Unit
+    onIntent: (HomeUiIntent) -> Unit,
+    navController: NavHostController,
 ) {
     Column(
         modifier = modifier
@@ -90,11 +92,11 @@ fun HomeContent(
 
         SectionHeader(stringResource(R.string.section_available_sections_header))
         SectionsRow(
-            context = context,
             sectionState = uiState.section,
             onRetry = {
                 onIntent(HomeUiIntent.GetSections)
-            }
+            },
+            navController = navController,
         )
 
         SectionHeader(stringResource(R.string.section_daily_info_header))
@@ -139,7 +141,8 @@ fun HomeScreenPreview() {
             ),
             innerPadding = innerPadding,
             context = LocalContext.current,
-            onIntent =  { _ -> }
+            onIntent = { _ -> },
+            navController = navController,
         )
     }
 }

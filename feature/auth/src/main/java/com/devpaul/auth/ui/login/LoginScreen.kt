@@ -8,9 +8,9 @@ import androidx.navigation.NavHostController
 import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
-import com.devpaul.shared.ui.extension.handleDefaultErrors
-import com.devpaul.shared.screen.BaseScreenWithState
-import com.devpaul.shared.ui.extension.ScreenLoading
+import com.devpaul.shared.domain.handleDefaultErrors
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
+import com.devpaul.shared.ui.components.atoms.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

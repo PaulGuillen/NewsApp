@@ -34,9 +34,9 @@ import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
-import com.devpaul.shared.screen.BaseScreenWithState
-import com.devpaul.shared.ui.extension.TopBar
-import com.devpaul.shared.ui.skeleton.NewsDetailSkeleton
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
+import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.atoms.skeleton.NewsDetailSkeleton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

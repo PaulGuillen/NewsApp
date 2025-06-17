@@ -69,8 +69,18 @@ data class SectionMock(
         status = 200,
         message = "Success",
         data = listOf(
-            SectionDataEntity(id = "1", title = "Noticias", type = "news"),
-            SectionDataEntity(id = "2", title = "Distritos", type = "districts")
-        )
+            SectionDataEntity(
+                id = "1", title = "Noticias", type = "news",
+                imageUrl = "https://via.placeholder.com/150",
+                description = "Latest news updates",
+                destination = "https://news.example.com"
+            ),
+            SectionDataEntity(
+                id = "2", title = "Inicio", type = "home",
+                imageUrl = "https://via.placeholder.com/150",
+                description = "Latest news updates",
+                destination = "https://news.example.com"
+            ),
+        ),
     )
 )

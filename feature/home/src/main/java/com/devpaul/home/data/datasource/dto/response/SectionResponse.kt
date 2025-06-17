@@ -11,5 +11,8 @@ data class SectionResponse(
 data class SectionItem(
     @SerializedName("id") val id: String,
     @SerializedName("title") val title: String,
-    @SerializedName("type") val type: String
+    @SerializedName("type") val type: String,
+    @SerializedName("imageUrl") val imageUrl: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("destination") val destination: String,
 )

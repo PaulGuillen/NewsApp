@@ -7,12 +7,15 @@ import kotlinx.parcelize.Parcelize
 data class SectionEntity(
     val status: Int,
     val message: String,
-    val data: List<SectionDataEntity>
+    val data: List<SectionDataEntity>,
 ) : Parcelable
 
 @Parcelize
 data class SectionDataEntity(
     val id: String,
     val title: String,
-    val type: String
+    val type: String,
+    val imageUrl: String,
+    val description: String,
+    val destination: String,
 ) : Parcelable

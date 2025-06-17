@@ -35,8 +35,8 @@ import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.navigation.core.jetpack.AppNavigator
-import com.devpaul.shared.components.atoms.RegisterFormCallbacks
-import com.devpaul.shared.components.atoms.RegisterFormState
+import com.devpaul.shared.ui.components.atoms.RegisterFormCallbacks
+import com.devpaul.shared.ui.components.atoms.RegisterFormState
 
 @Composable
 fun RegisterForm(

@@ -31,11 +31,11 @@ import com.devpaul.news.ui.news.components.country.CountryCards
 import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
 import com.devpaul.news.ui.news.components.google.GoogleNewsCards
 import com.devpaul.news.ui.news.components.reddit.RedditCards
-import com.devpaul.shared.ui.extension.handleDefaultErrors
-import com.devpaul.shared.screen.BaseScreenWithState
-import com.devpaul.shared.components.atoms.DividerView
-import com.devpaul.shared.ui.extension.BottomNavigationBar
-import com.devpaul.shared.ui.extension.TopBar
+import com.devpaul.shared.domain.handleDefaultErrors
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
+import com.devpaul.shared.ui.components.atoms.DividerView
+import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

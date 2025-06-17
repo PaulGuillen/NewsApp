@@ -1,6 +1,5 @@
 package com.devpaul.home.ui.components
 
-import android.content.Context
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,19 +25,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
-import com.devpaul.home.domain.entity.SectionDataEntity
+import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.domain.entity.SectionEntity
-import com.devpaul.shared.ui.skeleton.SectionsRowSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.SectionsRowSkeleton
 
 @Composable
 fun SectionsRow(
-    context: Context,
     sectionState: ResultState<SectionEntity>,
     onRetry: () -> Unit,
+    navController: NavHostController,
 ) {
     when (sectionState) {
         is ResultState.Loading -> {
@@ -52,7 +52,7 @@ fun SectionsRow(
                     .padding(horizontal = 10.dp)
             ) {
                 sectionState.response.data.forEach { sectionItem ->
-                    ItemSection(context = context, sectionItem = sectionItem)
+                    ItemSection(sectionItem = sectionItem, navController = navController)
                 }
             }
         }
@@ -114,19 +114,9 @@ fun SectionsRow(
 @Composable
 fun SectionsRowSuccessPreview() {
     SectionsRow(
-        context = LocalContext.current,
-        sectionState = ResultState.Success(
-            SectionEntity(
-                status = 200,
-                message = "Success",
-                data = SectionDataEntity(
-                    id = "1",
-                    title = "Section Title",
-                    type = "type"
-                ).let { listOf(it, it, it) }
-            ),
-        ),
-        onRetry = {}
+        sectionState = ResultState.Success(SectionMock().sectionMock),
+        onRetry = {},
+        navController = NavHostController(LocalContext.current)
     )
 }
 
@@ -134,9 +124,9 @@ fun SectionsRowSuccessPreview() {
 @Composable
 fun SectionsRowLoadingPreview() {
     SectionsRow(
-        context = LocalContext.current,
         sectionState = ResultState.Loading,
-        onRetry = {}
+        onRetry = {},
+        navController = NavHostController(LocalContext.current)
     )
 }
 
@@ -144,8 +134,8 @@ fun SectionsRowLoadingPreview() {
 @Composable
 fun SectionsRowErrorPreview() {
     SectionsRow(
-        context = LocalContext.current,
         sectionState = ResultState.Error(message = "Error loading sections"),
-        onRetry = {}
+        onRetry = {},
+        navController = NavHostController(LocalContext.current)
     )
 }

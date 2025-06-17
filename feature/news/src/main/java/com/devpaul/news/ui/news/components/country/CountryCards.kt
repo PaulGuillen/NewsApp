@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.devpaul.news.domain.entity.CountryEntity
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.shared.ui.skeleton.CountryCardSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.CountryCardSkeleton
 
 @Composable
 fun CountryCards(

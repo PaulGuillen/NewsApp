@@ -45,7 +45,7 @@ import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.domain.entity.GratitudeEntity
-import com.devpaul.shared.ui.skeleton.AcknowledgmentSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.AcknowledgmentSkeleton
 
 @Composable
 fun AcknowledgmentSection(
