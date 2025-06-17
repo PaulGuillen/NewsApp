@@ -14,6 +14,7 @@ internal interface NewsApi {
     suspend fun country(): Response<CountryResponse>
 
     @GET("http://192.168.100.137:3000/news/google")
+    //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun google(
         @Query("q") query: String,
         @Query("hl") mode: String,
@@ -22,6 +23,7 @@ internal interface NewsApi {
     ): Response<GoogleResponse>
 
     @GET("http://192.168.100.137:3000/news/gdelt")
+    //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun deltaProject(
         @Query("q") query: String,
         @Query("mode") mode: String,
@@ -31,6 +33,7 @@ internal interface NewsApi {
     ): Response<GDELTResponse>
 
     @GET("http://192.168.100.137:3000/news/reddit")
+    //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun reddit(
         @Query("country") country: String,
         @Query("page") page: Int,

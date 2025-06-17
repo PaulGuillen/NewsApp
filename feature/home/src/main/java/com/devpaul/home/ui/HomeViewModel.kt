@@ -36,19 +36,27 @@ class HomeViewModel(
             }
 
             is HomeUiIntent.GetGratitudeServices -> {
-                fetchGratitude()
+                launchIO {
+                    fetchGratitude()
+                }
             }
 
             is HomeUiIntent.GetSections -> {
-                fetchSection()
+                launchIO {
+                    fetchSection()
+                }
             }
 
             is HomeUiIntent.GetDollarQuote -> {
-                fetchDollarQuote()
+               launchIO {
+                    fetchDollarQuote()
+               }
             }
 
             is HomeUiIntent.GetUITValue -> {
-                fetchUit()
+               launchIO {
+                    fetchUit()
+               }
             }
         }
     }

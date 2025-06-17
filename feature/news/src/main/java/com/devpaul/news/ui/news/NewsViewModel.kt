@@ -36,6 +36,24 @@ class NewsViewModel(
                     { fetchRedditNews(intent.country) }
                 )
             }
+
+            is NewsUiIntent.GetDeltaProject ->{
+                launchIO {
+                    fetchDeltaNews(intent.country)
+                }
+            }
+
+            is NewsUiIntent.GetReddit -> {
+                launchIO {
+                    fetchRedditNews(intent.country)
+                }
+            }
+
+            is NewsUiIntent.GetGoogleNews -> {
+                launchIO {
+                    fetchGoogleNews(intent.country)
+                }
+            }
         }
     }
 

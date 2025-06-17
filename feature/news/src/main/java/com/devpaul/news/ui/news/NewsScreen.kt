@@ -76,6 +76,7 @@ fun NewsScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
                 uiState = uiState,
+                onIntent = onIntent,
                 onCountrySelected = { countryItem ->
                     onIntent(NewsUiIntent.SelectCountry(countryItem))
                 }
@@ -92,6 +93,7 @@ fun NewsContent(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     onCountrySelected: (CountryItemEntity) -> Unit
 ) {
     Column(
@@ -136,6 +138,9 @@ fun NewsContent(
                 context = context,
                 googleState = uiState.google,
                 selectedCountry = uiState.selectedCountry,
+                onRetry = {
+                    onIntent(NewsUiIntent.GetGoogleNews(uiState.selectedCountry))
+                }
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             RedditCards(
@@ -143,6 +148,9 @@ fun NewsContent(
                 context = context,
                 redditState = uiState.reddit,
                 selectedCountry = uiState.selectedCountry,
+                onRetry = {
+                    onIntent(NewsUiIntent.GetReddit(uiState.selectedCountry))
+                }
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
             GDELTCards(
@@ -150,6 +158,9 @@ fun NewsContent(
                 context = context,
                 deltaProjectState = uiState.deltaProject,
                 selectedCountry = uiState.selectedCountry,
+                onRetry = {
+                    onIntent(NewsUiIntent.GetDeltaProject(uiState.selectedCountry))
+                }
             )
             Spacer(modifier = Modifier.padding(top = 16.dp))
         }
