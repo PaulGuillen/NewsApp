@@ -9,6 +9,8 @@ import com.devpaul.news.domain.usecase.GoogleUC
 import com.devpaul.news.domain.usecase.RedditUC
 import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
 
 @KoinViewModel
 class NewsDetailViewModel(
@@ -25,7 +27,9 @@ class NewsDetailViewModel(
     private var currentPage = 1
     private var totalPages = 1
     private var currentNewsType: String? = null
-
+    private val _selectedUrl = mutableStateOf<String?>(null)
+    val selectedUrl: State<String?> get() = _selectedUrl
+    
     fun setNewsData(
         newsType: String?,
         country: String?
@@ -229,5 +233,9 @@ class NewsDetailViewModel(
                     it.copy(reddit = ResultState.Error(message = "Error al cargar las noticias de Reddit"))
                 }
             }
+    }
+
+    fun selectUrl(url: String) {
+        _selectedUrl.value = url
     }
 }

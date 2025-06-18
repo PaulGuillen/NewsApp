@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -37,6 +37,7 @@ fun NewsDetailsScreen(
 ) {
     val viewModel: NewsDetailViewModel = koinViewModel()
     val context = LocalContext.current
+    val selectedUrl by viewModel.selectedUrl
 
     LaunchedEffect(newsType, country) {
         viewModel.setNewsData(newsType, country)
@@ -47,7 +48,7 @@ fun NewsDetailsScreen(
         navController = navController,
         onBackPressed = { onBackWithResult -> onBackWithResult("shouldReload", true) }
     ) { _, uiState, _, _, _ ->
-        Scaffold(
+        androidx.compose.material3.Scaffold(
             topBar = {
                 TopBar(title = stringResource(R.string.app_name))
             }
@@ -59,7 +60,9 @@ fun NewsDetailsScreen(
                 newsType = newsType,
                 onLoadMore = {
                     viewModel.loadNextPage(newsType ?: "")
-                }
+                },
+                selectedUrl = selectedUrl,
+                onSelectUrl = { viewModel.selectUrl(it) }
             )
         }
     }
@@ -71,7 +74,9 @@ fun NewsDetailContent(
     innerPadding: PaddingValues,
     uiState: NewsDetailUiState,
     newsType: String?,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
 ) {
     val viewModel: NewsDetailViewModel = koinViewModel()
     val canLoadMore = viewModel.canLoadMore(newsType ?: "")
@@ -84,6 +89,8 @@ fun NewsDetailContent(
                 modifier = Modifier.padding(innerPadding),
                 onLoadMore = onLoadMore,
                 canLoadMore = canLoadMore,
+                selectedUrl = selectedUrl,
+                onSelectUrl = onSelectUrl
             )
         }
 
@@ -94,6 +101,8 @@ fun NewsDetailContent(
                 modifier = Modifier.padding(innerPadding),
                 onLoadMore = onLoadMore,
                 canLoadMore = canLoadMore,
+                selectedUrl = selectedUrl,
+                onSelectUrl = onSelectUrl
             )
         }
 
@@ -104,6 +113,8 @@ fun NewsDetailContent(
                 modifier = Modifier.padding(innerPadding),
                 onLoadMore = onLoadMore,
                 canLoadMore = canLoadMore,
+                selectedUrl = selectedUrl,
+                onSelectUrl = onSelectUrl
             )
         }
     }
@@ -115,14 +126,15 @@ fun GoogleNewsList(
     context: Context,
     modifier: Modifier,
     onLoadMore: () -> Unit,
-    canLoadMore: Boolean
+    canLoadMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
 ) {
     when (googleState) {
         is ResultState.Loading -> NewsDetailSkeleton(modifier)
         is ResultState.Success -> {
             LazyColumn(
-                modifier = modifier
-                    .padding(horizontal = 8.dp)
+                modifier = modifier.padding(horizontal = 8.dp)
             ) {
                 item {
                     NewsCountCard("Cantidad de noticias: ${googleState.response.data.totalItems}")
@@ -135,12 +147,12 @@ fun GoogleNewsList(
                         url = item.link,
                         date = item.pubDate,
                         author = item.source.name,
+                        isSelected = selectedUrl == item.link,
+                        onSelect = { onSelectUrl(item.link) }
                     )
                 }
                 if (canLoadMore) {
-                    item {
-                        OutlinedLoadMoreButton(onClick = onLoadMore)
-                    }
+                    item { OutlinedLoadMoreButton(onClick = onLoadMore) }
                 }
             }
         }
@@ -155,7 +167,9 @@ fun DeltaNewsList(
     context: Context,
     modifier: Modifier,
     onLoadMore: () -> Unit,
-    canLoadMore: Boolean
+    canLoadMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
 ) {
     when (deltaProjectState) {
         is ResultState.Loading -> NewsDetailSkeleton(modifier)
@@ -168,7 +182,16 @@ fun DeltaNewsList(
                     NewsCountCard("Cantidad de noticias: ${deltaProjectState.response.data.totalItems}")
                 }
                 items(deltaProjectState.response.data.items) { item ->
-                    NewsCard(context, item.title, item.domain, item.url, "", "")
+                    NewsCard(
+                        context = context,
+                        title = item.title,
+                        summary = item.domain,
+                        url = item.url,
+                        date = item.seenDate,
+                        author = item.sourceCountry,
+                        isSelected = selectedUrl == item.url,
+                        onSelect = { onSelectUrl(item.url) }
+                    )
                 }
                 if (canLoadMore) {
                     item {
@@ -188,7 +211,9 @@ fun RedditNewsList(
     context: Context,
     modifier: Modifier,
     onLoadMore: () -> Unit,
-    canLoadMore: Boolean
+    canLoadMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
 ) {
     when (redditState) {
         is ResultState.Loading -> NewsDetailSkeleton(modifier)
@@ -208,6 +233,8 @@ fun RedditNewsList(
                         url = post.url,
                         date = post.createdAt,
                         author = post.authorFullname,
+                        isSelected = selectedUrl == post.url,
+                        onSelect = { onSelectUrl(post.url) }
                     )
                 }
                 if (canLoadMore) {
@@ -237,7 +264,9 @@ fun NewsCardPreview() {
         summary = "Resumen de prueba para la tarjeta de noticias.",
         url = "https://example.com",
         date = "01/01/2023",
-        author = "Autor de prueba"
+        author = "Autor de prueba",
+        isSelected = false,
+        onSelect = {}
     )
 }
 
@@ -249,6 +278,8 @@ fun NewsDetailsScreenPreview() {
         context = LocalContext.current,
         modifier = Modifier.fillMaxWidth(),
         onLoadMore = {},
-        canLoadMore = true
+        canLoadMore = true,
+        selectedUrl = null,
+        onSelectUrl = {}
     )
 }

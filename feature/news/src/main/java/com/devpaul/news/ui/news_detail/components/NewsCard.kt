@@ -19,6 +19,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.theme.White
+import androidx.compose.foundation.border
+import com.devpaul.core_platform.theme.GreenDark
 
 @Composable
 fun NewsCard(
@@ -39,14 +45,20 @@ fun NewsCard(
     url: String,
     date: String,
     author: String,
+    isSelected: Boolean,
+    onSelect: () -> Unit
 ) {
+    val borderColor = if (isSelected) GreenDark else Color.Transparent
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 12.dp),
+            .padding(vertical = 8.dp, horizontal = 12.dp)
+            .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.medium),
         colors = CardDefaults.cardColors(containerColor = White),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         onClick = {
+            onSelect()
             context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
     ) {
@@ -114,12 +126,15 @@ fun NewsCard(
 @Preview(showBackground = true)
 @Composable
 fun NewsCardPreview() {
+    var selected by remember { mutableStateOf(false) }
     NewsCard(
         context = LocalContext.current,
         title = "Título de la noticia",
         summary = "Resumen de la noticia. Este es un texto de ejemplo para mostrar cómo se vería el resumen de una noticia en la tarjeta.",
         url = "https://www.example.com",
         date = "01/01/2023",
-        author = "Autor de la noticia"
+        author = "Autor de la noticia",
+        isSelected = selected,
+        onSelect = { selected = !selected }
     )
 }
