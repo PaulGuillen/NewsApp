@@ -1,39 +1,31 @@
 package com.devpaul.news.ui.news_detail
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Taupe
-import com.devpaul.core_platform.theme.White
+import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
+import com.devpaul.news.ui.news_detail.components.NewsCard
+import com.devpaul.news.ui.news_detail.components.NewsCountCard
+import com.devpaul.shared.ui.components.atoms.OutlinedLoadMoreButton
 import com.devpaul.shared.ui.components.atoms.skeleton.NewsDetailSkeleton
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
@@ -103,7 +95,7 @@ fun NewsDetailContent(
                 context = context,
                 modifier = Modifier.padding(innerPadding),
                 onLoadMore = onLoadMore,
-                canLoadMore  = canLoadMore,
+                canLoadMore = canLoadMore,
             )
         }
 
@@ -139,18 +131,18 @@ fun GoogleNewsList(
                     NewsCountCard("Cantidad de noticias: ${googleState.response.data.totalItems}")
                 }
                 items(googleState.response.data.items) { item ->
-                    NewsCard(context, item.title, item.description, item.link)
+                    NewsCard(
+                        context = context,
+                        title = item.title,
+                        summary = item.description,
+                        url = item.link,
+                        date = item.pubDate,
+                        author = item.source.name,
+                    )
                 }
                 if (canLoadMore) {
                     item {
-                        Button(
-                            onClick = onLoadMore,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text("Cargar más")
-                        }
+                        OutlinedLoadMoreButton(onClick = onLoadMore)
                     }
                 }
             }
@@ -180,18 +172,11 @@ fun DeltaNewsList(
                     NewsCountCard("Cantidad de noticias: ${deltaProjectState.response.data.totalItems}")
                 }
                 items(deltaProjectState.response.data.items) { item ->
-                    NewsCard(context, item.title, item.domain, item.url)
+                    NewsCard(context, item.title, item.domain, item.url, "", "")
                 }
                 if (canLoadMore) {
                     item {
-                        Button(
-                            onClick = onLoadMore,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text("Cargar más")
-                        }
+                        OutlinedLoadMoreButton(onClick = onLoadMore)
                     }
                 }
             }
@@ -221,18 +206,18 @@ fun RedditNewsList(
                     NewsCountCard("Cantidad de posts: ${redditState.response.data.totalItems}")
                 }
                 items(redditState.response.data.items) { post ->
-                    NewsCard(context, post.title, post.author, post.url)
+                    NewsCard(
+                        context = context,
+                        title = post.title,
+                        summary = post.selfText,
+                        url = post.url,
+                        date = post.createdAt,
+                        author = post.authorFullname,
+                    )
                 }
                 if (canLoadMore) {
                     item {
-                        Button(
-                            onClick = onLoadMore,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text("Cargar más")
-                        }
+                        OutlinedLoadMoreButton(onClick = onLoadMore)
                     }
                 }
             }
@@ -242,42 +227,33 @@ fun RedditNewsList(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun NewsCountCard(title: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = White)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = title,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
+fun NewsCountCardPreview() {
+    NewsCountCard(title = "Cantidad de noticias: 10")
 }
 
+@Preview(showBackground = true)
 @Composable
-fun NewsCard(context: Context, title: String, summary: String, url: String) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
-        onClick = {
-            context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
-        }
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, style = MaterialTheme.typography.titleLarge)
-        }
-    }
+fun NewsCardPreview() {
+    NewsCard(
+        context = LocalContext.current,
+        title = "Título de prueba",
+        summary = "Resumen de prueba para la tarjeta de noticias.",
+        url = "https://example.com",
+        date = "01/01/2023",
+        author = "Autor de prueba"
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsDetailsScreenPreview() {
+    GoogleNewsList(
+        googleState = ResultState.Success(NewsMock().googleMock),
+        context = LocalContext.current,
+        modifier = Modifier.fillMaxWidth(),
+        onLoadMore = {},
+        canLoadMore = true
+    )
 }
