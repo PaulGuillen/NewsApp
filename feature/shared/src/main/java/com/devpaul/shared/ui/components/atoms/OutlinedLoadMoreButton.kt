@@ -41,7 +41,7 @@ fun OutlinedLoadMoreButton(
         ),
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(1.dp, textColor),
-        elevation = ButtonDefaults.buttonElevation(0.dp)
+        elevation = ButtonDefaults.buttonElevation(4.dp)
     ) {
         if (showIcon) {
             Icon(

@@ -45,6 +45,7 @@ fun NewsCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 12.dp),
         colors = CardDefaults.cardColors(containerColor = White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         onClick = {
             context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         }
@@ -87,7 +88,7 @@ fun NewsCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(100.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(

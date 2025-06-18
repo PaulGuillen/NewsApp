@@ -1,7 +1,6 @@
 package com.devpaul.news.ui.news_detail
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Taupe
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.news.domain.entity.GoogleEntity
@@ -124,7 +122,6 @@ fun GoogleNewsList(
         is ResultState.Success -> {
             LazyColumn(
                 modifier = modifier
-                    .background(Taupe)
                     .padding(horizontal = 8.dp)
             ) {
                 item {
@@ -165,7 +162,6 @@ fun DeltaNewsList(
         is ResultState.Success -> {
             LazyColumn(
                 modifier = modifier
-                    .background(Taupe)
                     .padding(horizontal = 8.dp)
             ) {
                 item {
@@ -199,7 +195,6 @@ fun RedditNewsList(
         is ResultState.Success -> {
             LazyColumn(
                 modifier = modifier
-                    .background(Taupe)
                     .padding(horizontal = 8.dp)
             ) {
                 item {

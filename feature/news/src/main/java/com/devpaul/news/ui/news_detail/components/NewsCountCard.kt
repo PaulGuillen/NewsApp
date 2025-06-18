@@ -21,6 +21,7 @@ fun NewsCountCard(title: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = White)
     ) {
         Box(

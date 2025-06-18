@@ -85,7 +85,8 @@ fun RedditCard(
                     .padding(top = 10.dp, bottom = 10.dp)
             )
             Text(
-                text = limitText(redditPost.authorFullname, 10),
+                //text = limitText(redditPost.createdAt , 10),
+                text = redditPost.createdAt,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.align(Alignment.Start)
             )
