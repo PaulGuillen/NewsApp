@@ -38,12 +38,12 @@ class CoreDataModule {
     }
 
     @Single
-    fun tdpApiRetrofitProvider(
+    fun apiRetrofitProvider(
         httpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL_PERU)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(httpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()

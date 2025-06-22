@@ -10,10 +10,10 @@ import retrofit2.http.Query
 
 internal interface NewsApi {
 
-    @GET("http://192.168.100.137:3000/news/countries")
+    @GET("news/countries")
     suspend fun country(): Response<CountryResponse>
 
-    @GET("http://192.168.100.137:3000/news/google")
+    @GET("news/google")
     //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun google(
         @Query("q") query: String,
@@ -22,7 +22,7 @@ internal interface NewsApi {
         @Query("perPage") perPage: Int,
     ): Response<GoogleResponse>
 
-    @GET("http://192.168.100.137:3000/news/gdelt")
+    @GET("news/gdelt")
     //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun deltaProject(
         @Query("q") query: String,
@@ -32,7 +32,7 @@ internal interface NewsApi {
         @Query("perPage") perPage: Int,
     ): Response<GDELTResponse>
 
-    @GET("http://192.168.100.137:3000/news/reddit")
+    @GET("news/reddit")
     //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
     suspend fun reddit(
         @Query("country") country: String,
