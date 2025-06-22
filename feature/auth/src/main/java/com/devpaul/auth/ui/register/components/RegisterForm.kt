@@ -28,26 +28,29 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.navigation.core.jetpack.AppNavigator
-import com.devpaul.shared.ui.components.atoms.RegisterFormCallbacks
-import com.devpaul.shared.ui.components.atoms.RegisterFormState
+import com.devpaul.auth.ui.register.RegisterFormCallbacks
+import com.devpaul.auth.ui.register.RegisterFormState
 
 @Composable
 fun RegisterForm(
-    appNavigator: AppNavigator,
-    onRegister: (String, String, String, String) -> Unit,
+    navHostController: NavHostController,
+    onRegister: (String, String, String, String, String, String) -> Unit,
     showSnackBar: (String) -> Unit
 ) {
     val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var birthdate by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -55,19 +58,21 @@ fun RegisterForm(
 
     fun validateAndRegister() {
         val validationResult = validateRegistration(
-            context, name, lastName, email, password, confirmPassword
+            context, name, lastName, phone, email, birthdate, password, confirmPassword
         )
         if (validationResult != null) {
             showSnackBar(validationResult)
         } else {
-            onRegister(name, lastName, email, password)
+            onRegister(name, lastName, phone, email, birthdate, password)
         }
     }
 
     val state = RegisterFormState(
         name = name,
         lastName = lastName,
+        phone = phone,
         email = email,
+        birthdate = birthdate,
         password = password,
         confirmPassword = confirmPassword,
         passwordVisible = passwordVisible,
@@ -77,7 +82,9 @@ fun RegisterForm(
     val callbacks = RegisterFormCallbacks(
         onNameChange = { name = it },
         onLastNameChange = { lastName = it },
+        onPhoneChange = { phone = it },
         onEmailChange = { email = it },
+        onBirthdateChange = { birthdate = it },
         onPasswordChange = { password = it },
         onConfirmPasswordChange = { confirmPassword = it },
         onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
@@ -127,11 +134,23 @@ fun RegisterForm(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = { appNavigator.popBack() }) {
+        TextButton(onClick = {
+            navHostController.popBackStack()
+        }) {
             Text(
                 stringResource(id = R.string.register_screen_already_have_account),
                 color = BrickRed
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RegisterFormPreview() {
+    RegisterForm(
+        navHostController = rememberNavController(),
+        onRegister = { _, _, _, _, _, _ -> },
+        showSnackBar = {}
+    )
 }

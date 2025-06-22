@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms
+package com.devpaul.shared.ui.components.atoms.base
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke

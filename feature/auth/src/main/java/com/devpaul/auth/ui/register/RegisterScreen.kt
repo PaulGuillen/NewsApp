@@ -7,16 +7,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_data.Screen
-import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.organisms.ShowDialogSuccessRegister
-import com.devpaul.shared.ui.components.atoms.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
 @Composable
-fun RegisterScreen(navHostController: NavHostController, appNavigator: AppNavigator) {
+fun RegisterScreen(navHostController: NavHostController) {
 
     val viewModel: RegisterViewModel = koinViewModel()
 
@@ -39,17 +38,21 @@ fun RegisterScreen(navHostController: NavHostController, appNavigator: AppNaviga
             if (uiState.showDialog) {
                 ShowDialogSuccessRegister {
                     viewModel.setUiState(uiState.copy(showDialog = false))
-                    appNavigator.navigateTo(Screen.Home, popUpTo = Screen.Login, inclusive = true)
+                    navHostController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
                 }
             }
 
             RegisterForm(
-                appNavigator = appNavigator,
-                onRegister = { name, lastName, email, password ->
+                navHostController = navHostController,
+                onRegister = { name, lastName, phone, birthdate, email, password ->
                     onIntent(
                         RegisterUiIntent.Register(
                             name = name,
                             lastname = lastName,
+                            phone = phone,
+                            birthdate = birthdate,
                             email = email,
                             password = password,
                         )

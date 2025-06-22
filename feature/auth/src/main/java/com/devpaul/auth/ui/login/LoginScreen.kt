@@ -10,7 +10,7 @@ import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
-import com.devpaul.shared.ui.components.atoms.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

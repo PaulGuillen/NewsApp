@@ -23,7 +23,7 @@ import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.ui.news_detail.components.NewsCard
 import com.devpaul.news.ui.news_detail.components.NewsCountCard
-import com.devpaul.shared.ui.components.atoms.OutlinedLoadMoreButton
+import com.devpaul.shared.ui.components.atoms.base.OutlinedLoadMoreButton
 import com.devpaul.shared.ui.components.atoms.skeleton.NewsDetailSkeleton
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState

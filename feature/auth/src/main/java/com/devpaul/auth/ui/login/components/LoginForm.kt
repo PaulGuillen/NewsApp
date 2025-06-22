@@ -33,8 +33,8 @@ import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.EmailField
-import com.devpaul.shared.ui.components.atoms.PasswordField
+import com.devpaul.shared.ui.components.atoms.base.EmailField
+import com.devpaul.shared.ui.components.atoms.base.PasswordField
 
 @Composable
 fun LoginForm(

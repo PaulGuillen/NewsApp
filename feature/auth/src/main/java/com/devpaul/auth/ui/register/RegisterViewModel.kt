@@ -3,6 +3,7 @@ package com.devpaul.auth.ui.register
 import com.devpaul.auth.data.datasource.dto.register.RegisterRequest
 import com.devpaul.auth.domain.usecase.RegisterUC
 import com.devpaul.core_data.util.Constant
+import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import org.koin.android.annotation.KoinViewModel
@@ -22,6 +23,8 @@ class RegisterViewModel(
             is RegisterUiIntent.Register -> register(
                 name = intent.name,
                 lastName = intent.lastname,
+                birthdate = intent.birthdate,
+                phone = intent.phone,
                 email = intent.email,
                 password = intent.password,
             )
@@ -31,6 +34,8 @@ class RegisterViewModel(
     suspend fun register(
         name: String,
         lastName: String,
+        phone: String,
+        birthdate: String,
         email: String,
         password: String,
     ) {
@@ -48,6 +53,7 @@ class RegisterViewModel(
                 when (it) {
                     is RegisterUC.Success.RegisterSuccess -> {
                         setUiState(uiState.copy(showDialog = true))
+                        dataStoreUseCase.setValue(LOG_IN_KEY, true)
                     }
                 }
             }

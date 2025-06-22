@@ -27,7 +27,7 @@ import com.devpaul.home.ui.components.SectionsRow
 import com.devpaul.home.ui.components.UITCard
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.atoms.SectionHeader
+import com.devpaul.shared.ui.components.atoms.base.SectionHeader
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.domain.handleDefaultErrors
 import org.koin.androidx.compose.koinViewModel

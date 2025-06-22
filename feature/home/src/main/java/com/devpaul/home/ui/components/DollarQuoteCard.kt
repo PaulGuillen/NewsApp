@@ -40,7 +40,7 @@ import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.domain.entity.DollarQuoteEntity
-import com.devpaul.shared.ui.components.atoms.DividerView
+import com.devpaul.shared.ui.components.atoms.base.DividerView
 import com.devpaul.shared.ui.components.atoms.skeleton.SkeletonDollarQuote
 
 @Composable

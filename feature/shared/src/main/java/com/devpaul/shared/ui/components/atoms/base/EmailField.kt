@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms
+package com.devpaul.shared.ui.components.atoms.base
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

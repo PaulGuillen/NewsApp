@@ -30,7 +30,7 @@ import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
 import com.devpaul.news.ui.news.components.google.GoogleNewsCards
 import com.devpaul.news.ui.news.components.reddit.RedditCards
 import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.atoms.DividerView
+import com.devpaul.shared.ui.components.atoms.base.DividerView
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState

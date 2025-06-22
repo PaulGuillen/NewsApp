@@ -38,7 +38,7 @@ import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.UITEntity
-import com.devpaul.shared.ui.components.atoms.DividerView
+import com.devpaul.shared.ui.components.atoms.base.DividerView
 import com.devpaul.shared.ui.components.atoms.skeleton.UITCardSkeleton
 
 @Composable

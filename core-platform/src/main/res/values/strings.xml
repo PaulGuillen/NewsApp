@@ -9,7 +9,9 @@
     <string name="register_screen_description">Si te registras podrás mantenerte al tanto de los cambios realizados</string>
     <string name="register_screen_name">Nombre</string>
     <string name="register_screen_last_name">Apellido</string>
+    <string name="register_screen_phone">Celular</string>
     <string name="register_screen_email">Correo</string>
+    <string name="register_screen_birthdate">Fecha de nacimiento</string>
     <string name="register_screen_password">Contraseña</string>
     <string name="register_screen_confirm_password">Confirmar contraseña</string>
     <string name="register_screen_register_button">Registrarse</string>
@@ -19,6 +21,9 @@
     <string name="accept">Aceptar</string>
     <string name="error_name_empty">El nombre no puede estar vacío</string>
     <string name="error_lastname_empty">El apellido no puede estar vacío</string>
+    <string name="error_phone_empty">El celular no puede estar vacío</string>
+    <string name="error_birthdate_empty">La fecha de nacimiento no puede estar vacío</string>
+    <string name="error_phone_not_full">El celular debe ser minimo 9 carácteres</string>
     <string name="error_email_empty">El correo no puede estar vacío</string>
     <string name="error_email_invalid">El correo no es válido</string>
     <string name="error_password_empty">La contraseña no puede estar vacía</string>

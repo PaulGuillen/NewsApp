@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms
+package com.devpaul.shared.ui.components.atoms.base
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
