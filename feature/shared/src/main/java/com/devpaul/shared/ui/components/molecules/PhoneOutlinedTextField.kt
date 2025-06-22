@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import com.devpaul.core_platform.theme.BrickRed
 
 @Composable
@@ -23,7 +24,7 @@ fun PhoneOutlinedTextField(
     onValueChange: (String) -> Unit,
     @StringRes labelRes: Int,
     leadingIcon: ImageVector = Icons.Default.Phone,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
     maxLength: Int = Int.MAX_VALUE
 ) {
     OutlinedTextField(

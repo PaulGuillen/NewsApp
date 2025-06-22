@@ -7,11 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,12 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.auth.ui.register.RegisterFormCallbacks
+import com.devpaul.auth.ui.register.RegisterFormState
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.auth.ui.register.RegisterFormCallbacks
-import com.devpaul.auth.ui.register.RegisterFormState
+import com.devpaul.shared.ui.components.atoms.base.CustomButton
 
 @Composable
 fun RegisterForm(
@@ -94,8 +90,7 @@ fun RegisterForm(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(top = 40.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -114,23 +109,16 @@ fun RegisterForm(
                 )
 
                 RegisterFormFields(state = state, callbacks = callbacks)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { validateAndRegister() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    shape = RectangleShape,
-                    elevation = ButtonDefaults.buttonElevation(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BrickRed,
-                        contentColor = White
-                    )
-                ) {
-                    Text(stringResource(id = R.string.register_screen_register_button))
-                }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomButton(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(id = R.string.register_screen_register_button),
+            onClick = { validateAndRegister() },
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
