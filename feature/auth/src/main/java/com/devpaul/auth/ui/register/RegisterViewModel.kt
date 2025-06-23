@@ -43,6 +43,8 @@ class RegisterViewModel(
         val requestRegister = RegisterRequest(
             name = name,
             lastName = lastName,
+            phone = phone,
+            birthdate = birthdate,
             email = email,
             password = password
         )

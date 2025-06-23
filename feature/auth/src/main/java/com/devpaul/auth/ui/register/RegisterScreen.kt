@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -19,10 +20,9 @@ import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.SuccessNotification
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
-import com.devpaul.shared.ui.components.organisms.ShowDialogSuccessRegister
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 @Composable
 fun RegisterScreen(navHostController: NavHostController) {
@@ -41,24 +41,36 @@ fun RegisterScreen(navHostController: NavHostController) {
     ) { _, uiState, onIntent, showSnackBar, _ ->
 
         Box(modifier = Modifier.fillMaxSize()) {
+
             if (uiState.isLoading) {
                 ScreenLoading()
             }
 
             if (uiState.showDialog) {
-                ShowDialogSuccessRegister {
-                    viewModel.setUiState(uiState.copy(showDialog = false))
-                    navHostController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
-                }
+                SuccessNotification(
+                    visible = uiState.showDialog,
+                    title = "Registro exitoso",
+                    message = "Tu cuenta ha sido creada exitosamente.",
+                    primaryButtonText = "Ir al inicio",
+                    onPrimaryClick = {
+                        navHostController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                        }
+                    },
+                    onDismiss = {
+                        viewModel.setUiState(uiState.copy(showDialog = false))
+                    },
+                    showDismissIcon = false
+                )
             }
 
-            RegisterContent(
-                navHostController = navHostController,
-                onIntent = onIntent,
-                showSnackBar = showSnackBar
-            )
+            if (uiState.data != null) {
+                RegisterContent(
+                    navHostController = navHostController,
+                    onIntent = onIntent,
+                    showSnackBar = showSnackBar
+                )
+            }
         }
     }
 }

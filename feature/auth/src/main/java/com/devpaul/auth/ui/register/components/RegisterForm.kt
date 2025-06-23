@@ -2,6 +2,7 @@ package com.devpaul.auth.ui.register.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,13 +123,20 @@ fun RegisterForm(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = {
-            navHostController.popBackStack()
-        }) {
+        Row {
             Text(
-                stringResource(id = R.string.register_screen_already_have_account),
-                color = BrickRed
+                text = stringResource(id = R.string.register_screen_already_have_account),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.align(Alignment.CenterVertically),
             )
+            TextButton(onClick = {
+                navHostController.popBackStack()
+            }) {
+                Text(
+                    stringResource(id = R.string.login_button),
+                    color = BrickRed
+                )
+            }
         }
     }
 }
