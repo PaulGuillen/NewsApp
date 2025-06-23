@@ -22,6 +22,7 @@
     <string name="error_name_empty">El nombre no puede estar vacío</string>
     <string name="error_lastname_empty">El apellido no puede estar vacío</string>
     <string name="error_phone_empty">El celular no puede estar vacío</string>
+    <string name="error_phone_invalid">El celular debe tener nueve dígitos</string>
     <string name="error_birthdate_empty">La fecha de nacimiento no puede estar vacío</string>
     <string name="error_phone_not_full">El celular debe ser minimo 9 carácteres</string>
     <string name="error_email_empty">El correo no puede estar vacío</string>

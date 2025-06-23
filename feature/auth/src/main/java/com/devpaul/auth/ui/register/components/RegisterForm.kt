@@ -55,12 +55,19 @@ fun RegisterForm(
 
     fun validateAndRegister() {
         val validationResult = validateRegistration(
-            context, name, lastName, phone, email, birthdate, password, confirmPassword
+            context = context,
+            name = name,
+            lastName = lastName,
+            phone = phone,
+            email = email,
+            birthdate = birthdate,
+            password = password,
+            confirmPassword = confirmPassword
         )
         if (validationResult != null) {
             showSnackBar(validationResult)
         } else {
-            onRegister(name, lastName, phone, email, birthdate, password)
+            onRegister(name, lastName, phone, birthdate, email, password)
         }
     }
 

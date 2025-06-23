@@ -45,7 +45,7 @@ class RegisterViewModel(
             lastName = lastName,
             phone = phone,
             birthdate = birthdate,
-            email = email,
+            email = email.trim(),
             password = password
         )
         updateUiStateOnMain { it.copy(isLoading = true) }

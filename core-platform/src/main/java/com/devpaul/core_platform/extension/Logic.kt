@@ -22,6 +22,7 @@ fun validateRegistration(
         name.isEmpty() -> context.getString(R.string.error_name_empty)
         lastName.isEmpty() -> context.getString(R.string.error_lastname_empty)
         phone.isEmpty() -> context.getString(R.string.error_phone_empty)
+        phone.length < 8 -> context.getString(R.string.error_phone_invalid)
         email.isEmpty() -> context.getString(R.string.error_email_empty)
         !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
         birthdate.isEmpty() -> context.getString(R.string.error_birthdate_empty)

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -20,7 +19,7 @@ import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
-import com.devpaul.shared.ui.components.atoms.base.SuccessNotification
+import com.devpaul.shared.ui.components.atoms.base.dialog.SuccessNotification
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,14 +40,14 @@ fun RegisterScreen(navHostController: NavHostController) {
     ) { _, uiState, onIntent, showSnackBar, _ ->
 
         Box(modifier = Modifier.fillMaxSize()) {
-
             if (uiState.isLoading) {
                 ScreenLoading()
             }
 
             if (uiState.showDialog) {
+                println("🟢 Mostrando SuccessNotification")
                 SuccessNotification(
-                    visible = uiState.showDialog,
+                    visible = true,
                     title = "Registro exitoso",
                     message = "Tu cuenta ha sido creada exitosamente.",
                     primaryButtonText = "Ir al inicio",
@@ -64,13 +63,11 @@ fun RegisterScreen(navHostController: NavHostController) {
                 )
             }
 
-            if (uiState.data != null) {
-                RegisterContent(
-                    navHostController = navHostController,
-                    onIntent = onIntent,
-                    showSnackBar = showSnackBar
-                )
-            }
+            RegisterContent(
+                navHostController = navHostController,
+                onIntent = onIntent,
+                showSnackBar = showSnackBar
+            )
         }
     }
 }

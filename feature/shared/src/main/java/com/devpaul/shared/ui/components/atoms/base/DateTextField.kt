@@ -43,7 +43,7 @@ fun DateTextField(
 
     OutlinedTextField(
         value = value,
-        onValueChange = {},
+        onValueChange = onDateSelected,
         modifier = Modifier
             .fillMaxWidth()
             .clickable { datePickerDialog.show() },
