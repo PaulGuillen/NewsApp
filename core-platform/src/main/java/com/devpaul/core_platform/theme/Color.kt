@@ -17,7 +17,23 @@ val BlueDark = Color(0xFF0D325D)
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)
 val SuccessTitleHeader = Color(0xFF137333)
-val SuccessHorizontalDivider = Color(0xFFE0E0E0)
 val SuccessIcon = Color(0xFF137333)
 val SuccessTitle = Color(0xFF137333)
 val SuccessButtonText = Color(0xFF137333)
+
+//Info Dialog
+val InfoTitleHeaderBackground = Color(0xFFE0F2FE)
+val InfoTitleHeader = Color(0xFF2563EB)
+val InfoIcon = Color(0xFF9CA3AF)
+val InfoTitle = Color(0xFF1E3A8A)
+val InfoButtonText = Color(0xFF2563EB)
+
+//Error Dialog
+val ErrorTitleHeaderBackground = Color(0xFFFEE2E2)
+val ErrorTitleHeader = Color(0xFFB91C1C)
+val ErrorIcon = Color(0xFFEF4444)
+val ErrorTitle = Color(0xFFB91C1C)
+val ErrorButtonText = Color(0xFFDC2626)
+
+//Utils
+val ColorHorizontalDivider = Color(0xFFE0E0E0)

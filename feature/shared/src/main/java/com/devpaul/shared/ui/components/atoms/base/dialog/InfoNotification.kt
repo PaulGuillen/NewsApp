@@ -44,6 +44,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devpaul.core_platform.theme.ColorHorizontalDivider
+import com.devpaul.core_platform.theme.InfoButtonText
+import com.devpaul.core_platform.theme.InfoIcon
+import com.devpaul.core_platform.theme.InfoTitle
+import com.devpaul.core_platform.theme.InfoTitleHeader
+import com.devpaul.core_platform.theme.InfoTitleHeaderBackground
 
 @Composable
 fun InfoNotification(
@@ -123,12 +129,12 @@ fun InfoNotificationContent(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFE0F2FE))
+                        .background(InfoTitleHeaderBackground)
                         .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                 ) {
                     Text(
                         text = titleHeader,
-                        color = Color(0xFF2563EB),
+                        color = InfoTitleHeader,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterStart)
                     )
@@ -144,7 +150,7 @@ fun InfoNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = Color(0xFFE0E0E0))
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
@@ -155,7 +161,7 @@ fun InfoNotificationContent(
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = null,
-                        tint = Color(0xFF9CA3AF),
+                        tint = InfoIcon,
                         modifier = Modifier
                             .padding(end = 16.dp)
                             .size(48.dp)
@@ -164,7 +170,7 @@ fun InfoNotificationContent(
                     Column {
                         Text(
                             text = title,
-                            color = Color(0xFF1E3A8A),
+                            color = InfoTitle,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(6.dp))
@@ -176,7 +182,7 @@ fun InfoNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = Color(0xFFE0E0E0))
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
@@ -203,7 +209,7 @@ fun InfoNotificationContent(
                             onDismiss?.invoke()
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2563EB),
+                            containerColor = InfoButtonText,
                             contentColor = Color.White
                         )
                     ) {

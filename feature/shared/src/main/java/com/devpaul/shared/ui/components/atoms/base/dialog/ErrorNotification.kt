@@ -45,6 +45,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.devpaul.core_platform.theme.ColorHorizontalDivider
+import com.devpaul.core_platform.theme.ErrorButtonText
+import com.devpaul.core_platform.theme.ErrorIcon
+import com.devpaul.core_platform.theme.ErrorTitle
+import com.devpaul.core_platform.theme.ErrorTitleHeader
+import com.devpaul.core_platform.theme.ErrorTitleHeaderBackground
 
 @Composable
 fun ErrorNotification(
@@ -123,13 +129,13 @@ fun ErrorNotificationContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFFEE2E2))
+                        .background(ErrorTitleHeaderBackground)
                         .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = titleHeader,
-                        color = Color(0xFFB91C1C),
+                        color = ErrorTitleHeader,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -145,7 +151,7 @@ fun ErrorNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = Color(0xFFE0E0E0))
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
@@ -156,7 +162,7 @@ fun ErrorNotificationContent(
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = null,
-                        tint = Color(0xFFEF4444),
+                        tint = ErrorIcon,
                         modifier = Modifier
                             .padding(end = 16.dp)
                             .size(48.dp)
@@ -165,7 +171,7 @@ fun ErrorNotificationContent(
                     Column {
                         Text(
                             text = title,
-                            color = Color(0xFFB91C1C),
+                            color = ErrorTitle,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(modifier = Modifier.height(6.dp))
@@ -177,7 +183,7 @@ fun ErrorNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = Color(0xFFE0E0E0))
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
@@ -204,7 +210,7 @@ fun ErrorNotificationContent(
                             onDismiss?.invoke()
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFDC2626),
+                            containerColor = ErrorButtonText,
                             contentColor = Color.White
                         )
                     ) {

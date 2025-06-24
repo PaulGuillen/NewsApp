@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.SuccessButtonText
-import com.devpaul.core_platform.theme.SuccessHorizontalDivider
+import com.devpaul.core_platform.theme.ColorHorizontalDivider
 import com.devpaul.core_platform.theme.SuccessIcon
 import com.devpaul.core_platform.theme.SuccessTitle
 import com.devpaul.core_platform.theme.SuccessTitleHeader
@@ -153,7 +153,7 @@ fun SuccessNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = SuccessHorizontalDivider)
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
@@ -185,7 +185,7 @@ fun SuccessNotificationContent(
                     }
                 }
 
-                HorizontalDivider(color = SuccessHorizontalDivider)
+                HorizontalDivider(color = ColorHorizontalDivider)
 
                 Row(
                     modifier = Modifier
