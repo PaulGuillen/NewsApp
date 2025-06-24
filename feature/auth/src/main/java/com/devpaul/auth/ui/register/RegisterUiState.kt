@@ -1,9 +1,10 @@
 package com.devpaul.auth.ui.register
 
+import com.devpaul.auth.data.datasource.dto.register.RegisterRequest
 import com.devpaul.auth.domain.entity.Register
+import com.devpaul.core_platform.extension.ResultState
 
 data class RegisterUiState(
-    val data: Register? = null,
-    val isLoading: Boolean = false,
-    val showDialog: Boolean = false,
+    val register: ResultState<Register>? = null,
+    val registerRequest : RegisterRequest? = null,
 )
