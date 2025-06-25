@@ -6,6 +6,8 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="forgot_password">Has olvidado tu contraseña?</string>
     <string name="not_registered">Aún no te has registrado?</string>
+    <string name="not_have_account">Aún no tienes cuenta?</string>
+    <string name="register">Registrate</string>
     <string name="register_screen_description">Si te registras podrás mantenerte al tanto de los cambios realizados</string>
     <string name="register_screen_name">Nombre</string>
     <string name="register_screen_last_name">Apellido</string>

@@ -1,16 +1,12 @@
 package com.devpaul.auth.ui.login
 
-import androidx.lifecycle.viewModelScope
 import com.devpaul.auth.data.datasource.dto.login.LoginRequest
 import com.devpaul.auth.domain.usecase.LoginUC
-import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_domain.use_case.DataStoreUseCase
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import timber.log.Timber
 
 @KoinViewModel
 class LoginViewModel(
@@ -41,26 +37,32 @@ class LoginViewModel(
                 type = "classic",
                 googleToken = ""
             )
-        updateUiStateOnMain { it.copy(isLoading = true) }
+        updateUiStateOnMain { it.copy(loginRequest = requestLogin) }
+        updateUiStateOnMain { it.copy(login = ResultState.Loading) }
         val result = loginUC(LoginUC.Params(requestLogin))
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
                     is LoginUC.Success.LoginSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(login = ResultState.Success(it.login))
+                        }
                         dataStoreUseCase.setValue(LOG_IN_KEY, true)
-                        LoginUiEvent.LoginSuccess(message = Constant.LOGIN_SUCCESS).send()
                     }
                 }
             }
             .onFailure<LoginUC.Failure> {
                 when (it) {
                     is LoginUC.Failure.LoginError -> {
-                        LoginUiEvent.LoginError(error = Constant.LOGIN_ERROR).send()
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                login = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message ?: "Unknown error"
+                                )
+                            )
+                        }
                     }
                 }
-            }
-            .also {
-                updateUiStateOnMain { it.copy(isLoading = false) }
             }
     }
 
@@ -68,15 +70,12 @@ class LoginViewModel(
 
     }
 
-    private fun checkUserLoggedIn() {
-        viewModelScope.launch {
-            updateUiStateOnMain { it.copy(isLoading = true) }
-            delay(Constant.LOGIN_DELAY)
-            val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
-            updateUiStateOnMain { it.copy(isLoading = false) }
-            if (isLoggedIn) {
-                LoginUiEvent.LoginSuccess(Constant.LOGIN_SUCCESS).send()
-            }
+    private suspend fun checkUserLoggedIn() {
+
+        val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
+        if (isLoggedIn) {
+
         }
+
     }
 }
