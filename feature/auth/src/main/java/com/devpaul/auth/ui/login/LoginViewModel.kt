@@ -2,10 +2,12 @@ package com.devpaul.auth.ui.login
 
 import com.devpaul.auth.data.datasource.dto.login.LoginRequest
 import com.devpaul.auth.domain.usecase.LoginUC
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
+import kotlinx.coroutines.delay
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -44,10 +46,8 @@ class LoginViewModel(
             .onSuccessful {
                 when (it) {
                     is LoginUC.Success.LoginSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(login = ResultState.Success(it.login))
-                        }
                         dataStoreUseCase.setValue(LOG_IN_KEY, true)
+                        LoginUiEvent.UserLogged.send()
                     }
                 }
             }
@@ -63,6 +63,8 @@ class LoginViewModel(
                         }
                     }
                 }
+            }.also {
+                updateUiStateOnMain { it.copy(login = ResultState.Idle) }
             }
     }
 
@@ -71,11 +73,12 @@ class LoginViewModel(
     }
 
     private suspend fun checkUserLoggedIn() {
-
         val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
+        updateUiStateOnMain { it.copy(login = ResultState.Loading) }
+        delay(Constant.LOGIN_DELAY)
+        updateUiStateOnMain { it.copy(login = null) }
         if (isLoggedIn) {
-
+            LoginUiEvent.UserLogged.send()
         }
-
     }
 }

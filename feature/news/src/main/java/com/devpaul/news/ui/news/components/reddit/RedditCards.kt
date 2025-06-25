@@ -160,6 +160,10 @@ fun RedditCards(
                 }
             }
         }
+
+        else -> {
+            // Handle other states if necessary
+        }
     }
 }
 

@@ -53,6 +53,10 @@ fun CountryCards(
                 modifier = Modifier.padding(16.dp)
             )
         }
+
+        else -> {
+            // Handle other states if necessary
+        }
     }
 }
 

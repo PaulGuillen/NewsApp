@@ -156,6 +156,10 @@ fun GoogleNewsCards(
                 }
             }
         }
+
+        else -> {
+            // Handle other states if necessary
+        }
     }
 }
 

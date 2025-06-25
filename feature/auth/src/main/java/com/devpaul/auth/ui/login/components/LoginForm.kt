@@ -52,7 +52,7 @@ fun LoginForm(
     onForgotPassword: (String) -> Unit,
     showSnackBar: (String) -> Unit,
     uiState: ResultState<Login>?,
-    onSuccess: @Composable () -> Unit?,
+    onSuccess: (() -> Unit)? = null,
     onError: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -104,17 +104,11 @@ fun LoginForm(
             ScreenLoading()
         }
 
-        is ResultState.Success -> {
-            onSuccess()
-        }
-
         is ResultState.Error -> {
             onError()
         }
 
-        else -> {
-            //
-        }
+        else -> {}
     }
 }
 

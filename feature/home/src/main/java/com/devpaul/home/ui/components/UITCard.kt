@@ -186,6 +186,10 @@ fun UITCard(
                 }
             }
         }
+
+        else -> {
+            // Handle other states if necessary
+        }
     }
 }
 

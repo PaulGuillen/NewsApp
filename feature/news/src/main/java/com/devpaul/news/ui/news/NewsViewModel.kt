@@ -37,7 +37,7 @@ class NewsViewModel(
                 )
             }
 
-            is NewsUiIntent.GetDeltaProject ->{
+            is NewsUiIntent.GetDeltaProject -> {
                 launchIO {
                     fetchDeltaNews(intent.country)
                 }

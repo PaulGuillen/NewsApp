@@ -157,6 +157,8 @@ fun GDELTCards(
                 }
             }
         }
+        
+        else -> {}
     }
 }
 

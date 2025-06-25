@@ -158,6 +158,8 @@ fun GoogleNewsList(
         }
 
         is ResultState.Error -> {}
+
+        else -> {}
     }
 }
 
@@ -202,6 +204,8 @@ fun DeltaNewsList(
         }
 
         is ResultState.Error -> {}
+
+        else -> {}
     }
 }
 
@@ -246,6 +250,8 @@ fun RedditNewsList(
         }
 
         is ResultState.Error -> {}
+
+        else -> {}
     }
 }
 

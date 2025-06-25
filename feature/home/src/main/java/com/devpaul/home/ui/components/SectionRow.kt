@@ -106,6 +106,10 @@ fun SectionsRow(
             }
         }
 
+        else -> {
+            // Handle other states if necessary
+        }
+
     }
 
 }

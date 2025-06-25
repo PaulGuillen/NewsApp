@@ -163,7 +163,10 @@ fun AcknowledgmentSection(
                     }
                 }
             }
+        }
 
+        else -> {
+            // Handle other states if necessary
         }
     }
 }
