@@ -18,9 +18,7 @@ import com.devpaul.auth.ui.register.RegisterFormCallbacks
 import com.devpaul.auth.ui.register.RegisterFormState
 import com.devpaul.core_platform.R
 import com.devpaul.shared.ui.components.atoms.base.CustomOutlinedTextField
-import com.devpaul.shared.ui.components.atoms.base.DateTextField
 import com.devpaul.shared.ui.components.atoms.base.PasswordField
-import com.devpaul.shared.ui.components.molecules.PhoneOutlinedTextField
 
 @Composable
 fun RegisterFormFields(
@@ -45,27 +43,11 @@ fun RegisterFormFields(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    PhoneOutlinedTextField(
-        value = state.phone,
-        onValueChange = callbacks.onPhoneChange,
-        labelRes = R.string.register_screen_phone,
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
     CustomOutlinedTextField(
         value = state.email,
         onValueChange = callbacks.onEmailChange,
         labelRes = R.string.register_screen_email,
         leadingIcon = Icons.Default.Email,
-    )
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    DateTextField(
-        value = state.birthdate,
-        onDateSelected = callbacks.onBirthdateChange,
-        labelRes = R.string.register_screen_birthdate
     )
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -103,9 +85,7 @@ fun PreviewRegisterFormFields() {
     val callbacks = RegisterFormCallbacks(
         onNameChange = {},
         onLastNameChange = {},
-        onPhoneChange = {},
         onEmailChange = {},
-        onBirthdateChange = {},
         onPasswordChange = {},
         onConfirmPasswordChange = {},
         onPasswordVisibilityChange = {},

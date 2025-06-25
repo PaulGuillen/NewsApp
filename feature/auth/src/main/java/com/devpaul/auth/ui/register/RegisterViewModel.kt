@@ -24,8 +24,6 @@ class RegisterViewModel(
             is RegisterUiIntent.Register -> register(
                 name = intent.name,
                 lastName = intent.lastname,
-                birthdate = intent.birthdate,
-                phone = intent.phone,
                 email = intent.email,
                 password = intent.password,
             )
@@ -35,8 +33,6 @@ class RegisterViewModel(
     suspend fun register(
         name: String,
         lastName: String,
-        phone: String,
-        birthdate: String,
         email: String,
         password: String,
     ) {
@@ -44,8 +40,6 @@ class RegisterViewModel(
         val requestRegister = RegisterRequest(
             name = name,
             lastName = lastName,
-            phone = phone,
-            birthdate = birthdate,
             email = email.trim(),
             password = password
         )

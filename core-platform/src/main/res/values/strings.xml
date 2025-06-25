@@ -14,7 +14,7 @@
     <string name="register_screen_birthdate">Fecha de nacimiento</string>
     <string name="register_screen_password">Contraseña</string>
     <string name="register_screen_confirm_password">Confirmar contraseña</string>
-    <string name="register_screen_register_button">Registrarse</string>
+    <string name="register_button">Registrarse</string>
     <string name="register_screen_already_have_account">¿Ya tienes cuenta?</string>
     <string name="register_success">Registro exitoso</string>
     <string name="register_error">Error en el registro</string>

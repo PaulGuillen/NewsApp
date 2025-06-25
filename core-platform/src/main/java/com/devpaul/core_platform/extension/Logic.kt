@@ -12,20 +12,15 @@ fun validateRegistration(
     context: Context,
     name: String,
     lastName: String,
-    phone: String,
     email: String,
-    birthdate: String,
     password: String,
     confirmPassword: String
 ): String? {
     return when {
         name.isEmpty() -> context.getString(R.string.error_name_empty)
         lastName.isEmpty() -> context.getString(R.string.error_lastname_empty)
-        phone.isEmpty() -> context.getString(R.string.error_phone_empty)
-        phone.length < 8 -> context.getString(R.string.error_phone_invalid)
         email.isEmpty() -> context.getString(R.string.error_email_empty)
         !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
-        birthdate.isEmpty() -> context.getString(R.string.error_birthdate_empty)
         password.isEmpty() -> context.getString(R.string.error_password_empty)
         confirmPassword.isEmpty() -> context.getString(R.string.error_confirm_password_empty)
         password != confirmPassword -> context.getString(R.string.error_password_mismatch)

@@ -27,8 +27,6 @@ class AuthRepositoryImpl(
         val request = RegisterRequest(
             name = requestRegister.name,
             lastName = requestRegister.lastName,
-            phone = requestRegister.phone,
-            birthdate = requestRegister.birthdate,
             email = requestRegister.email,
             password = requestRegister.password,
         )
