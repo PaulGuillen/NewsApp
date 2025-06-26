@@ -1,4 +1,4 @@
-package com.devpaul.profile.ui
+package com.devpaul.profile.ui.profile
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import org.koin.android.annotation.KoinViewModel
