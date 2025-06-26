@@ -4,6 +4,7 @@ import com.devpaul.auth.data.datasource.dto.login.LoginRequest
 import com.devpaul.auth.domain.usecase.LoginUC
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
+import com.devpaul.core_data.util.Constant.USER_UID_KEY
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -47,6 +48,7 @@ class LoginViewModel(
                 when (it) {
                     is LoginUC.Success.LoginSuccess -> {
                         dataStoreUseCase.setValue(LOG_IN_KEY, true)
+                        dataStoreUseCase.setValue(USER_UID_KEY, it.login.uid)
                         LoginUiEvent.UserLogged.send()
                     }
                 }

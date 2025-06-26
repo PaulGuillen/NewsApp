@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms.base
+package com.devpaul.shared.ui.components.atoms.base.textfield
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.core_platform.theme.BrickRed
+import com.devpaul.shared.ui.components.atoms.base.TextFieldConfig
 
 @Composable
 fun CustomTextField(

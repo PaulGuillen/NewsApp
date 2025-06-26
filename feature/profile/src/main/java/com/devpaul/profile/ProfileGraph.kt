@@ -12,6 +12,6 @@ fun NavGraphBuilder.profileGraph(
     appNavigator: AppNavigator
 ) {
     composable(Screen.Profile.route) {
-        ProfileScreen(navController)
+        ProfileScreen(navController = navController)
     }
 }

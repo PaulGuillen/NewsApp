@@ -7,6 +7,7 @@ import com.devpaul.core_data.manager.FirebaseModule
 import com.devpaul.home.HomeModule
 import com.devpaul.navigation.NavigationModule
 import com.devpaul.news.NewsModule
+import com.devpaul.profile.ProfileModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
@@ -18,6 +19,7 @@ import org.koin.core.annotation.Module
     AuthModule::class,
     HomeModule::class,
     NewsModule::class,
+    ProfileModule::class,
 ])
 
 @ComponentScan

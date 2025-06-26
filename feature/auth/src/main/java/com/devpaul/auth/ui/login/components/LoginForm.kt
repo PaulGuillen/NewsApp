@@ -41,7 +41,7 @@ import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.shared.ui.components.atoms.base.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.EmailField
-import com.devpaul.shared.ui.components.atoms.base.PasswordField
+import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 

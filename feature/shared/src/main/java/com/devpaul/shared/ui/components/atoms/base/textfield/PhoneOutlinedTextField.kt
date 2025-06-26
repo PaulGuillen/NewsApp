@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.molecules
+package com.devpaul.shared.ui.components.atoms.base.textfield
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.text.KeyboardOptions

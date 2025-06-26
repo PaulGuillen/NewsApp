@@ -46,4 +46,8 @@
     <!--News Screen-->
     <string name="news_screen_title">Noticias</string>
     <string name="select_country_to_see_news">Seleccione un país para ver las noticias</string>
+
+    <!--Profile Screen-->
+    <string name="button_update">Actualizar</string>
+
 </resources>

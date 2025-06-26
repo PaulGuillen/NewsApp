@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.core_platform.R
+import com.devpaul.shared.ui.components.atoms.base.textfield.CustomTextField
 
 @Composable
 fun EmailField(value: String, onValueChange: (String) -> Unit) {

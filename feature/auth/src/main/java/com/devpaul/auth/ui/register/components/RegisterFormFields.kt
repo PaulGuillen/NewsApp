@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.auth.ui.register.RegisterFormCallbacks
 import com.devpaul.auth.ui.register.RegisterFormState
 import com.devpaul.core_platform.R
-import com.devpaul.shared.ui.components.atoms.base.CustomOutlinedTextField
-import com.devpaul.shared.ui.components.atoms.base.PasswordField
+import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
+import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 
 @Composable
 fun RegisterFormFields(
