@@ -1,6 +1,5 @@
 package com.devpaul.profile.ui.profile
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -60,13 +59,22 @@ fun ProfileScreen(navController: NavHostController) {
     val viewModel: ProfileViewModel = koinViewModel()
     val context = LocalContext.current
 
-    fun validateAndUpdate() {
-
-    }
-
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navController,
+        onUiEvent = { event, _ ->
+            when (event) {
+                is ProfileUiEvent.LaunchIntent -> {
+                    context.startActivity(event.intent)
+                }
+
+                is ProfileUiEvent.UserLoggedOut -> {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            }
+        },
         onDefaultError = { error, showSnackBar ->
             handleDefaultErrors(error, showSnackBar)
         }
@@ -82,15 +90,12 @@ fun ProfileScreen(navController: NavHostController) {
             },
         ) { innerPadding ->
             ProfileContent(
-                context = context,
                 modifier = Modifier.fillMaxSize(),
                 innerPadding = innerPadding,
+                onIntent = onIntent,
                 onNavigate = { route ->
                     navController.navigate(route)
                 },
-                onLogout = {
-                    // Handle logout logic here
-                }
             )
         }
     }
@@ -98,11 +103,10 @@ fun ProfileScreen(navController: NavHostController) {
 
 @Composable
 fun ProfileContent(
-    context: Context,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     onNavigate: (String) -> Unit = {},
-    onLogout: () -> Unit = {}
+    onIntent: (ProfileUiIntent) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -119,6 +123,7 @@ fun ProfileContent(
         ) {
             Box(
                 modifier = Modifier
+                    .weight(0.4f)
                     .fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
@@ -144,7 +149,7 @@ fun ProfileContent(
 
             Column(
                 modifier = Modifier
-                    .weight(0.7f),
+                    .weight(0.6f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -176,20 +181,30 @@ fun ProfileContent(
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 val options = listOf(
-                    Triple("Recomendar a un amigo", Icons.Outlined.Share, "profile/share"),
-                    Triple("Términos de servicio", Icons.Outlined.Build, "profile/terms"),
-                    Triple("Política de privacidad", Icons.Outlined.Settings, "profile/privacy"),
-                    Triple("Sugerencias", Icons.Outlined.MailOutline, "profile/suggestions"),
-                    Triple("Acerca de nosotros", Icons.Outlined.Home, "profile/about")
+                    Triple("Recomendar a un amigo", Icons.Outlined.Share) {
+                        onIntent(ProfileUiIntent.ShareApp)
+                    },
+                    Triple("Términos de servicio", Icons.Outlined.Build) {
+                        onIntent(ProfileUiIntent.OpenTerms)
+                    },
+                    Triple("Política de privacidad", Icons.Outlined.Settings) {
+                        onIntent(ProfileUiIntent.OpenPrivacy)
+                    },
+                    Triple("Sugerencias", Icons.Outlined.MailOutline) {
+                        onNavigate("profile/suggestions")
+                    },
+                    Triple("Acerca de nosotros", Icons.Outlined.Home) {
+                        onNavigate("profile/about")
+                    }
                 )
 
-                options.forEachIndexed { index, (title, icon, route) ->
+                options.forEachIndexed { index, (title, icon, action) ->
                     val isLastItem = index == options.lastIndex
                     ProfileOptionItem(
                         title = title,
                         icon = icon,
                         showDivider = !isLastItem,
-                        onClick = { onNavigate(route) }
+                        onClick = { action() }
                     )
                 }
 
@@ -201,7 +216,7 @@ fun ProfileContent(
                     color = BrickRed,
                     showDivider = false,
                     onClick = {
-                        onLogout()
+                        onIntent(ProfileUiIntent.Logout)
                     }
                 )
             }
@@ -213,7 +228,6 @@ fun ProfileContent(
 @Composable
 fun ProfileContentPreview() {
     ProfileContent(
-        context = LocalContext.current,
         modifier = Modifier.fillMaxSize(),
         innerPadding = PaddingValues(0.dp),
     )

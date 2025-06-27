@@ -47,7 +47,7 @@ import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PhoneOutlinedTextField
 
 @Composable
-fun ProfileUpdateScreen(
+fun UpdateScreen(
     navController: NavHostController
 ) {
     var name by remember { mutableStateOf("") }
@@ -168,5 +168,5 @@ fun ProfileUpdateScreen(
 @Preview(showBackground = true)
 @Composable
 fun ProfileUpdateScreenPreview() {
-    ProfileUpdateScreen(navController = rememberNavController())
+    UpdateScreen(navController = rememberNavController())
 }

@@ -5,8 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
+import com.devpaul.profile.ui.about.AboutScreen
 import com.devpaul.profile.ui.profile.ProfileScreen
-import com.devpaul.profile.ui.update.ProfileUpdateScreen
+import com.devpaul.profile.ui.suggestions.SuggestionsScreen
+import com.devpaul.profile.ui.update.UpdateScreen
 
 fun NavGraphBuilder.profileGraph(
     navController: NavHostController,
@@ -17,6 +19,14 @@ fun NavGraphBuilder.profileGraph(
     }
 
     composable(Screen.ProfileUpdate.route) {
-        ProfileUpdateScreen(navController = navController)
+        UpdateScreen(navController = navController)
+    }
+
+    composable(Screen.Suggestions.route) {
+        SuggestionsScreen(navController = navController)
+    }
+
+    composable(Screen.About.route) {
+        AboutScreen(navController = navController)
     }
 }
