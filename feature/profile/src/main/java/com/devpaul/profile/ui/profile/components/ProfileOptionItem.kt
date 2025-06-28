@@ -8,15 +8,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ fun ProfileOptionItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(60.dp)
                 .background(backgroundColor, shape = RoundedCornerShape(8.dp))
                 .clickable(
                     interactionSource = interactionSource,
@@ -73,17 +75,16 @@ fun ProfileOptionItem(
                 modifier = Modifier.weight(1f)
             )
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
                 tint = color
             )
         }
 
         if (showDivider) {
-            Divider(
-                modifier = Modifier.padding(start = 48.dp),
-                thickness = 0.7.dp,
-                color = Color.LightGray.copy(alpha = 0.5f)
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Color.LightGray.copy(alpha = 0.8f)
             )
         }
     }

@@ -2,13 +2,12 @@ package com.devpaul.profile.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,19 +37,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.devpaul.core_platform.R
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.atoms.base.CustomButton
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
@@ -80,11 +76,6 @@ fun ProfileScreen(navController: NavHostController) {
         }
     ) { _, uiState, onIntent, _, _ ->
         Scaffold(
-            topBar = {
-                TopBar(
-                    title = stringResource(R.string.app_name)
-                )
-            },
             bottomBar = {
                 BottomNavigationBar(navController)
             },
@@ -108,58 +99,51 @@ fun ProfileContent(
     onNavigate: (String) -> Unit = {},
     onIntent: (ProfileUiIntent) -> Unit = {},
 ) {
-    Column(
+    Box(
         modifier = modifier
+            .fillMaxSize()
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 10.dp)
     ) {
-        Row(
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 10.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
-                modifier = Modifier
-                    .weight(0.4f)
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Image(
-                    painter = rememberAsyncImagePainter("https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg"),
-                    contentDescription = "Foto de perfil",
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                )
-                Icon(
-                    imageVector = Icons.Outlined.Face,
-                    contentDescription = "Cambiar foto",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .size(40.dp)
-                        .background(BrickRed, CircleShape)
-                        .padding(2.dp)
-                )
-            }
-
             Column(
                 modifier = Modifier
-                    .weight(0.6f),
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Charlotte King",
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Text(
-                    text = "@johnkinggraphics",
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                Box(
+                    modifier = Modifier.size(140.dp),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter("https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg"),
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
+                    Icon(
+                        imageVector = Icons.Outlined.Face,
+                        contentDescription = "Cambiar foto",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .background(BrickRed, CircleShape)
+                            .padding(6.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text("Charlotte King", style = MaterialTheme.typography.titleMedium)
+                Text("@johnkinggraphics", style = MaterialTheme.typography.bodySmall)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -169,57 +153,57 @@ fun ProfileContent(
                     onClick = { onNavigate("profile/update") }
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = White),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                val options = listOf(
-                    Triple("Recomendar a un amigo", Icons.Outlined.Share) {
-                        onIntent(ProfileUiIntent.ShareApp)
-                    },
-                    Triple("Términos de servicio", Icons.Outlined.Build) {
-                        onIntent(ProfileUiIntent.OpenTerms)
-                    },
-                    Triple("Política de privacidad", Icons.Outlined.Settings) {
-                        onIntent(ProfileUiIntent.OpenPrivacy)
-                    },
-                    Triple("Sugerencias", Icons.Outlined.MailOutline) {
-                        onNavigate("profile/suggestions")
-                    },
-                    Triple("Acerca de nosotros", Icons.Outlined.Home) {
-                        onNavigate("profile/about")
+            Spacer(modifier = Modifier.weight(1f))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.cardColors(containerColor = White),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    val options = listOf(
+                        Triple("Recomendar a un amigo", Icons.Outlined.Share) {
+                            onIntent(ProfileUiIntent.ShareApp)
+                        },
+                        Triple("Términos de servicio", Icons.Outlined.Build) {
+                            onIntent(ProfileUiIntent.OpenTerms)
+                        },
+                        Triple("Política de privacidad", Icons.Outlined.Settings) {
+                            onIntent(ProfileUiIntent.OpenPrivacy)
+                        },
+                        Triple("Sugerencias", Icons.Outlined.MailOutline) {
+                            onNavigate("profile/suggestions")
+                        },
+                        Triple("Acerca de nosotros", Icons.Outlined.Home) {
+                            onNavigate("profile/about")
+                        }
+                    )
+
+                    options.forEachIndexed {  _, (title, icon, action) ->
+                        ProfileOptionItem(
+                            title = title,
+                            icon = icon,
+                            onClick = { action() }
+                        )
                     }
-                )
 
-                options.forEachIndexed { index, (title, icon, action) ->
-                    val isLastItem = index == options.lastIndex
                     ProfileOptionItem(
-                        title = title,
-                        icon = icon,
-                        showDivider = !isLastItem,
-                        onClick = { action() }
+                        title = "Salir",
+                        icon = Icons.AutoMirrored.Outlined.ExitToApp,
+                        color = BrickRed,
+                        showDivider = false,
+                        onClick = {
+                            onIntent(ProfileUiIntent.Logout)
+                        }
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                ProfileOptionItem(
-                    title = "Salir",
-                    icon = Icons.AutoMirrored.Outlined.ExitToApp,
-                    color = BrickRed,
-                    showDivider = false,
-                    onClick = {
-                        onIntent(ProfileUiIntent.Logout)
-                    }
-                )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

@@ -62,7 +62,6 @@ class RegisterViewModel(
             .onFailure<RegisterUC.Failure> {
                 when (it) {
                     is RegisterUC.Failure.RegisterError -> {
-
                         updateUiStateOnMain { uiState ->
                             uiState.copy(
                                 register = ResultState.Error(
