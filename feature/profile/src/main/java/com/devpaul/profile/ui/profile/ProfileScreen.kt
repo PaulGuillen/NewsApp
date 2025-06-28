@@ -2,7 +2,6 @@ package com.devpaul.profile.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,11 +40,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.atoms.base.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -87,6 +88,7 @@ fun ProfileScreen(navController: NavHostController) {
                 onNavigate = { route ->
                     navController.navigate(route)
                 },
+                uiState = uiState
             )
         }
     }
@@ -98,7 +100,30 @@ fun ProfileContent(
     innerPadding: PaddingValues,
     onNavigate: (String) -> Unit = {},
     onIntent: (ProfileUiIntent) -> Unit = {},
+    uiState: ProfileUiState
 ) {
+    var fullName = "Cargando..."
+    var email = ""
+
+    when (val state = uiState.profile) {
+        is ResultState.Success -> {
+            val profile = state.response.data
+            fullName = "${profile.name} ${profile.lastname}"
+            email = profile.email
+        }
+
+        is ResultState.Error -> {
+            fullName = "Error al cargar"
+        }
+
+        is ResultState.Loading -> {
+            ScreenLoading()
+            fullName = "Cargando..."
+        }
+
+        else -> {}
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -112,6 +137,7 @@ fun ProfileContent(
                 .padding(horizontal = 10.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -142,8 +168,8 @@ fun ProfileContent(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Charlotte King", style = MaterialTheme.typography.titleMedium)
-                Text("@johnkinggraphics", style = MaterialTheme.typography.bodySmall)
+                Text(fullName, style = MaterialTheme.typography.titleMedium)
+                Text(email, style = MaterialTheme.typography.bodySmall)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -183,7 +209,7 @@ fun ProfileContent(
                         }
                     )
 
-                    options.forEachIndexed {  _, (title, icon, action) ->
+                    options.forEachIndexed { _, (title, icon, action) ->
                         ProfileOptionItem(
                             title = title,
                             icon = icon,
@@ -204,6 +230,7 @@ fun ProfileContent(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
         }
     }
 }
@@ -214,5 +241,8 @@ fun ProfileContentPreview() {
     ProfileContent(
         modifier = Modifier.fillMaxSize(),
         innerPadding = PaddingValues(0.dp),
+        onNavigate = {},
+        onIntent = {},
+        uiState = ProfileUiState(profile = ResultState.Loading)
     )
 }

@@ -4,5 +4,5 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.profile.domain.entity.ProfileEntity
 
 data class ProfileUiState(
-    val profile: ResultState<ProfileEntity>? = null,
+    val profile: ResultState<ProfileEntity>? = ResultState.Loading,
 )
