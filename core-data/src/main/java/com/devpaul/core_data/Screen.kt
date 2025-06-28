@@ -17,7 +17,13 @@ sealed class Screen(val route: String) {
     }
     data object Districts : Screen("districts")
     data object Profile : Screen("profile")
-    data object ProfileUpdate : Screen("profile/update")
+    data object ProfileUpdate : Screen(route = "profile/update/{profile_data}") {
+        fun createRoute(profileData: Any?): String {
+            val gson = Gson()
+            val encodedCountry = Uri.encode(gson.toJson(profileData))
+            return "profile/update/$encodedCountry"
+        }
+    }
     data object Suggestions : Screen("profile/suggestions")
     data object About : Screen("profile/about")
 }

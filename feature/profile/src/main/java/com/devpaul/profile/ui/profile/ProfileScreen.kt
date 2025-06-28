@@ -40,9 +40,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
+import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.atoms.base.CustomButton
@@ -70,6 +72,10 @@ fun ProfileScreen(navController: NavHostController) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
+
+                is ProfileUiEvent.GoToEditProfile -> {
+
+                }
             }
         },
         onDefaultError = { error, showSnackBar ->
@@ -83,6 +89,7 @@ fun ProfileScreen(navController: NavHostController) {
         ) { innerPadding ->
             ProfileContent(
                 modifier = Modifier.fillMaxSize(),
+                navController = navController,
                 innerPadding = innerPadding,
                 onIntent = onIntent,
                 onNavigate = { route ->
@@ -97,17 +104,19 @@ fun ProfileScreen(navController: NavHostController) {
 @Composable
 fun ProfileContent(
     modifier: Modifier = Modifier,
+    navController: NavHostController,
     innerPadding: PaddingValues,
     onNavigate: (String) -> Unit = {},
     onIntent: (ProfileUiIntent) -> Unit = {},
     uiState: ProfileUiState
 ) {
+    var profile: ProfileUserEntity? = null
     var fullName = "Cargando..."
     var email = ""
 
     when (val state = uiState.profile) {
         is ResultState.Success -> {
-            val profile = state.response.data
+            profile = state.response.data
             fullName = "${profile.name} ${profile.lastname}"
             email = profile.email
         }
@@ -176,7 +185,13 @@ fun ProfileContent(
                 CustomButton(
                     modifier = Modifier.fillMaxWidth(0.6f),
                     text = "Edit Profile",
-                    onClick = { onNavigate("profile/update") }
+                    onClick = {
+                        navController.navigate(
+                            Screen.ProfileUpdate.createRoute(
+                                profileData = profile
+                            )
+                        )
+                    }
                 )
             }
 
@@ -240,6 +255,7 @@ fun ProfileContent(
 fun ProfileContentPreview() {
     ProfileContent(
         modifier = Modifier.fillMaxSize(),
+        navController = NavHostController(LocalContext.current),
         innerPadding = PaddingValues(0.dp),
         onNavigate = {},
         onIntent = {},

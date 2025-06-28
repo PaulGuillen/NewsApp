@@ -21,7 +21,7 @@ import kotlin.coroutines.cancellation.CancellationException
 abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
     defaultUIState: () -> UiState,
     private val keySavedUIState: String = "UiState",
-    private val savedStateHandle: SavedStateHandle? = null,
+    val savedStateHandle: SavedStateHandle? = null,
 ) : StatelessViewModel<UiIntent, UiEvent>(), UiStateHolder<UiState> {
 
     private val _changeUiStateLiveData = MutableLiveData<Pair<UiState?, UiState>>(

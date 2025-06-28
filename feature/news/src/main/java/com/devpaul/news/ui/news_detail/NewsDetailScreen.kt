@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,12 +49,13 @@ fun NewsDetailsScreen(
         navController = navController,
         onBackPressed = { onBackWithResult -> onBackWithResult("shouldReload", true) }
     ) { _, uiState, _, _, _ ->
-        androidx.compose.material3.Scaffold(
+        Scaffold(
             topBar = {
                 TopBar(title = stringResource(R.string.app_name))
             }
         ) { innerPadding ->
             NewsDetailContent(
+                viewModel = viewModel,
                 context = context,
                 innerPadding = innerPadding,
                 uiState = uiState,
@@ -70,6 +72,7 @@ fun NewsDetailsScreen(
 
 @Composable
 fun NewsDetailContent(
+    viewModel: NewsDetailViewModel,
     context: Context,
     innerPadding: PaddingValues,
     uiState: NewsDetailUiState,
@@ -78,7 +81,6 @@ fun NewsDetailContent(
     selectedUrl: String?,
     onSelectUrl: (String) -> Unit
 ) {
-    val viewModel: NewsDetailViewModel = koinViewModel()
     val canLoadMore = viewModel.canLoadMore(newsType ?: "")
 
     when (newsType) {

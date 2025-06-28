@@ -26,23 +26,23 @@ class ProfileViewModel(
 
     override suspend fun onUiIntent(intent: ProfileUiIntent) {
         when (intent) {
-            ProfileUiIntent.GetUserProfile -> {
+            is ProfileUiIntent.GetUserProfile -> {
                 launchIO { userProfile() }
             }
 
-            ProfileUiIntent.ShareApp -> {
+            is ProfileUiIntent.ShareApp -> {
                 sharedApp()
             }
 
-            ProfileUiIntent.OpenTerms -> {
+            is ProfileUiIntent.OpenTerms -> {
                 openTerms()
             }
 
-            ProfileUiIntent.OpenPrivacy -> {
+            is ProfileUiIntent.OpenPrivacy -> {
                 openPrivacy()
             }
 
-            ProfileUiIntent.Logout -> {
+            is ProfileUiIntent.Logout -> {
                 logOut()
             }
         }

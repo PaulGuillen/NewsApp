@@ -2,7 +2,9 @@ package com.devpaul.profile
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.devpaul.core_data.Screen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.profile.ui.about.AboutScreen
@@ -18,8 +20,16 @@ fun NavGraphBuilder.profileGraph(
         ProfileScreen(navController = navController)
     }
 
-    composable(Screen.ProfileUpdate.route) {
-        UpdateScreen(navController = navController)
+    composable(
+        route = Screen.ProfileUpdate.route,
+        arguments = listOf(
+            navArgument("profile_data") { type = NavType.StringType }
+        )
+    ) { backStackEntry ->
+        UpdateScreen(
+            navController = navController,
+            profileData = backStackEntry.arguments?.getString("profile_data")
+        )
     }
 
     composable(Screen.Suggestions.route) {
