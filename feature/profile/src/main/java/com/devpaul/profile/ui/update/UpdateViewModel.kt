@@ -6,7 +6,6 @@ import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
-import timber.log.Timber
 
 @KoinViewModel
 class UpdateViewModel(
@@ -22,12 +21,16 @@ class UpdateViewModel(
     }
 
 
-    fun getProfileData(profileData: String?) {
+    suspend fun getProfileData(profileData: String?) {
         val gson = Gson()
         val decodedProfileJson = profileData?.let { Uri.decode(it) }
         val profileEntity = decodedProfileJson?.let {
             gson.fromJson(it, ProfileUserEntity::class.java)
         }
-        Timber.d("Profile Data: $profileEntity")
+
+        updateUiStateOnMain {
+            it.copy(profile = profileEntity)
+        }
     }
+
 }

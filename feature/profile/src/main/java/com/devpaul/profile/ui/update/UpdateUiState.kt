@@ -1,8 +1,7 @@
 package com.devpaul.profile.ui.update
 
-import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.profile.domain.entity.ProfileEntity
+import com.devpaul.profile.domain.entity.ProfileUserEntity
 
 data class UpdateUiState(
-    val profile: ResultState<ProfileEntity>? = ResultState.Loading,
+    val profile: ProfileUserEntity? = null,
 )
