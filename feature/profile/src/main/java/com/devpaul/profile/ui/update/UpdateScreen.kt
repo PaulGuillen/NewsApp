@@ -196,7 +196,7 @@ fun UpdateScreenContent(
 
                     CustomOutlinedTextField(
                         value = email,
-                        onValueChange =  { email = it },
+                        onValueChange = { email = it },
                         labelRes = R.string.register_screen_email,
                         leadingIcon = Icons.Default.Email,
                         keyboardOptions = KeyboardOptions(
