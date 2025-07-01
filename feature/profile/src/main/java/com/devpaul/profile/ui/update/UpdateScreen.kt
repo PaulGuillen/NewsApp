@@ -35,9 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.R
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
+import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.dialog.ErrorNotification
+import com.devpaul.shared.ui.components.atoms.base.dialog.InfoNotification
+import com.devpaul.shared.ui.components.atoms.base.dialog.SuccessNotification
 import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
 import com.devpaul.shared.ui.components.atoms.base.textfield.DateTextField
@@ -55,35 +60,107 @@ fun UpdateScreen(
 ) {
     val viewModel: UpdateViewModel = koinViewModel()
 
+    val showDialogInfo = remember { mutableStateOf(false) }
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val showSuccessDialog = remember { mutableStateOf(false) }
+    val errorMessage = remember { mutableStateOf("") }
+
     BaseScreenWithState(
         viewModel = viewModel,
-        onInit = { _, _ ->
-            viewModel.getProfileData()
-        },
+        onInit = { _, _ -> viewModel.getProfileData() },
         navController = navController,
     ) { _, uiState, onIntent, _, _ ->
+
+        if (uiState.updateUser is ResultState.Loading) {
+            ScreenLoading()
+        }
+
+        if (uiState.updateUser is ResultState.Success) {
+            showSuccessDialog.value = true
+        }
+
+        if (uiState.updateUser is ResultState.Error) {
+            showErrorDialog.value = true
+            errorMessage.value = uiState.updateUser.message
+        }
+
+        // Diálogos
+        if (showDialogInfo.value) {
+            InfoNotification(
+                visible = true,
+                title = "Perfil sin cambios",
+                message = "No se detectaron cambios en los campos del perfil.",
+                primaryButtonText = "Aceptar",
+                onPrimaryClick = { showDialogInfo.value = false },
+                onDismiss = { showDialogInfo.value = false },
+                showDismissIcon = false
+            )
+        }
+
+        if (showSuccessDialog.value) {
+            SuccessNotification(
+                visible = true,
+                titleHeader = "¡Felicidades!",
+                title = "Actualización exitosa",
+                message = "Los datos se han actualizado exitosamente.",
+                primaryButtonText = "Aceptar",
+                onPrimaryClick = {
+                    showSuccessDialog.value = false
+                    viewModel.resetUpdateUser()
+                },
+                onDismiss = {
+                    showSuccessDialog.value = false
+                    viewModel.resetUpdateUser()
+                },
+                showDismissIcon = false
+            )
+        }
+
+        if (showErrorDialog.value) {
+            ErrorNotification(
+                visible = true,
+                titleHeader = "Error",
+                title = "Actualización fallida",
+                message = errorMessage.value.ifEmpty { "Ocurrió un error al actualizar los datos." },
+                primaryButtonText = "Aceptar",
+                onPrimaryClick = {
+                    showErrorDialog.value = false
+                    viewModel.resetUpdateUser()
+                },
+                onDismiss = {
+                    showErrorDialog.value = false
+                    viewModel.resetUpdateUser()
+                },
+                showDismissIcon = false
+            )
+        }
+
         Scaffold(
             topBar = {
                 TopBar(title = stringResource(R.string.app_name))
             },
         ) { innerPadding ->
             UpdateScreenContent(
+                viewModel = viewModel,
                 innerPadding = innerPadding,
                 uiState = uiState,
                 onIntent = onIntent,
+                onShowInfoDialog = { showDialogInfo.value = true }
             )
         }
     }
 }
 
+
 @Composable
 fun UpdateScreenContent(
+    viewModel: UpdateViewModel?,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: UpdateUiState,
     onIntent: (UpdateUiIntent) -> Unit,
+    onShowInfoDialog: () -> Unit
 ) {
-
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -206,27 +283,27 @@ fun UpdateScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(id = R.string.button_update),
                 onClick = {
-                    onIntent(
-                        UpdateUiIntent.UpdateProfile(
-                            ProfileUserEntity(
-                                id = uiState.profile?.id.orEmpty(),
-                                uid = uiState.profile?.uid.orEmpty(),
-                                name = name,
-                                lastname = lastname,
-                                birthdate = birthdate,
-                                phone = phone,
-                                email = email,
-                                password = password,
-                                image = base64Image.value
-                            )
-                        )
+                    val updatedProfile = ProfileUserEntity(
+                        id = uiState.profile?.id.orEmpty(),
+                        uid = uiState.profile?.uid.orEmpty(),
+                        name = name,
+                        lastname = lastname,
+                        birthdate = birthdate,
+                        phone = phone,
+                        email = email,
+                        password = password,
+                        image = base64Image.value
                     )
 
+                    if (viewModel?.hasProfileChanged(updatedProfile) == true) {
+                        onIntent(UpdateUiIntent.UpdateProfile(updatedProfile))
+                    } else {
+                        onShowInfoDialog()
+                    }
                 },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }
@@ -235,8 +312,10 @@ fun UpdateScreenContent(
 @Composable
 fun ProfileUpdateScreenPreview() {
     UpdateScreenContent(
+        viewModel = null,
         innerPadding = PaddingValues(0.dp),
         uiState = UpdateUiState(),
-        onIntent = {}
+        onIntent = {},
+        onShowInfoDialog = {}
     )
 }

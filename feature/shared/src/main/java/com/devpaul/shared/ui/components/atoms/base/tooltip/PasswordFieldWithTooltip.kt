@@ -82,6 +82,7 @@ fun PasswordFieldWithTooltip(
             label = label,
             passwordVisible = passwordVisible,
             onPasswordVisibilityChange = onPasswordVisibilityChange,
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
@@ -92,5 +93,6 @@ fun PasswordFieldWithTooltip(
                     } else Modifier
                 )
         )
+
     }
 }

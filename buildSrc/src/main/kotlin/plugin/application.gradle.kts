@@ -41,6 +41,7 @@ android {
         compose = true
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false

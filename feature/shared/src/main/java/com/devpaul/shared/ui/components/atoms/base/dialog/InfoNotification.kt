@@ -54,7 +54,7 @@ import com.devpaul.core_platform.theme.InfoTitleHeaderBackground
 @Composable
 fun InfoNotification(
     visible: Boolean,
-    titleHeader: String = "Info dialog",
+    titleHeader: String = "Notificación",
     title: String,
     message: String,
     primaryButtonText: String,
@@ -119,7 +119,6 @@ fun InfoNotificationContent(
     ) {
         Card(
             modifier = Modifier
-                .padding(24.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(10.dp),

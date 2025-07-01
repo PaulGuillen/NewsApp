@@ -1,8 +1,8 @@
 package com.devpaul.profile.ui.update
 
+import androidx.lifecycle.viewModelScope
 import com.devpaul.core_data.serialization.Wrapper
 import com.devpaul.core_data.serialization.fromJsonGeneric
-
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -10,6 +10,7 @@ import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.domain.usecase.UpdateProfileUC
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -21,6 +22,8 @@ class UpdateViewModel(
         UpdateUiState()
     }
 ) {
+
+    private var originalProfile: ProfileUserEntity? = null
 
     override suspend fun onUiIntent(intent: UpdateUiIntent) {
         when (intent) {
@@ -34,6 +37,8 @@ class UpdateViewModel(
         val profileJson = dataStoreUseCase.getString("profile_data")
         val wrapper: Wrapper<ProfileUserEntity>? = Gson().fromJsonGeneric(profileJson)
         val profile = wrapper?.data
+
+        originalProfile = profile
 
         updateUiStateOnMain {
             it.copy(profile = profile)
@@ -70,7 +75,7 @@ class UpdateViewModel(
                             uitState.copy(
                                 updateUser = ResultState.Error(
                                     message = it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar el perfil"
+                                        ?: "Ocurrió un error al actualizar el perfil.",
                                 )
                             )
                         }
@@ -78,4 +83,15 @@ class UpdateViewModel(
                 }
             }
     }
+
+    fun hasProfileChanged(current: ProfileUserEntity): Boolean {
+        return current != originalProfile
+    }
+
+     fun resetUpdateUser() {
+        viewModelScope.launch {
+            updateUiStateOnMain { it.copy(updateUser = ResultState.Idle) }
+        }
+    }
+
 }

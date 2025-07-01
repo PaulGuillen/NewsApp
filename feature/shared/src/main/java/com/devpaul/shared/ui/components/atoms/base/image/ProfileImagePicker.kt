@@ -199,7 +199,7 @@ fun ProfileImagePicker(
                 tint = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .offset(x = (-6).dp, y = (2).dp)
+                    .offset(x = (2).dp, y = (2).dp)
                     .size(38.dp)
                     .background(BrickRed, CircleShape)
                     .padding(6.dp)

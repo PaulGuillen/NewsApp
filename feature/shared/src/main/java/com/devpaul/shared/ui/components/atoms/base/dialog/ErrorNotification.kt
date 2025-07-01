@@ -119,7 +119,6 @@ fun ErrorNotificationContent(
     ) {
         Card(
             modifier = Modifier
-                .padding(12.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(10.dp),

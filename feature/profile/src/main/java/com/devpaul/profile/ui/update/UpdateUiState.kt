@@ -6,5 +6,5 @@ import com.devpaul.profile.domain.entity.UpdateEntity
 
 data class UpdateUiState(
     val profile: ProfileUserEntity? = null,
-    val updateUser: ResultState<UpdateEntity> = ResultState.Loading,
+    val updateUser: ResultState<UpdateEntity> = ResultState.Idle,
 )
