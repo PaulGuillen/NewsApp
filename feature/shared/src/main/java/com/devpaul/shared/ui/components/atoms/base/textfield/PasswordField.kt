@@ -27,6 +27,7 @@ fun PasswordField(
     label: String,
     passwordVisible: Boolean,
     onPasswordVisibilityChange: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
@@ -44,7 +45,7 @@ fun PasswordField(
                 Icon(painter = icon, contentDescription = null)
             }
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next,

@@ -93,7 +93,6 @@ fun DateTextField(
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        // Tooltip
         AnimatedVisibility(
             visible = showTooltip,
             enter = slideInVertically(

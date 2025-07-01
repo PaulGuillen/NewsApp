@@ -23,5 +23,6 @@ fun ProfileUserResponse.toDomain(): ProfileUserEntity {
         birthdate = birthdate,
         email = email,
         password = password,
+        image = image
     )
 }

@@ -14,5 +14,6 @@ data class ProfileUserEntity(
     val phone: String,
     val birthdate: String,
     val email: String,
-    val password: String
+    val password: String,
+    val image: String? = null
 )

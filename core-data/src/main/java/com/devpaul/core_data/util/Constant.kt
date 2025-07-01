@@ -41,4 +41,7 @@ object Constant {
     const val NEWS_LANGUAGE = "es"
     const val NEWS_MODE = "ArtList"
     const val NEWS_FORMAT = "json"
+
+    //URL IMAGE
+    const val URL_IMAGE = "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg"
 }

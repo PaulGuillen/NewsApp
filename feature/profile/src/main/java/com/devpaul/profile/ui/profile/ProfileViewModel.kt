@@ -8,6 +8,7 @@ import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.profile.domain.usecase.UserProfileUC
+import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -86,6 +87,9 @@ class ProfileViewModel(
                         updateUiStateOnMain { uiState ->
                             uiState.copy(profile = ResultState.Success(it.profile))
                         }
+
+                        val profileJson = Gson().toJson(it.profile)
+                        dataStoreUseCase.setValue("profile_data", profileJson)
                     }
                 }
             }

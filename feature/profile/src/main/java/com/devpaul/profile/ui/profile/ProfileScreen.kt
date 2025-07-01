@@ -1,7 +1,5 @@
 package com.devpaul.profile.ui.profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,44 +9,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_data.Screen
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -71,10 +64,6 @@ fun ProfileScreen(navController: NavHostController) {
                     navController.navigate("login") {
                         popUpTo(0) { inclusive = true }
                     }
-                }
-
-                is ProfileUiEvent.GoToEditProfile -> {
-
                 }
             }
         },
@@ -153,27 +142,12 @@ fun ProfileContent(
                     .padding(top = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier.size(140.dp),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter("https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg"),
-                        contentDescription = "Foto de perfil",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape)
-                    )
-                    Icon(
-                        imageVector = Icons.Outlined.Face,
-                        contentDescription = "Cambiar foto",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(BrickRed, CircleShape)
-                            .padding(6.dp)
-                    )
-                }
+                ProfileImagePicker(
+                    defaultImageUrl = Constant.URL_IMAGE,
+                    base64Image = profile?.image,
+                    showDialogOnClick = false,
+                    onImageSelected = { _, _ -> }
+                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -184,13 +158,9 @@ fun ProfileContent(
 
                 CustomButton(
                     modifier = Modifier.fillMaxWidth(0.6f),
-                    text = "Edit Profile",
+                    text = "Editar Perfil",
                     onClick = {
-                        navController.navigate(
-                            Screen.ProfileUpdate.createRoute(
-                                profileData = profile
-                            )
-                        )
+                        navController.navigate(Screen.ProfileUpdate.route)
                     }
                 )
             }

@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,8 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.SuccessButtonText
 import com.devpaul.core_platform.theme.ColorHorizontalDivider
+import com.devpaul.core_platform.theme.SuccessButtonText
 import com.devpaul.core_platform.theme.SuccessIcon
 import com.devpaul.core_platform.theme.SuccessTitle
 import com.devpaul.core_platform.theme.SuccessTitleHeader
@@ -162,7 +162,7 @@ fun SuccessNotificationContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Clear,
+                        imageVector = Icons.Default.Check,
                         contentDescription = null,
                         tint = SuccessIcon,
                         modifier = Modifier

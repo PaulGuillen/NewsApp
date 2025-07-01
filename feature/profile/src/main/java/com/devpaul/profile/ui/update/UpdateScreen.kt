@@ -1,8 +1,6 @@
 package com.devpaul.profile.ui.update
 
-import android.content.Context
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,21 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,25 +27,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
+import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
-import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextFieldWithTooltip
 import com.devpaul.shared.ui.components.atoms.base.textfield.DateTextField
-import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PhoneOutlinedTextField
+import com.devpaul.shared.ui.components.atoms.base.tooltip.CustomOutlinedTextFieldWithTooltip
+import com.devpaul.shared.ui.components.atoms.base.tooltip.PasswordFieldWithTooltip
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.organisms.OnValueChangeEffect
@@ -61,29 +52,25 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun UpdateScreen(
     navController: NavHostController,
-    profileData: String?
 ) {
-
     val viewModel: UpdateViewModel = koinViewModel()
-    val context = LocalContext.current
 
     BaseScreenWithState(
         viewModel = viewModel,
         onInit = { _, _ ->
-            viewModel.getProfileData(profileData)
+            viewModel.getProfileData()
         },
         navController = navController,
-    ) { _, uiState, _, _, _ ->
+    ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
                 TopBar(title = stringResource(R.string.app_name))
             },
         ) { innerPadding ->
             UpdateScreenContent(
-                viewModel = viewModel,
-                context = context,
                 innerPadding = innerPadding,
                 uiState = uiState,
+                onIntent = onIntent,
             )
         }
     }
@@ -91,11 +78,10 @@ fun UpdateScreen(
 
 @Composable
 fun UpdateScreenContent(
-    viewModel: UpdateViewModel?,
-    context: Context,
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues,
     uiState: UpdateUiState,
+    onIntent: (UpdateUiIntent) -> Unit,
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -105,6 +91,8 @@ fun UpdateScreenContent(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val base64Image = remember { mutableStateOf<String?>(null) }
 
     OnValueChangeEffect(uiState.profile) { profile ->
         name = profile.name
@@ -113,6 +101,7 @@ fun UpdateScreenContent(
         birthdate = profile.birthdate
         email = profile.email
         password = profile.password
+        base64Image.value = profile.image
     }
 
     Box(
@@ -127,30 +116,18 @@ fun UpdateScreenContent(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
-                modifier = Modifier
-                    .size(140.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter("https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg"),
-                    contentDescription = "Foto de perfil",
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                )
-                Icon(
-                    imageVector = Icons.Default.Face,
-                    contentDescription = "Cambiar foto",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .offset(x = (-4).dp, y = (-4).dp)
-                        .size(32.dp)
-                        .background(BrickRed, CircleShape)
-                        .padding(6.dp)
-                )
-            }
+            ProfileImagePicker(
+                defaultImageUrl = Constant.URL_IMAGE,
+                base64Image = base64Image.value,
+                showDialogOnClick = true,
+                onImageSelected = { base64, uri ->
+                    base64Image.value = base64
+                    imageUri.value = uri
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -211,12 +188,14 @@ fun UpdateScreenContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    PasswordField(
+                    PasswordFieldWithTooltip(
                         value = password,
                         onValueChange = { password = it },
                         label = stringResource(id = R.string.register_screen_password),
                         passwordVisible = isPasswordVisible,
-                        onPasswordVisibilityChange = { isPasswordVisible = !isPasswordVisible }
+                        onPasswordVisibilityChange = { isPasswordVisible = !isPasswordVisible },
+                        enabled = false,
+                        tooltipMessage = "No puedes modificar este campo",
                     )
                 }
             }
@@ -226,7 +205,24 @@ fun UpdateScreenContent(
             CustomButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(id = R.string.button_update),
-                onClick = {},
+                onClick = {
+                    onIntent(
+                        UpdateUiIntent.UpdateProfile(
+                            ProfileUserEntity(
+                                id = uiState.profile?.id.orEmpty(),
+                                uid = uiState.profile?.uid.orEmpty(),
+                                name = name,
+                                lastname = lastname,
+                                birthdate = birthdate,
+                                phone = phone,
+                                email = email,
+                                password = password,
+                                image = base64Image.value
+                            )
+                        )
+                    )
+
+                },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -239,9 +235,8 @@ fun UpdateScreenContent(
 @Composable
 fun ProfileUpdateScreenPreview() {
     UpdateScreenContent(
-        viewModel = null,
-        context = LocalContext.current,
         innerPadding = PaddingValues(0.dp),
         uiState = UpdateUiState(),
+        onIntent = {}
     )
 }

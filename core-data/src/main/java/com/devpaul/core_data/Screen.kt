@@ -4,10 +4,10 @@ import android.net.Uri
 import com.google.gson.Gson
 
 sealed class Screen(val route: String) {
-    data object Login : Screen("login")
-    data object Register : Screen("register")
-    data object Home : Screen("home")
-    data object News : Screen("news")
+    data object Login : Screen(route = "login")
+    data object Register : Screen(route = "register")
+    data object Home : Screen(route = "home")
+    data object News : Screen(route = "news")
     data object NewsDetail : Screen(route = "all_news/{newsType}/{country}") {
         fun createRoute(newsType: String, country: Any): String {
             val gson = Gson()
@@ -15,15 +15,10 @@ sealed class Screen(val route: String) {
             return "all_news/$newsType/$encodedCountry"
         }
     }
-    data object Districts : Screen("districts")
-    data object Profile : Screen("profile")
-    data object ProfileUpdate : Screen(route = "profile/update/{profile_data}") {
-        fun createRoute(profileData: Any?): String {
-            val gson = Gson()
-            val encodedCountry = Uri.encode(gson.toJson(profileData))
-            return "profile/update/$encodedCountry"
-        }
-    }
-    data object Suggestions : Screen("profile/suggestions")
-    data object About : Screen("profile/about")
+
+    data object Districts : Screen(route = "districts")
+    data object Profile : Screen(route = "profile")
+    data object ProfileUpdate : Screen(route = "profile/update")
+    data object Suggestions : Screen(route = "profile/suggestions")
+    data object About : Screen(route = "profile/about")
 }

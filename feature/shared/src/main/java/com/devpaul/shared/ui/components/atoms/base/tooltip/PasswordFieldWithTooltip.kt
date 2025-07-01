@@ -1,6 +1,5 @@
-package com.devpaul.shared.ui.components.atoms.base.textfield
+package com.devpaul.shared.ui.components.atoms.base.tooltip
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -14,9 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,22 +24,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import kotlinx.coroutines.delay
 
 @Composable
-fun CustomOutlinedTextFieldWithTooltip(
-    modifier: Modifier = Modifier,
+fun PasswordFieldWithTooltip(
     value: String,
     onValueChange: (String) -> Unit,
-    @StringRes labelRes: Int,
-    leadingIcon: ImageVector = Icons.Default.Person,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-    enabled: Boolean = true,
+    label: String,
+    passwordVisible: Boolean,
+    onPasswordVisibilityChange: () -> Unit,
     tooltipMessage: String = "",
     tooltipDuration: Long = 2000L,
+    enabled: Boolean = true,
 ) {
     var showTooltip by remember { mutableStateOf(false) }
 
@@ -54,7 +48,7 @@ fun CustomOutlinedTextFieldWithTooltip(
         }
     }
 
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxWidth()) {
         AnimatedVisibility(
             visible = showTooltip,
             enter = slideInVertically(
@@ -82,7 +76,12 @@ fun CustomOutlinedTextFieldWithTooltip(
             }
         }
 
-        CustomOutlinedTextField(
+        PasswordField(
+            value = value,
+            onValueChange = onValueChange,
+            label = label,
+            passwordVisible = passwordVisible,
+            onPasswordVisibilityChange = onPasswordVisibilityChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .then(
@@ -91,13 +90,7 @@ fun CustomOutlinedTextFieldWithTooltip(
                             showTooltip = true
                         }
                     } else Modifier
-                ),
-            value = value,
-            onValueChange = onValueChange,
-            labelRes = labelRes,
-            leadingIcon = leadingIcon,
-            keyboardOptions = keyboardOptions,
-            enabled = enabled,
+                )
         )
     }
 }
