@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.shared.ui.components.atoms.base.TextFieldConfig
 
 @Composable
 fun CustomTextField(

@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms.base
+package com.devpaul.shared.ui.components.atoms.base.textfield
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable

@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +30,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,10 +44,10 @@ import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.base.CustomButton
-import com.devpaul.shared.ui.components.atoms.base.EmailField
-import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
+import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 
 @Composable
@@ -146,7 +151,17 @@ fun LoginBody(
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
-                EmailField(value = email, onValueChange = onEmailChange)
+                CustomOutlinedTextField(
+                    value = email,
+                    onValueChange = onEmailChange,
+                    labelRes = R.string.register_screen_email,
+                    leadingIcon = Icons.Default.Email,
+                    enabled = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    )
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 

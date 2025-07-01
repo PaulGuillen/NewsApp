@@ -43,7 +43,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.base.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.dialog.ErrorNotification
 import com.devpaul.shared.ui.components.atoms.base.dialog.SuccessNotification

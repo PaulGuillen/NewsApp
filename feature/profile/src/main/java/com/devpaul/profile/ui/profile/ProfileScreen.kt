@@ -47,7 +47,7 @@ import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.atoms.base.CustomButton
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState

@@ -47,9 +47,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.base.CustomButton
-import com.devpaul.shared.ui.components.atoms.base.DateTextField
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
+import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextFieldWithTooltip
+import com.devpaul.shared.ui.components.atoms.base.textfield.DateTextField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PhoneOutlinedTextField
 import com.devpaul.shared.ui.components.molecules.TopBar
@@ -151,8 +152,6 @@ fun UpdateScreenContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(8.dp),
@@ -184,17 +183,20 @@ fun UpdateScreenContent(
                         labelRes = R.string.register_screen_phone,
                         maxLength = 9,
                     )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     DateTextField(
                         value = birthdate,
                         onDateSelected = { birthdate = it },
-                        labelRes = R.string.register_screen_birthdate
+                        labelRes = R.string.register_screen_birthdate,
+                        enabled = true,
+                        tooltipMessage = "Selecciona el icono para elegir la fecha",
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CustomOutlinedTextField(
+                    CustomOutlinedTextFieldWithTooltip(
                         value = email,
                         onValueChange = { email = it },
                         labelRes = R.string.register_screen_email,
@@ -202,7 +204,9 @@ fun UpdateScreenContent(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
-                        )
+                        ),
+                        enabled = false,
+                        tooltipMessage = "No puedes modificar este campo",
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))

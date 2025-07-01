@@ -17,7 +17,7 @@ project.extensions.findByType(BaseExtension::class.java)?.let { android ->
                 buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
                 buildConfigField("String", "ENVIRONMENT", "\"prod\"")
                 buildConfigField("int", "VERSION_CODE", "$versionCode")
-                buildConfigField("String", "BASE_URL", "\"https://infoperu-be.onrender.com/\"")
+                 buildConfigField("String", "BASE_URL", "\"https://infoperu-be.fly.dev\"")
             }
 
             create("dev") {

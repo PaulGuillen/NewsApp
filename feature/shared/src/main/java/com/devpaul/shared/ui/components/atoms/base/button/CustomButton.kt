@@ -1,4 +1,4 @@
-package com.devpaul.shared.ui.components.atoms.base
+package com.devpaul.shared.ui.components.atoms.base.button
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
