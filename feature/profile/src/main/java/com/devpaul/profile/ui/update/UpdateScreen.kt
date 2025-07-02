@@ -84,7 +84,6 @@ fun UpdateScreen(
             errorMessage.value = uiState.updateUser.message
         }
 
-        // Diálogos
         if (showDialogInfo.value) {
             InfoNotification(
                 visible = true,

@@ -27,9 +27,7 @@ class UpdateViewModel(
 
     override suspend fun onUiIntent(intent: UpdateUiIntent) {
         when (intent) {
-            is UpdateUiIntent.UpdateProfile -> {
-                updateUserProfile(intent.profileUserEntity)
-            }
+            is UpdateUiIntent.UpdateProfile -> updateUserProfile(intent.profileUserEntity)
         }
     }
 
@@ -55,9 +53,9 @@ class UpdateViewModel(
             password = userProfile.password,
             image = userProfile.image ?: ""
         )
+        updateUiStateOnMain { it.copy(updateUser = ResultState.Loading) }
         val result =
             updateProfileUC(UpdateProfileUC.Params(uid = userProfile.uid, profileUser = updateUser))
-        updateUiStateOnMain { it.copy(updateUser = ResultState.Loading) }
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
@@ -88,7 +86,7 @@ class UpdateViewModel(
         return current != originalProfile
     }
 
-     fun resetUpdateUser() {
+    fun resetUpdateUser() {
         viewModelScope.launch {
             updateUiStateOnMain { it.copy(updateUser = ResultState.Idle) }
         }

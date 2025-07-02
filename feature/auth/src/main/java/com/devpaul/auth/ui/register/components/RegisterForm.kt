@@ -119,7 +119,6 @@ fun RegisterForm(
     )
 
     BaseContentLayout(
-        header = {},
         body = {
             RegisterBody(
                 state = state,
