@@ -60,10 +60,7 @@ fun NewsScreen(navController: NavHostController) {
         Scaffold(
             topBar = {
                 TopBar(
-                    title = stringResource(R.string.app_name),
-                    onLogoutClick = {
-                        // viewModel.logOut(navController)
-                    }
+                    title = stringResource(R.string.header_actually),
                 )
             },
             bottomBar = {

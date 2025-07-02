@@ -13,6 +13,7 @@ val Taupe = Color(0xFFEBE9E9)
 val GreenLight = Color(0xFFD2F5D4)
 val GreenDark = Color(0xFF6DC56E)
 val BlueDark = Color(0xFF0D325D)
+val PinkGray = Color(0xFFFFCDD2)
 
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)

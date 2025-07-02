@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.devpaul.core_data.Screen
-import com.devpaul.districts.ui.DistrictNewScreen
+import com.devpaul.districts.ui.DistrictScreen
 import com.devpaul.navigation.core.jetpack.AppNavigator
 
 fun NavGraphBuilder.districtGraph(
@@ -12,6 +12,6 @@ fun NavGraphBuilder.districtGraph(
     appNavigator: AppNavigator
 ) {
     composable(Screen.Districts.route) {
-        DistrictNewScreen(navController)
+        DistrictScreen(navController)
     }
 }

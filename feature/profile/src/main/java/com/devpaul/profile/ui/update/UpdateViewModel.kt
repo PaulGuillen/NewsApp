@@ -27,7 +27,9 @@ class UpdateViewModel(
 
     override suspend fun onUiIntent(intent: UpdateUiIntent) {
         when (intent) {
-            is UpdateUiIntent.UpdateProfile -> updateUserProfile(intent.profileUserEntity)
+            is UpdateUiIntent.UpdateProfile -> launchIO {
+                updateUserProfile(intent.profileUserEntity)
+            }
         }
     }
 

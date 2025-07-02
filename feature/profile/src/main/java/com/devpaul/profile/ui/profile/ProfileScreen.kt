@@ -28,11 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_data.util.Constant
+import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
@@ -43,6 +45,7 @@ import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
@@ -72,6 +75,11 @@ fun ProfileScreen(navController: NavHostController) {
         }
     ) { _, uiState, onIntent, _, _ ->
         Scaffold(
+            topBar = {
+                TopBar(
+                    title = stringResource(R.string.header_my_account)
+                )
+            },
             bottomBar = {
                 BottomNavigationBar(navController)
             },
@@ -132,7 +140,7 @@ fun ProfileContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 10.dp, vertical = 10.dp),
+                .padding(horizontal = 10.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 

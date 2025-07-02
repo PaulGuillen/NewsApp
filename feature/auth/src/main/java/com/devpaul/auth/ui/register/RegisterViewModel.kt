@@ -22,12 +22,14 @@ class RegisterViewModel(
 
     override suspend fun onUiIntent(intent: RegisterUiIntent) {
         when (intent) {
-            is RegisterUiIntent.Register -> register(
-                name = intent.name,
-                lastName = intent.lastname,
-                email = intent.email,
-                password = intent.password,
-            )
+            is RegisterUiIntent.Register -> launchIO {
+                register(
+                    name = intent.name,
+                    lastName = intent.lastname,
+                    email = intent.email,
+                    password = intent.password,
+                )
+            }
         }
     }
 

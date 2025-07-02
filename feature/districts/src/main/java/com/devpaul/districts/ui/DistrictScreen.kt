@@ -12,16 +12,14 @@ import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBar
 
 @Composable
-fun DistrictNewScreen(
+fun DistrictScreen(
     navController: NavHostController
 ) {
     Scaffold(
         topBar = {
             TopBar(
-                title = stringResource(R.string.app_name),
-                onLogoutClick = {
-                    // viewModel.logOut(navController)
-                })
+                title = stringResource(R.string.header_available_zones),
+            )
         },
         bottomBar = {
             BottomNavigationBar(navController)

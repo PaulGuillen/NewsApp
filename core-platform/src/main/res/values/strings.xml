@@ -50,4 +50,11 @@
     <!--Profile Screen-->
     <string name="button_update">Actualizar</string>
 
+    <!--Titles Screen-->
+    <string name="header_update">Actualizar datos</string>
+    <string name="header_my_account">Mi cuenta</string>
+    <string name="header_available_zones">Zonas disponibles</string>
+    <string name="header_actually">Lo mas reciente</string>
+    <string name="header_explore">Panel principal</string>
+
 </resources>

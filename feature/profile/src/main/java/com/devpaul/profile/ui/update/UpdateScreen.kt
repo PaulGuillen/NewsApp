@@ -136,7 +136,10 @@ fun UpdateScreen(
 
         Scaffold(
             topBar = {
-                TopBar(title = stringResource(R.string.app_name))
+                TopBar(
+                    title = stringResource(R.string.header_update),
+                    onBackClick = { navController.popBackStack() },
+                )
             },
         ) { innerPadding ->
             UpdateScreenContent(

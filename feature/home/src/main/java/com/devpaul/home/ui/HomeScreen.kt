@@ -23,13 +23,14 @@ import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.ui.components.AcknowledgmentSection
 import com.devpaul.home.ui.components.DollarQuoteCard
+import com.devpaul.home.ui.components.SectionBanner
 import com.devpaul.home.ui.components.SectionsRow
 import com.devpaul.home.ui.components.UITCard
-import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
-import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.atoms.base.SectionHeader
-import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.domain.handleDefaultErrors
+import com.devpaul.shared.ui.components.atoms.base.SectionHeader
+import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -47,9 +48,7 @@ fun HomeScreen(navController: NavHostController) {
     ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
-                TopBar(
-                    title = stringResource(R.string.app_name)
-                )
+                TopBar(title = stringResource(R.string.header_explore))
             },
             bottomBar = {
                 BottomNavigationBar(navController)
@@ -81,6 +80,7 @@ fun HomeContent(
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
+        SectionBanner()
         SectionHeader(stringResource(R.string.section_gratitude_header))
         AcknowledgmentSection(
             context = context,

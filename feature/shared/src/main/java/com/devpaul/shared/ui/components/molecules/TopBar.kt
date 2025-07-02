@@ -1,6 +1,7 @@
 package com.devpaul.shared.ui.components.molecules
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,12 +20,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     title: String,
     onBackClick: (() -> Unit)? = null,
     onLogoutClick: (() -> Unit)? = null,
+    mustBeCentered: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {
         if (onLogoutClick != null) {
             IconButton(onClick = onLogoutClick) {
@@ -41,15 +46,31 @@ fun TopBar(
         color = MaterialTheme.colorScheme.surface
     ) {
         TopAppBar(
-            title = { Text(text = title, fontWeight = FontWeight.Bold) },
+            title = {
+                if (mustBeCentered) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = title,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                } else {
+                    Text(
+                        text = title,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
             actions = actions,
             navigationIcon = {
-                onBackClick?.let {
-                    IconButton(onClick = it) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Atrás"
-                        )
+                if (!mustBeCentered) {
+                    onBackClick?.let {
+                        IconButton(onClick = it) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Atrás"
+                            )
+                        }
                     }
                 }
             }
