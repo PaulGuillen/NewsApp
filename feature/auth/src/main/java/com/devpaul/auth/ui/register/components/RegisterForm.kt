@@ -38,13 +38,14 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.auth.domain.entity.Register
 import com.devpaul.auth.ui.register.RegisterFormCallbacks
 import com.devpaul.auth.ui.register.RegisterFormState
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.dialog.ErrorNotification
 import com.devpaul.shared.ui.components.atoms.base.dialog.SuccessNotification
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -123,13 +124,13 @@ fun RegisterForm(
             RegisterBody(
                 state = state,
                 callbacks = callbacks,
+                validateAndRegister = ::validateAndRegister
             )
         },
         footer = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 RegisterFooter(
                     navHostController = navHostController,
-                    validateAndRegister = ::validateAndRegister,
                 )
             }
         }
@@ -177,6 +178,7 @@ fun RegisterForm(
 fun RegisterBody(
     state: RegisterFormState,
     callbacks: RegisterFormCallbacks,
+    validateAndRegister: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -208,30 +210,29 @@ fun RegisterBody(
                 )
 
                 RegisterFormFields(state = state, callbacks = callbacks)
+
             }
         }
-    }
-}
 
-@Composable
-fun RegisterFooter(
-    navHostController: NavHostController,
-    validateAndRegister: () -> Unit,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
-    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         CustomButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.register_button),
             onClick = { validateAndRegister() },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
 
+@Composable
+fun RegisterFooter(
+    navHostController: NavHostController,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -242,7 +243,9 @@ fun RegisterFooter(
                 style = MaterialTheme.typography.bodyMedium
             )
             TextButton(onClick = {
-                navHostController.popBackStack()
+                navHostController.navigate(Screen.Login.route) {
+                    launchSingleTop = true
+                }
             }) {
                 Text(
                     text = stringResource(id = R.string.login_button),
@@ -250,8 +253,6 @@ fun RegisterFooter(
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 
@@ -272,10 +273,11 @@ fun BaseContentLayoutPreview() {
                     onPasswordVisibilityChange = { },
                     onConfirmPasswordVisibilityChange = { }
                 ),
+                validateAndRegister = { }
             )
         },
         footer = {
-            RegisterFooter(navHostController = rememberNavController(), validateAndRegister = { })
+            RegisterFooter(navHostController = rememberNavController())
         }
     )
 }

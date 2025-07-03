@@ -2,12 +2,14 @@ package com.devpaul.auth.ui.login.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +18,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,14 +31,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.auth.domain.entity.Login
@@ -64,6 +72,7 @@ fun LoginForm(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var rememberMe by remember { mutableStateOf(false) }
 
     fun validateLogin() {
         val validationResult = validateStartSession(context, email, password)
@@ -94,6 +103,8 @@ fun LoginForm(
                 onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
                 onLoginClick = ::validateLogin,
                 onForgotPasswordClick = ::validateRecoveryPassword,
+                rememberMe = rememberMe,
+                onRememberMeChange = { rememberMe = it }
             )
         },
         footer = {
@@ -125,7 +136,9 @@ fun LoginBody(
     passwordVisible: Boolean,
     onPasswordVisibilityChange: () -> Unit,
     onLoginClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    rememberMe: Boolean,
+    onRememberMeChange: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -150,6 +163,33 @@ fun LoginBody(
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
+
+                Text(
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .fillMaxWidth(),
+                    text = "Bienvenido a Info Perú",
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                )
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Ingresa con tus credenciales para iniciar sesión",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                )
+
+                HorizontalDivider(
+                    thickness = 1.5.dp,
+                    color = Color.LightGray,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
                 CustomOutlinedTextField(
                     value = email,
                     onValueChange = onEmailChange,
@@ -176,12 +216,30 @@ fun LoginBody(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextButton(
-            modifier = Modifier.align(Alignment.End),
-            onClick = onForgotPasswordClick
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Text(stringResource(id = R.string.forgot_password), color = BrickRed)
+            Checkbox(
+                modifier = Modifier.offset(x = (-10).dp),
+                checked = rememberMe,
+                onCheckedChange = { onRememberMeChange(it) },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = BrickRed,
+                    uncheckedColor = Color.Black,
+                )
+            )
+            Text(
+                modifier = Modifier.offset(x = (-10).dp),
+                text = "Recordar usuario/contraseña",
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 14.sp,
+            )
         }
+
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -189,7 +247,22 @@ fun LoginBody(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.login_button),
             onClick = onLoginClick,
+            painterIcon = painterResource(id = R.drawable.baseline_self_improvement_24),
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextButton(
+            modifier = Modifier.align(Alignment.End),
+            onClick = onForgotPasswordClick
+        ) {
+            Text(
+                stringResource(id = R.string.forgot_password),
+                modifier = Modifier.offset(x = (10).dp),
+                color = BrickRed,
+            )
+        }
+
     }
 }
 
@@ -197,24 +270,32 @@ fun LoginBody(
 fun LoginFooter(
     navHostController: NavHostController
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
-        Text(
-            text = stringResource(id = R.string.not_have_account),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        TextButton(onClick = {
-            navHostController.navigate(Screen.Register.route)
-        }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
             Text(
-                text = stringResource(id = R.string.register),
-                color = BrickRed,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                text = stringResource(id = R.string.not_have_account),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyMedium
             )
+            TextButton(onClick = {
+                if (navHostController.currentDestination?.route != Screen.Register.route) {
+                    navHostController.navigate(Screen.Register.route) {
+                        launchSingleTop = true
+                    }
+                }
+            }) {
+                Text(
+                    text = stringResource(id = R.string.register),
+                    color = BrickRed
+                )
+            }
         }
     }
 }
@@ -233,7 +314,9 @@ fun BaseContentLayoutPreview() {
                 passwordVisible = false,
                 onPasswordVisibilityChange = {},
                 onLoginClick = {},
-                onForgotPasswordClick = {}
+                onForgotPasswordClick = {},
+                rememberMe = false,
+                onRememberMeChange = {}
             )
         },
         footer = {
