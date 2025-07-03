@@ -1,9 +1,8 @@
-package com.devpaul.home.ui
+package com.devpaul.home.ui.home
 
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.home.domain.usecase.DollarQuoteUC
-import com.devpaul.home.domain.usecase.GratitudeUC
 import com.devpaul.home.domain.usecase.SectionUC
 import com.devpaul.home.domain.usecase.UITValueUC
 import org.koin.android.annotation.KoinViewModel
@@ -13,13 +12,11 @@ class HomeViewModel(
     private val dollarQuoteUC: DollarQuoteUC,
     private val uitValueUC: UITValueUC,
     private val sectionUC: SectionUC,
-    private val gratitudeUC: GratitudeUC,
 ) : StatefulViewModel<HomeUiState, HomeUiIntent, HomeUiEvent>(
     defaultUIState = {
         HomeUiState()
     }
 ) {
-
     init {
         HomeUiIntent.GetHomeServices.execute()
     }
@@ -30,33 +27,19 @@ class HomeViewModel(
                 launchConcurrentRequests(
                     { fetchDollarQuote() },
                     { fetchUit() },
-                    { fetchSection() },
-                    { fetchGratitude() }
                 )
             }
 
-            is HomeUiIntent.GetGratitudeServices -> {
-                launchIO {
-                    fetchGratitude()
-                }
-            }
-
-            is HomeUiIntent.GetSections -> {
-                launchIO {
-                    fetchSection()
-                }
-            }
-
             is HomeUiIntent.GetDollarQuote -> {
-               launchIO {
+                launchIO {
                     fetchDollarQuote()
-               }
+                }
             }
 
             is HomeUiIntent.GetUITValue -> {
-               launchIO {
+                launchIO {
                     fetchUit()
-               }
+                }
             }
         }
     }
@@ -148,32 +131,4 @@ class HomeViewModel(
             }
     }
 
-    private suspend fun fetchGratitude() {
-        updateUiStateOnMain { it.copy(gratitude = ResultState.Loading) }
-        val result = gratitudeUC()
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is GratitudeUC.Success.GratitudeSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(gratitude = ResultState.Success(it.gratitude))
-                        }
-                    }
-                }
-            }
-            .onFailure<GratitudeUC.Failure> {
-                when (it) {
-                    is GratitudeUC.Failure.GratitudeError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                gratitude = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar los agradecimientos"
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-    }
 }

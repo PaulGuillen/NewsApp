@@ -7,6 +7,7 @@ sealed class Screen(val route: String) {
     data object Login : Screen(route = "login")
     data object Register : Screen(route = "register")
     data object Home : Screen(route = "home")
+    data object Acknowledgment : Screen(route = "acknowledgment")
     data object News : Screen(route = "news")
     data object NewsDetail : Screen(route = "all_news/{newsType}/{country}") {
         fun createRoute(newsType: String, country: Any): String {

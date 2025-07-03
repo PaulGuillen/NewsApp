@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.components
+package com.devpaul.home.ui.home.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box

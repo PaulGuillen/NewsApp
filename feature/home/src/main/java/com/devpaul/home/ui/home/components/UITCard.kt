@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.components
+package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent

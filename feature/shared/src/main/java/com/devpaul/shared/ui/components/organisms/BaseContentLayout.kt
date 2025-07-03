@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BaseContentLayout(
     modifier: Modifier = Modifier,
+    isBodyScrollable: Boolean = true,
     header: @Composable () -> Unit = {},
     body: @Composable () -> Unit = {},
     footer: @Composable () -> Unit = {}
@@ -27,35 +28,65 @@ fun BaseContentLayout(
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val isPortrait = maxHeight > maxWidth
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(
-                    horizontal = if (!isPortrait) 48.dp else 0.dp,
-                    vertical = 24.dp
-                ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                header()
-            }
-
-            Box(
+        if (isBodyScrollable) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                body()
-            }
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    header()
+                }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(
+                            horizontal = if (!isPortrait) 48.dp else 0.dp,
+                        ),
+                ) {
+                    body()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                ) {
+                    footer()
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                footer()
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    header()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(
+                            horizontal = if (!isPortrait) 48.dp else 0.dp,
+                        ),
+                ) {
+                    body()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                ) {
+                    footer()
+                }
             }
         }
     }

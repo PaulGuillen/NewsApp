@@ -57,15 +57,6 @@ fun LoginContent(
         },
         showSnackBar = showSnackBar,
         uiState = uiState.login,
-        onError = {
-            val request = uiState.loginRequest
-            onIntent(
-                LoginUiIntent.Login(
-                    email = request?.email ?: "",
-                    password = ""
-                )
-            )
-        }
     )
 }
 

@@ -1,4 +1,4 @@
-package com.devpaul.home.ui
+package com.devpaul.home.ui.home
 
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.domain.entity.DollarQuoteEntity
@@ -10,5 +10,4 @@ data class HomeUiState(
     val dollarQuote: ResultState<DollarQuoteEntity> = ResultState.Loading,
     val uitValue: ResultState<UITEntity> = ResultState.Loading,
     val section: ResultState<SectionEntity> = ResultState.Loading,
-    val gratitude: ResultState<GratitudeEntity> = ResultState.Loading
 )

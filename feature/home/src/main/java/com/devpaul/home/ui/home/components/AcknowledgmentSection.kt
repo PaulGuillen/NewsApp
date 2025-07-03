@@ -1,26 +1,27 @@
-package com.devpaul.home.ui.components
+package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,81 +40,43 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.BackgroundBlack
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.GratitudeMock
+import com.devpaul.home.domain.entity.GratitudeDataEntity
 import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.shared.ui.components.atoms.skeleton.AcknowledgmentSkeleton
 
 @Composable
 fun AcknowledgmentSection(
+    modifier: Modifier = Modifier,
     context: Context,
     gratitudeState: ResultState<GratitudeEntity>,
     onRetry: () -> Unit,
 ) {
-
     when (gratitudeState) {
         is ResultState.Loading -> {
             AcknowledgmentSkeleton()
         }
 
         is ResultState.Success -> {
-            Row(
-                modifier = Modifier
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = modifier
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                gratitudeState.response.data.forEach { gratitude ->
-                    Card(
+
+                items(gratitudeState.response.data) { gratitude ->
+                    GratitudeCard(
+                        gratitude = gratitude,
+                        context = context,
                         modifier = Modifier
-                            .width(320.dp)
-                            .padding(8.dp)
-                            .clickable {
-                                val intent =
-                                    Intent(Intent.ACTION_VIEW, gratitude.link.toUri())
-                                context.startActivity(intent)
-                            },
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background
-                        )
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(gratitude.imageUrl),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clip(RoundedCornerShape(16.dp)),
-                                contentScale = ContentScale.Crop
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(BackgroundBlack.copy(alpha = 0.5f))
-                            )
-                            Text(
-                                text = gratitude.title,
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSecondary,
-                                fontSize = 18.sp,
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(end = 14.dp, top = 8.dp),
-                                maxLines = 1,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                            .fillMaxWidth()
+                    )
                 }
             }
         }
@@ -122,7 +85,8 @@ fun AcknowledgmentSection(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp),
+                    .height(220.dp)
+                    .padding(top = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Card(
@@ -165,8 +129,67 @@ fun AcknowledgmentSection(
             }
         }
 
-        else -> {
-            // Handle other states if necessary
+        else -> Unit
+    }
+}
+
+@Composable
+fun GratitudeCard(
+    gratitude: GratitudeDataEntity,
+    context: Context,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .padding(vertical = 10.dp)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, gratitude.link.toUri())
+                context.startActivity(intent)
+            },
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(gratitude.imageUrl),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Color.LightGray)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = gratitude.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

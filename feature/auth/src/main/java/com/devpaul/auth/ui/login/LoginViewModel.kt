@@ -65,8 +65,6 @@ class LoginViewModel(
                         }
                     }
                 }
-            }.also {
-                updateUiStateOnMain { it.copy(login = ResultState.Idle) }
             }
     }
 

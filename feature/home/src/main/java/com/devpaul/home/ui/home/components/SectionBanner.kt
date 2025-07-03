@@ -1,4 +1,4 @@
-package com.devpaul.home.ui.components
+package com.devpaul.home.ui.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,7 +53,7 @@ fun SectionBanner(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 12.dp),
             shape = RoundedCornerShape(8.dp),
             color = Color.White,
             tonalElevation = 2.dp,

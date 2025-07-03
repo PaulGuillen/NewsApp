@@ -44,8 +44,8 @@ import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
-import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -58,7 +58,7 @@ fun LoginForm(
     showSnackBar: (String) -> Unit,
     uiState: ResultState<Login>?,
     onSuccess: (() -> Unit)? = null,
-    onError: () -> Unit,
+    onError: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -84,7 +84,6 @@ fun LoginForm(
     }
 
     BaseContentLayout(
-        header = {},
         body = {
             LoginBody(
                 email = email,
@@ -110,7 +109,7 @@ fun LoginForm(
         }
 
         is ResultState.Error -> {
-            onError()
+            showSnackBar(uiState.message)
         }
 
         else -> {}

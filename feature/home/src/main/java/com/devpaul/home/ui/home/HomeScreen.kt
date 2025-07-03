@@ -1,4 +1,4 @@
-package com.devpaul.home.ui
+package com.devpaul.home.ui.home
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -7,48 +7,53 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.core_platform.R
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
-import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.data.datasource.mock.UITMock
-import com.devpaul.home.ui.components.AcknowledgmentSection
-import com.devpaul.home.ui.components.DollarQuoteCard
-import com.devpaul.home.ui.components.SectionBanner
-import com.devpaul.home.ui.components.SectionsRow
-import com.devpaul.home.ui.components.UITCard
-import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.atoms.base.SectionHeader
+import com.devpaul.home.ui.home.components.DollarQuoteCard
+import com.devpaul.home.ui.home.components.SectionBanner
+import com.devpaul.home.ui.home.components.UITCard
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val viewModel: HomeViewModel = koinViewModel()
-
     val context = LocalContext.current
 
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navController,
-        onDefaultError = { error, showSnackBar ->
-            handleDefaultErrors(error, showSnackBar)
-        }
     ) { _, uiState, onIntent, _, _ ->
         Scaffold(
             topBar = {
-                TopBar(title = stringResource(R.string.header_explore))
+                TopBarPrincipal(
+                    style = 1,
+                    onEndIconClick = {
+                        navController.navigate(
+                            route = Screen.Acknowledgment.route
+                        )
+                    },
+                )
             },
             bottomBar = {
                 BottomNavigationBar(navController)
@@ -60,7 +65,6 @@ fun HomeScreen(navController: NavHostController) {
                 innerPadding = innerPadding,
                 uiState = uiState,
                 onIntent = onIntent,
-                navController = navController,
             )
         }
     }
@@ -73,7 +77,6 @@ fun HomeContent(
     uiState: HomeUiState,
     innerPadding: PaddingValues,
     onIntent: (HomeUiIntent) -> Unit,
-    navController: NavHostController,
 ) {
     Column(
         modifier = modifier
@@ -81,25 +84,21 @@ fun HomeContent(
             .verticalScroll(rememberScrollState())
     ) {
         SectionBanner()
-        SectionHeader(stringResource(R.string.section_gratitude_header))
-        AcknowledgmentSection(
-            context = context,
-            gratitudeState = uiState.gratitude,
-            onRetry = {
-                onIntent(HomeUiIntent.GetGratitudeServices)
-            }
+
+        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+
+        Text(
+            text = "Información diaria de Perú",
+            fontSize = 14.sp,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.CenterHorizontally),
+            textAlign = TextAlign.Center
         )
 
-        SectionHeader(stringResource(R.string.section_available_sections_header))
-        SectionsRow(
-            sectionState = uiState.section,
-            onRetry = {
-                onIntent(HomeUiIntent.GetSections)
-            },
-            navController = navController,
-        )
+        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
 
-        SectionHeader(stringResource(R.string.section_daily_info_header))
         DollarQuoteCard(
             context = context,
             dollarQuoteState = uiState.dollarQuote,
@@ -136,13 +135,11 @@ fun HomeScreenPreview() {
             uiState = HomeUiState(
                 dollarQuote = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
                 uitValue = ResultState.Success(UITMock().uitMock),
-                gratitude = ResultState.Success(GratitudeMock().gratitudeMock),
                 section = ResultState.Success(SectionMock().sectionMock),
             ),
             innerPadding = innerPadding,
             context = LocalContext.current,
             onIntent = { _ -> },
-            navController = navController,
         )
     }
 }
