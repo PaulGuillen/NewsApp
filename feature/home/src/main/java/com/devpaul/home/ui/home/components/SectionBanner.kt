@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,72 +28,129 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.devpaul.core_platform.R
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.PinkGray
+import com.devpaul.home.data.datasource.mock.SectionMock
+import com.devpaul.home.domain.entity.SectionEntity
+import com.devpaul.shared.ui.components.atoms.skeleton.SectionsRowContactSkeleton
 
 @Composable
 fun SectionBanner(
-    modifier: Modifier = Modifier
+    sectionState: ResultState<SectionEntity>,
+    onRetryClick: (() -> Unit)? = null,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(PinkGray)
-            .padding(vertical = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_world),
-            contentDescription = "Mundo",
-            modifier = Modifier
-                .size(80.dp)
-                .offset { IntOffset(0, 0) }
-                .zIndex(1f)
-        )
+    when (sectionState) {
+        is ResultState.Loading -> {
+            SectionsRowContactSkeleton()
+        }
 
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            shape = RoundedCornerShape(8.dp),
-            color = Color.White,
-            tonalElevation = 2.dp,
-            shadowElevation = 2.dp,
-        ) {
+        is ResultState.Error -> {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(PinkGray)
+                    .padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
+                Image(
+                    painter = painterResource(id = R.drawable.ic_world),
+                    contentDescription = "Mundo",
                     modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    SectionItem(
-                        iconRes = R.drawable.ic_news,
-                        label = "Noticias"
-                    )
-                    SectionItem(
-                        iconRes = R.drawable.ic_services,
-                        label = "Servicios"
-                    )
-                    SectionItem(
-                        iconRes = R.drawable.ic_districts,
-                        label = "Distritos"
-                    )
-                }
-
-                HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
-
-                Text(
-                    text = "Secciones disponibles",
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(8.dp),
-                    color = Black
+                        .size(80.dp)
+                        .offset { IntOffset(0, 0) }
+                        .zIndex(1f)
                 )
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White,
+                    tonalElevation = 2.dp,
+                    shadowElevation = 2.dp,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Button(onClick = { onRetryClick?.invoke() }) {
+                            Text(text = "Reintentar")
+                        }
+                    }
+                }
             }
         }
+
+        is ResultState.Success -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(PinkGray)
+                    .padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_world),
+                    contentDescription = "Mundo",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .offset { IntOffset(0, 0) }
+                        .zIndex(1f)
+                )
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White,
+                    tonalElevation = 2.dp,
+                    shadowElevation = 2.dp,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            SectionItem(
+                                iconRes = R.drawable.ic_news,
+                                label = "Noticias"
+                            )
+                            SectionItem(
+                                iconRes = R.drawable.ic_services,
+                                label = "Servicios"
+                            )
+                            SectionItem(
+                                iconRes = R.drawable.ic_districts,
+                                label = "Distritos"
+                            )
+                        }
+
+                        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+
+                        Text(
+                            text = "Secciones disponibles",
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(8.dp),
+                            color = Black
+                        )
+                    }
+                }
+            }
+        }
+
+        else -> {}
     }
+
+
 }
 
 @Composable
@@ -112,5 +170,24 @@ private fun SectionItem(iconRes: Int, label: String) {
 @Preview(showBackground = true)
 @Composable
 fun SectionBannerPreview() {
-    SectionBanner()
+    SectionBanner(
+        sectionState = ResultState.Success(SectionMock().sectionMock)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SectionBannerErrorPreview() {
+    SectionBanner(
+        sectionState = ResultState.Error("Error al cargar las secciones"),
+        onRetryClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SectionBannerLoadingPreview() {
+    SectionBanner(
+        sectionState = ResultState.Loading
+    )
 }

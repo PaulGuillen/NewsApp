@@ -27,6 +27,7 @@ class HomeViewModel(
                 launchConcurrentRequests(
                     { fetchDollarQuote() },
                     { fetchUit() },
+                    { fetchSection() }
                 )
             }
 

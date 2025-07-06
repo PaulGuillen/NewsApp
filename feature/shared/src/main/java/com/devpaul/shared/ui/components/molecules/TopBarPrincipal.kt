@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +37,7 @@ fun TopBarPrincipal(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(60.dp)
             .background(Color.White)
             .statusBarsPadding(),
         shadowElevation = 4.dp,

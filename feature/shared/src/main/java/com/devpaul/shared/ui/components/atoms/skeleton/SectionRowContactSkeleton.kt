@@ -1,68 +1,81 @@
 package com.devpaul.shared.ui.components.atoms.skeleton
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devpaul.core_platform.theme.PinkGray
 
 @Composable
 fun SectionsRowContactSkeleton() {
-
-    val shimmerColor = listOf(
-        Color.LightGray.copy(alpha = 0.9f),
-        Color.LightGray.copy(alpha = 0.3f),
-        Color.LightGray.copy(alpha = 0.9f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "")
-    val color by transition.animateColor(
-        initialValue = shimmerColor[0],
-        targetValue = shimmerColor[1],
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000),
-            repeatMode = RepeatMode.Reverse
-        ), label = ""
-    )
-
-    Row(
+    Column(
         modifier = Modifier
-            .horizontalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .background(PinkGray)
+            .padding(vertical = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        repeat(3) {
-            Card(
-                modifier = Modifier
-                    .width(220.dp)
-                    .height(140.dp)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color)
-                )
+        Box(
+            modifier = Modifier
+                .size(80.dp)
+                .background(Color.LightGray.copy(alpha = 0.5f), shape = RoundedCornerShape(50))
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Skeleton para las 3 secciones
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            repeat(3) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .background(
+                                Color.LightGray.copy(alpha = 0.5f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(12.dp)
+                            .background(
+                                Color.LightGray.copy(alpha = 0.5f),
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                    )
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .width(160.dp)
+                .height(12.dp)
+                .background(Color.LightGray.copy(alpha = 0.5f), shape = RoundedCornerShape(50))
+        )
     }
 }
 
