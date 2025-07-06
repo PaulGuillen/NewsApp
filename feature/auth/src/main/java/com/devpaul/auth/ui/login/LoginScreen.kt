@@ -49,8 +49,14 @@ fun LoginContent(
 ) {
     LoginForm(
         navHostController = navHostController,
-        onLogin = { email, password ->
-            onIntent(LoginUiIntent.Login(email.trim(), password.trim()))
+        onLogin = { email, password, rememberMe ->
+            onIntent(
+                LoginUiIntent.Login(
+                    email = email.trim(),
+                    password = password.trim(),
+                    rememberMe = rememberMe,
+                )
+            )
         },
         onForgotPassword = { email ->
             onIntent(LoginUiIntent.ResetPassword(email.trim()))

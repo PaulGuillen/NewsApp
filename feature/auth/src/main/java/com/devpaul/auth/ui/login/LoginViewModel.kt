@@ -27,13 +27,13 @@ class LoginViewModel(
 
     override suspend fun onUiIntent(intent: LoginUiIntent) {
         when (intent) {
-            is LoginUiIntent.Login -> login(email = intent.email)
+            is LoginUiIntent.Login -> login(email = intent.email, rememberMe = intent.rememberMe)
             is LoginUiIntent.ResetPassword -> sendPasswordResetEmail(email = intent.email)
             is LoginUiIntent.CheckUserLoggedIn -> launchIO { checkUserLoggedIn() }
         }
     }
 
-    private suspend fun login(email: String) {
+    private suspend fun login(email: String, rememberMe: Boolean) {
         val requestLogin =
             LoginRequest(
                 email = email,
@@ -47,8 +47,12 @@ class LoginViewModel(
             .onSuccessful {
                 when (it) {
                     is LoginUC.Success.LoginSuccess -> {
-                        dataStoreUseCase.setValue(LOG_IN_KEY, true)
                         dataStoreUseCase.setValue(USER_UID_KEY, it.login.uid)
+                        if (rememberMe) {
+                            dataStoreUseCase.setValue(LOG_IN_KEY, true)
+                        } else {
+                            dataStoreUseCase.setValue(LOG_IN_KEY, false)
+                        }
                         LoginUiEvent.UserLogged.send()
                     }
                 }
@@ -65,6 +69,8 @@ class LoginViewModel(
                         }
                     }
                 }
+            }.also {
+                updateUiStateOnMain { it.copy(login = ResultState.Idle) }
             }
     }
 
@@ -74,11 +80,11 @@ class LoginViewModel(
 
     private suspend fun checkUserLoggedIn() {
         val isLoggedIn = dataStoreUseCase.getBoolean(LOG_IN_KEY) == true
-        updateUiStateOnMain { it.copy(login = ResultState.Loading) }
-        delay(Constant.LOGIN_DELAY)
-        updateUiStateOnMain { it.copy(login = null) }
         if (isLoggedIn) {
+            updateUiStateOnMain { it.copy(login = ResultState.Loading) }
+            delay(Constant.LOGIN_DELAY)
             LoginUiEvent.UserLogged.send()
         }
+        updateUiStateOnMain { it.copy(login = ResultState.Idle) }
     }
 }

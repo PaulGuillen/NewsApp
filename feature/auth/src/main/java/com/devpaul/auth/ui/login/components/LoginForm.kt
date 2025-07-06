@@ -61,12 +61,10 @@ import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 @Composable
 fun LoginForm(
     navHostController: NavHostController,
-    onLogin: (String, String) -> Unit,
+    onLogin: (String, String, Boolean) -> Unit,
     onForgotPassword: (String) -> Unit,
     showSnackBar: (String) -> Unit,
     uiState: ResultState<Login>?,
-    onSuccess: (() -> Unit)? = null,
-    onError: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -79,7 +77,7 @@ fun LoginForm(
         if (validationResult != null) {
             showSnackBar(validationResult)
         } else {
-            onLogin(email, password)
+            onLogin(email, password, rememberMe)
         }
     }
 
@@ -292,6 +290,7 @@ fun LoginFooter(
                 }
             }) {
                 Text(
+                    modifier = Modifier.offset(x = (-4).dp),
                     text = stringResource(id = R.string.register),
                     color = BrickRed
                 )
