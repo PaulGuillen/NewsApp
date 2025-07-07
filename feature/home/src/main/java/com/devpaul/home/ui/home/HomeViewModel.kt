@@ -42,6 +42,12 @@ class HomeViewModel(
                     fetchUit()
                 }
             }
+
+            is HomeUiIntent.GetSections -> {
+                launchIO {
+                    fetchSection()
+                }
+            }
         }
     }
 

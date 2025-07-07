@@ -51,6 +51,7 @@ fun HomeScreen(navController: NavHostController) {
             },
             body = {
                 HomeBody(
+                    navController = navController,
                     context = context,
                     uiState = uiState,
                     onIntent = onIntent,
@@ -65,12 +66,19 @@ fun HomeScreen(navController: NavHostController) {
 
 @Composable
 fun HomeBody(
+    navController: NavHostController,
     context: Context,
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     onIntent: (HomeUiIntent) -> Unit,
 ) {
-    SectionBanner(uiState.section)
+    SectionBanner(
+        navHostController = navController,
+        sectionState = uiState.section,
+        onRetryClick = {
+            onIntent(HomeUiIntent.GetSections)
+        }
+    )
 
     HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
 
@@ -115,6 +123,7 @@ fun HomeScreenPreview() {
         },
         body = {
             HomeBody(
+                navController = navController,
                 context = LocalContext.current,
                 uiState = HomeUiState(
                     dollarQuote = ResultState.Success(DollarQuoteMock().dollarQuoteMock),

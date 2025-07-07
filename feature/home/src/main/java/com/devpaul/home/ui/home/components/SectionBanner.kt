@@ -2,6 +2,7 @@ package com.devpaul.home.ui.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,22 +28,27 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.domain.entity.SectionEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.SectionsRowContactSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.SectionBannerSkeleton
 
 @Composable
 fun SectionBanner(
+    navHostController: NavHostController,
     sectionState: ResultState<SectionEntity>,
     onRetryClick: (() -> Unit)? = null,
 ) {
     when (sectionState) {
         is ResultState.Loading -> {
-            SectionsRowContactSkeleton()
+            SectionBannerSkeleton()
         }
 
         is ResultState.Error -> {
@@ -86,12 +92,14 @@ fun SectionBanner(
         }
 
         is ResultState.Success -> {
+            val sections = sectionState.response.data
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(PinkGray)
                     .padding(vertical = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_world),
@@ -120,18 +128,21 @@ fun SectionBanner(
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            SectionItem(
-                                iconRes = R.drawable.ic_news,
-                                label = "Noticias"
-                            )
-                            SectionItem(
-                                iconRes = R.drawable.ic_services,
-                                label = "Servicios"
-                            )
-                            SectionItem(
-                                iconRes = R.drawable.ic_districts,
-                                label = "Distritos"
-                            )
+                            sections.take(3).forEach { section ->
+                                SectionItem(
+                                    imageUrl = section.imageUrl,
+                                    label = section.title,
+                                    onClick = {
+                                        when (section.type.lowercase()) {
+                                            "districts" -> navHostController.navigate(Screen.Districts.route)
+                                            "news" -> navHostController.navigate(Screen.News.route)
+                                            "profile" -> navHostController.navigate(Screen.Profile.route)
+                                            else -> {
+                                            }
+                                        }
+                                    }
+                                )
+                            }
                         }
 
                         HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
@@ -149,15 +160,18 @@ fun SectionBanner(
 
         else -> {}
     }
-
-
 }
 
 @Composable
-private fun SectionItem(iconRes: Int, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun SectionItem(imageUrl: String, label: String, onClick: () -> Unit) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable {
+            onClick()
+        }
+    ) {
         Image(
-            painter = painterResource(id = iconRes),
+            painter = rememberAsyncImagePainter(imageUrl),
             contentDescription = label,
             modifier = Modifier.size(52.dp)
         )
@@ -166,11 +180,11 @@ private fun SectionItem(iconRes: Int, label: String) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun SectionBannerPreview() {
     SectionBanner(
+        navHostController = rememberNavController(),
         sectionState = ResultState.Success(SectionMock().sectionMock)
     )
 }
@@ -179,6 +193,7 @@ fun SectionBannerPreview() {
 @Composable
 fun SectionBannerErrorPreview() {
     SectionBanner(
+        navHostController = rememberNavController(),
         sectionState = ResultState.Error("Error al cargar las secciones"),
         onRetryClick = {}
     )
@@ -188,6 +203,7 @@ fun SectionBannerErrorPreview() {
 @Composable
 fun SectionBannerLoadingPreview() {
     SectionBanner(
+        navHostController = rememberNavController(),
         sectionState = ResultState.Loading
     )
 }

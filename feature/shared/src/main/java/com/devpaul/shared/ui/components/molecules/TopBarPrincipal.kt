@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -60,6 +61,7 @@ fun TopBarPrincipal(
                             onClick = it,
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
+                                .padding(end = 6.dp)
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
@@ -79,7 +81,10 @@ fun TopBarPrincipal(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(onClick = { onStartIconClick?.invoke() }) {
+                        IconButton(
+                            modifier = Modifier.padding(start = 6.dp),
+                            onClick = { onStartIconClick?.invoke() }
+                        ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_arrow_circle_left_24),
                                 contentDescription = "Atrás",
@@ -95,7 +100,10 @@ fun TopBarPrincipal(
                     }
 
                     onEndIconClick?.let {
-                        IconButton(onClick = it) {
+                        IconButton(
+                            modifier = Modifier.padding(end = 6.dp),
+                            onClick = it)
+                        {
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",

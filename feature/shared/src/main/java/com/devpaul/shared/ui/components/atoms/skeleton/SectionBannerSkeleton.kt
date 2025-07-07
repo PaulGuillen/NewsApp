@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.PinkGray
 
 @Composable
-fun SectionsRowContactSkeleton() {
+fun SectionBannerSkeleton() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,5 +82,5 @@ fun SectionsRowContactSkeleton() {
 @Preview(showBackground = true)
 @Composable
 fun SectionsRowContactShimmerPreview() {
-    SectionsRowContactSkeleton()
+    SectionBannerSkeleton()
 }
