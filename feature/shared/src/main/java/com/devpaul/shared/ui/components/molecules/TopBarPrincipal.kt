@@ -31,7 +31,7 @@ import com.devpaul.core_platform.theme.Black
 fun TopBarPrincipal(
     modifier: Modifier = Modifier,
     style: Int = 1,
-    titleStyle2: String = "",
+    title: String = "",
     onStartIconClick: (() -> Unit)? = null,
     onEndIconClick: (() -> Unit)? = null
 ) {
@@ -42,7 +42,8 @@ fun TopBarPrincipal(
             .background(Color.White)
             .statusBarsPadding(),
         shadowElevation = 4.dp,
-        color = Color.White
+        color = Color.White,
+        tonalElevation = 14.dp
     ) {
         when (style) {
             1 -> {
@@ -93,7 +94,7 @@ fun TopBarPrincipal(
                         }
 
                         Text(
-                            text = titleStyle2,
+                            text = title,
                             fontSize = 20.sp,
                             color = Black
                         )
@@ -102,11 +103,41 @@ fun TopBarPrincipal(
                     onEndIconClick?.let {
                         IconButton(
                             modifier = Modifier.padding(end = 6.dp),
-                            onClick = it)
+                            onClick = it
+                        )
                         {
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",
+                                tint = Black
+                            )
+                        }
+                    }
+                }
+            }
+
+            3 -> {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = title,
+                        fontSize = 20.sp,
+                        color = Black,
+                        fontWeight  = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
+
+                    onEndIconClick?.let {
+                        IconButton(
+                            onClick = it,
+                            modifier = Modifier.padding(end = 6.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.outline_hr_resting_24),
+                                contentDescription = "Icono final",
                                 tint = Black
                             )
                         }

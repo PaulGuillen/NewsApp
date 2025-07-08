@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -31,6 +32,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
@@ -171,10 +173,17 @@ private fun SectionItem(imageUrl: String, label: String, onClick: () -> Unit) {
         }
     ) {
         Image(
-            painter = rememberAsyncImagePainter(imageUrl),
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .size(100)
+                    .build()
+            ),
             contentDescription = label,
             modifier = Modifier.size(52.dp)
         )
+
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = label, style = MaterialTheme.typography.bodyMedium, fontSize = 14.sp)
     }

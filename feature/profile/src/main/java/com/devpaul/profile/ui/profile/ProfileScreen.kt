@@ -3,15 +3,12 @@ package com.devpaul.profile.ui.profile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Build
@@ -22,30 +19,29 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_data.util.Constant
-import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
-import com.devpaul.shared.domain.handleDefaultErrors
-import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
+import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,37 +60,35 @@ fun ProfileScreen(navController: NavHostController) {
                 }
 
                 is ProfileUiEvent.UserLoggedOut -> {
-                    navController.navigate("login") {
+                    navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
                 }
             }
         },
-        onDefaultError = { error, showSnackBar ->
-            handleDefaultErrors(error, showSnackBar)
-        }
     ) { _, uiState, onIntent, _, _ ->
-        Scaffold(
-            topBar = {
-                TopBar(
-                    title = stringResource(R.string.header_my_account)
+        BaseContentLayout(
+            header = {
+                TopBarPrincipal(
+                    style = 3,
+                    title = "Mi Cuenta"
                 )
             },
-            bottomBar = {
+            body = {
+                ProfileContent(
+                    modifier = Modifier.fillMaxSize(),
+                    navController = navController,
+                    onIntent = onIntent,
+                    onNavigate = { route ->
+                        navController.navigate(route)
+                    },
+                    uiState = uiState
+                )
+            },
+            footer = {
                 BottomNavigationBar(navController)
             },
-        ) { innerPadding ->
-            ProfileContent(
-                modifier = Modifier.fillMaxSize(),
-                navController = navController,
-                innerPadding = innerPadding,
-                onIntent = onIntent,
-                onNavigate = { route ->
-                    navController.navigate(route)
-                },
-                uiState = uiState
-            )
-        }
+        )
     }
 }
 
@@ -102,75 +96,97 @@ fun ProfileScreen(navController: NavHostController) {
 fun ProfileContent(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    innerPadding: PaddingValues,
     onNavigate: (String) -> Unit = {},
     onIntent: (ProfileUiIntent) -> Unit = {},
     uiState: ProfileUiState
 ) {
-    var profile: ProfileUserEntity? = null
-    var fullName = "Cargando..."
-    var email = ""
-
-    when (val state = uiState.profile) {
-        is ResultState.Success -> {
-            profile = state.response.data
-            fullName = "${profile.name} ${profile.lastname}"
-            email = profile.email
-        }
-
-        is ResultState.Error -> {
-            fullName = "Error al cargar"
-        }
-
-        is ResultState.Loading -> {
-            ScreenLoading()
-            fullName = "Cargando..."
-        }
-
-        else -> {}
-    }
+    var profile: ProfileUserEntity?
+    var fullName: String
+    var email: String
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(innerPadding)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 10.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ProfileImagePicker(
-                    defaultImageUrl = Constant.URL_IMAGE,
-                    base64Image = profile?.image,
-                    showDialogOnClick = false,
-                    onImageSelected = { _, _ -> }
-                )
+            when (val state = uiState.profile) {
+                is ResultState.Loading -> {
+                    SkeletonRenderer(type = SkeletonType.PROFILE_ACCOUNT)
+                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                is ResultState.Success -> {
+                    profile = state.response.data
+                    fullName = "${profile?.name} ${profile?.lastname}"
+                    email = profile?.email.toString()
 
-                Text(fullName, style = MaterialTheme.typography.titleMedium)
-                Text(email, style = MaterialTheme.typography.bodySmall)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        ProfileImagePicker(
+                            defaultImageUrl = Constant.URL_IMAGE,
+                            base64Image = profile?.image,
+                            showDialogOnClick = false,
+                            onImageSelected = { _, _ -> }
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                CustomButton(
-                    modifier = Modifier.fillMaxWidth(0.6f),
-                    text = "Editar Perfil",
-                    onClick = {
-                        navController.navigate(Screen.ProfileUpdate.route)
+                        Text(fullName, style = MaterialTheme.typography.titleMedium)
+                        Text(email, style = MaterialTheme.typography.bodySmall)
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        CustomButton(
+                            modifier = Modifier.fillMaxWidth(0.6f),
+                            text = "Editar Perfil",
+                            onClick = {
+                                navController.navigate(Screen.ProfileUpdate.route)
+                            }
+                        )
                     }
-                )
+                }
+
+                is ResultState.Error -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        ProfileImagePicker(
+                            defaultImageUrl = Constant.URL_IMAGE,
+                            base64Image = null,
+                            showDialogOnClick = false,
+                            onImageSelected = { _, _ -> }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "Error al cargar perfil",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        CustomButton(
+                            modifier = Modifier.fillMaxWidth(0.6f),
+                            text = "Reintentar",
+                            onClick = {
+                                onIntent(ProfileUiIntent.GetUserProfile)
+                            }
+                        )
+                    }
+                }
+
+                else -> {}
             }
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -231,12 +247,43 @@ fun ProfileContent(
 @Preview(showBackground = true)
 @Composable
 fun ProfileContentPreview() {
-    ProfileContent(
-        modifier = Modifier.fillMaxSize(),
-        navController = NavHostController(LocalContext.current),
-        innerPadding = PaddingValues(0.dp),
-        onNavigate = {},
-        onIntent = {},
-        uiState = ProfileUiState(profile = ResultState.Loading)
+    BaseContentLayout(
+        header = {
+            TopBarPrincipal(
+                style = 3,
+                title = "Mi Cuenta"
+            )
+        },
+        body = {
+            ProfileContent(
+                modifier = Modifier.fillMaxSize(),
+                navController = rememberNavController(),
+                onNavigate = {},
+                onIntent = {},
+                uiState = ProfileUiState(profile = ResultState.Loading)
+            )
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileErrorContentPreview() {
+    BaseContentLayout(
+        header = {
+            TopBarPrincipal(
+                style = 3,
+                title = "Mi Cuenta"
+            )
+        },
+        body = {
+            ProfileContent(
+                modifier = Modifier.fillMaxSize(),
+                navController = rememberNavController(),
+                onNavigate = {},
+                onIntent = {},
+                uiState = ProfileUiState(profile = ResultState.Error("Error al cargar perfil"))
+            )
+        },
     )
 }

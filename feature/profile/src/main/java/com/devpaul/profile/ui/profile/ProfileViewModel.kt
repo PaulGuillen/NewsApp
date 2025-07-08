@@ -49,37 +49,10 @@ class ProfileViewModel(
         }
     }
 
-    private fun sharedApp() {
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "InfoPerú")
-            putExtra(Intent.EXTRA_TEXT, "Descarga InfoPerú desde https://infoperu.app")
-        }
-        ProfileUiEvent.LaunchIntent(intent = Intent.createChooser(shareIntent, "Compartir vía"))
-            .send()
-    }
-
-
-    private fun openTerms() {
-        val termsIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/terminos".toUri())
-        ProfileUiEvent.LaunchIntent(intent = termsIntent).send()
-    }
-
-
-    private fun openPrivacy() {
-        val privacyIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/privacidad".toUri())
-        ProfileUiEvent.LaunchIntent(intent = privacyIntent).send()
-    }
-
-    private fun logOut() {
-        dataStoreUseCase.setValue(LOG_IN_KEY, false)
-        ProfileUiEvent.UserLoggedOut.send()
-    }
-
     private suspend fun userProfile() {
         val uid = dataStoreUseCase.getString(USER_UID_KEY) ?: ""
-        val result = userProfileUC(UserProfileUC.Params(uid = uid))
         updateUiStateOnMain { it.copy(profile = ResultState.Loading) }
+        val result = userProfileUC(UserProfileUC.Params(uid = uid))
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
@@ -107,6 +80,33 @@ class ProfileViewModel(
                     }
                 }
             }
+    }
+
+    private fun sharedApp() {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "InfoPerú")
+            putExtra(Intent.EXTRA_TEXT, "Descarga InfoPerú desde https://infoperu.app")
+        }
+        ProfileUiEvent.LaunchIntent(intent = Intent.createChooser(shareIntent, "Compartir vía"))
+            .send()
+    }
+
+
+    private fun openTerms() {
+        val termsIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/terminos".toUri())
+        ProfileUiEvent.LaunchIntent(intent = termsIntent).send()
+    }
+
+
+    private fun openPrivacy() {
+        val privacyIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/privacidad".toUri())
+        ProfileUiEvent.LaunchIntent(intent = privacyIntent).send()
+    }
+
+    private fun logOut() {
+        dataStoreUseCase.setValue(LOG_IN_KEY, false)
+        ProfileUiEvent.UserLoggedOut.send()
     }
 
 }

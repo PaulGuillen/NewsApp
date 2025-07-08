@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -14,9 +15,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BaseContentLayout(
@@ -29,7 +29,8 @@ fun BaseContentLayout(
     val scrollState = rememberScrollState()
 
     val configuration = LocalConfiguration.current
-    val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
+    val isPortrait =
+        configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val horizontalPadding = if (isPortrait) 0.dp else 48.dp
 
     Scaffold(
@@ -62,12 +63,15 @@ fun BaseContentLayout(
             }
         }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = horizontalPadding)
+                .padding(
+                    top = if (header != null) innerPadding.calculateTopPadding() else 0.dp,
+                    bottom = if (footer != null) innerPadding.calculateBottomPadding() else 0.dp,
+                    start = horizontalPadding,
+                    end = horizontalPadding
+                )
                 .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
