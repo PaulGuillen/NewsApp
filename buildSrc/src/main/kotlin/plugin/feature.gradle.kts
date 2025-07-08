@@ -45,6 +45,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
 
+    lint {
+        disable += "NullSafeMutableLiveData"
+    }
+
 }
 
 ksp {

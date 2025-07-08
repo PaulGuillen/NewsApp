@@ -1,14 +1,6 @@
 package com.devpaul.shared.ui.components.organisms
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -24,18 +16,17 @@ fun BaseContentLayout(
     isBodyScrollable: Boolean = true,
     header: @Composable (() -> Unit)? = null,
     body: @Composable () -> Unit,
-    footer: @Composable (() -> Unit)? = null
+    footer: @Composable (() -> Unit)? = null,
+    applyBottomPaddingWhenNoFooter: Boolean = false
 ) {
     val scrollState = rememberScrollState()
-
     val configuration = LocalConfiguration.current
     val isPortrait =
         configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val horizontalPadding = if (isPortrait) 0.dp else 48.dp
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             header?.let {
                 Box(
@@ -73,6 +64,10 @@ fun BaseContentLayout(
                     end = horizontalPadding
                 )
                 .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
+                .then(
+                    if (footer == null && applyBottomPaddingWhenNoFooter) Modifier.navigationBarsPadding()
+                    else Modifier
+                )
                 .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

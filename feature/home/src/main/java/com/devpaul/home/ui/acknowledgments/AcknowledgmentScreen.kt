@@ -61,6 +61,7 @@ fun AcknowledgmentContent(
     uiState: AcknowledgmentUiState,
 ) {
     BaseContentLayout(
+        applyBottomPaddingWhenNoFooter = false,
         isBodyScrollable = false,
         header = {
             TopBarPrincipal(

@@ -65,6 +65,7 @@ class UpdateViewModel(
                         updateUiStateOnMain { uiState ->
                             uiState.copy(updateUser = ResultState.Success(it.updateUser))
                         }
+                        originalProfile = userProfile
                     }
                 }
             }
