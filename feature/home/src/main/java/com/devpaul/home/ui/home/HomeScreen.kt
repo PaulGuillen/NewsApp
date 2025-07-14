@@ -1,10 +1,13 @@
 package com.devpaul.home.ui.home
 
 import android.content.Context
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -72,42 +75,44 @@ fun HomeBody(
     uiState: HomeUiState,
     onIntent: (HomeUiIntent) -> Unit,
 ) {
-    SectionBanner(
-        navHostController = navController,
-        sectionState = uiState.section,
-        onRetryClick = {
-            onIntent(HomeUiIntent.GetSections)
-        }
-    )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        SectionBanner(
+            navHostController = navController,
+            sectionState = uiState.section,
+            onRetryClick = {
+                onIntent(HomeUiIntent.GetSections)
+            }
+        )
 
-    HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
 
-    Text(
-        text = "Información diaria de Perú",
-        fontSize = 14.sp,
-        color = Color.Black,
-        modifier = modifier
-            .padding(12.dp),
-        textAlign = TextAlign.Center
-    )
+        Text(
+            text = "Información diaria de Perú",
+            fontSize = 14.sp,
+            modifier = modifier.padding(12.dp),
+            textAlign = TextAlign.Center
+        )
 
-    HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
 
-    DollarQuoteCard(
-        context = context,
-        dollarQuoteState = uiState.dollarQuote,
-        onRetry = {
-            onIntent(HomeUiIntent.GetDollarQuote)
-        }
-    )
+        DollarQuoteCard(
+            context = context,
+            dollarQuoteState = uiState.dollarQuote,
+            onRetry = {
+                onIntent(HomeUiIntent.GetDollarQuote)
+            }
+        )
 
-    UITCard(
-        context = context,
-        uitState = uiState.uitValue,
-        onRetry = {
-            onIntent(HomeUiIntent.GetUITValue)
-        }
-    )
+        UITCard(
+            context = context,
+            uitState = uiState.uitValue,
+            onRetry = {
+                onIntent(HomeUiIntent.GetUITValue)
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true)

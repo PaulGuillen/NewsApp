@@ -1,5 +1,6 @@
 package com.devpaul.auth.ui.login.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +52,6 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
 import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.core_platform.theme.White
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
@@ -91,6 +91,7 @@ fun LoginForm(
     }
 
     BaseContentLayout(
+        isBodyScrollable = true,
         body = {
             LoginBody(
                 email = email,
@@ -156,9 +157,9 @@ fun LoginBody(
         )
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = White),
-            shape = RoundedCornerShape(16.dp)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
 

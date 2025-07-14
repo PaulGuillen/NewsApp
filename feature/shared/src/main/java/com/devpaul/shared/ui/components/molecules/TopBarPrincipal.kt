@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,11 +40,9 @@ fun TopBarPrincipal(
         modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .statusBarsPadding(),
-        shadowElevation = 4.dp,
-        color = Color.White,
-        tonalElevation = 14.dp
+        shadowElevation = 14.dp,
     ) {
         when (style) {
             1 -> {
@@ -51,7 +50,11 @@ fun TopBarPrincipal(
                     Text(
                         text = buildAnnotatedString {
                             appendStyled("Info", Color(0xFFD32F2F), FontWeight.Bold)
-                            appendStyled("Perú", Black, FontWeight.Normal)
+                            appendStyled(
+                                "Perú",
+                                MaterialTheme.colorScheme.onSecondary,
+                                FontWeight.Normal
+                            )
                         },
                         fontSize = 22.sp,
                         modifier = Modifier.align(Alignment.Center)
@@ -67,7 +70,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",
-                                tint = Black
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     }
@@ -89,14 +92,13 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_arrow_circle_left_24),
                                 contentDescription = "Atrás",
-                                tint = Black
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
 
                         Text(
                             text = title,
                             fontSize = 20.sp,
-                            color = Black
                         )
                     }
 
@@ -109,7 +111,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",
-                                tint = Black
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     }
@@ -126,7 +128,7 @@ fun TopBarPrincipal(
                         text = title,
                         fontSize = 20.sp,
                         color = Black,
-                        fontWeight  = FontWeight.SemiBold,
+                        fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 12.dp)
                     )
 

@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -11,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,17 +19,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     NavigationBar(
-        modifier = Modifier.shadow(elevation = 6.dp),
-        containerColor = Color.White,
-        contentColor = Black
-    ){
+        tonalElevation = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
         NavigationBarItem(
             icon = {
                 Icon(
@@ -46,10 +44,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = White,
-                selectedTextColor = Black,
                 indicatorColor = BrickRed,
-                unselectedIconColor = Black,
-                unselectedTextColor = Black
             )
         )
         NavigationBarItem(
@@ -68,10 +63,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = White,
-                selectedTextColor = Black,
                 indicatorColor = BrickRed,
-                unselectedIconColor = Black,
-                unselectedTextColor = Black
             )
         )
         NavigationBarItem(
@@ -90,10 +82,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = White,
-                selectedTextColor = Black,
                 indicatorColor = BrickRed,
-                unselectedIconColor = Black,
-                unselectedTextColor = Black
             )
         )
         NavigationBarItem(
@@ -112,10 +101,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = White,
-                selectedTextColor = Black,
                 indicatorColor = BrickRed,
-                unselectedIconColor = Black,
-                unselectedTextColor = Black
             )
         )
     }

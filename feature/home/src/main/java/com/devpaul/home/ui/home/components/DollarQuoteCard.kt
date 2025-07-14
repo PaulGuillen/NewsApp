@@ -2,6 +2,7 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,8 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.domain.entity.DollarQuoteEntity
@@ -59,13 +59,9 @@ fun DollarQuoteCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.run {
-                    cardColors(
-                        containerColor = White,
-                        contentColor = Black
-                    )
-                },
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 onClick = {
                     val intent =
                         Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
@@ -104,7 +100,6 @@ fun DollarQuoteCard(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp
                                 ),
-                                color = BlueDark,
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
                         }
@@ -122,7 +117,6 @@ fun DollarQuoteCard(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 15.sp
                                 ),
-                                color = BlueDark
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
@@ -143,7 +137,6 @@ fun DollarQuoteCard(
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontWeight = FontWeight.Bold
                                 ),
-                                color = BlueDark
                             )
                             Spacer(modifier = Modifier.width(4.dp))
 
@@ -188,8 +181,7 @@ fun DollarQuoteCard(
                     .padding(16.dp),
                 elevation = CardDefaults.cardElevation(8.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = White,
-                    contentColor = Black
+                    containerColor = MaterialTheme.colorScheme.surface,
                 )
             ) {
                 Box(
@@ -204,7 +196,6 @@ fun DollarQuoteCard(
                         Text(
                             text = dollarQuoteState.message,
                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
-                            color = Black,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -216,7 +207,7 @@ fun DollarQuoteCard(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BlueDark,
+                                containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = White
                             )
                         ) {
@@ -227,7 +218,7 @@ fun DollarQuoteCard(
             }
         }
 
-        else  -> {}
+        else -> {}
     }
 }
 

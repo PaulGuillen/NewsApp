@@ -8,33 +8,32 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = BrickRed, // Color principal en modo oscuro
-    onPrimary = White, // Color del texto sobre color principal en modo oscuro
-    secondary = BrickRed,
-    onSecondary = White,
-    tertiary = White,
-    background = Black, // Color de fondo en modo oscuro
-    surface = Color.DarkGray // Color de las superficies (tarjetas) en modo oscuro
+    primary = BrickRed,         // Color principal de la marca (usado en botones, switches, barras activas)
+    onPrimary = White,          // Color del texto o íconos que van sobre el color `primary`
+    secondary = BrickRed,       // Color secundario para componentes menos destacados o alternativos
+    onSecondary = White,        // Color del contenido sobre `secondary`
+    tertiary = White,           // Color terciario (opcional, usado para acentos o elementos gráficos adicionales)
+    background = Black,         // Color de fondo general (por ejemplo, detrás del contenido principal)
+    surface = DarkChocolate // Color de superficies como tarjetas, diálogos, sheets en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = BrickRed, // Color principal en modo claro
-    onPrimary = White, // Color del texto sobre color principal en modo claro
-    secondary = BrickRed,
-    onSecondary = White,
-    tertiary = Color.DarkGray, // Color terciario en modo claro
-    background = White, // Color de fondo en modo claro
-    surface = White // Color de las superficies (tarjetas) en modo claro
+    primary = BrickRed,         // Color principal de la marca en modo claro
+    onPrimary = White,          // Color del texto o íconos sobre `primary` (por ejemplo en un botón rojo)
+    secondary = BrickRed,       // Color secundario para distinguir otras acciones o secciones
+    onSecondary = DarkGray,     // Color del texto o íconos sobre `secondary`
+    tertiary = LightGray,        // Color opcional para detalles visuales adicionales (iconos decorativos, etc.)
+    background = White,         // Color de fondo general de la app en modo claro
+    surface = White             // Color de tarjetas, diálogos y contenedores que descansan sobre el fondo
 )
 
 @Composable
 fun InfoXPeruTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

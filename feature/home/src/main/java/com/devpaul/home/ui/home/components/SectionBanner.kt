@@ -1,5 +1,6 @@
 package com.devpaul.home.ui.home.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,7 +37,6 @@ import coil.request.ImageRequest
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.domain.entity.SectionEntity
@@ -59,7 +59,6 @@ fun SectionBanner(
                     .fillMaxWidth()
                     .background(PinkGray)
                     .padding(vertical = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_world),
@@ -74,9 +73,9 @@ fun SectionBanner(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White,
-                    tonalElevation = 2.dp,
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     shadowElevation = 2.dp,
                 ) {
                     Column(
@@ -116,10 +115,10 @@ fun SectionBanner(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White,
-                    tonalElevation = 2.dp,
-                    shadowElevation = 2.dp,
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    shadowElevation = 2.dp
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,7 +152,6 @@ fun SectionBanner(
                             text = "Secciones disponibles",
                             fontSize = 14.sp,
                             modifier = Modifier.padding(8.dp),
-                            color = Black
                         )
                     }
                 }

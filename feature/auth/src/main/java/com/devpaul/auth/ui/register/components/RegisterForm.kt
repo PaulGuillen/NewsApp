@@ -1,14 +1,16 @@
 package com.devpaul.auth.ui.register.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,9 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.auth.domain.entity.Register
@@ -43,7 +43,6 @@ import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateRegistration
 import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.core_platform.theme.White
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.dialog.ErrorNotification
@@ -120,6 +119,7 @@ fun RegisterForm(
     )
 
     BaseContentLayout(
+        isBodyScrollable = true,
         body = {
             RegisterBody(
                 state = state,
@@ -128,11 +128,9 @@ fun RegisterForm(
             )
         },
         footer = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                RegisterFooter(
-                    navHostController = navHostController,
-                )
-            }
+            RegisterFooter(
+                navHostController = navHostController,
+            )
         }
     )
 
@@ -183,23 +181,24 @@ fun RegisterBody(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 20.dp, bottom = 20.dp, start = 16.dp, end = 16.dp),
-        verticalArrangement = Arrangement.Top,
+            .padding(16.dp)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(modifier = Modifier.height(30.dp))
+
         Image(
             painter = painterResource(id = R.drawable.user_register),
             contentDescription = "Registro",
             modifier = Modifier
                 .size(160.dp)
-                .offset { IntOffset(0, 2) }
-                .zIndex(1f)
         )
+
         Card(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = White),
-            shape = RoundedCornerShape(16.dp)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(
@@ -229,9 +228,10 @@ fun RegisterBody(
 fun RegisterFooter(
     navHostController: NavHostController,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -260,7 +260,6 @@ fun RegisterFooter(
 @Composable
 fun BaseContentLayoutPreview() {
     BaseContentLayout(
-        header = { },
         body = {
             RegisterBody(
                 state = RegisterFormState(),

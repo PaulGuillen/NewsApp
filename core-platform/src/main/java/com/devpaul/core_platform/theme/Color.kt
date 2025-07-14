@@ -14,6 +14,8 @@ val GreenLight = Color(0xFFD2F5D4)
 val GreenDark = Color(0xFF6DC56E)
 val BlueDark = Color(0xFF0D325D)
 val PinkGray = Color(0xFFFFCDD2)
+val DarkChocolate = Color(0xFF503C34)
+val BrownGray     = Color(0xFF38241C)
 
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)

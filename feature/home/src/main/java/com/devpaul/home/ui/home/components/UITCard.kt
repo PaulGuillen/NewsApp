@@ -2,6 +2,7 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,8 +35,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.UITEntity
@@ -57,11 +57,9 @@ fun UITCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = White,
-                    contentColor = Black
-                ),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, uitState.response.data.link?.toUri())
                     context.startActivity(intent)
@@ -89,7 +87,6 @@ fun UITCard(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             ),
-                            color = BlueDark,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -104,7 +101,6 @@ fun UITCard(
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold
                             ),
-                            color = BlueDark
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 
@@ -146,11 +142,9 @@ fun UITCard(
                     .fillMaxWidth()
                     .height(180.dp)
                     .padding(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = White,
-                    contentColor = Black
-                )
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             ) {
                 Box(
                     modifier = Modifier
@@ -164,7 +158,6 @@ fun UITCard(
                         Text(
                             text = uitState.message,
                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
-                            color = Black,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -176,7 +169,7 @@ fun UITCard(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BlueDark,
+                                containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = White
                             )
                         ) {

@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.core_platform.theme.SetStatusBarColor
 import org.koin.core.parameter.parametersOf
@@ -23,12 +24,18 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme = isSystemInDarkTheme()
             val statusBarColor = if (isDarkTheme) Color.Black else Color.White
             SetStatusBarColor(statusBarColor, darkIcons = !isDarkTheme)
-            Surface(color = MaterialTheme.colorScheme.background) {
-                val navController = rememberNavController()
-                val appNavigator: AppNavigator = remember {
-                    getKoin().get<AppNavigator> { parametersOf(navController) }
+
+            InfoXPeruTheme(
+                darkTheme = isDarkTheme,
+                dynamicColor = false,
+            ) {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    val navController = rememberNavController()
+                    val appNavigator: AppNavigator = remember {
+                        getKoin().get<AppNavigator> { parametersOf(navController) }
+                    }
+                    MainGraph(navController = navController, appNavigator = appNavigator)
                 }
-                MainGraph(navController = navController, appNavigator = appNavigator)
             }
         }
     }

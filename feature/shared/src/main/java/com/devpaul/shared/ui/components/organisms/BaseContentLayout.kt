@@ -49,9 +49,6 @@ fun BaseContentLayout(
     val isPortrait =
         configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
 
-    // Padding horizontal condicional: más margen en modo landscape
-    val horizontalPadding = if (isPortrait) 0.dp else 48.dp
-
     // Scaffold: estructura básica con topBar, content, bottomBar y FAB
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -99,8 +96,8 @@ fun BaseContentLayout(
                     // Evita que el contenido quede debajo del header o footer
                     top = if (header != null) innerPadding.calculateTopPadding() else 0.dp,
                     bottom = if (footer != null) innerPadding.calculateBottomPadding() else 0.dp,
-                    start = horizontalPadding,
-                    end = horizontalPadding
+                    start = 0.dp,
+                    end = 0.dp
                 )
                 // Aplica scroll si es necesario
                 .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
@@ -109,10 +106,22 @@ fun BaseContentLayout(
                     if (footer == null && applyBottomPaddingWhenNoFooter) Modifier.navigationBarsPadding()
                     else Modifier
                 )
-                .imePadding(), // Evita que el teclado tape el contenido
+                // Asegura que el contenido no se superponga con el teclado o la barra de navegación
+                .then(
+                    if (isPortrait) Modifier.wrapContentHeight() else Modifier.navigationBarsPadding()
+                )
+                // Evita que el teclado tape el contenido
+                .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            body()
+            // Siempre centra el contenido en el eje horizontal
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter // Centrado horizontalmente, pero inicia desde arriba
+            ) {
+                body()
+            }
         }
     }
 }
