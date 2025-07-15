@@ -20,41 +20,47 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 
 /**
- * Layout base reutilizable para pantallas que requieren estructura común:
- * encabezado (header), contenido (body), pie de página (footer) y botón flotante (FAB).
+ * Layout base reutilizable para pantallas que requieren una estructura con:
+ * - Header (parte superior),
+ * - Body (contenido principal),
+ * - Footer (parte inferior),
+ * - FAB (Floating Action Button).
  *
- * @param modifier Permite extender o modificar el comportamiento visual externo del layout.
- * @param isBodyScrollable Si es true, el body se hace scrollable verticalmente.
- * @param header Composable opcional que se mostrará en la parte superior (topBar).
- * @param body Composable principal con el contenido central de la pantalla.
- * @param footer Composable opcional que se mostrará en la parte inferior (bottomBar).
- * @param floatingActionButton FAB opcional que se posiciona sobre el contenido principal.
- * @param applyBottomPaddingWhenNoFooter Si no se usa footer, aplicar padding inferior para evitar superposición con nav bar.
+ * Puedes controlar si quieres aplicar paddings para el teclado, status bar o navigation bar.
+ *
+ * @param modifier Modificador externo para ajustar el diseño general.
+ * @param isBodyScrollable Define si el contenido principal debe ser desplazable verticalmente.
+ * @param applyImePadding Aplica padding inferior si el teclado está activo.
+ * @param applyStatusBarsPaddingToHeader Aplica padding superior al header para evitar solaparse con la status bar.
+ * @param applyNavigationBarsPaddingToFooter Aplica padding inferior al footer para evitar solaparse con la navigation bar.
+ * @param header Composable opcional para la parte superior (topBar).
+ * @param body Composable principal con el contenido central.
+ * @param footer Composable opcional para la parte inferior (bottomBar).
+ * @param floatingActionButton Composable opcional para un botón flotante.
+ * @param applyBottomPaddingWhenNoFooter Si no hay footer, aplica padding inferior para evitar solaparse con la navigation bar.
  */
-
 @Composable
 fun BaseContentLayout(
     modifier: Modifier = Modifier,
     isBodyScrollable: Boolean = true,
+    applyImePadding: Boolean = true,
+    applyStatusBarsPaddingToHeader: Boolean = true,
+    applyNavigationBarsPaddingToFooter: Boolean = true,
     header: @Composable (() -> Unit)? = null,
     body: @Composable () -> Unit,
     footer: @Composable (() -> Unit)? = null,
     floatingActionButton: (@Composable () -> Unit)? = null,
     applyBottomPaddingWhenNoFooter: Boolean = false
 ) {
-    // Scroll state para el contenido si se permite scroll
     val scrollState = rememberScrollState()
-
-    // Configuración del dispositivo para detectar orientación
     val configuration = LocalConfiguration.current
     val isPortrait =
         configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
 
-    // Scaffold: estructura básica con topBar, content, bottomBar y FAB
     Scaffold(
         modifier = modifier.fillMaxSize(),
 
-        // Encabezado
+        // Header
         topBar = {
             header?.let {
                 Box(
@@ -69,7 +75,7 @@ fun BaseContentLayout(
             }
         },
 
-        // Pie de página (footer)
+        // Footer
         bottomBar = {
             footer?.let {
                 Box(
@@ -84,42 +90,39 @@ fun BaseContentLayout(
             }
         },
 
-        // Botón flotante (FAB)
+        // FAB
         floatingActionButton = {
             floatingActionButton?.invoke()
         }
     ) { innerPadding ->
-        // Contenido principal (body)
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // Padding según si hay header/footer
                 .padding(
-                    // Evita que el contenido quede debajo del header o footer
-                    top = if (header != null) innerPadding.calculateTopPadding() else 0.dp,
-                    bottom = if (footer != null) innerPadding.calculateBottomPadding() else 0.dp,
+                    top = if (header != null && applyStatusBarsPaddingToHeader) innerPadding.calculateTopPadding() else 0.dp,
+                    bottom = if (footer != null && applyNavigationBarsPaddingToFooter) innerPadding.calculateBottomPadding() else 0.dp,
                     start = 0.dp,
                     end = 0.dp
                 )
-                // Aplica scroll si es necesario
+                // Scroll si se requiere
                 .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
-                // Si no hay footer pero se quiere margen inferior, aplica padding
+                // Padding inferior si no hay footer pero se requiere espacio para navegación
                 .then(
-                    if (footer == null && applyBottomPaddingWhenNoFooter) Modifier.navigationBarsPadding()
+                    if (footer == null && applyBottomPaddingWhenNoFooter)
+                        Modifier.navigationBarsPadding()
                     else Modifier
                 )
-                // Asegura que el contenido no se superponga con el teclado o la barra de navegación
-                .then(
-                    if (isPortrait) Modifier.fillMaxHeight() else Modifier.navigationBarsPadding()
-                )
-                // Evita que el teclado tape el contenido
-                .imePadding(),
+                // Padding por teclado si está activado
+                .then(if (applyImePadding) Modifier.imePadding() else Modifier)
+                // Por seguridad en orientación vertical, llena altura
+                .then(if (isPortrait) Modifier.fillMaxHeight() else Modifier),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Siempre centra el contenido en el eje horizontal
+            // Contenido del body alineado arriba y centrado horizontalmente
             Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.TopCenter // Centrado horizontalmente, pero inicia desde arriba
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter
             ) {
                 body()
             }

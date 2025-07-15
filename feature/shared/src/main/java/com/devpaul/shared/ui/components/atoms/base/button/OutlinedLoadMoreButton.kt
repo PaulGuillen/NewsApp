@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.BlueDark
+import com.devpaul.core_platform.theme.White
 
 @Composable
 fun OutlinedLoadMoreButton(
@@ -26,8 +26,8 @@ fun OutlinedLoadMoreButton(
     onClick: () -> Unit,
     text: String = "Cargar más",
     @DrawableRes iconResId: Int = R.drawable.baseline_arrow_drop_down_circle_24,
-    iconTint: Color = BlueDark,
-    textColor: Color = BlueDark,
+    iconTint: Color = MaterialTheme.colorScheme.secondary,
+    textColor: Color = MaterialTheme.colorScheme.secondary,
     showIcon: Boolean = true
 ) {
     Button(
@@ -36,7 +36,7 @@ fun OutlinedLoadMoreButton(
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 10.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.White,
+            containerColor = White,
             contentColor = textColor
         ),
         shape = MaterialTheme.shapes.medium,

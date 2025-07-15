@@ -11,4 +11,5 @@ data class NewsDetailUiState(
     val google: ResultState<GoogleEntity> = ResultState.Loading,
     val deltaProject: ResultState<DeltaProjectEntity> = ResultState.Loading,
     val reddit: ResultState<RedditEntity> = ResultState.Loading,
+    val isLoadingMore: Boolean = false
 )

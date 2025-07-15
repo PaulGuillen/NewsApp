@@ -70,11 +70,18 @@ class NewsDetailViewModel(
             is NewsDetailUiIntent.GetRedditNews -> {
                 launchIO { intent.country?.let { fetchRedditNews(it, intent.page) } }
             }
+
+            is NewsDetailUiIntent.LoadNextPage -> {
+                launchIO { loadNextPage(intent.newsType) }
+            }
         }
     }
 
-    fun loadNextPage(newsType: String) {
+    private suspend fun loadNextPage(newsType: String) {
         if (!canLoadMore(newsType)) return
+
+        updateUiStateOnMain { it.copy(isLoadingMore = true) }
+
         selectedCountry?.let {
             currentPage++
             when (newsType) {
@@ -158,6 +165,8 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(google = ResultState.Error(message = "Error al cargar las noticias de Google"))
                 }
+            } .also {
+                updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
 
@@ -195,6 +204,8 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(deltaProject = ResultState.Error(message = "Error al cargar las noticias de Delta Project"))
                 }
+            } . also {
+                updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
 
@@ -232,6 +243,8 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(reddit = ResultState.Error(message = "Error al cargar las noticias de Reddit"))
                 }
+            } .onFailure {
+                updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
 

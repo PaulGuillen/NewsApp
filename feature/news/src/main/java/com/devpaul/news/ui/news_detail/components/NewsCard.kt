@@ -2,6 +2,8 @@ package com.devpaul.news.ui.news_detail.components
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,8 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.White
-import androidx.compose.foundation.border
 import com.devpaul.core_platform.theme.GreenDark
 
 @Composable
@@ -55,8 +56,9 @@ fun NewsCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 12.dp)
             .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.medium),
-        colors = CardDefaults.cardColors(containerColor = White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         onClick = {
             onSelect()
             context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
@@ -94,7 +96,7 @@ fun NewsCard(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 thickness = 1.dp,
-                color = Color.LightGray
+                color = MaterialTheme.colorScheme.tertiary
             )
 
             Box(
