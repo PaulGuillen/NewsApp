@@ -1,6 +1,7 @@
 package com.devpaul.shared.ui.components.atoms.skeleton
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,16 +13,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.PinkGray
 
 @Composable
 fun SectionBannerSkeleton() {
+    val materialTheme = if (!isSystemInDarkTheme()) {
+        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
+    } else {
+        MaterialTheme.colorScheme.tertiary
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,7 +39,7 @@ fun SectionBannerSkeleton() {
         Box(
             modifier = Modifier
                 .size(80.dp)
-                .background(Color.LightGray.copy(alpha = 0.5f), shape = RoundedCornerShape(50))
+                .background(materialTheme, shape = RoundedCornerShape(50))
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -50,7 +57,7 @@ fun SectionBannerSkeleton() {
                         modifier = Modifier
                             .size(52.dp)
                             .background(
-                                Color.LightGray.copy(alpha = 0.5f),
+                                materialTheme,
                                 shape = RoundedCornerShape(8.dp)
                             )
                     )
@@ -60,7 +67,7 @@ fun SectionBannerSkeleton() {
                             .width(60.dp)
                             .height(12.dp)
                             .background(
-                                Color.LightGray.copy(alpha = 0.5f),
+                                materialTheme,
                                 shape = RoundedCornerShape(4.dp)
                             )
                     )
@@ -74,7 +81,7 @@ fun SectionBannerSkeleton() {
             modifier = Modifier
                 .width(160.dp)
                 .height(12.dp)
-                .background(Color.LightGray.copy(alpha = 0.5f), shape = RoundedCornerShape(50))
+                .background(materialTheme, shape = RoundedCornerShape(50))
         )
     }
 }

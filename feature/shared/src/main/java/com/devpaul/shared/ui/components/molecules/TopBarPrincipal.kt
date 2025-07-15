@@ -127,7 +127,6 @@ fun TopBarPrincipal(
                     Text(
                         text = title,
                         fontSize = 20.sp,
-                        color = Black,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 12.dp)
                     )
@@ -140,7 +139,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Icono final",
-                                tint = Black
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     }

@@ -2,6 +2,7 @@ package com.devpaul.news.ui.news.components.country
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -32,17 +32,18 @@ fun CountryCard(
     isSelected: Boolean,
     onClick: () -> Unit = {}
 ) {
+
+    val isDarkMode = isSystemInDarkTheme()
+
     Card(
         modifier = Modifier
             .width(120.dp)
             .height(120.dp)
             .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(0.8.dp, Color.Black),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) GreenLight else White,
-            contentColor = Black
+            containerColor = if (isSelected) GreenLight else MaterialTheme.colorScheme.surface,
         ),
         onClick = {
             onClick()
@@ -63,7 +64,11 @@ fun CountryCard(
                 textAlign = TextAlign.Center,
                 text = country.title,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Black,
+                color = if (isDarkMode) {
+                    if (isSelected) Black else White
+                } else {
+                    Black
+                },
             )
         }
     }

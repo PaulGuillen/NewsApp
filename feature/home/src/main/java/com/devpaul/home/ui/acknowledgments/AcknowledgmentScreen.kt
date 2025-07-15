@@ -1,6 +1,7 @@
 package com.devpaul.home.ui.acknowledgments
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -98,9 +100,9 @@ fun AcknowledgmentBody(
         )
 
         Card(
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .offset(y = (-60).dp)
@@ -114,12 +116,10 @@ fun AcknowledgmentBody(
                     text = "Gracias por el contenido",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Black
                 )
                 Text(
                     text = "Agradecemos a las siguientes fuentes por proporcionar información confiable.",
                     fontSize = 14.sp,
-                    color = Color.Gray,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
                 )

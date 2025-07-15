@@ -2,6 +2,7 @@ package com.devpaul.shared.ui.components.organisms
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -108,7 +109,7 @@ fun BaseContentLayout(
                 )
                 // Asegura que el contenido no se superponga con el teclado o la barra de navegación
                 .then(
-                    if (isPortrait) Modifier.wrapContentHeight() else Modifier.navigationBarsPadding()
+                    if (isPortrait) Modifier.fillMaxHeight() else Modifier.navigationBarsPadding()
                 )
                 // Evita que el teclado tape el contenido
                 .imePadding(),

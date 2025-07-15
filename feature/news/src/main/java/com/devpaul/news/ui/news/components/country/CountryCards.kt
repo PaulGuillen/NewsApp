@@ -1,7 +1,9 @@
 package com.devpaul.news.ui.news.components.country
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -30,19 +32,25 @@ fun CountryCards(
         }
 
         is ResultState.Success -> {
-            Row(
+            Column(
                 modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
                     .padding(horizontal = 10.dp)
+                    .fillMaxWidth(),
             ) {
-                countryState.response.data.forEach { countryItem ->
-                    CountryCard(
-                        country = countryItem,
-                        isSelected = selectedCountry?.id == countryItem.id,
-                        onClick = {
-                            onCountrySelected(countryItem)
-                        }
-                    )
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+
+                ) {
+                    countryState.response.data.forEach { countryItem ->
+                        CountryCard(
+                            country = countryItem,
+                            isSelected = selectedCountry?.id == countryItem.id,
+                            onClick = {
+                                onCountrySelected(countryItem)
+                            }
+                        )
+                    }
                 }
             }
         }
