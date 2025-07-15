@@ -2,6 +2,7 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,8 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.domain.entity.GratitudeDataEntity
@@ -93,9 +91,9 @@ fun AcknowledgmentSection(
                     modifier = Modifier
                         .width(320.dp)
                         .padding(8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 ) {
                     Column(
                         modifier = Modifier
@@ -107,7 +105,6 @@ fun AcknowledgmentSection(
                         Text(
                             text = gratitudeState.message,
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Black,
                             fontSize = 15.sp,
                             textAlign = TextAlign.Center
                         )
@@ -117,7 +114,7 @@ fun AcknowledgmentSection(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BlueDark,
+                                containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = White
                             ),
                             modifier = Modifier.padding(top = 8.dp)
@@ -146,9 +143,9 @@ fun GratitudeCard(
                 val intent = Intent(Intent.ACTION_VIEW, gratitude.link.toUri())
                 context.startActivity(intent)
             },
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -172,7 +169,7 @@ fun GratitudeCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(Color.LightGray)
+                    .background(MaterialTheme.colorScheme.tertiary)
             )
 
             Box(

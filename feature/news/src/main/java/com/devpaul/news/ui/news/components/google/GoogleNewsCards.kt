@@ -1,6 +1,7 @@
 package com.devpaul.news.ui.news.components.google
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -24,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -36,8 +37,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
@@ -74,13 +73,11 @@ fun GoogleNewsCards(
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
                     )
                     Text(
                         text = "Ver Más",
                         fontSize = 15.sp,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Blue,
                         modifier = Modifier.clickable {
                             navController.navigate(
                                 Screen.NewsDetail.createRoute(
@@ -116,11 +113,9 @@ fun GoogleNewsCards(
                     .fillMaxWidth()
                     .height(260.dp)
                     .padding(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = White,
-                    contentColor = Black
-                )
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             ) {
                 Box(
                     modifier = Modifier
@@ -134,7 +129,6 @@ fun GoogleNewsCards(
                         Text(
                             text = googleState.message,
                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
-                            color = Black,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -146,7 +140,7 @@ fun GoogleNewsCards(
                             shape = RectangleShape,
                             elevation = ButtonDefaults.buttonElevation(4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = BlueDark,
+                                containerColor = MaterialTheme.colorScheme.secondary,
                                 contentColor = White
                             )
                         ) {

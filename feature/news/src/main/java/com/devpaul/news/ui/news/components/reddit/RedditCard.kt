@@ -20,14 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.extension.limitText
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.RedditPostItemEntity
 
 @Composable
@@ -40,12 +37,9 @@ fun RedditCard(
             .width(300.dp)
             .height(180.dp)
             .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = BorderStroke(0.8.dp, Color.Black),
-        colors = CardDefaults.cardColors(
-            containerColor = White,
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         onClick = {
             redditPost.url.let { url ->
                 context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
@@ -77,7 +71,6 @@ fun RedditCard(
                 text = redditPost.title,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Black,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -85,7 +78,6 @@ fun RedditCard(
                     .padding(top = 10.dp, bottom = 10.dp)
             )
             Text(
-                //text = limitText(redditPost.createdAt , 10),
                 text = redditPost.createdAt,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.align(Alignment.Start)

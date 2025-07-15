@@ -2,6 +2,7 @@ package com.devpaul.news.ui.news.components.deltaproject
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,8 +28,6 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.White
 import com.devpaul.news.domain.entity.DeltaProjectItemEntity
 
 @Composable
@@ -41,12 +40,9 @@ fun GDELTCard(
             .width(300.dp)
             .height(260.dp)
             .padding(8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = White,
-            contentColor = Black
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         onClick = {
             context.startActivity(Intent(Intent.ACTION_VIEW, deltaProject.url.toUri()))
         }
@@ -80,7 +76,6 @@ fun GDELTCard(
                 Text(
                     text = deltaProject.title,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Start,
