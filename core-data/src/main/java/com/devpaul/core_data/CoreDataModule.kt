@@ -1,6 +1,5 @@
 package com.devpaul.core_data
 
-import android.content.Context
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,9 +15,7 @@ import java.util.concurrent.TimeUnit
 class CoreDataModule {
 
     @Single
-    fun okHttpClientProvider(
-        context: Context,
-    ): OkHttpClient {
+    fun okHttpClientProvider(): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)

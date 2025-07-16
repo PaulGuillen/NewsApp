@@ -6,13 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devpaul.core_data.Screen
-import com.devpaul.navigation.core.jetpack.AppNavigator
 import com.devpaul.news.ui.news.NewsScreen
 import com.devpaul.news.ui.news_detail.NewsDetailsScreen
 
 fun NavGraphBuilder.newsGraph(
     navController: NavHostController,
-    appNavigator: AppNavigator,
 ) {
     composable(Screen.News.route) {
         NewsScreen(
