@@ -85,9 +85,11 @@ _Noticias_
 <img width="320" height="1400" alt="Screenshot_1752696437" src="https://github.com/user-attachments/assets/5ae937ab-cb46-4996-b3ad-31873e439f84" />
 
 
-
-
 _Video avance funcionalidades_
+
+https://github.com/user-attachments/assets/4d74e088-98a0-4ba6-84f3-1825d33271a7
+
+
 
 ## Autor ✒️
 
