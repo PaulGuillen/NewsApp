@@ -44,7 +44,6 @@ fun SectionBannerSkeleton() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Skeleton para las 3 secciones
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,7 +54,7 @@ fun SectionBannerSkeleton() {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
                         modifier = Modifier
-                            .size(52.dp)
+                            .size(54.dp)
                             .background(
                                 materialTheme,
                                 shape = RoundedCornerShape(8.dp)
@@ -79,8 +78,19 @@ fun SectionBannerSkeleton() {
 
         Box(
             modifier = Modifier
-                .width(160.dp)
-                .height(12.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(1.5.dp)
+                .background(
+                    materialTheme, shape = RoundedCornerShape(50)
+                )
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .width(180.dp)
+                .height(18.dp)
                 .background(materialTheme, shape = RoundedCornerShape(50))
         )
     }

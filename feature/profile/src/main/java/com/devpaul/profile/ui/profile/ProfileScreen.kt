@@ -68,6 +68,7 @@ fun ProfileScreen(navController: NavHostController) {
         },
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
+            isBodyScrollable = true,
             header = {
                 TopBarPrincipal(
                     style = 3,

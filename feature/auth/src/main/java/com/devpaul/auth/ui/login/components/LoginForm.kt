@@ -143,6 +143,7 @@ fun LoginBody(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 

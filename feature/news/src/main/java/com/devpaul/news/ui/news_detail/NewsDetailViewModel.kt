@@ -1,6 +1,8 @@
 package com.devpaul.news.ui.news_detail
 
 import android.net.Uri
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.news.domain.entity.CountryItemEntity
@@ -9,8 +11,6 @@ import com.devpaul.news.domain.usecase.GoogleUC
 import com.devpaul.news.domain.usecase.RedditUC
 import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.State
 
 @KoinViewModel
 class NewsDetailViewModel(
@@ -29,7 +29,7 @@ class NewsDetailViewModel(
     private var currentNewsType: String? = null
     private val _selectedUrl = mutableStateOf<String?>(null)
     val selectedUrl: State<String?> get() = _selectedUrl
-    
+
     fun setNewsData(
         newsType: String?,
         country: String?
@@ -78,7 +78,10 @@ class NewsDetailViewModel(
     }
 
     private suspend fun loadNextPage(newsType: String) {
-        if (!canLoadMore(newsType)) return
+        if (!canLoadMore(newsType)) {
+            updateUiStateOnMain { it.copy(isLoadingMore = false) }
+            return
+        }
 
         updateUiStateOnMain { it.copy(isLoadingMore = true) }
 
@@ -165,7 +168,7 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(google = ResultState.Error(message = "Error al cargar las noticias de Google"))
                 }
-            } .also {
+            }.also {
                 updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
@@ -204,7 +207,7 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(deltaProject = ResultState.Error(message = "Error al cargar las noticias de Delta Project"))
                 }
-            } . also {
+            }.also {
                 updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
@@ -243,7 +246,7 @@ class NewsDetailViewModel(
                 updateUiStateOnMain {
                     it.copy(reddit = ResultState.Error(message = "Error al cargar las noticias de Reddit"))
                 }
-            } .onFailure {
+            }.also {
                 updateUiStateOnMain { it.copy(isLoadingMore = false) }
             }
     }
@@ -251,4 +254,5 @@ class NewsDetailViewModel(
     fun selectUrl(url: String) {
         _selectedUrl.value = url
     }
+
 }

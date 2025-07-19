@@ -30,7 +30,7 @@ class ProfileSkeleton : SkeletonStrategy {
         ) {
             Box(
                 modifier = Modifier
-                    .size(width = 110.dp, height = 120.dp)
+                    .size(180.dp)
                     .background(shimmerColor)
             )
 
