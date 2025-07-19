@@ -38,8 +38,9 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.UITEntity
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.atoms.base.DividerView
-import com.devpaul.shared.ui.components.atoms.skeleton.UITCardSkeleton
 
 @Composable
 fun UITCard(
@@ -49,7 +50,7 @@ fun UITCard(
 ) {
     when (uitState) {
         is ResultState.Loading -> {
-            UITCardSkeleton()
+            SkeletonRenderer(type = SkeletonType.UIT_CARD)
         }
 
         is ResultState.Success -> {

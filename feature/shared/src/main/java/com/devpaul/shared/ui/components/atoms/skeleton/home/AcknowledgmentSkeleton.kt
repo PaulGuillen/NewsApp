@@ -1,10 +1,5 @@
-package com.devpaul.shared.ui.components.atoms.skeleton
+package com.devpaul.shared.ui.components.atoms.skeleton.home
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,34 +13,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devpaul.shared.data.repository.SkeletonStrategy
+import com.devpaul.shared.ui.components.atoms.base.shimmer.getShimmerBrush
+
+class AcknowledgmentSkeleton : SkeletonStrategy {
+    @Composable
+    override fun Render(modifier: Modifier) {
+        AcknowledgmentSkeletonContent(modifier)
+    }
+}
 
 @Composable
-fun AcknowledgmentSkeleton() {
-    val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.6f),
-        Color.LightGray.copy(alpha = 0.3f),
-        Color.LightGray.copy(alpha = 0.6f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "")
-    val animatedColor by transition.animateColor(
-        initialValue = shimmerColors[0],
-        targetValue = shimmerColors[1],
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
-    )
+fun AcknowledgmentSkeletonContent(modifier: Modifier = Modifier) {
+    val shimmerBrush = getShimmerBrush()
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -62,7 +49,7 @@ fun AcknowledgmentSkeleton() {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(animatedColor)
+                        .background(brush = shimmerBrush)
                 )
             }
         }
@@ -72,5 +59,5 @@ fun AcknowledgmentSkeleton() {
 @Preview(showBackground = true)
 @Composable
 fun SkeletonScreenAcknowledgmentPreview() {
-    AcknowledgmentSkeleton()
+    AcknowledgmentSkeletonContent()
 }

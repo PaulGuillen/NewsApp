@@ -40,8 +40,9 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.domain.entity.DollarQuoteEntity
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.atoms.base.DividerView
-import com.devpaul.shared.ui.components.atoms.skeleton.SkeletonDollarQuote
 
 @Composable
 fun DollarQuoteCard(
@@ -51,7 +52,7 @@ fun DollarQuoteCard(
 ) {
     when (dollarQuoteState) {
         is ResultState.Loading -> {
-            SkeletonDollarQuote()
+            SkeletonRenderer(type = SkeletonType.DOLLAR_QUOTE)
         }
 
         is ResultState.Success -> {
@@ -179,10 +180,9 @@ fun DollarQuoteCard(
                     .fillMaxWidth()
                     .height(380.dp)
                     .padding(16.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                )
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             ) {
                 Box(
                     modifier = Modifier

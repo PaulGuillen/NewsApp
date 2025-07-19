@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.ui.home.components.AcknowledgmentSection

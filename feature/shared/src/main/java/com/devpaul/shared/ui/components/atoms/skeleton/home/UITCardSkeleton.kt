@@ -1,10 +1,5 @@
-package com.devpaul.shared.ui.components.atoms.skeleton
+package com.devpaul.shared.ui.components.atoms.skeleton.home
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,33 +10,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.devpaul.shared.data.repository.SkeletonStrategy
+import com.devpaul.shared.ui.components.atoms.base.shimmer.getShimmerBrush
+
+class UITCardSkeleton : SkeletonStrategy {
+    @Composable
+    override fun Render(modifier: Modifier) {
+        UITCardSkeletonContent(modifier)
+    }
+}
 
 @Composable
-fun UITCardSkeleton() {
-    val shimmerColor = listOf(
-        Color.LightGray.copy(alpha = 0.9f),
-        Color.LightGray.copy(alpha = 0.3f),
-        Color.LightGray.copy(alpha = 0.9f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "")
-    val color by transition.animateColor(
-        initialValue = shimmerColor[0],
-        targetValue = shimmerColor[1],
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000),
-            repeatMode = RepeatMode.Reverse
-        ), label = ""
-    )
+fun UITCardSkeletonContent(modifier: Modifier = Modifier) {
+    val shimmerBrush = getShimmerBrush()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
@@ -51,7 +39,7 @@ fun UITCardSkeleton() {
                     .fillMaxWidth(if (it == 0) 0.7f else 0.5f)
                     .height(20.dp)
                     .align(Alignment.CenterHorizontally)
-                    .background(color, shape = RoundedCornerShape(8.dp))
+                    .background(brush = shimmerBrush, shape = RoundedCornerShape(8.dp))
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -61,7 +49,7 @@ fun UITCardSkeleton() {
         Box(
             modifier = Modifier
                 .align(Alignment.End)
-                .background(color, shape = RoundedCornerShape(8.dp))
+                .background(brush = shimmerBrush, shape = RoundedCornerShape(8.dp))
                 .height(14.dp)
                 .width(80.dp)
         )
@@ -71,7 +59,7 @@ fun UITCardSkeleton() {
         Box(
             modifier = Modifier
                 .align(Alignment.End)
-                .background(color, shape = RoundedCornerShape(8.dp))
+                .background(brush = shimmerBrush, shape = RoundedCornerShape(8.dp))
                 .height(14.dp)
                 .width(40.dp)
         )
@@ -81,5 +69,5 @@ fun UITCardSkeleton() {
 @Preview(showBackground = true)
 @Composable
 fun SkeletonUITScreenPreview() {
-    UITCardSkeleton()
+    UITCardSkeletonContent()
 }

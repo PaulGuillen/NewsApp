@@ -40,7 +40,8 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.SectionMock
 import com.devpaul.home.domain.entity.SectionEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.SectionBannerSkeleton
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun SectionBanner(
@@ -50,7 +51,7 @@ fun SectionBanner(
 ) {
     when (sectionState) {
         is ResultState.Loading -> {
-            SectionBannerSkeleton()
+            SkeletonRenderer(type = SkeletonType.SECTION_BANNER)
         }
 
         is ResultState.Error -> {
