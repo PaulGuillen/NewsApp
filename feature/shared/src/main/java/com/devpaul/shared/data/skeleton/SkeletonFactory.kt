@@ -5,6 +5,9 @@ import com.devpaul.shared.ui.components.atoms.skeleton.home.AcknowledgmentSkelet
 import com.devpaul.shared.ui.components.atoms.skeleton.home.DollarQuoteSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.home.SectionBannerSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.home.UITCardSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.news.CountryCardSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.news.GeneralNewSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.news.NewsDetailSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.profile.ProfileSkeleton
 
 object SkeletonFactory {
@@ -14,6 +17,9 @@ object SkeletonFactory {
         SkeletonType.DOLLAR_QUOTE -> DollarQuoteSkeleton()
         SkeletonType.UIT_CARD -> UITCardSkeleton()
         SkeletonType.ACKNOWLEDGEMENT -> AcknowledgmentSkeleton()
+        SkeletonType.COUNTRY_CARD -> CountryCardSkeleton()
+        SkeletonType.GENERAL_NEWS -> GeneralNewSkeleton()
+        SkeletonType.NEWS_DETAIL -> NewsDetailSkeleton()
         SkeletonType.OTHER -> ProfileSkeleton()
     }
 }

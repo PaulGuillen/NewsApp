@@ -23,8 +23,9 @@ import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.ui.news_detail.components.NewsCard
 import com.devpaul.news.ui.news_detail.components.NewsCountCard
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.atoms.base.button.OutlinedLoadMoreButton
-import com.devpaul.shared.ui.components.atoms.skeleton.NewsDetailSkeleton
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -187,7 +188,7 @@ fun GoogleNewsList(
     onSelectUrl: (String) -> Unit
 ) {
     when (googleState) {
-        is ResultState.Loading -> NewsDetailSkeleton(modifier)
+        is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
             LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
                 items(googleState.response.data.items) { item ->
@@ -219,7 +220,7 @@ fun DeltaNewsList(
     onSelectUrl: (String) -> Unit
 ) {
     when (deltaProjectState) {
-        is ResultState.Loading -> NewsDetailSkeleton(modifier)
+        is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
             LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
                 items(deltaProjectState.response.data.items) { item ->
@@ -251,7 +252,7 @@ fun RedditNewsList(
     onSelectUrl: (String) -> Unit
 ) {
     when (redditState) {
-        is ResultState.Loading -> NewsDetailSkeleton(modifier)
+        is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
             LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
                 items(redditState.response.data.items) { post ->

@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -38,13 +37,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BlueDark
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.DeltaProjectEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun GDELTCards(
@@ -57,7 +55,7 @@ fun GDELTCards(
 
     when (deltaProjectState) {
         is ResultState.Loading -> {
-            RedditSkeleton()
+            SkeletonRenderer(type = SkeletonType.GENERAL_NEWS)
         }
 
         is ResultState.Success -> {
@@ -154,7 +152,7 @@ fun GDELTCards(
                 }
             }
         }
-        
+
         else -> {}
     }
 }

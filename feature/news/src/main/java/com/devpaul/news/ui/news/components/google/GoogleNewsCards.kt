@@ -41,7 +41,8 @@ import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.GoogleNewsSkeleton
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun GoogleNewsCards(
@@ -53,7 +54,7 @@ fun GoogleNewsCards(
 ) {
     when (googleState) {
         is ResultState.Loading -> {
-            GoogleNewsSkeleton()
+            SkeletonRenderer(type = SkeletonType.GENERAL_NEWS)
         }
 
         is ResultState.Success -> {

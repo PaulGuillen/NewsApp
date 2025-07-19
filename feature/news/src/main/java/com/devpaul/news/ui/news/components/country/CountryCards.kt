@@ -18,7 +18,8 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryEntity
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.CountryCardSkeleton
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun CountryCards(
@@ -28,7 +29,7 @@ fun CountryCards(
 ) {
     when (countryState) {
         is ResultState.Loading -> {
-            CountryCardSkeleton()
+            SkeletonRenderer(type = SkeletonType.COUNTRY_CARD)
         }
 
         is ResultState.Success -> {

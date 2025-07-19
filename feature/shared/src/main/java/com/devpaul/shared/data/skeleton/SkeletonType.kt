@@ -6,5 +6,8 @@ enum class SkeletonType {
     DOLLAR_QUOTE,
     UIT_CARD,
     ACKNOWLEDGEMENT,
+    COUNTRY_CARD,
+    GENERAL_NEWS,
+    NEWS_DETAIL,
     OTHER
 }

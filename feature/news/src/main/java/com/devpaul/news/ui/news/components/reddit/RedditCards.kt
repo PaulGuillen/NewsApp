@@ -41,7 +41,8 @@ import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.RedditEntity
-import com.devpaul.shared.ui.components.atoms.skeleton.RedditSkeleton
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun RedditCards(
@@ -54,7 +55,7 @@ fun RedditCards(
 
     when (redditState) {
         is ResultState.Loading -> {
-            RedditSkeleton()
+            SkeletonRenderer(type = SkeletonType.GENERAL_NEWS)
         }
 
         is ResultState.Success -> {
