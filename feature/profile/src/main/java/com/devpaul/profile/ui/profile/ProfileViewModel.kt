@@ -94,13 +94,13 @@ class ProfileViewModel(
 
 
     private fun openTerms() {
-        val termsIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/terminos".toUri())
+        val termsIntent = Intent(Intent.ACTION_VIEW, "https://paulguillen.github.io/Think-Terms-Conditions/".toUri())
         ProfileUiEvent.LaunchIntent(intent = termsIntent).send()
     }
 
 
     private fun openPrivacy() {
-        val privacyIntent = Intent(Intent.ACTION_VIEW, "https://infoperu.app/privacidad".toUri())
+        val privacyIntent = Intent(Intent.ACTION_VIEW, "https://paulguillen.github.io/Think-Privacy/".toUri())
         ProfileUiEvent.LaunchIntent(intent = privacyIntent).send()
     }
 

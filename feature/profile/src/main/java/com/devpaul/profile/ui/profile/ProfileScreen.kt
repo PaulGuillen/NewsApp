@@ -1,5 +1,6 @@
 package com.devpaul.profile.ui.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,6 @@ import com.devpaul.core_data.Screen
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.ui.profile.components.ProfileOptionItem
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
@@ -196,9 +196,9 @@ fun ProfileContent(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(8.dp),
-                colors = CardDefaults.cardColors(containerColor = White),
-                shape = RoundedCornerShape(16.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     val options = listOf(
