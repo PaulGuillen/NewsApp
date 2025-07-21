@@ -58,7 +58,7 @@ fun BaseContentLayout(
         configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().navigationBarsPadding(),
 
         // Header
         topBar = {

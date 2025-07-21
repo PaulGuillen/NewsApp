@@ -54,8 +54,8 @@ fun SuggestionsScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .imePadding()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .imePadding(),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(text = "Nuevo comentario", style = MaterialTheme.typography.titleMedium)

@@ -113,7 +113,7 @@ fun NewsBody(
         )
 
         if (uiState.selectedCountry == null) {
-            Spacer(modifier = Modifier.height(120.dp))
+            Spacer(modifier = Modifier.height(80.dp))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
