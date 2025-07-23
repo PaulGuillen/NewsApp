@@ -8,6 +8,7 @@ import com.devpaul.shared.ui.components.atoms.skeleton.home.UITCardSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.news.CountryCardSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.news.GeneralNewSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.news.NewsDetailSkeleton
+import com.devpaul.shared.ui.components.atoms.skeleton.profile.PostScreenSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.profile.ProfileSkeleton
 
 object SkeletonFactory {
@@ -20,6 +21,7 @@ object SkeletonFactory {
         SkeletonType.COUNTRY_CARD -> CountryCardSkeleton()
         SkeletonType.GENERAL_NEWS -> GeneralNewSkeleton()
         SkeletonType.NEWS_DETAIL -> NewsDetailSkeleton()
+        SkeletonType.POST_SCREEN -> PostScreenSkeleton()
         SkeletonType.OTHER -> ProfileSkeleton()
     }
 }

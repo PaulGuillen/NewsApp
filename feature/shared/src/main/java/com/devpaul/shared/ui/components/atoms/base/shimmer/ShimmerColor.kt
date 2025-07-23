@@ -53,7 +53,7 @@ fun getShimmerBrush(): Brush {
         initialValue = 0f,
         targetValue = 1000f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000),
+            animation = tween(durationMillis = 900),
             repeatMode = RepeatMode.Restart
         ),
         label = "shimmer_anim"

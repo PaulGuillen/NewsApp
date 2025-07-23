@@ -9,5 +9,6 @@ enum class SkeletonType {
     COUNTRY_CARD,
     GENERAL_NEWS,
     NEWS_DETAIL,
+    POST_SCREEN,
     OTHER
 }

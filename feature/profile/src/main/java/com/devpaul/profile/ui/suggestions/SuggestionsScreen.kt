@@ -11,16 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.devpaul.profile.ui.suggestions.components.PostScreen
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
@@ -73,7 +70,9 @@ fun SuggestionContent(
         isBodyScrollable = false,
         header = { TopBar(title = "Comentarios") },
         body = {
-            CommentsBody(comments)
+            CommentsBody(
+                uiState = uiState
+            )
         },
         footer = {
             CommentsFooter(
@@ -91,42 +90,30 @@ fun SuggestionContent(
 }
 
 @Composable
-fun CommentsBody(comments: List<String>) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(Color.LightGray),
-        )
+fun CommentsBody(
+    uiState: SuggestionUiState
+) {
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = "Like",
-                tint = Color.Black
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "1", style = MaterialTheme.typography.bodySmall)
+    PostScreen(
+        post = uiState.posts,
+        onLikeClick = {
         }
+    )
 
-        Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
-        LazyColumn {
-            items(comments) { comment ->
-                Text(
-                    text = comment,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-        }
-    }
+//        LazyColumn {
+//            items(comments) { comment ->
+//                Text(
+//                    text = comment,
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    modifier = Modifier.padding(vertical = 4.dp)
+//                )
+//            }
+//        }
+
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsFooter(
     commentText: String,
@@ -135,7 +122,7 @@ fun CommentsFooter(
 ) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -145,7 +132,7 @@ fun CommentsFooter(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
             ) {
                 Box(
                     modifier = Modifier
