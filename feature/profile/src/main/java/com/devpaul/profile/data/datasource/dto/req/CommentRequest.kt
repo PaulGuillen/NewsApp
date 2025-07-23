@@ -2,7 +2,7 @@ package com.devpaul.profile.data.datasource.dto.req
 
 import com.google.gson.annotations.SerializedName
 
-data class CreatePostRequest(
+data class CommentRequest(
     @SerializedName("userId")
     val userId: String,
     @SerializedName("name")

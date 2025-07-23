@@ -1,9 +1,10 @@
 package com.devpaul.profile.data.datasource.remote
 
-import com.devpaul.profile.data.datasource.dto.req.CreatePostRequest
+import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
-import com.devpaul.profile.data.datasource.dto.res.AllPostsResponse
-import com.devpaul.profile.data.datasource.dto.res.CreatePostResponse
+import com.devpaul.profile.data.datasource.dto.res.PostResponse
+import com.devpaul.profile.data.datasource.dto.res.CommentResponse
+import com.devpaul.profile.data.datasource.dto.res.GetCommentResponse
 import com.devpaul.profile.data.datasource.dto.res.IncrementLikeResponse
 import com.devpaul.profile.data.datasource.dto.res.ProfileResponse
 import com.devpaul.profile.data.datasource.dto.res.UpdateResponse
@@ -28,16 +29,20 @@ internal interface ProfileApi {
         @Body profileUserEntity: UpdateRequest
     ): Response<UpdateResponse>
 
-    @POST("users/posts")
-    suspend fun createPost(
-        @Body request: CreatePostRequest
-    ): Response<CreatePostResponse>
+    @POST("users/comments")
+    suspend fun createComment(
+        @Body request: CommentRequest
+    ): Response<CommentResponse>
 
     @PATCH("users/posts/like/{id}")
     suspend fun incrementLike(
+        @Path("type") type: String,
         @Path("id") commentId: String
     ): Response<IncrementLikeResponse>
 
     @GET("users/posts")
-    suspend fun getAllPosts(): Response<AllPostsResponse>
+    suspend fun getPost(): Response<PostResponse>
+
+    @GET("users/posts")
+    suspend fun getComments(): Response<GetCommentResponse>
 }

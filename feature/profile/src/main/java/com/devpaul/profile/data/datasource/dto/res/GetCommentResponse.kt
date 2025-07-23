@@ -2,18 +2,16 @@ package com.devpaul.profile.data.datasource.dto.res
 
 import com.google.gson.annotations.SerializedName
 
-data class CreatePostResponse(
+data class GetCommentResponse(
     @SerializedName("status")
     val status: Int,
-    @SerializedName("message")
-    val message: String,
-    @SerializedName("commentId")
-    val commentId: String,
-    @SerializedName("data")
-    val data: CommentDataResponse
+    @SerializedName("comments")
+    val comments: GetCommentDataResponse
 )
 
-data class CommentDataResponse(
+data class GetCommentDataResponse(
+    @SerializedName("id")
+    val id: String,
     @SerializedName("commentId")
     val commentId: String,
     @SerializedName("userId")

@@ -1,18 +1,23 @@
 package com.devpaul.profile.domain.repository
 
 import com.devpaul.core_data.DefaultOutput
-import com.devpaul.profile.data.datasource.dto.req.CreatePostRequest
+import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
-import com.devpaul.profile.domain.entity.AllPostEntity
-import com.devpaul.profile.domain.entity.CreatePostEntity
-import com.devpaul.profile.domain.entity.IncrementLikeEntity
+import com.devpaul.profile.domain.entity.CommentEntity
+import com.devpaul.profile.domain.entity.GenericEntity
+import com.devpaul.profile.domain.entity.GetCommentEntity
+import com.devpaul.profile.domain.entity.PostEntity
 import com.devpaul.profile.domain.entity.ProfileEntity
-import com.devpaul.profile.domain.entity.UpdateEntity
 
 interface ProfileRepository {
     suspend fun profileById(uid: String): DefaultOutput<ProfileEntity>
-    suspend fun updateUserData(uid: String, profileUser: UpdateRequest): DefaultOutput<UpdateEntity>
-    suspend fun createPost(postRequest: CreatePostRequest): DefaultOutput<CreatePostEntity>
-    suspend fun incrementLike(commentId: String): DefaultOutput<IncrementLikeEntity>
-    suspend fun getAllPosts(): DefaultOutput<AllPostEntity>
+    suspend fun updateUserData(
+        uid: String,
+        profileUser: UpdateRequest
+    ): DefaultOutput<GenericEntity>
+
+    suspend fun createPost(postRequest: CommentRequest): DefaultOutput<CommentEntity>
+    suspend fun incrementLike(type: String, commentId: String): DefaultOutput<GenericEntity>
+    suspend fun getPost(): DefaultOutput<PostEntity>
+    suspend fun getComments(): DefaultOutput<GetCommentEntity>
 }

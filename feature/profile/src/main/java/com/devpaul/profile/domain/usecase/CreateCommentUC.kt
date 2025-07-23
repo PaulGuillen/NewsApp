@@ -5,31 +5,31 @@ import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.core_domain.entity.transform
 import com.devpaul.core_domain.entity.transformHttpError
 import com.devpaul.core_domain.use_case.SimpleUC
-import com.devpaul.profile.data.datasource.dto.req.CreatePostRequest
-import com.devpaul.profile.domain.entity.CreatePostEntity
+import com.devpaul.profile.data.datasource.dto.req.CommentRequest
+import com.devpaul.profile.domain.entity.CommentEntity
 import com.devpaul.profile.domain.repository.ProfileRepository
 import org.koin.core.annotation.Factory
 
 @Factory
-class CreatePostUC(
+class CreateCommentUC(
     private val profileRepository: ProfileRepository
-) : SimpleUC.ParamsAndResult<CreatePostUC.Params, DefaultOutput<CreatePostUC.Success>> {
+) : SimpleUC.ParamsAndResult<CreateCommentUC.Params, DefaultOutput<CreateCommentUC.Success>> {
 
     override suspend fun invoke(params: Params): DefaultOutput<Success> {
         return profileRepository.createPost(params.createPost).transformHttpError {
-            Failure.CreatePostError(it)
+            Failure.CreateCommentError(it)
         }.transform {
-            Success.CreatePostSuccess(it)
+            Success.CreateCommentSuccess(it)
         }
     }
 
-    data class Params(val createPost: CreatePostRequest)
+    data class Params(val createPost: CommentRequest)
 
     sealed class Failure : Defaults.CustomError() {
-        data class CreatePostError(val error: HttpError<String>) : Failure()
+        data class CreateCommentError(val error: HttpError<String>) : Failure()
     }
 
     sealed class Success {
-        data class CreatePostSuccess(val createPost: CreatePostEntity) : Success()
+        data class CreateCommentSuccess(val comment: CommentEntity) : Success()
     }
 }

@@ -6,7 +6,7 @@ import com.devpaul.core_domain.entity.transform
 import com.devpaul.core_domain.entity.transformHttpError
 import com.devpaul.core_domain.use_case.SimpleUC
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
-import com.devpaul.profile.domain.entity.UpdateEntity
+import com.devpaul.profile.domain.entity.GenericEntity
 import com.devpaul.profile.domain.repository.ProfileRepository
 import org.koin.core.annotation.Factory
 
@@ -30,6 +30,6 @@ class UpdateProfileUC(
     }
 
     sealed class Success {
-        data class UpdateSuccess(val updateUser: UpdateEntity) : Success()
+        data class UpdateSuccess(val updateUser: GenericEntity) : Success()
     }
 }

@@ -1,6 +1,6 @@
 package com.devpaul.profile.domain.entity
 
-data class CreatePostEntity(
+data class CommentEntity(
     val status: Int,
     val message: String,
     val commentId: String,
