@@ -1,8 +1,6 @@
 package plugin
 
 import dependence.*
-import gradle.kotlin.dsl.accessors._d77737fb63c02bd0af3daccce5f88495.kotlinOptions
-import gradle.kotlin.dsl.accessors._d77737fb63c02bd0af3daccce5f88495.ksp
 
 plugins {
     id("com.android.library")

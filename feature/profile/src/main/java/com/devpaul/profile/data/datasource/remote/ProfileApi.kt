@@ -43,6 +43,6 @@ internal interface ProfileApi {
     @GET("users/posts")
     suspend fun getPost(): Response<PostResponse>
 
-    @GET("users/posts")
+    @GET("users/comments")
     suspend fun getComments(): Response<GetCommentResponse>
 }

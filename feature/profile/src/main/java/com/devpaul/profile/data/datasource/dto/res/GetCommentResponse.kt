@@ -6,7 +6,7 @@ data class GetCommentResponse(
     @SerializedName("status")
     val status: Int,
     @SerializedName("comments")
-    val comments: GetCommentDataResponse
+    val comments: List<GetCommentDataResponse>
 )
 
 data class GetCommentDataResponse(

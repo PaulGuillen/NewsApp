@@ -5,7 +5,7 @@ import com.devpaul.profile.domain.entity.GenericEntity
 
 fun IncrementLikeResponse.toDomain() : GenericEntity {
     return GenericEntity(
-        status = status,
-        message = message,
+        status = this.status,
+        message = this.message,
     )
 }

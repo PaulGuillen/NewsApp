@@ -50,8 +50,8 @@ class ProfileViewModel(
     }
 
     private suspend fun userProfile() {
-        val uid = dataStoreUseCase.getString(USER_UID_KEY) ?: ""
         updateUiStateOnMain { it.copy(profile = ResultState.Loading) }
+        val uid = dataStoreUseCase.getString(USER_UID_KEY) ?: ""
         val result = userProfileUC(UserProfileUC.Params(uid = uid))
         result.handleNetworkDefault()
             .onSuccessful {

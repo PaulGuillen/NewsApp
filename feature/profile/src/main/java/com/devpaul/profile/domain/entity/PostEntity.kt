@@ -17,6 +17,6 @@ data class PostItemEntity(
 )
 
 data class CreatedAtEntity(
-    val seconds: Long,
-    val nanoseconds: Int
+    val seconds: Long = 0L,
+    val nanoseconds: Int = 0
 )

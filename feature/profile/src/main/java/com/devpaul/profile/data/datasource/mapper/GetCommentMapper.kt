@@ -7,21 +7,21 @@ import com.devpaul.profile.domain.entity.GetCommentEntity
 
 fun GetCommentResponse.toDomain(): GetCommentEntity {
     return GetCommentEntity(
-        status = status,
-        comments = comments.toDomain()
+        status = this.status,
+        comments = this.comments.map { it.toDomain() }
     )
 }
 
 fun GetCommentDataResponse.toDomain(): GetCommentDataEntity {
     return GetCommentDataEntity(
-        id = id,
-        commentId = commentId,
-        userId = userId,
-        name = name,
-        lastname = lastname,
-        image = image,
-        comment = comment,
-        createdAt = createdAt.toDomain(),
-        likes = likes
+        id = this.id,
+        commentId = this.commentId,
+        userId = this.userId,
+        name = this.name,
+        lastname = this.lastname,
+        image = this.image,
+        comment = this.comment,
+        createdAt = this.createdAt.toDomain(),
+        likes = this.likes
     )
 }

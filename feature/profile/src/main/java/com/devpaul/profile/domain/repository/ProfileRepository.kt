@@ -16,7 +16,7 @@ interface ProfileRepository {
         profileUser: UpdateRequest
     ): DefaultOutput<GenericEntity>
 
-    suspend fun createPost(postRequest: CommentRequest): DefaultOutput<CommentEntity>
+    suspend fun createComment(postRequest: CommentRequest): DefaultOutput<CommentEntity>
     suspend fun incrementLike(type: String, commentId: String): DefaultOutput<GenericEntity>
     suspend fun getPost(): DefaultOutput<PostEntity>
     suspend fun getComments(): DefaultOutput<GetCommentEntity>

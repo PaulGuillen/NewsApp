@@ -16,14 +16,14 @@ class CreateCommentUC(
 ) : SimpleUC.ParamsAndResult<CreateCommentUC.Params, DefaultOutput<CreateCommentUC.Success>> {
 
     override suspend fun invoke(params: Params): DefaultOutput<Success> {
-        return profileRepository.createPost(params.createPost).transformHttpError {
+        return profileRepository.createComment(params.createComment).transformHttpError {
             Failure.CreateCommentError(it)
         }.transform {
             Success.CreateCommentSuccess(it)
         }
     }
 
-    data class Params(val createPost: CommentRequest)
+    data class Params(val createComment: CommentRequest)
 
     sealed class Failure : Defaults.CustomError() {
         data class CreateCommentError(val error: HttpError<String>) : Failure()

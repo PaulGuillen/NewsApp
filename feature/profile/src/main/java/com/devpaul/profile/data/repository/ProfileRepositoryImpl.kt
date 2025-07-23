@@ -28,7 +28,7 @@ class ProfileRepositoryImpl(
         return profileServiceDS.getUpdateUserData(uid = uid, profileUser = profileUser)
     }
 
-    override suspend fun createPost(postRequest: CommentRequest): DefaultOutput<CommentEntity> {
+    override suspend fun createComment(postRequest: CommentRequest): DefaultOutput<CommentEntity> {
         return profileServiceDS.createComment(postRequest = postRequest)
     }
 

@@ -9,29 +9,29 @@ import com.devpaul.profile.domain.entity.CreatedAtEntity
 
 fun CommentResponse.toDomain(): CommentEntity {
     return CommentEntity(
-        status = status,
-        message = message,
-        commentId = commentId,
-        data = data.toDomain()
+        status = this.status,
+        message = this.message,
+        commentId = this.commentId,
+        data = this.data.toDomain()
     )
 }
 
 fun CommentDataResponse.toDomain(): CommentDataEntity {
     return CommentDataEntity(
-        commentId = commentId,
-        userId = userId,
-        name = name,
-        lastname = lastname,
-        image = image,
-        comment = comment,
-        createdAt = createdAt.toDomain(),
-        likes = likes
+        commentId = this.commentId,
+        userId = this.userId,
+        name = this.name,
+        lastname = this.lastname,
+        image = this.image,
+        comment = this.comment,
+        createdAt = this.createdAt.toDomain(),
+        likes = this.likes
     )
 }
 
 fun CreatedAtResponse.toDomain(): CreatedAtEntity {
     return CreatedAtEntity(
-        seconds = seconds,
-        nanoseconds = nanoseconds
+        seconds = this.seconds,
+        nanoseconds = this.nanoseconds
     )
 }
