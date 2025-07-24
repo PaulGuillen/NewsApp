@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.devpaul.profile.ui.suggestions.components.CommentScreen
 import com.devpaul.profile.ui.suggestions.components.PostScreen
 import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -67,7 +68,7 @@ fun SuggestionContent(
     var commentText by remember { mutableStateOf("") }
 
     BaseContentLayout(
-        isBodyScrollable = false,
+        isBodyScrollable = true,
         header = { TopBar(title = "Comentarios") },
         body = {
             CommentsBody(
@@ -93,25 +94,21 @@ fun SuggestionContent(
 fun CommentsBody(
     uiState: SuggestionUiState
 ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        PostScreen(
+            post = uiState.posts,
+            onLikeClick = {
+            }
+        )
 
-    PostScreen(
-        post = uiState.posts,
-        onLikeClick = {
-        }
-    )
+        Spacer(modifier = Modifier.height(4.dp))
 
-    Spacer(modifier = Modifier.height(12.dp))
-
-//        LazyColumn {
-//            items(comments) { comment ->
-//                Text(
-//                    text = comment,
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    modifier = Modifier.padding(vertical = 4.dp)
-//                )
-//            }
-//        }
-
+        CommentScreen(
+            comment = uiState.getComments,
+        )
+    }
 }
 
 @Composable

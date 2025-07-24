@@ -55,7 +55,7 @@ fun PostScreenSkeletonContent(modifier: Modifier = Modifier) {
         ) {
             Box(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(start = 8.dp)
                     .width(34.dp)
                     .height(30.dp)
                     .background(brush = shimmerBrush, shape = RoundedCornerShape(4.dp))

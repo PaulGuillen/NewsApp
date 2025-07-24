@@ -82,7 +82,6 @@ fun PostScreen(
                                 text = (data?.likes).toString(),
                                 style = MaterialTheme.typography.bodySmall
                             )
-
                         }
                     }
                 }
