@@ -8,6 +8,10 @@ import android.util.Base64
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import java.io.ByteArrayOutputStream
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 fun uriToBitmap(context: Context, uri: Uri): Bitmap {
     val inputStream = context.contentResolver.openInputStream(uri)
@@ -28,5 +32,27 @@ fun base64ToImageBitmap(base64Str: String): ImageBitmap? {
         bitmap.asImageBitmap()
     } catch (e: Exception) {
         null
+    }
+}
+
+fun formatRelativeTime(seconds: Long, nanoseconds: Int): String {
+    val dateTime = Instant.ofEpochSecond(seconds, nanoseconds.toLong())
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+
+    val now = LocalDateTime.now()
+
+    val minutes = ChronoUnit.MINUTES.between(dateTime, now)
+    val hours = ChronoUnit.HOURS.between(dateTime, now)
+    val days = ChronoUnit.DAYS.between(dateTime.toLocalDate(), now.toLocalDate())
+
+    return when {
+        minutes < 1 -> "Justo ahora"
+        minutes == 1L -> "Hace 1 minuto"
+        minutes < 60 -> "Hace $minutes minutos"
+        hours == 1L -> "Hace 1 hora"
+        hours < 24 -> "Hace $hours horas"
+        days == 1L -> "Hace 1 día"
+        else -> "Hace $days días"
     }
 }

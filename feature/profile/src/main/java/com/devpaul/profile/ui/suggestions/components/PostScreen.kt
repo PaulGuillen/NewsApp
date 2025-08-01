@@ -1,19 +1,21 @@
 package com.devpaul.profile.ui.suggestions.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,19 +24,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.profile.data.datasource.mock.PostMock
 import com.devpaul.profile.domain.entity.PostEntity
+import com.devpaul.profile.domain.entity.PostItemEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun PostScreen(
     post: ResultState<PostEntity>,
-    onLikeClick: (PostEntity) -> Unit,
+    onLikeClick: (PostItemEntity) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     when (post) {
         is ResultState.Loading -> {
@@ -42,60 +47,88 @@ fun PostScreen(
         }
 
         is ResultState.Success -> {
-            val response = post.response
-            val data = response.data.firstOrNull()
+            val data = post.response.data.firstOrNull()
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            ) {
-                Column {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Image(
                         painter = rememberAsyncImagePainter(data?.image),
                         contentDescription = data?.title,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp),
+                            .height(280.dp),
                         contentScale = ContentScale.Crop
                     )
 
-                    Column(
-                        modifier = Modifier.padding(12.dp),
+                    // Top Buttons Overlay
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(18.dp)
+                                )
+                                .padding(8.dp)
+                                .clickable { onBackClick() }
+                        )
 
-                            Icon(
-                                imageVector = Icons.Default.FavoriteBorder,
-                                contentDescription = "Like",
-                                tint = Color.Black
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = (data?.likes).toString(),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorito",
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(18.dp)
+                                )
+                                .padding(8.dp)
+                                .clickable {
+                                    data?.let { onLikeClick(it) }
+                                }
+                        )
                     }
                 }
-            }
 
+                // Post Details
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                ) {
+                    Text(
+                        text = data?.title ?: "",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = data?.description ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         }
 
         is ResultState.Error -> {
-            // Handle error state
+            // Manejo de error
         }
 
-        else -> {
-            // Handle idle state
-        }
+        else -> Unit
     }
 }
 
@@ -103,5 +136,5 @@ fun PostScreen(
 @Composable
 fun PostScreenPreview() {
     val mockPost = ResultState.Success(PostMock().postMock)
-    PostScreen(post = mockPost, onLikeClick = {})
+    PostScreen(post = mockPost, onLikeClick = {}, onBackClick = {})
 }

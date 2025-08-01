@@ -57,75 +57,141 @@ fun BaseContentLayout(
     val isPortrait =
         configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
 
-    Scaffold(
-        modifier = modifier.fillMaxSize().navigationBarsPadding(),
 
-        // Header
-        topBar = {
-            header?.let {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .statusBarsPadding(), // Evita solaparse con status bar
-                    contentAlignment = Alignment.Center
-                ) {
-                    it()
+    if (isPortrait) {
+        Scaffold(
+            modifier = modifier.fillMaxSize(),
+
+            // Header
+            topBar = {
+                header?.let {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .statusBarsPadding(), // Evita solaparse con status bar
+                        contentAlignment = Alignment.Center
+                    ) {
+                        it()
+                    }
                 }
-            }
-        },
+            },
 
-        // Footer
-        bottomBar = {
-            footer?.let {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .navigationBarsPadding(), // Evita solaparse con sistema de navegación
-                    contentAlignment = Alignment.Center
-                ) {
-                    it()
+            // Footer
+            bottomBar = {
+                footer?.let {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .navigationBarsPadding(), // Evita solaparse con sistema de navegación
+                        contentAlignment = Alignment.Center
+                    ) {
+                        it()
+                    }
                 }
-            }
-        },
+            },
 
-        // FAB
-        floatingActionButton = {
-            floatingActionButton?.invoke()
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                // Padding según si hay header/footer
-                .padding(
-                    top = if (header != null && applyStatusBarsPaddingToHeader) innerPadding.calculateTopPadding() else 0.dp,
-                    bottom = if (footer != null && applyNavigationBarsPaddingToFooter) innerPadding.calculateBottomPadding() else 0.dp,
-                    start = 0.dp,
-                    end = 0.dp
-                )
-                // Scroll si se requiere
-                .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
-                // Padding inferior si no hay footer pero se requiere espacio para navegación
-                .then(
-                    if (footer == null && applyBottomPaddingWhenNoFooter)
-                        Modifier.navigationBarsPadding()
-                    else Modifier
-                )
-                // Padding por teclado si está activado
-                .then(if (applyImePadding) Modifier.imePadding() else Modifier)
-                // Por seguridad en orientación vertical, llena altura
-                .then(if (isPortrait) Modifier.fillMaxHeight() else Modifier),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Contenido del body alineado arriba y centrado horizontalmente
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.TopCenter
+            // FAB
+            floatingActionButton = {
+                floatingActionButton?.invoke()
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    // Padding según si hay header/footer
+                    .padding(
+                        top = if (header != null && applyStatusBarsPaddingToHeader) innerPadding.calculateTopPadding() else 0.dp,
+                        bottom = if (footer != null && applyNavigationBarsPaddingToFooter) innerPadding.calculateBottomPadding() else 0.dp,
+                        start = 0.dp,
+                        end = 0.dp
+                    )
+                    // Scroll si se requiere
+                    .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
+                    // Padding inferior si no hay footer pero se requiere espacio para navegación
+                    .then(
+                        if (footer == null && applyBottomPaddingWhenNoFooter)
+                            Modifier.navigationBarsPadding()
+                        else Modifier
+                    )
+                    // Padding por teclado si está activado
+                    .then(if (applyImePadding) Modifier.imePadding() else Modifier),
+                    // Por seguridad en orientación vertical, llena altura
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                body()
+                // Contenido del body alineado arriba y centrado horizontalmente
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    body()
+                }
+            }
+        }
+    } else {
+        Scaffold(
+            modifier = modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding(),
+            // Header
+            topBar = {
+                header?.let {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .statusBarsPadding(), // Evita solaparse con status bar
+                        contentAlignment = Alignment.Center
+                    ) {
+                        it()
+                    }
+                }
+            },
+
+            // Footer
+            bottomBar = {
+                footer?.let {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .navigationBarsPadding(), // Evita solaparse con sistema de navegación
+                        contentAlignment = Alignment.Center
+                    ) {
+                        it()
+                    }
+                }
+            },
+
+            // FAB
+            floatingActionButton = {
+                floatingActionButton?.invoke()
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+
+                    // Padding según si hay header/footer
+                    .padding(
+                        top = if (header != null && applyStatusBarsPaddingToHeader) innerPadding.calculateTopPadding() else 0.dp,
+                        bottom = if (footer != null && applyNavigationBarsPaddingToFooter) innerPadding.calculateBottomPadding() else 0.dp,
+                        start = 0.dp,
+                        end = 0.dp
+                    )
+                    // Scroll si se requiere
+                    .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
+                    // Padding por teclado si está activado
+                    .then(if (applyImePadding) Modifier.imePadding() else Modifier),
+            ) {
+                // Contenido del body alineado arriba y centrado horizontalmente
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    body()
+                }
             }
         }
     }
+
 }

@@ -34,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.White
 import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
@@ -185,7 +184,6 @@ fun UpdateScreenContent(
     }
 
     BaseContentLayout(
-        applyBottomPaddingWhenNoFooter = false,
         isBodyScrollable = true,
         header = {
             UpdateScreenHeader(
@@ -408,7 +406,6 @@ fun UpdateScreenFooter(
 @Composable
 fun ProfileUpdateScreenPreview() {
     BaseContentLayout(
-        applyBottomPaddingWhenNoFooter = false,
         isBodyScrollable = true,
         header = {
             UpdateScreenHeader(

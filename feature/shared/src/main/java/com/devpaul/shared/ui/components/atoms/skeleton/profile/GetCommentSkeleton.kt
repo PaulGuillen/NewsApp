@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -35,41 +34,64 @@ fun GetCommentSkeletonContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .background(
-                brush = shimmerBrush,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(12.dp),
+            .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        repeat(10) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+        repeat(5) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = shimmerBrush,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .padding(12.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(brush = shimmerBrush, shape = CircleShape)
-                )
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Avatar
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(shimmerBrush, CircleShape)
+                        )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                                    .height(16.dp)
+                                    .background(shimmerBrush, RoundedCornerShape(4.dp))
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.3f)
+                                    .height(12.dp)
+                                    .background(shimmerBrush, RoundedCornerShape(4.dp))
+                            )
+                        }
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(20.dp)
-                        .background(brush = shimmerBrush, shape = RoundedCornerShape(4.dp))
-                )
+                        Box(
+                            modifier = Modifier
+                                .size(18.dp)
+                                .background(shimmerBrush, RoundedCornerShape(4.dp))
+                        )
+                    }
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(brush = shimmerBrush, shape = RoundedCornerShape(4.dp))
-                )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .background(shimmerBrush, RoundedCornerShape(6.dp))
+                    )
+                }
             }
         }
     }

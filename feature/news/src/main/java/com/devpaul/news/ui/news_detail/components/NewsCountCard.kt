@@ -29,7 +29,7 @@ fun NewsCountCard(title: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 12.dp),
+            .padding(horizontal = 10.dp),
         colors = CardDefaults.cardColors(containerColor = if (isDarkMode) DarkChocolate else GreenLight),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),

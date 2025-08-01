@@ -47,32 +47,55 @@ fun NewsDetailsScreen(
         navController = navController,
         onBackPressed = { onBackWithResult -> onBackWithResult("shouldReload", true) }
     ) { innerPadding, uiState, onIntent, _, _ ->
-        BaseContentLayout(
-            isBodyScrollable = false,
-            applyStatusBarsPaddingToHeader = false,
-            applyNavigationBarsPaddingToFooter = false,
-            header = {
-                NewsDetailHeader(newsType = newsType, uiState = uiState)
-            },
-            body = {
-                NewsDetailBody(
-                    context = context,
-                    innerPadding = innerPadding,
-                    uiState = uiState,
-                    newsType = newsType,
-                    selectedUrl = selectedUrl,
-                    onSelectUrl = { viewModel.selectUrl(it) }
-                )
-            },
-            footer = {
-                NewsDetailFooter(
-                    canLoadMore = canLoadMore,
-                    isLoadingMore = uiState.isLoadingMore,
-                    onLoadMore = { onIntent(NewsDetailUiIntent.LoadNextPage(newsType ?: "")) }
-                )
-            }
+        NewsDetailContent(
+            context = context,
+            innerPadding = innerPadding,
+            uiState = uiState,
+            newsType = newsType,
+            selectedUrl = selectedUrl,
+            canLoadMore = canLoadMore,
+            onSelectUrl = { viewModel.selectUrl(it) },
+            onLoadMore = { onIntent(NewsDetailUiIntent.LoadNextPage(newsType ?: "")) }
         )
     }
+}
+
+@Composable
+fun NewsDetailContent(
+    context: Context,
+    innerPadding: PaddingValues,
+    uiState: NewsDetailUiState,
+    newsType: String?,
+    selectedUrl: String?,
+    canLoadMore: Boolean,
+    onSelectUrl: (String) -> Unit,
+    onLoadMore: () -> Unit
+) {
+    BaseContentLayout(
+        isBodyScrollable = false,
+        applyStatusBarsPaddingToHeader = false,
+        applyNavigationBarsPaddingToFooter = false,
+        header = {
+            NewsDetailHeader(newsType = newsType, uiState = uiState)
+        },
+        body = {
+            NewsDetailBody(
+                context = context,
+                innerPadding = innerPadding,
+                uiState = uiState,
+                newsType = newsType,
+                selectedUrl = selectedUrl,
+                onSelectUrl = onSelectUrl
+            )
+        },
+        footer = {
+            NewsDetailFooter(
+                canLoadMore = canLoadMore,
+                isLoadingMore = uiState.isLoadingMore,
+                onLoadMore = onLoadMore
+            )
+        }
+    )
 }
 
 @Composable
@@ -91,7 +114,9 @@ fun NewsDetailHeader(
 
     if (totalItems > 0) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 10.dp)
+                .fillMaxWidth()
         ) {
             NewsCountCard(
                 title = when (newsType) {
@@ -114,7 +139,9 @@ fun NewsDetailBody(
     onSelectUrl: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(vertical = 70.dp)
+        modifier = Modifier
+            .padding(vertical = 64.dp)
+            .fillMaxWidth()
     ) {
         when (newsType) {
             "googleNews" -> {
@@ -190,7 +217,12 @@ fun GoogleNewsList(
     when (googleState) {
         is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
-            LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(modifier)
+                    .padding(horizontal = 8.dp)
+            ) {
                 items(googleState.response.data.items) { item ->
                     NewsCard(
                         context = context,
@@ -222,7 +254,12 @@ fun DeltaNewsList(
     when (deltaProjectState) {
         is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
-            LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(modifier)
+                    .padding(horizontal = 8.dp)
+            ) {
                 items(deltaProjectState.response.data.items) { item ->
                     NewsCard(
                         context = context,
@@ -254,7 +291,12 @@ fun RedditNewsList(
     when (redditState) {
         is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.NEWS_DETAIL)
         is ResultState.Success -> {
-            LazyColumn(modifier = modifier.padding(horizontal = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(modifier)
+                    .padding(horizontal = 8.dp)
+            ) {
                 items(redditState.response.data.items) { post ->
                     NewsCard(
                         context = context,
@@ -275,10 +317,31 @@ fun RedditNewsList(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    name = "NewsDetailContentPreview - Landscape",
+    uiMode = android.content.res.Configuration.UI_MODE_TYPE_NORMAL,
+
+    )
 @Composable
-fun NewsCountCardPreview() {
-    NewsCountCard(title = "Cantidad de noticias: 10")
+fun NewsDetailContentPreview() {
+    val context = LocalContext.current
+
+    NewsDetailContent(
+        context = context,
+        innerPadding = PaddingValues(0.dp),
+        uiState = NewsDetailUiState(
+            google = ResultState.Success(NewsMock().googleMock),
+            reddit = ResultState.Loading,
+            deltaProject = ResultState.Loading,
+            isLoadingMore = false
+        ),
+        newsType = "googleNews",
+        selectedUrl = null,
+        canLoadMore = true,
+        onSelectUrl = {},
+        onLoadMore = {}
+    )
 }
 
 @Preview(showBackground = true)
