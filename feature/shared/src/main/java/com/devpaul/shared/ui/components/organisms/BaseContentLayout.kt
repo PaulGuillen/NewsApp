@@ -109,6 +109,12 @@ fun BaseContentLayout(
                     )
                     // Scroll si se requiere
                     .then(if (isBodyScrollable) Modifier.verticalScroll(scrollState) else Modifier)
+                    // Padding superior si no hay header pero se requiere espacio para status bar
+                    .then(
+                        if (header == null && applyStatusBarsPaddingToHeader)
+                            Modifier.statusBarsPadding()
+                        else Modifier
+                    )
                     // Padding inferior si no hay footer pero se requiere espacio para navegación
                     .then(
                         if (footer == null && applyBottomPaddingWhenNoFooter)

@@ -20,11 +20,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -60,7 +65,6 @@ fun PostScreen(
                         contentScale = ContentScale.Crop
                     )
 
-                    // Top Buttons Overlay
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -100,7 +104,6 @@ fun PostScreen(
                     }
                 }
 
-                // Post Details
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -115,17 +118,43 @@ fun PostScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    val description = data?.description.orEmpty()
+                    val lineBreaks = remember(description) { description.count { it == '\n' } }
+
+                    val shouldForceShowMore = lineBreaks >= 4
+
+                    var isExpanded by remember { mutableStateOf(false) }
+                    var isOverflowing by remember { mutableStateOf(false) }
+
                     Text(
-                        text = data?.description ?: "",
+                        text = description,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 4.dp),
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 5,
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { textLayoutResult ->
+                            isOverflowing = textLayoutResult.lineCount > 5
+                        }
                     )
+
+                    if (shouldForceShowMore || isOverflowing) {
+                        Text(
+                            text = if (isExpanded) "Ver menos" else "Ver más",
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .clickable { isExpanded = !isExpanded }
+                                .padding(bottom = 8.dp)
+                        )
+                    }
                 }
             }
         }
 
         is ResultState.Error -> {
-            // Manejo de error
+            // Manejo de error si deseas mostrar algo
         }
 
         else -> Unit
