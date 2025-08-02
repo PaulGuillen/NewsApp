@@ -61,7 +61,7 @@ fun PostScreen(
                         contentDescription = data?.title,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(280.dp),
+                            .height(240.dp),
                         contentScale = ContentScale.Crop
                     )
 
@@ -132,10 +132,10 @@ fun PostScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 4.dp),
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 5,
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 3,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textLayoutResult ->
-                            isOverflowing = textLayoutResult.lineCount > 5
+                            isOverflowing = textLayoutResult.lineCount > 3
                         }
                     )
 

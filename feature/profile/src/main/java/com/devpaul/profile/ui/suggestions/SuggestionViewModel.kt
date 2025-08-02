@@ -1,13 +1,19 @@
 package com.devpaul.profile.ui.suggestions
 
+import com.devpaul.core_data.serialization.Wrapper
+import com.devpaul.core_data.serialization.fromJsonGeneric
+import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
+import com.devpaul.profile.domain.entity.ProfileUserEntity
 import com.devpaul.profile.domain.usecase.CreateCommentUC
 import com.devpaul.profile.domain.usecase.GetCommentUC
 import com.devpaul.profile.domain.usecase.GetPostUC
 import com.devpaul.profile.domain.usecase.IncrementLikeUC
+import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
+import timber.log.Timber
 
 @KoinViewModel
 class SuggestionViewModel(
@@ -15,11 +21,14 @@ class SuggestionViewModel(
     private val getCommentUC: GetCommentUC,
     private val patchIncrementLike: IncrementLikeUC,
     private val createCommentUC: CreateCommentUC,
+    private val dataStoreUseCase: DataStoreUseCase,
 ) : StatefulViewModel<SuggestionUiState, SuggestionUiIntent, SuggestionUiEvent>(
     defaultUIState = {
         SuggestionUiState()
     }
 ) {
+
+    var profile: ProfileUserEntity? = null
 
     init {
         SuggestionUiIntent.GetPost.execute()
@@ -61,6 +70,17 @@ class SuggestionViewModel(
                 }
             }
         }
+    }
+
+    suspend fun getProfileData() {
+        val profileJson = dataStoreUseCase.getString("profile_data")
+        val wrapper: Wrapper<ProfileUserEntity>? = Gson().fromJsonGeneric(profileJson)
+        profile = wrapper?.data
+
+        updateUiStateOnMain {
+            it.copy(profile = profile)
+        }
+        Timber.d("Profile data: $profile")
     }
 
     private suspend fun createComment(

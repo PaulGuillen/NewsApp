@@ -36,7 +36,7 @@ fun PostScreenSkeletonContent(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp)
+                .height(240.dp)
                 .background(
                     brush = shimmerBrush,
                     shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)

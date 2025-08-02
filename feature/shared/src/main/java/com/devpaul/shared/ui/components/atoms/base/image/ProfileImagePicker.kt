@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,7 @@ fun ProfileImagePicker(
     base64Image: String?,
     modifier: Modifier = Modifier,
     showDialogOnClick: Boolean = true,
+    isCircular: Boolean = false,
     onImageSelected: (base64: String?, uri: Uri?) -> Unit
 ) {
     val isInPreview = LocalInspectionMode.current
@@ -174,24 +176,28 @@ fun ProfileImagePicker(
 
     Box(
         modifier = modifier
-            .size(180.dp)
+            .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
             .background(Color.White)
             .then(if (showDialogOnClick) Modifier.clickable { showDialog = true } else Modifier),
         contentAlignment = Alignment.Center
-    ) {
+    ){
         if (imageBitmap != null) {
             Image(
                 bitmap = imageBitmap,
                 contentDescription = "Foto de perfil",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(180.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
             )
         } else {
             Image(
                 painter = rememberAsyncImagePainter(imageUri ?: defaultImageUrl),
                 contentDescription = "Foto de perfil",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(180.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
             )
         }
 

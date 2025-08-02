@@ -29,7 +29,7 @@ internal interface ProfileApi {
         @Body profileUserEntity: UpdateRequest
     ): Response<UpdateResponse>
 
-    @POST("users/comments")
+    @POST("users/comment")
     suspend fun createComment(
         @Body request: CommentRequest
     ): Response<CommentResponse>
