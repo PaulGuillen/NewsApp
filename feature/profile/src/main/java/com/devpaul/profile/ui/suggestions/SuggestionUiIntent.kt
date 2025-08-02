@@ -9,7 +9,14 @@ sealed class SuggestionUiIntent {
         val comment: String,
     ) : SuggestionUiIntent()
 
-    data class PatchIncrementLike(val type: String, val commentId: String) : SuggestionUiIntent()
+    data class PatchIncrementLike(
+        val type: String,
+        val commentId: String,
+        val userId: String,
+        val increment: Boolean,
+    ) : SuggestionUiIntent()
+
     data object GetPost : SuggestionUiIntent()
     data object GetComments : SuggestionUiIntent()
+    data object NavigateBack : SuggestionUiIntent()
 }

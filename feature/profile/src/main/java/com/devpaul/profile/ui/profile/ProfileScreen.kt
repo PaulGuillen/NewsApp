@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
@@ -129,12 +130,14 @@ fun ProfileContent(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 32.dp),
+                            .padding(top = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         ProfileImagePicker(
                             defaultImageUrl = Constant.URL_IMAGE,
                             base64Image = profile?.image,
+                            modifier = Modifier.size(180.dp),
+                            isCircular = true,
                             showDialogOnClick = false,
                             onImageSelected = { _, _ -> }
                         )

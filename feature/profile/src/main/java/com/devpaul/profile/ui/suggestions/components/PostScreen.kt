@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,11 +40,13 @@ import com.devpaul.profile.domain.entity.PostEntity
 import com.devpaul.profile.domain.entity.PostItemEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
+import kotlinx.coroutines.delay
 
 @Composable
 fun PostScreen(
     post: ResultState<PostEntity>,
-    onLikeClick: (PostItemEntity) -> Unit,
+    userId: String,
+    onLikeClick: (PostItemEntity, Boolean) -> Unit,
     onBackClick: () -> Unit,
 ) {
     when (post) {
@@ -52,13 +55,23 @@ fun PostScreen(
         }
 
         is ResultState.Success -> {
-            val data = post.response.data.firstOrNull()
+            val data = post.response.data.firstOrNull() ?: return
+            var isLiked by remember { mutableStateOf(data.likedBy?.get(userId) == true) }
+            var likeCount by remember { mutableStateOf(data.likes ?: 0) }
+            var isProcessing by remember { mutableStateOf(false) }
+
+            LaunchedEffect(isProcessing) {
+                if (isProcessing) {
+                    delay(1000)
+                    isProcessing = false
+                }
+            }
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Image(
-                        painter = rememberAsyncImagePainter(data?.image),
-                        contentDescription = data?.title,
+                        painter = rememberAsyncImagePainter(data.image),
+                        contentDescription = data.title,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(240.dp),
@@ -89,7 +102,7 @@ fun PostScreen(
                         Icon(
                             imageVector = Icons.Default.FavoriteBorder,
                             contentDescription = "Favorito",
-                            tint = Color.Black,
+                            tint = if (isLiked) Color.Red else Color.Gray,
                             modifier = Modifier
                                 .size(36.dp)
                                 .background(
@@ -97,8 +110,11 @@ fun PostScreen(
                                     shape = RoundedCornerShape(18.dp)
                                 )
                                 .padding(8.dp)
-                                .clickable {
-                                    data?.let { onLikeClick(it) }
+                                .clickable(enabled = !isProcessing) {
+                                    isLiked = !isLiked
+                                    likeCount = if (isLiked) likeCount + 1 else likeCount - 1
+                                    isProcessing = true
+                                    onLikeClick(data, isLiked)
                                 }
                         )
                     }
@@ -110,19 +126,26 @@ fun PostScreen(
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                 ) {
                     Text(
-                        text = data?.title ?: "",
+                        text = data.title ?: "",
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                    val description = data?.description.orEmpty()
+                    Text(
+                        text = "$likeCount me gusta",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(bottom = 4.dp)
+                    )
+
+                    val description = data.description.orEmpty()
                     val lineBreaks = remember(description) { description.count { it == '\n' } }
 
                     val shouldForceShowMore = lineBreaks >= 4
-
                     var isExpanded by remember { mutableStateOf(false) }
                     var isOverflowing by remember { mutableStateOf(false) }
 
@@ -134,8 +157,8 @@ fun PostScreen(
                             .padding(bottom = 4.dp),
                         maxLines = if (isExpanded) Int.MAX_VALUE else 3,
                         overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { textLayoutResult ->
-                            isOverflowing = textLayoutResult.lineCount > 3
+                        onTextLayout = { result ->
+                            isOverflowing = result.lineCount > 3
                         }
                     )
 
@@ -154,7 +177,11 @@ fun PostScreen(
         }
 
         is ResultState.Error -> {
-            // Manejo de error si deseas mostrar algo
+            Text(
+                text = "Error al cargar el post.",
+                color = Color.Red,
+                modifier = Modifier.padding(16.dp)
+            )
         }
 
         else -> Unit
@@ -165,5 +192,10 @@ fun PostScreen(
 @Composable
 fun PostScreenPreview() {
     val mockPost = ResultState.Success(PostMock().postMock)
-    PostScreen(post = mockPost, onLikeClick = {}, onBackClick = {})
+    PostScreen(
+        post = mockPost,
+        userId = "",
+        onLikeClick = { _, _ -> },
+        onBackClick = {}
+    )
 }

@@ -21,6 +21,7 @@ fun PostItemResponse.toDomain(): PostItemEntity {
         postId = this.postId,
         title = this.title,
         description = this.description,
-        toPublic = this.toPublic ?: false
+        toPublic = this.toPublic ?: false,
+        likedBy = this.likedBy ?: emptyMap()
     )
 }

@@ -26,6 +26,8 @@ data class PostItemResponse(
     val title: String? = null,
     @SerializedName("description")
     val description: String? = null,
+    @SerializedName("likedBy")
+    val likedBy: Map<String, Boolean>? = null
 )
 
 data class CreatedAtResponse(

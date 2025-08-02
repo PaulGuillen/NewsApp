@@ -15,15 +15,25 @@ class IncrementLikeUC(
 ) : SimpleUC.ParamsAndResult<IncrementLikeUC.Params, DefaultOutput<IncrementLikeUC.Success>> {
 
     override suspend fun invoke(params: Params): DefaultOutput<Success> {
-        return profileRepository.incrementLike(type = params.type, commentId = params.commentId)
+        return profileRepository.incrementLike(
+            type = params.type,
+            commentId = params.commentId,
+            userId = params.userId,
+            increment = params.increment,
+        )
             .transformHttpError {
                 Failure.IncrementLikeError(it)
             }.transform {
-            Success.IncrementLikeSuccess(it)
-        }
+                Success.IncrementLikeSuccess(it)
+            }
     }
 
-    data class Params(val type: String, val commentId: String)
+    data class Params(
+        val type: String,
+        val commentId: String,
+        val userId: String,
+        val increment: Boolean
+    )
 
     sealed class Failure : Defaults.CustomError() {
         data class IncrementLikeError(val error: HttpError<String>) : Failure()

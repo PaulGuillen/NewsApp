@@ -13,7 +13,6 @@ import com.devpaul.profile.domain.usecase.GetPostUC
 import com.devpaul.profile.domain.usecase.IncrementLikeUC
 import com.google.gson.Gson
 import org.koin.android.annotation.KoinViewModel
-import timber.log.Timber
 
 @KoinViewModel
 class SuggestionViewModel(
@@ -54,6 +53,8 @@ class SuggestionViewModel(
                     incrementLike(
                         type = intent.type,
                         commentId = intent.commentId,
+                        userId = intent.userId,
+                        increment = intent.increment,
                     )
                 }
             }
@@ -69,6 +70,11 @@ class SuggestionViewModel(
                     fetchComments()
                 }
             }
+
+            is SuggestionUiIntent.NavigateBack -> {
+                navigationBack()
+            }
+
         }
     }
 
@@ -80,7 +86,6 @@ class SuggestionViewModel(
         updateUiStateOnMain {
             it.copy(profile = profile)
         }
-        Timber.d("Profile data: $profile")
     }
 
     private suspend fun createComment(
@@ -124,9 +129,21 @@ class SuggestionViewModel(
             }
     }
 
-    private suspend fun incrementLike(type: String, commentId: String) {
+    private suspend fun incrementLike(
+        type: String,
+        commentId: String,
+        userId: String,
+        increment: Boolean,
+    ) {
         updateUiStateOnMain { it.copy(incrementLike = ResultState.Loading) }
-        val result = patchIncrementLike(IncrementLikeUC.Params(type = type, commentId = commentId))
+        val result = patchIncrementLike(
+            IncrementLikeUC.Params(
+                type = type,
+                commentId = commentId,
+                userId = userId,
+                increment = increment
+            )
+        )
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
@@ -206,6 +223,10 @@ class SuggestionViewModel(
                     }
                 }
             }
+    }
+
+    private fun navigationBack() {
+        SuggestionUiEvent.NavigationBack.send()
     }
 
 }

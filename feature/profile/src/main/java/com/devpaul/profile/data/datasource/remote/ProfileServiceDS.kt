@@ -40,9 +40,19 @@ class ProfileServiceDS(
         }.transform { it.toDomain() }
     }
 
-    suspend fun incrementLike(type: String, commentId: String): DefaultOutput<GenericEntity> {
+    suspend fun incrementLike(
+        type: String,
+        commentId: String,
+        userId: String,
+        increment: Boolean,
+    ): DefaultOutput<GenericEntity> {
         return safeApiCall {
-            profileServiceDS.incrementLike(type = type, commentId = commentId)
+            profileServiceDS.incrementLike(
+                type = type,
+                commentId = commentId,
+                userId = userId,
+                increment = increment
+            )
         }.transform { it.toDomain() }
     }
 

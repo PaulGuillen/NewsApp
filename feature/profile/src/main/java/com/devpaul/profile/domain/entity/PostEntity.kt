@@ -14,6 +14,7 @@ data class PostItemEntity(
     val description: String? = null,
     val toPublic: Boolean? = null,
     val image: String? = null,
+    val likedBy: Map<String, Boolean>? = null
 )
 
 data class CreatedAtEntity(

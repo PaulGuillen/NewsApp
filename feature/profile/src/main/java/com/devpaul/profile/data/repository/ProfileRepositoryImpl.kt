@@ -4,11 +4,11 @@ import com.devpaul.core_data.DefaultOutput
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.data.datasource.remote.ProfileServiceDS
-import com.devpaul.profile.domain.entity.PostEntity
 import com.devpaul.profile.domain.entity.CommentEntity
-import com.devpaul.profile.domain.entity.ProfileEntity
 import com.devpaul.profile.domain.entity.GenericEntity
 import com.devpaul.profile.domain.entity.GetCommentEntity
+import com.devpaul.profile.domain.entity.PostEntity
+import com.devpaul.profile.domain.entity.ProfileEntity
 import com.devpaul.profile.domain.repository.ProfileRepository
 import org.koin.core.annotation.Factory
 
@@ -34,9 +34,16 @@ class ProfileRepositoryImpl(
 
     override suspend fun incrementLike(
         type: String,
-        commentId: String
+        commentId: String,
+        userId: String,
+        increment: Boolean,
     ): DefaultOutput<GenericEntity> {
-        return profileServiceDS.incrementLike(type = type, commentId = commentId)
+        return profileServiceDS.incrementLike(
+            type = type,
+            commentId = commentId,
+            userId = userId,
+            increment = increment
+        )
     }
 
     override suspend fun getPost(): DefaultOutput<PostEntity> {

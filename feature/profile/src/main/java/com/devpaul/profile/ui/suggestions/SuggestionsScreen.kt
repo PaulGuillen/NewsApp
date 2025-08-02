@@ -54,10 +54,18 @@ fun SuggestionsScreen(navController: NavHostController) {
         onInit = { _, _ ->
             viewModel.getProfileData()
         },
+        onUiEvent = { event, _ ->
+            when (event) {
+                is SuggestionUiEvent.NavigationBack -> {
+                    navController.popBackStack()
+                }
+            }
+        },
         navController = navController,
-    ) { _, uiState, onIntent, _, _ ->
+    ) { _, uiState, onIntent, showSnackBar, _ ->
         SuggestionContent(
             uiState = uiState,
+            showSnackBar = showSnackBar,
             onIntent = onIntent,
         )
     }
@@ -66,6 +74,7 @@ fun SuggestionsScreen(navController: NavHostController) {
 @Composable
 fun SuggestionContent(
     uiState: SuggestionUiState,
+    showSnackBar: (String) -> Unit,
     onIntent: (SuggestionUiIntent) -> Unit,
 ) {
     var commentText by remember { mutableStateOf("") }
@@ -82,9 +91,11 @@ fun SuggestionContent(
         is ResultState.Loading -> {
             ScreenLoading()
         }
+
         is ResultState.Error -> {
-            // Handle error state if needed
+            showSnackBar("Error al crear el comentario")
         }
+
         else -> {
             // Handle other states if needed
         }
@@ -95,7 +106,8 @@ fun SuggestionContent(
         applyStatusBarsPaddingToHeader = true,
         body = {
             CommentsBody(
-                uiState = uiState
+                uiState = uiState,
+                onIntent = onIntent
             )
         },
         footer = {
@@ -124,19 +136,28 @@ fun SuggestionContent(
 @Composable
 fun CommentsBody(
     uiState: SuggestionUiState,
+    onIntent: (SuggestionUiIntent) -> Unit
 ) {
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         PostScreen(
             post = uiState.posts,
-            onLikeClick = {
+            userId = uiState.profile?.id.orEmpty(),
+            onLikeClick = { post, increment ->
+                onIntent(
+                    SuggestionUiIntent.PatchIncrementLike(
+                        type = "post",
+                        commentId = post.postId.orEmpty(),
+                        userId = uiState.profile?.id.orEmpty(),
+                        increment = increment
+                    )
+                )
             },
             onBackClick = {
-
+                onIntent(SuggestionUiIntent.NavigateBack)
             }
-
         )
 
         HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
@@ -217,6 +238,7 @@ fun CommentsFooter(
 fun SuggestionsScreenPreview() {
     SuggestionContent(
         uiState = SuggestionUiState(),
+        showSnackBar = {},
         onIntent = {}
     )
 }

@@ -34,10 +34,12 @@ internal interface ProfileApi {
         @Body request: CommentRequest
     ): Response<CommentResponse>
 
-    @PATCH("users/posts/like/{id}")
+    @PATCH("users/posts/like/{type}/{id}/{userId}/{increment}")
     suspend fun incrementLike(
         @Path("type") type: String,
-        @Path("id") commentId: String
+        @Path("id") commentId: String,
+        @Path("userId") userId: String,
+        @Path("increment") increment: Boolean
     ): Response<IncrementLikeResponse>
 
     @GET("users/posts")
