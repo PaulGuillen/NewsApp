@@ -62,9 +62,12 @@ class ProfileServiceDS(
         }.transform { it.toDomain() }
     }
 
-    suspend fun getComments(): DefaultOutput<GetCommentEntity> {
+    suspend fun getComments(
+        limit: Int,
+        lastTimestamp: Long? = null
+    ): DefaultOutput<GetCommentEntity> {
         return safeApiCall {
-            profileServiceDS.getComments()
+            profileServiceDS.getComments(limit, lastTimestamp)
         }.transform { it.toDomain() }
     }
 }

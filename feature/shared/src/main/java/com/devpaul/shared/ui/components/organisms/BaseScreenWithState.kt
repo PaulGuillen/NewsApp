@@ -168,3 +168,7 @@ fun <T> OnValueChangeEffect(value: T?, onChange: (T) -> Unit) {
         currentValue.value?.let(onChange)
     }
 }
+
+fun NavHostController.setNavigationResult(key: String, value: Any) {
+    this.previousBackStackEntry?.savedStateHandle?.set(key, value)
+}

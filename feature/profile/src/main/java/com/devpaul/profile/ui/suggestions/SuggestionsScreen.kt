@@ -29,10 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.extension.ResultState
@@ -79,13 +77,16 @@ fun SuggestionContent(
 ) {
     var commentText by remember { mutableStateOf("") }
     val createCommentState = uiState.createComment
+    var hasFetched by remember { mutableStateOf(false) }
 
     LaunchedEffect(createCommentState) {
-        if (createCommentState is ResultState.Success) {
+        if (createCommentState is ResultState.Success && !hasFetched) {
             commentText = ""
-            onIntent(SuggestionUiIntent.GetComments)
+            hasFetched = true
+            onIntent(SuggestionUiIntent.GetComments(isNextPage = false))
         }
     }
+
 
     when (uiState.createComment) {
         is ResultState.Loading -> {
@@ -102,7 +103,7 @@ fun SuggestionContent(
     }
 
     BaseContentLayout(
-        isBodyScrollable = true,
+        isBodyScrollable = false,
         applyStatusBarsPaddingToHeader = true,
         body = {
             CommentsBody(
@@ -162,18 +163,14 @@ fun CommentsBody(
 
         HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
 
-        Text(
-            text = "Sugerencias y comentarios",
-            fontSize = 14.sp,
-            modifier = Modifier.padding(12.dp),
-            textAlign = TextAlign.Center
-        )
-
-        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
-
         CommentScreen(
             comment = uiState.getComments,
+            isLoadingMore = uiState.isLoadingMore,
+            onLoadMore = {
+                onIntent(SuggestionUiIntent.GetComments(isNextPage = true))
+            }
         )
+
     }
 }
 

@@ -6,7 +6,9 @@ data class GetCommentResponse(
     @SerializedName("status")
     val status: Int,
     @SerializedName("comments")
-    val comments: List<GetCommentDataResponse>
+    val comments: List<GetCommentDataResponse>,
+    @SerializedName("nextPageCursor")
+    val nextPageCursor: Long? = null,
 )
 
 data class GetCommentDataResponse(
@@ -27,5 +29,5 @@ data class GetCommentDataResponse(
     @SerializedName("createdAt")
     val createdAt: CreatedAtResponse,
     @SerializedName("likes")
-    val likes: Int
+    val likes: Int,
 )

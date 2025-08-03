@@ -50,7 +50,13 @@ class ProfileRepositoryImpl(
         return profileServiceDS.getPost()
     }
 
-    override suspend fun getComments(): DefaultOutput<GetCommentEntity> {
-        return profileServiceDS.getComments()
+    override suspend fun getComments(
+        limit: Int,
+        lastTimestamp: Long?
+    ): DefaultOutput<GetCommentEntity> {
+        return profileServiceDS.getComments(
+            limit = limit,
+            lastTimestamp = lastTimestamp
+        )
     }
 }

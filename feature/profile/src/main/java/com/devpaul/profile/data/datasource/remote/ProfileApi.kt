@@ -15,6 +15,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 internal interface ProfileApi {
 
@@ -46,5 +47,9 @@ internal interface ProfileApi {
     suspend fun getPost(): Response<PostResponse>
 
     @GET("users/comments")
-    suspend fun getComments(): Response<GetCommentResponse>
+    suspend fun getComments(
+        @Query("limit") limit: Int,
+        @Query("lastTimestamp") lastTimestamp: Long? = null
+    ): Response<GetCommentResponse>
+
 }

@@ -25,5 +25,8 @@ interface ProfileRepository {
     ): DefaultOutput<GenericEntity>
 
     suspend fun getPost(): DefaultOutput<PostEntity>
-    suspend fun getComments(): DefaultOutput<GetCommentEntity>
+    suspend fun getComments(
+        limit: Int,
+        lastTimestamp: Long? = null
+    ): DefaultOutput<GetCommentEntity>
 }

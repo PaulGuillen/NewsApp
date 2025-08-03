@@ -71,7 +71,6 @@ fun ProfileOptionItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                color = color,
                 modifier = Modifier.weight(1f)
             )
             Icon(

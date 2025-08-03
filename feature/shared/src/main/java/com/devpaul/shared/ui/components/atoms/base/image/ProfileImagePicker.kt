@@ -11,15 +11,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -27,7 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.shared.domain.base64ToImageBitmap
@@ -49,23 +47,25 @@ fun ProfileImagePicker(
     if (isInPreview) {
         Box(
             modifier = modifier
-                .size(180.dp)
+                .size(240.dp)
+                .clip(CircleShape)
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.outline_photo_camera_24),
-                contentDescription = "Preview Camera",
+                painter = painterResource(id = R.drawable.baseline_sentiment_very_dissatisfied_24),
+                contentDescription = "Preview User",
                 tint = Color.DarkGray,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.fillMaxSize().padding(8.dp)
             )
+            CameraIconOverlay()
         }
         return
     }
 
     val context = LocalContext.current
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val showDialog = remember { mutableStateOf(false) }
 
     val photoFile = remember {
         File(context.getExternalFilesDir("Pictures"), "profile_${System.currentTimeMillis()}.jpg")
@@ -76,96 +76,65 @@ fun ProfileImagePicker(
         photoFile
     )
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            imageUri = photoUri
-            val bitmap = uriToBitmap(context, photoUri)
-            val base64 = bitmapToBase64(bitmap)
-            onImageSelected(base64, photoUri)
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                imageUri.value = photoUri
+                val bitmap = uriToBitmap(context, photoUri)
+                val base64 = bitmapToBase64(bitmap)
+                onImageSelected(base64, photoUri)
+            }
         }
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                imageUri.value = it
+                val bitmap = uriToBitmap(context, it)
+                val base64 = bitmapToBase64(bitmap)
+                onImageSelected(base64, it)
+            }
+        }
+
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                showDialog.value = false
+                cameraLauncher.launch(photoUri)
+            } else {
+                Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    val imageBitmap = remember(base64Image) {
+        base64Image?.let { base64ToImageBitmap(it) }
     }
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        uri?.let {
-            imageUri = it
-            val bitmap = uriToBitmap(context, it)
-            val base64 = bitmapToBase64(bitmap, quality = 40)
-            onImageSelected(base64, uri)
-        }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            showDialog = false
-            cameraLauncher.launch(photoUri)
-        } else {
-            Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    val imageBitmap = base64Image?.let { base64ToImageBitmap(it) }
-
-    if (showDialog) {
+    if (showDialog.value) {
         AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Selecciona imagen",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            },
+            onDismissRequest = { showDialog.value = false },
+            tonalElevation = 0.dp,
+            title = { Text("Selecciona imagen", style = MaterialTheme.typography.titleMedium) },
             text = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable {
-                            showDialog = false
-                            if (ContextCompat.checkSelfPermission(
-                                    context, Manifest.permission.CAMERA
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                cameraLauncher.launch(photoUri)
-                            } else {
-                                permissionLauncher.launch(Manifest.permission.CAMERA)
-                            }
+                    CameraOrGalleryOption("Cámara", R.drawable.outline_photo_camera_24) {
+                        showDialog.value = false
+                        if (ContextCompat.checkSelfPermission(
+                                context, Manifest.permission.CAMERA
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            cameraLauncher.launch(photoUri)
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_photo_camera_24),
-                            contentDescription = "Abrir cámara",
-                            modifier = Modifier
-                                .size(48.dp)
-                                .padding(4.dp)
-                        )
-                        Text(text = "Cámara")
                     }
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable {
-                            showDialog = false
-                            galleryLauncher.launch("image/*")
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.outline_gallery_thumbnail_24),
-                            contentDescription = "Abrir galería",
-                            modifier = Modifier
-                                .size(48.dp)
-                                .padding(4.dp)
-                        )
-                        Text(text = "Galería")
+                    CameraOrGalleryOption("Galería", R.drawable.outline_gallery_thumbnail_24) {
+                        showDialog.value = false
+                        galleryLauncher.launch("image/*")
                     }
                 }
             },
@@ -176,43 +145,98 @@ fun ProfileImagePicker(
 
     Box(
         modifier = modifier
-            .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
-            .background(Color.White)
-            .then(if (showDialogOnClick) Modifier.clickable { showDialog = true } else Modifier),
+            .size(240.dp)
+            .clickable(enabled = showDialogOnClick) { showDialog.value = true },
         contentAlignment = Alignment.Center
-    ){
-        if (imageBitmap != null) {
-            Image(
-                bitmap = imageBitmap,
-                contentDescription = "Foto de perfil",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
-            )
-        } else {
-            Image(
-                painter = rememberAsyncImagePainter(imageUri ?: defaultImageUrl),
-                contentDescription = "Foto de perfil",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(if (isCircular) Modifier.clip(CircleShape) else Modifier)
-            )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(if (isCircular) CircleShape else RectangleShape)
+                .background(Color.White)
+        ) {
+            val imageModifier = Modifier
+                .fillMaxSize()
+                .clip(if (isCircular) CircleShape else RectangleShape)
+
+            when {
+                imageBitmap != null -> {
+                    Image(
+                        bitmap = imageBitmap,
+                        contentDescription = "Foto de perfil",
+                        contentScale = ContentScale.Crop,
+                        modifier = imageModifier
+                    )
+                }
+
+                imageUri.value != null -> {
+                    AsyncImage(
+                        model = imageUri.value,
+                        contentDescription = "Foto de perfil",
+                        contentScale = ContentScale.Crop,
+                        modifier = imageModifier
+                    )
+                }
+
+                else -> {
+                    AsyncImage(
+                        model = defaultImageUrl,
+                        contentDescription = "Foto de perfil",
+                        contentScale = ContentScale.Crop,
+                        modifier = imageModifier
+                    )
+                }
+            }
         }
 
         if (showDialogOnClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.outline_photo_camera_24),
-                contentDescription = "Cambiar foto",
-                tint = Color.White,
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .offset(x = (2).dp, y = (2).dp)
-                    .size(38.dp)
-                    .background(BrickRed, CircleShape)
-                    .padding(6.dp)
-            )
+                    .offset(x = (-12).dp, y = (-12).dp)
+                    .size(42.dp)
+                    .background(BrickRed, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_photo_camera_24),
+                    contentDescription = "Cambiar foto",
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
+    }
+
+}
+
+@Composable
+private fun CameraOrGalleryOption(label: String, iconId: Int, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { onClick() }) {
+        Icon(
+            painter = painterResource(id = iconId),
+            contentDescription = label,
+            modifier = Modifier.size(48.dp).padding(4.dp)
+        )
+        Text(label)
+    }
+}
+
+@Composable
+private fun BoxScope.CameraIconOverlay() {
+    Box(
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .offset(x = (-12).dp, y = (-12).dp)
+            .size(42.dp)
+            .background(BrickRed, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.outline_photo_camera_24),
+            contentDescription = "Cambiar foto",
+            tint = Color.White,
+            modifier = Modifier.size(20.dp)
+        )
     }
 }

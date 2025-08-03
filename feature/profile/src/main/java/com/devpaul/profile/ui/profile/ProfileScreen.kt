@@ -67,6 +67,12 @@ fun ProfileScreen(navController: NavHostController) {
                 }
             }
         },
+        observeBackKeys = listOf("shouldReload"),
+        onBackResults = { results, _, onIntent ->
+            if (results["shouldReload"] == true) {
+                onIntent(ProfileUiIntent.GetUserProfile)
+            }
+        },
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
             isBodyScrollable = true,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,7 @@ import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.organisms.OnValueChangeEffect
+import com.devpaul.shared.ui.components.organisms.setNavigationResult
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -73,6 +75,8 @@ fun UpdateScreen(
     val showSuccessDialog = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf("") }
 
+    val shouldReloadGlobal = remember { mutableStateOf(false) }
+
     BaseScreenWithState(
         viewModel = viewModel,
         onInit = { _, _ -> viewModel.getProfileData() },
@@ -95,6 +99,7 @@ fun UpdateScreen(
             showSuccessDialog = showSuccessDialog,
             errorMessage = errorMessage,
             onIntent = onIntent,
+            shouldReloadGlobal = shouldReloadGlobal,
             navController = navController
         )
     }
@@ -118,6 +123,7 @@ fun UpdateScreenContent(
     showSuccessDialog: MutableState<Boolean>,
     errorMessage: MutableState<String>,
     onIntent: (UpdateUiIntent) -> Unit,
+    shouldReloadGlobal: MutableState<Boolean>,
     navController: NavHostController,
 ) {
     if (uiState.updateUser is ResultState.Loading) {
@@ -155,10 +161,8 @@ fun UpdateScreenContent(
             onPrimaryClick = {
                 showSuccessDialog.value = false
                 viewModel.resetUpdateUser()
-            },
-            onDismiss = {
-                showSuccessDialog.value = false
-                viewModel.resetUpdateUser()
+                shouldReloadGlobal.value = true
+                navController.setNavigationResult("shouldReload", true)
             },
             showDismissIcon = false
         )
@@ -175,10 +179,6 @@ fun UpdateScreenContent(
                 showErrorDialog.value = false
                 viewModel.resetUpdateUser()
             },
-            onDismiss = {
-                showErrorDialog.value = false
-                viewModel.resetUpdateUser()
-            },
             showDismissIcon = false
         )
     }
@@ -187,7 +187,8 @@ fun UpdateScreenContent(
         isBodyScrollable = true,
         header = {
             UpdateScreenHeader(
-                navController = navController
+                navController = navController,
+                shouldReloadGlobal = shouldReloadGlobal
             )
         },
         body = {
@@ -224,11 +225,17 @@ fun UpdateScreenContent(
 }
 
 @Composable
-fun UpdateScreenHeader(navController: NavHostController) {
+fun UpdateScreenHeader(
+    navController: NavHostController,
+    shouldReloadGlobal: MutableState<Boolean>
+) {
     TopBarPrincipal(
         style = 2,
         title = stringResource(R.string.header_update),
-        onStartIconClick = { navController.popBackStack() },
+        onStartIconClick = {
+            navController.setNavigationResult("shouldReload", shouldReloadGlobal.value)
+            navController.popBackStack()
+        }
     )
 }
 
@@ -274,7 +281,10 @@ fun UpdateScreenBody(
                     base64Image.value = base64
                     imageUri.value = uri
                 },
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .size(240.dp)
+                    .align(Alignment.CenterHorizontally),
+                isCircular = true,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -409,7 +419,8 @@ fun ProfileUpdateScreenPreview() {
         isBodyScrollable = true,
         header = {
             UpdateScreenHeader(
-                navController = rememberNavController()
+                navController = rememberNavController(),
+                shouldReloadGlobal = remember { mutableStateOf(false) }
             )
         },
         body = {

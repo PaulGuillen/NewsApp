@@ -8,7 +8,8 @@ import com.devpaul.profile.domain.entity.GetCommentEntity
 fun GetCommentResponse.toDomain(): GetCommentEntity {
     return GetCommentEntity(
         status = this.status,
-        comments = this.comments.map { it.toDomain() }
+        comments = this.comments.map { it.toDomain() },
+        nextPageCursor = this.nextPageCursor,
     )
 }
 

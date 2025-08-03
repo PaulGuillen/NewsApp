@@ -31,7 +31,7 @@ class SuggestionViewModel(
 
     init {
         SuggestionUiIntent.GetPost.execute()
-        SuggestionUiIntent.GetComments.execute()
+        SuggestionUiIntent.GetComments(isNextPage = false).execute()
     }
 
     override suspend fun onUiIntent(intent: SuggestionUiIntent) {
@@ -67,7 +67,7 @@ class SuggestionViewModel(
 
             is SuggestionUiIntent.GetComments -> {
                 launchIO {
-                    fetchComments()
+                    fetchComments(intent.isNextPage)
                 }
             }
 
@@ -197,33 +197,47 @@ class SuggestionViewModel(
             }
     }
 
-    private suspend fun fetchComments() {
-        updateUiStateOnMain { it.copy(getComments = ResultState.Loading) }
-        val result = getCommentUC()
+    private suspend fun fetchComments(isNextPage: Boolean = false) {
+        val cursor = uiState.nextPageCursor
+        updateUiStateOnMain { it.copy(isLoadingMore = true) }
+
+        val result = getCommentUC(
+            GetCommentUC.Params(
+                limit = 10,
+                lastTimestamp = if (isNextPage) cursor else null
+            )
+        )
+
         result.handleNetworkDefault()
             .onSuccessful {
                 when (it) {
                     is GetCommentUC.Success.GetCommentSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(getComments = ResultState.Success(it.comment))
-                        }
-                    }
-                }
-            }.onFailure<GetCommentUC.Failure> {
-                when (it) {
-                    is GetCommentUC.Failure.GetCommentError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                getComments = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "An error occurred while fetching all comments."
-                                )
+                        val oldList = if (isNextPage)
+                            (uiState.getComments as? ResultState.Success)?.response?.comments.orEmpty()
+                        else
+                            emptyList()
+                        val newList = oldList + it.comment.comments
+                        val newCursor = it.comment.nextPageCursor
+
+                        updateUiStateOnMain { state ->
+                            state.copy(
+                                getComments = ResultState.Success(
+                                    it.comment.copy(comments = newList)
+                                ),
+                                nextPageCursor = newCursor,
+                                isLoadingMore = false
                             )
                         }
                     }
                 }
             }
+            .onFailure<GetCommentUC.Failure> {
+                updateUiStateOnMain {
+                    it.copy(isLoadingMore = false)
+                }
+            }
     }
+
 
     private fun navigationBack() {
         SuggestionUiEvent.NavigationBack.send()

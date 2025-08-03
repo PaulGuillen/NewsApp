@@ -2,7 +2,8 @@ package com.devpaul.profile.domain.entity
 
 data class GetCommentEntity(
     val status: Int,
-    val comments: List<GetCommentDataEntity>
+    val comments: List<GetCommentDataEntity>,
+    val nextPageCursor: Long? = null,
 )
 
 data class GetCommentDataEntity(

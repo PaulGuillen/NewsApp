@@ -12,5 +12,7 @@ data class SuggestionUiState(
     val incrementLike: ResultState<GenericEntity> = ResultState.Loading,
     val posts: ResultState<PostEntity> = ResultState.Loading,
     val getComments: ResultState<GetCommentEntity> = ResultState.Loading,
+    val nextPageCursor: Long? = null,
+    val isLoadingMore: Boolean = false,
     val profile: ProfileUserEntity? = null,
 )

@@ -12,15 +12,18 @@ import org.koin.core.annotation.Factory
 @Factory
 class GetCommentUC(
     private val profileRepository: ProfileRepository
-) : SimpleUC.OnlyResult<DefaultOutput<GetCommentUC.Success>> {
+) : SimpleUC.ParamsAndResult<GetCommentUC.Params, DefaultOutput<GetCommentUC.Success>> {
 
-    override suspend fun invoke(): DefaultOutput<Success> {
-        return profileRepository.getComments().transformHttpError {
-            Failure.GetCommentError(it)
-        }.transform {
-            Success.GetCommentSuccess(it)
-        }
+    override suspend fun invoke(params: Params): DefaultOutput<Success> {
+        return profileRepository.getComments(params.limit, params.lastTimestamp)
+            .transformHttpError {
+                Failure.GetCommentError(it)
+            }.transform {
+                Success.GetCommentSuccess(it)
+            }
     }
+
+    data class Params(val limit: Int, val lastTimestamp: Long? = null)
 
     sealed class Failure : Defaults.CustomError() {
         data class GetCommentError(val error: HttpError<String>) : Failure()

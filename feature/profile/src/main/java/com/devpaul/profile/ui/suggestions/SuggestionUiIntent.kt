@@ -17,6 +17,6 @@ sealed class SuggestionUiIntent {
     ) : SuggestionUiIntent()
 
     data object GetPost : SuggestionUiIntent()
-    data object GetComments : SuggestionUiIntent()
+    data class GetComments(val isNextPage : Boolean = false) : SuggestionUiIntent()
     data object NavigateBack : SuggestionUiIntent()
 }

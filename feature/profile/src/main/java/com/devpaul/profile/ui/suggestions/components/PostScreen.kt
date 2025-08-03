@@ -74,7 +74,7 @@ fun PostScreen(
                         contentDescription = data.title,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(240.dp),
+                            .height(160.dp),
                         contentScale = ContentScale.Crop
                     )
 
@@ -145,7 +145,7 @@ fun PostScreen(
                     val description = data.description.orEmpty()
                     val lineBreaks = remember(description) { description.count { it == '\n' } }
 
-                    val shouldForceShowMore = lineBreaks >= 4
+                    val shouldForceShowMore = lineBreaks >= 3
                     var isExpanded by remember { mutableStateOf(false) }
                     var isOverflowing by remember { mutableStateOf(false) }
 
@@ -155,10 +155,10 @@ fun PostScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 4.dp),
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { result ->
-                            isOverflowing = result.lineCount > 3
+                            isOverflowing = result.lineCount > 1
                         }
                     )
 
