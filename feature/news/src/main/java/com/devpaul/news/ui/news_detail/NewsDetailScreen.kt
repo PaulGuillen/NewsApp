@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +40,6 @@ fun NewsDetailsScreen(
     val viewModel: NewsDetailViewModel = koinViewModel()
     val context = LocalContext.current
     val selectedUrl by viewModel.selectedUrl
-    val canLoadMore = viewModel.canLoadMore(newsType ?: "")
 
     BaseScreenWithState(
         viewModel = viewModel,
@@ -47,6 +47,9 @@ fun NewsDetailsScreen(
         navController = navController,
         onBackPressed = { onBackWithResult -> onBackWithResult("shouldReload", true) }
     ) { innerPadding, uiState, onIntent, _, _ ->
+
+        val canLoadMore = viewModel.canLoadMore(newsType ?: "")
+
         NewsDetailContent(
             context = context,
             innerPadding = innerPadding,
@@ -115,7 +118,7 @@ fun NewsDetailHeader(
     if (totalItems > 0) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 10.dp)
+                .padding(horizontal = 8.dp, vertical = 6.dp)
                 .fillMaxWidth()
         ) {
             NewsCountCard(
@@ -140,7 +143,7 @@ fun NewsDetailBody(
 ) {
     Column(
         modifier = Modifier
-            .padding(vertical = 64.dp)
+            .padding(vertical = 70.dp)
             .fillMaxWidth()
     ) {
         when (newsType) {
@@ -183,25 +186,22 @@ fun NewsDetailFooter(
     isLoadingMore: Boolean,
     onLoadMore: () -> Unit
 ) {
-    if (canLoadMore) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 6.dp, vertical = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (isLoadingMore) {
-            Column(
-                modifier = Modifier.padding(4.dp)
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(60.dp)
-                )
-            }
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(32.dp)
+            )
         } else {
-            Column(
-                modifier = Modifier.padding(horizontal = 6.dp)
-            ) {
-                OutlinedLoadMoreButton(
-                    onClick = onLoadMore
-                )
-            }
-
+            OutlinedLoadMoreButton(
+                onClick = onLoadMore,
+                enabled = canLoadMore
+            )
         }
     }
 }

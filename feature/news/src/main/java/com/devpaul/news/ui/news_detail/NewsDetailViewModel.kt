@@ -155,6 +155,7 @@ class NewsDetailViewModel(
                                 google = ResultState.Success(
                                     it.google.copy(
                                         data = it.google.data.copy(
+                                            currentPage = page,
                                             items = previous + it.google.data.items
                                         )
                                     )
@@ -195,7 +196,10 @@ class NewsDetailViewModel(
                             uiState.copy(
                                 deltaProject = ResultState.Success(
                                     it.deltaProject.copy(
-                                        data = it.deltaProject.data.copy(items = previous + it.deltaProject.data.items)
+                                        data = it.deltaProject.data.copy(
+                                            currentPage = page,
+                                            items = previous + it.deltaProject.data.items
+                                        )
                                     )
                                 )
                             )
@@ -233,6 +237,7 @@ class NewsDetailViewModel(
                                 reddit = ResultState.Success(
                                     it.reddit.copy(
                                         data = it.reddit.data.copy(
+                                            currentPage = page,
                                             items = previous + it.reddit.data.items
                                         )
                                     )

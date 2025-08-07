@@ -24,23 +24,27 @@ import com.devpaul.core_platform.theme.White
 fun OutlinedLoadMoreButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    text: String = "Cargar más",
+    enabled: Boolean = true,
     @DrawableRes iconResId: Int = R.drawable.baseline_arrow_drop_down_circle_24,
     iconTint: Color = MaterialTheme.colorScheme.secondary,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     showIcon: Boolean = true
 ) {
+    val displayText = if (enabled) "Cargar más" else "No hay más resultados"
+
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 10.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = White,
-            contentColor = textColor
+            contentColor = textColor,
+            disabledContentColor = Color.Gray
         ),
         shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(1.dp, textColor),
+        border = BorderStroke(1.dp, if (enabled) textColor else Color.Gray),
         elevation = ButtonDefaults.buttonElevation(4.dp)
     ) {
         if (showIcon) {
@@ -50,18 +54,17 @@ fun OutlinedLoadMoreButton(
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(20.dp),
-                tint = iconTint
+                tint = if (enabled) iconTint else Color.Gray
             )
         }
         Text(
-            text = text,
+            text = displayText,
             modifier = Modifier.padding(vertical = 8.dp),
-            color = textColor,
+            color = if (enabled) textColor else Color.Gray,
             fontSize = 16.sp
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
