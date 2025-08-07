@@ -1,8 +1,10 @@
 package com.devpaul.shared.ui.components.molecules
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -48,7 +50,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    imageVector = Icons.Default.DateRange,
                     contentDescription = stringResource(id = R.string.bottom_nav_news)
                 )
             },
@@ -67,15 +69,15 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = stringResource(id = R.string.bottom_nav_districts)
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = stringResource(id = R.string.bottom_nav_emergency)
                 )
             },
-            label = { Text(stringResource(id = R.string.bottom_nav_districts)) },
-            selected = navController.currentBackStackEntry?.destination?.route == "districts",
+            label = { Text(stringResource(id = R.string.bottom_nav_emergency)) },
+            selected = navController.currentBackStackEntry?.destination?.route == "emergency",
             onClick = {
-                navController.navigate("districts") {
-                    popUpTo("districts") { inclusive = true }
+                navController.navigate("emergency") {
+                    popUpTo("emergency") { inclusive = true }
                 }
             },
             colors = NavigationBarItemDefaults.colors(
@@ -86,7 +88,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    imageVector = Icons.Default.Person,
                     contentDescription = stringResource(id = R.string.bottom_nav_profile)
                 )
             },

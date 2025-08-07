@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.devpaul.districts"
+    namespace = "com.devpaul.emergency"
 }
 
 dependencies {

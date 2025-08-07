@@ -1,4 +1,4 @@
-package com.devpaul.districts
+package com.example.emergency
 
 import org.junit.Test
 

@@ -8,7 +8,7 @@ android {
 
 dependencies {
     implementation(project(":feature:news"))
-    implementation(project(":feature:districts"))
+    implementation(project(":feature:emergency"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:shared"))
 }

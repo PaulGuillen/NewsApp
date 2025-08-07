@@ -40,7 +40,7 @@
     <!--BottomNavigationBar-->
     <string name="bottom_nav_home">Inicio</string>
     <string name="bottom_nav_news">Noticias</string>
-    <string name="bottom_nav_districts">Distritos</string>
+    <string name="bottom_nav_emergency">Emergencias</string>
     <string name="bottom_nav_profile">Perfil</string>
 
     <!--News Screen-->

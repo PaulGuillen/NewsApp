@@ -92,7 +92,7 @@ fun NewsBody(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.padding(top = 16.dp))
+        Spacer(modifier = Modifier.padding(top = 8.dp))
 
         CountryCards(
             countryState = uiState.country,

@@ -136,7 +136,7 @@ fun SectionBanner(
                                     label = section.title,
                                     onClick = {
                                         when (section.type.lowercase()) {
-                                            "districts" -> navHostController.navigate(Screen.Districts.route)
+                                            "emergency" -> navHostController.navigate(Screen.Emergency.route)
                                             "news" -> navHostController.navigate(Screen.News.route)
                                             "profile" -> navHostController.navigate(Screen.Profile.route)
                                             else -> {

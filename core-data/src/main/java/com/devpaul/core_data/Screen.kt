@@ -17,7 +17,7 @@ sealed class Screen(val route: String) {
         }
     }
 
-    data object Districts : Screen(route = "districts")
+    data object Emergency : Screen(route = "emergency")
     data object Profile : Screen(route = "profile")
     data object ProfileUpdate : Screen(route = "profile/update")
     data object Suggestions : Screen(route = "profile/suggestions")

@@ -1,4 +1,4 @@
-package com.devpaul.districts.ui
+package com.example.emergency.ui.emergency
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,8 +12,8 @@ import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBar
 
 @Composable
-fun DistrictScreen(
-    navController: NavHostController
+fun EmergencyScreen(
+    navHostController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -22,7 +22,7 @@ fun DistrictScreen(
             )
         },
         bottomBar = {
-            BottomNavigationBar(navController)
+            BottomNavigationBar(navHostController)
         }
     ) { innerPadding ->
         Text(

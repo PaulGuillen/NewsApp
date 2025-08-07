@@ -35,7 +35,7 @@ fun CountryCards(
         is ResultState.Success -> {
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 8.dp)
                     .fillMaxWidth(),
             ) {
                 Row(

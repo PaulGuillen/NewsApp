@@ -1,8 +1,8 @@
-package com.devpaul.districts
+package com.example.emergency
 
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
 @Module
 @ComponentScan
-class DistrictModule
+class EmergencyModule
