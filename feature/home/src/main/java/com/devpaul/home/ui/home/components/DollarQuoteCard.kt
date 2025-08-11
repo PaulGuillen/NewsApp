@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
@@ -70,13 +71,13 @@ fun DollarQuoteCard(
                 }
             ) {
                 Column {
-                    Image(
-                        painter = rememberAsyncImagePainter(dollarQuoteState.response.data.imageUrl),
+                    AsyncImage(
+                        model = dollarQuoteState.response.data.imageUrl,
                         contentDescription = "Imagen del dólar",
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
                     )
                     Column(
                         modifier = Modifier.fillMaxWidth(),
