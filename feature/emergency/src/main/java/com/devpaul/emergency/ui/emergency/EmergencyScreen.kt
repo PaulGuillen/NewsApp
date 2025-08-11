@@ -35,7 +35,7 @@ import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.SectionItemEntity
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -54,8 +54,9 @@ fun EmergencyScreen(
         BaseContentLayout(
             isBodyScrollable = false,
             header = {
-                TopBar(
-                    title = stringResource(R.string.header_available_sections),
+                TopBarPrincipal(
+                    style = 3,
+                    title = stringResource(R.string.header_available_sections)
                 )
             },
             body = {
@@ -80,9 +81,11 @@ fun EmergencyBody(
 ) {
     when (val state = uiState.section) {
         is ResultState.Loading -> {
-            Box(Modifier
-                .fillMaxSize()
-                .padding(16.dp)) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
