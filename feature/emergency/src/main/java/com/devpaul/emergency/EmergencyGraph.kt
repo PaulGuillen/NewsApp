@@ -1,4 +1,4 @@
-package com.example.emergency
+package com.devpaul.emergency
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

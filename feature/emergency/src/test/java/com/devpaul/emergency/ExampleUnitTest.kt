@@ -1,4 +1,4 @@
-package com.example.emergency
+package com.devpaul.emergency
 
 import org.junit.Test
 

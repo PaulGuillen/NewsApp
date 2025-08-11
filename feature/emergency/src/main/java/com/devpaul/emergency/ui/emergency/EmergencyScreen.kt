@@ -1,4 +1,4 @@
-package com.example.emergency.ui.emergency
+package com.devpaul.emergency.ui.emergency
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold

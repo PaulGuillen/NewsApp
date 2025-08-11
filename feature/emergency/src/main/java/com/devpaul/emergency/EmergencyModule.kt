@@ -1,4 +1,4 @@
-package com.example.emergency
+package com.devpaul.emergency
 
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module

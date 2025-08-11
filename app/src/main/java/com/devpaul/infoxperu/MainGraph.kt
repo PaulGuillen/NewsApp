@@ -8,7 +8,7 @@ import com.devpaul.core_data.Screen
 import com.devpaul.home.homeGraph
 import com.devpaul.news.newsGraph
 import com.devpaul.profile.profileGraph
-import com.example.emergency.emergencyGraph
+import com.devpaul.emergency.emergencyGraph
 
 @Composable
 fun MainGraph(

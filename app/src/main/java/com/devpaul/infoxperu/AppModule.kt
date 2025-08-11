@@ -3,12 +3,12 @@ package com.devpaul.infoxperu
 import com.devpaul.auth.AuthModule
 import com.devpaul.core_data.CoreDataModule
 import com.devpaul.core_data.manager.FirebaseModule
+import com.devpaul.emergency.EmergencyModule
 import com.devpaul.home.HomeModule
 import com.devpaul.navigation.NavigationModule
 import com.devpaul.news.NewsModule
 import com.devpaul.profile.ProfileModule
 import com.devpaul.shared.SharedModule
-import com.example.emergency.EmergencyModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
