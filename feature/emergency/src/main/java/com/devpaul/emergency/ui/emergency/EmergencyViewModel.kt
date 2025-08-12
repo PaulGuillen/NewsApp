@@ -8,21 +8,25 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class EmergencyViewModel(
     private val sectionUC: SectionUC,
-) : StatefulViewModel<EmergencyUiState, EmergencyIntent, EmergencyEvent>(
+) : StatefulViewModel<EmergencyUiState, EmergencyUiIntent, EmergencyUiEvent>(
     defaultUIState = {
         EmergencyUiState()
     }
 ) {
     init {
-        EmergencyIntent.GetEmergencyServices.execute()
+        EmergencyUiIntent.GetEmergencyServices.execute()
     }
 
-    override suspend fun onUiIntent(intent: EmergencyIntent) {
+    override suspend fun onUiIntent(intent: EmergencyUiIntent) {
         when (intent) {
-            is EmergencyIntent.GetEmergencyServices -> {
+            is EmergencyUiIntent.GetEmergencyServices -> {
                 launchConcurrentRequests(
                     { fetchSection() }
                 )
+            }
+
+            is EmergencyUiIntent.NavigateToDetails -> {
+                EmergencyUiEvent.NavigateToDetails(type = intent.type).send()
             }
         }
     }

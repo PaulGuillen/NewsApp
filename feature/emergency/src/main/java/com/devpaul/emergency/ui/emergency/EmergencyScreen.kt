@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.SectionItemEntity
@@ -52,6 +52,17 @@ fun EmergencyScreen(
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navHostController,
+        onUiEvent = { event, _ ->
+            when (event) {
+                is EmergencyUiEvent.NavigateToDetails -> {
+                    navHostController.navigate(
+                        Screen.EmergencyDetail.createRoute(
+                            type = event.type
+                        )
+                    )
+                }
+            }
+        },
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
             isBodyScrollable = false,
@@ -79,11 +90,11 @@ fun EmergencyScreen(
 fun EmergencyBody(
     navController: NavHostController,
     uiState: EmergencyUiState,
-    onIntent: (EmergencyIntent) -> Unit,
+    onIntent: (EmergencyUiIntent) -> Unit,
 ) {
     when (val state = uiState.section) {
         is ResultState.Loading -> {
-           SkeletonRenderer(SkeletonType.SECTION_EMERGENCY)
+            SkeletonRenderer(SkeletonType.SECTION_EMERGENCY)
         }
 
         is ResultState.Error -> {
@@ -99,7 +110,7 @@ fun EmergencyBody(
                 )
                 Spacer(Modifier.height(12.dp))
                 Button(onClick = {
-                    onIntent(EmergencyIntent.GetEmergencyServices)
+                    onIntent(EmergencyUiIntent.GetEmergencyServices)
                 }) {
                     Text("Reintentar")
                 }
@@ -108,7 +119,7 @@ fun EmergencyBody(
 
         is ResultState.Success -> {
             SectionList(
-                navController = navController,
+                onIntent = onIntent,
                 items = state.response.data
             )
         }
@@ -119,7 +130,7 @@ fun EmergencyBody(
 
 @Composable
 private fun SectionList(
-    navController: NavHostController,
+    onIntent: (EmergencyUiIntent) -> Unit,
     items: List<SectionItemEntity>,
 ) {
     val priority = mapOf(
@@ -142,6 +153,11 @@ private fun SectionList(
                 title = item.title,
                 imageUrl = item.image,
                 onClick = {
+                    onIntent(
+                        EmergencyUiIntent.NavigateToDetails(
+                            type = item.type
+                        )
+                    )
                 }
             )
         }
