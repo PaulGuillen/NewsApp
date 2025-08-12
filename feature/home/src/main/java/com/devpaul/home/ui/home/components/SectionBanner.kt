@@ -140,7 +140,7 @@ fun SectionBanner(
                                         when (section.type.lowercase()) {
                                             "emergency" -> navHostController.navigate(Screen.Emergency.route)
                                             "news" -> navHostController.navigate(Screen.News.route)
-                                            "profile" -> navHostController.navigate(Screen.Profile.route)
+                                            "suggestion" -> navHostController.navigate(Screen.Suggestions.route)
                                             else -> {
                                             }
                                         }
@@ -182,8 +182,7 @@ private fun SectionItem(
                 .build(),
             contentDescription = label,
             modifier = Modifier
-                .size(52.dp)
-                .clip(RoundedCornerShape(12.dp)),
+                .size(52.dp),
             contentScale = ContentScale.Crop,
         )
 

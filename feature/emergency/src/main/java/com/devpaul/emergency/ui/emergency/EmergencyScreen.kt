@@ -34,6 +34,8 @@ import coil.compose.AsyncImage
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.SectionItemEntity
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -81,13 +83,7 @@ fun EmergencyBody(
 ) {
     when (val state = uiState.section) {
         is ResultState.Loading -> {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
-            }
+           SkeletonRenderer(SkeletonType.SECTION_EMERGENCY)
         }
 
         is ResultState.Error -> {

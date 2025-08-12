@@ -11,5 +11,6 @@ enum class SkeletonType {
     NEWS_DETAIL,
     POST_SCREEN,
     GET_COMMENT,
+    SECTION_EMERGENCY,
     OTHER
 }
