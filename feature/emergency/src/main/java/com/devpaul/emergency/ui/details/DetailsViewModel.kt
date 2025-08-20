@@ -1,12 +1,19 @@
 package com.devpaul.emergency.ui.details
 
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
+import com.devpaul.emergency.domain.usecase.CivilDefenseUC
+import com.devpaul.emergency.domain.usecase.GeneralUC
+import com.devpaul.emergency.domain.usecase.LimaSecurityUC
+import com.devpaul.emergency.domain.usecase.ProvinceSecurityUC
 import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
 
 @KoinViewModel
 class DetailsViewModel(
-
+    private val generalUC: GeneralUC,
+    private val civilDefenseUC: CivilDefenseUC,
+    private val limaSecurityUC: LimaSecurityUC,
+    private val provinceSecurityUC: ProvinceSecurityUC,
 ) : StatefulViewModel<DetailsUiState, DetailsUiIntent, DetailsUiEvent>(
     defaultUIState = {
         DetailsUiState()
