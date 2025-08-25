@@ -24,7 +24,12 @@ class DetailsViewModel(
     private var typeService: String = ""
 
     override suspend fun onUiIntent(intent: DetailsUiIntent) {
-
+        when (intent) {
+            is DetailsUiIntent.CallNumber -> {
+                val clean = intent.phone.filter { it.isDigit() || it == '+' }
+                DetailsUiEvent.RequireCallPermission(clean).send()
+            }
+        }
     }
 
     private suspend fun fetchGeneral() {
