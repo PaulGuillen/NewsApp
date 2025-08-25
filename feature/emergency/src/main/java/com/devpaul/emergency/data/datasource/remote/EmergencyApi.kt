@@ -11,25 +11,25 @@ internal interface EmergencyApi {
     @GET("district/section")
     suspend fun section(): Response<SectionResponse>
 
-    @GET("district/general")
+    @GET("districts/general")
     suspend fun general(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
     ): Response<GeneralResponse>
 
-    @GET("district/civil_defense")
+    @GET("districts/civil_defense")
     suspend fun civilDefense(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
     ): Response<GeneralResponse>
 
-    @GET("district/lima")
+    @GET("districts/lima")
     suspend fun limaSecurity(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
     ): Response<GeneralResponse>
 
-    @GET("district/province")
+    @GET("districts/province")
     suspend fun provincesSecurity(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,

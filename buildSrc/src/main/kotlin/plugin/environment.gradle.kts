@@ -28,7 +28,7 @@ project.extensions.findByType(BaseExtension::class.java)?.let { android ->
                 buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
                 buildConfigField("String", "ENVIRONMENT", "\"dev\"")
                 buildConfigField("int", "VERSION_CODE", "$versionCode")
-                buildConfigField("String", "BASE_URL", "\"http://192.168.100.137:3000/\"")
+                buildConfigField("String", "BASE_URL", "\"http://192.168.100.6:3000/\"")
             }
         }
 

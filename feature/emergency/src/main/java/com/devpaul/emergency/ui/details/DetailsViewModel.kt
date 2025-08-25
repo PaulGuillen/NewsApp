@@ -1,5 +1,6 @@
 package com.devpaul.emergency.ui.details
 
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.emergency.domain.usecase.CivilDefenseUC
 import com.devpaul.emergency.domain.usecase.GeneralUC
@@ -26,14 +27,39 @@ class DetailsViewModel(
 
     }
 
-    private fun fetchGeneral() {
-        Timber.d("Fetching general service details")
-        // Implement fetching logic for general service
+    private suspend fun fetchGeneral() {
+        updateUiStateOnMain { it.copy(generalCase = true) }
+        updateUiStateOnMain { it.copy(general = ResultState.Loading) }
+        val result = generalUC(GeneralUC.Params(page = 1, perPage = 10))
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is GeneralUC.Success.GeneralSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(general = ResultState.Success(it.general))
+                        }
+                    }
+                }
+            }
+            .onFailure<GeneralUC.Failure> {
+                when (it) {
+                    is GeneralUC.Failure.GeneralError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                general = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar los servicios generales"
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
     }
 
-    private fun fetchCivilDefense() {
+    private suspend fun fetchCivilDefense() {
+        updateUiStateOnMain { it.copy(civilCase = true) }
         Timber.d("Fetching civil defense service details")
-        // Implement fetching logic for civil defense service
     }
 
     private fun fetchPolice() {
@@ -46,17 +72,22 @@ class DetailsViewModel(
         // Implement fetching logic for firefighter service
     }
 
-    private fun fetchLocalSecurity() {
-        Timber.d("Fetching local security service details")
+    private suspend fun fetchLocalSecurity() {
+        updateUiStateOnMain { it.copy(securityCase = true) }
+        Timber.d("Fetchin0g local security service details")
         // Implement fetching logic for local security service
     }
 
 
-    fun getTypeService(type: String?) {
+    suspend fun getTypeService(type: String?) {
         Timber.d("getTypeService: $type")
         typeService = type ?: ""
         when (typeService) {
             "general" -> fetchGeneral()
+            "civil_defense" -> fetchCivilDefense()
+            "police" -> fetchPolice()
+            "firefighter" -> fetchFirefighter()
+            "local_security" -> fetchLocalSecurity()
             else -> Timber.w("Unknown service type: $typeService")
         }
     }
