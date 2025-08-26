@@ -12,5 +12,6 @@ enum class SkeletonType {
     POST_SCREEN,
     GET_COMMENT,
     SECTION_EMERGENCY,
+    GENERAL_EMERGENCY,
     OTHER
 }

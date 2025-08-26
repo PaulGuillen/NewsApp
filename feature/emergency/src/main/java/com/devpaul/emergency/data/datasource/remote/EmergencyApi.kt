@@ -11,6 +11,7 @@ internal interface EmergencyApi {
     @GET("district/section")
     suspend fun section(): Response<SectionResponse>
 
+    //@GET("https://8bbbd0993edc4cfd84a68674c0f45e7d.api.mockbin.io/")
     @GET("districts/general")
     suspend fun general(
         @Query("page") page: Int,

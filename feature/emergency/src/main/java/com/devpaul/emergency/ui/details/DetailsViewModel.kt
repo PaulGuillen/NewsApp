@@ -29,6 +29,10 @@ class DetailsViewModel(
                 val clean = intent.phone.filter { it.isDigit() || it == '+' }
                 DetailsUiEvent.RequireCallPermission(clean).send()
             }
+
+            is DetailsUiIntent.CallGeneralService -> {
+                launchIO { fetchGeneral() }
+            }
         }
     }
 

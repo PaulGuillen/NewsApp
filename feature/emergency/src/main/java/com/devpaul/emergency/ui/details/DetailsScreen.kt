@@ -3,6 +3,7 @@ package com.devpaul.emergency.ui.details
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,10 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
+import com.devpaul.shared.data.skeleton.SkeletonRenderer
+import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.domain.rememberCallActions
 import com.devpaul.shared.domain.splitNumberAndNote
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
@@ -102,7 +106,8 @@ fun GeneralCase(
     onIntent: (DetailsUiIntent) -> Unit
 ) {
     when (val state = uiState.general) {
-        is ResultState.Loading -> { /* shimmer */
+        is ResultState.Loading -> {
+            SkeletonRenderer(type = SkeletonType.GENERAL_EMERGENCY)
         }
 
         is ResultState.Success -> {
@@ -119,7 +124,8 @@ fun GeneralCase(
             }
         }
 
-        is ResultState.Error -> { /* error */
+        is ResultState.Error -> {
+            EmergencyError(error = state.message, onIntent = onIntent)
         }
 
         else -> Unit
@@ -186,6 +192,43 @@ fun EmergencyCard(
 }
 
 @Composable
+fun EmergencyError(
+    error: String,
+    onIntent: (DetailsUiIntent) -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Button(
+                    onClick = { onIntent(DetailsUiIntent.CallGeneralService) },
+                    modifier = Modifier.height(36.dp)
+                ) { Text("Reintentar") }
+            }
+        }
+    }
+}
+
+@Composable
 fun CivilDefenseCase(
     uiState: DetailsUiState,
 ) {
@@ -225,4 +268,13 @@ fun SecurityCase(
 
         else -> Unit
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun EmergencyErrorPreview() {
+    EmergencyError(
+        error = "Ha ocurrido un error inesperado",
+        onIntent = {}
+    )
 }
