@@ -13,5 +13,6 @@ enum class SkeletonType {
     GET_COMMENT,
     SECTION_EMERGENCY,
     GENERAL_EMERGENCY,
+    CIVIL_DEFENSE_EMERGENCY,
     OTHER
 }

@@ -68,7 +68,32 @@ class DetailsViewModel(
 
     private suspend fun fetchCivilDefense() {
         updateUiStateOnMain { it.copy(civilCase = true) }
-        Timber.d("Fetching civil defense service details")
+        updateUiStateOnMain { it.copy(civilDefense = ResultState.Loading) }
+        val result = civilDefenseUC(CivilDefenseUC.Params(page = 1, perPage = 10))
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is CivilDefenseUC.Success.CivilDefenseSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(civilDefense = ResultState.Success(it.general))
+                        }
+                    }
+                }
+            }
+            .onFailure<CivilDefenseUC.Failure> {
+                when (it) {
+                    is CivilDefenseUC.Failure.CivilDefenseError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                civilDefense = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar los servicios de defensa civil"
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
     }
 
     private fun fetchPolice() {

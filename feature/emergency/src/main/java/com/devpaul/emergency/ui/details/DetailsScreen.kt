@@ -19,6 +19,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,11 +30,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
+import com.devpaul.emergency.domain.entity.PaginationEntity
+import com.devpaul.emergency.ui.details.components.Region
+import com.devpaul.emergency.ui.details.components.RegionChooserRow
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
+import com.devpaul.shared.domain.extractPhones
 import com.devpaul.shared.domain.rememberCallActions
-import com.devpaul.shared.domain.splitNumberAndNote
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
@@ -89,11 +97,11 @@ fun DetailBody(
     uiState: DetailsUiState,
     onIntent: (DetailsUiIntent) -> Unit
 ) {
-    if (uiState.generalCase) {
+    if (uiState.generalCase && !uiState.civilCase && !uiState.securityCase) {
         GeneralCase(uiState = uiState, onIntent = onIntent)
-    } else if (uiState.civilCase) {
-        CivilDefenseCase(uiState = uiState)
-    } else if (uiState.securityCase) {
+    } else if (uiState.civilCase && !uiState.generalCase && !uiState.securityCase) {
+        CivilDefenseCase(uiState = uiState, onIntent = onIntent)
+    } else if (uiState.securityCase && !uiState.generalCase && !uiState.civilCase) {
         SecurityCase(uiState = uiState)
     } else {
         // Display other case details
@@ -137,6 +145,10 @@ fun EmergencyCard(
     item: GeneralEntityItem,
     onIntent: (DetailsUiIntent) -> Unit
 ) {
+    val phones: List<String> = remember(item) {
+        item.value.flatMap { extractPhones(it) }.distinct()
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,9 +164,7 @@ fun EmergencyCard(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            item.value.forEachIndexed { index, raw ->
-                val (phone, note) = splitNumberAndNote(raw)
-
+            phones.forEachIndexed { index, phone ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -162,30 +172,26 @@ fun EmergencyCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
+                    Text(
+                        text = "Contacto ${index + 1}: $phone",
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
-                    ) {
-                        Text(
-                            text = "Contacto ${index + 1}: $phone",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        if (note != null) {
-                            Text(
-                                text = note,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-
-                    // Botón fijo a la derecha
+                    )
                     Button(
                         onClick = { onIntent(DetailsUiIntent.CallNumber(phone)) },
                         modifier = Modifier.height(36.dp)
                     ) { Text("Llamar") }
                 }
+            }
+
+            if (phones.isEmpty()) {
+                Text(
+                    text = "Sin números disponibles",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -231,18 +237,45 @@ fun EmergencyError(
 @Composable
 fun CivilDefenseCase(
     uiState: DetailsUiState,
+    onIntent: (DetailsUiIntent) -> Unit
 ) {
     when (val state = uiState.civilDefense) {
         is ResultState.Loading -> {
-            // Show loading state
+            SkeletonRenderer(type = SkeletonType.CIVIL_DEFENSE_EMERGENCY)
         }
 
         is ResultState.Success -> {
-            // Display civil defense case details
+            val data = state.response.data
+            var selected by remember { mutableStateOf(Region.Provincias) }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                RegionChooserRow(
+                    selected = selected,
+                    onSelect = { region ->
+                        selected = region
+                        if (region == Region.Lima) {
+                            println("⚡ Mostrar solo Lima")
+                        } else if (region == Region.Provincias) {
+                            println("⚡ Mostrar solo Provincias")
+                        }
+                    },
+                    limaEnabled = false
+                )
+
+                data.forEach { item ->
+                    EmergencyCard(item = item, onIntent = onIntent)
+                }
+            }
         }
 
         is ResultState.Error -> {
-            // Show error message
+            EmergencyError(error = state.message, onIntent = onIntent)
         }
 
         else -> Unit
@@ -272,9 +305,65 @@ fun SecurityCase(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
+fun EmergencyCardPreview() {
+    EmergencyCard(
+        item = GeneralEntityItem(
+            key = "Policía Nacional",
+            value = listOf("123456789", "987654321 (Emergencias)", "555-1234 (Oficina)")
+        ),
+        onIntent = {}
+    )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
 fun EmergencyErrorPreview() {
     EmergencyError(
         error = "Ha ocurrido un error inesperado",
+        onIntent = {}
+    )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CivilDefenseCasePreview() {
+    val fakeData = listOf(
+        GeneralEntityItem(
+            key = "Cusco",
+            value = listOf("084 240 658", "984 628 573 (Emergencias)")
+        ),
+        GeneralEntityItem(
+            key = "Arequipa",
+            value = listOf("054 430 101", "958 534 755 (Central)")
+        )
+    )
+
+    CivilDefenseCase(
+        uiState = DetailsUiState(
+            civilDefense = ResultState.Success(
+                GeneralEntity(
+                    status = 200,
+                    data = fakeData,
+                    pagination = PaginationEntity(
+                        total = 2,
+                        perPage = 10,
+                        currentPage = 1,
+                        totalPages = 1
+                    )
+                )
+            )
+        ),
+        onIntent = {}
+    )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun GeneralCaseLoadingPreview() {
+    CivilDefenseCase(
+        uiState = DetailsUiState(
+            civilDefense = ResultState.Loading
+        ),
         onIntent = {}
     )
 }

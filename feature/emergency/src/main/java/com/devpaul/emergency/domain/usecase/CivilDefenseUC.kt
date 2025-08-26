@@ -19,8 +19,8 @@ class CivilDefenseUC(
             .transformHttpError {
                 Failure.CivilDefenseError(it)
             }.transform {
-            Success.CivilDefenseSuccess(it)
-        }
+                Success.CivilDefenseSuccess(it)
+            }
     }
 
     data class Params(val page: Int, val perPage: Int)

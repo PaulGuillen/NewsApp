@@ -1,9 +1,9 @@
 package com.devpaul.shared.data.skeleton
 
 import com.devpaul.shared.data.repository.SkeletonStrategy
+import com.devpaul.shared.ui.components.atoms.skeleton.emergency.CivilDefenseSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.emergency.GeneralSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.emergency.SectionSkeleton
-import com.devpaul.shared.ui.components.atoms.skeleton.emergency.SectionSkeletonContent
 import com.devpaul.shared.ui.components.atoms.skeleton.home.AcknowledgmentSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.home.DollarQuoteSkeleton
 import com.devpaul.shared.ui.components.atoms.skeleton.home.SectionBannerSkeleton
@@ -29,6 +29,7 @@ object SkeletonFactory {
         SkeletonType.GET_COMMENT -> GetCommentSkeleton()
         SkeletonType.SECTION_EMERGENCY -> SectionSkeleton()
         SkeletonType.GENERAL_EMERGENCY -> GeneralSkeleton()
+        SkeletonType.CIVIL_DEFENSE_EMERGENCY -> CivilDefenseSkeleton()
         SkeletonType.OTHER -> ProfileSkeleton()
     }
 }

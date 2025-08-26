@@ -103,19 +103,21 @@ private fun startCall(context: Context, phone: String, direct: Boolean) {
     }
 }
 
-private val hasLetters = Regex("[A-Za-zÁÉÍÓÚáéíóúÑñ]")
-private val splitPhoneAndNote = Regex("""^([+\d\-\s()]+)(.*)$""")
+private val phoneRegex = Regex("""\+?\d[\d\s\-]+""") // 2+ chars tipo teléfono
 
-fun splitNumberAndNote(raw: String): Pair<String, String?> {
-    val s = raw.trim()
-    return if (hasLetters.containsMatchIn(s)) {
-        // Ej: "01-411-8000opción6." -> ("01-411-8000", "opción6.")
-        val m = splitPhoneAndNote.find(s)
-        val phone = m?.groupValues?.getOrNull(1)?.trim().orEmpty()
-        val note = m?.groupValues?.getOrNull(2)?.trim()?.takeIf { it.isNotEmpty() }
-        phone to note
-    } else {
-        // No hay letras: lo dejamos tal cual
-        s to null
+/** Extrae teléfonos de un string (soporta saltos de línea, comas, etc.) */
+fun extractPhones(raw: String): List<String> {
+    // separadores comunes + saltos de línea
+    val chunks = raw.split('\n', ',', ';', '/')
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+
+    val phones = chunks.flatMap { line ->
+        phoneRegex.findAll(line).map { m ->
+            // normaliza espacios múltiples
+            m.value.replace(Regex("\\s+"), " ").trim()
+        }.toList()
     }
+
+    return phones.distinct()
 }
