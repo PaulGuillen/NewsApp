@@ -47,6 +47,7 @@ databindingRuntime = "8.7.2"
 kotlinxSerialization = "1.6.3"
 jwtdecode = "2.0.0"
 navigationCompose = "2.9.0"
+chucker = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -129,6 +130,9 @@ jwtdecode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtdecode" 
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version = "3.5.6" }
+
+chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+chucker-no-op = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

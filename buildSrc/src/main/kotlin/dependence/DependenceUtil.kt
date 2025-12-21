@@ -128,3 +128,12 @@ fun Project.retrofitImplementation() {
         "implementation"(libs["okhttp3-loggin-interceptor"])
     }
 }
+
+fun Project.chuckerImplementation() {
+    val libs: VersionCatalog = getLibs()
+
+    dependencies {
+        "debugImplementation"(dependency = libs["chucker"])
+        "releaseImplementation"(dependency = libs["chucker-no-op"])
+    }
+}

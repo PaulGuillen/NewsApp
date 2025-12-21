@@ -18,4 +18,5 @@ dependencies {
     koinImplementation()
     datastoreImplementation()
     firebaseImplementation()
+    chuckerImplementation()
 }

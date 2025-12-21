@@ -1,5 +1,7 @@
 package com.devpaul.core_data
 
+import android.content.Context
+import com.devpaul.core_data.interceptor.ChuckerInterceptorProvider
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +17,9 @@ import java.util.concurrent.TimeUnit
 class CoreDataModule {
 
     @Single
-    fun okHttpClientProvider(): OkHttpClient {
+    fun okHttpClientProvider(
+        context: Context,
+    ): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -23,6 +27,13 @@ class CoreDataModule {
         builder.addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
+
+        if (BuildConfig.DEBUG) {
+            ChuckerInterceptorProvider.provide(context)?.let {
+                builder.addInterceptor(it)
+            }
+        }
+
         return builder.build()
     }
 
