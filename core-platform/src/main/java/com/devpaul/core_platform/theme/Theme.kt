@@ -14,16 +14,18 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = BrickRed,         // Color principal de la marca (usado en botones, switches, barras activas)
     onPrimary = White,          // Color del texto o íconos que van sobre el color `primary`
+    primaryContainer = Black, // Color de fondo para elementos que contienen `primary` (botones elevados, etc.)
     secondary = BrickRed,       // Color secundario para componentes menos destacados o alternativos
     onSecondary = White,        // Color del contenido sobre `secondary`
     tertiary = White,           // Color terciario (opcional, usado para acentos o elementos gráficos adicionales)
     background = Black,         // Color de fondo general (por ejemplo, detrás del contenido principal)
-    surface = Black // Color de superficies como tarjetas, diálogos, sheets en modo oscuro
+    surface = GrayBlack // Color de superficies como tarjetas, diálogos, sheets en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = BrickRed,         // Color principal de la marca en modo claro
     onPrimary = White,          // Color del texto o íconos sobre `primary` (por ejemplo en un botón rojo)
+    primaryContainer = PinkGray, // Color de fondo para elementos que contienen `primary`
     secondary = BrickRed,       // Color secundario para distinguir otras acciones o secciones
     onSecondary = DarkGray,     // Color del texto o íconos sobre `secondary`
     tertiary = LightGray,        // Color opcional para detalles visuales adicionales (iconos decorativos, etc.)

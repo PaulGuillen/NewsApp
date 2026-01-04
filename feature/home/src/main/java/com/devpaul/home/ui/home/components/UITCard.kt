@@ -2,8 +2,10 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +39,9 @@ import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.White
+import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
@@ -88,7 +92,7 @@ fun UITCard(
                             text = uitState.response.service ?: "Servicio no disponible",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp
+                                fontSize = 18.sp
                             ),
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
@@ -102,21 +106,26 @@ fun UITCard(
                         Text(
                             text = "UIT:",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
                             ),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
                             text = uitState.response.value.toString(),
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.sp
+                            )
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = uitState.response.site ?: "Sitio no disponible",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 16.sp,
+                        ),
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -127,7 +136,7 @@ fun UITCard(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = uitState.response.year.toString(),
-                        fontSize = 12.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.End,
                         modifier = Modifier
@@ -199,14 +208,28 @@ fun UITCardLoadingPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun UITCardSuccessPreview() {
-    UITCard(
-        context = LocalContext.current,
-        uitState = ResultState.Success(UITMock().uitMock),
-        onRetry = {}
-    )
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        UITCard(
+            context = LocalContext.current,
+            uitState = ResultState.Success(UITMock().uitMock),
+            onRetry = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)

@@ -1,6 +1,8 @@
 package com.devpaul.home.ui.home
 
 import android.content.Context
+import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
@@ -18,6 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.ui.home.components.DollarQuoteCard
@@ -114,30 +117,44 @@ fun HomeBody(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun HomeScreenPreview() {
-    val navController = rememberNavController()
-    BaseContentLayout(
-        isBodyScrollable = false,
-        header = {
-            TopBar(
-                title = "Home",
-            )
-        },
-        body = {
-            HomeBody(
-                navController = navController,
-                context = LocalContext.current,
-                uiState = HomeUiState(
-                    dollarQuote = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
-                    uitValue = ResultState.Success(UITMock().uitMock),
-                ),
-                onIntent = {}
-            )
-        },
-        footer = {
-            BottomNavigationBar(navController)
-        }
-    )
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "Home",
+                )
+            },
+            body = {
+                HomeBody(
+                    navController = navController,
+                    context = LocalContext.current,
+                    uiState = HomeUiState(
+                        dollarQuote = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
+                        uitValue = ResultState.Success(UITMock().uitMock),
+                    ),
+                    onIntent = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
+        )
+    }
 }

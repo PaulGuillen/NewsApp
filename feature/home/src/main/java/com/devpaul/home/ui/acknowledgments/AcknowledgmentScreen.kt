@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.ui.home.components.AcknowledgmentSection
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -86,7 +85,7 @@ fun AcknowledgmentBody(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(110.dp)
-                .background(PinkGray)
+                .background(MaterialTheme.colorScheme.primaryContainer)
         )
 
         Card(

@@ -1,9 +1,11 @@
 package com.devpaul.home.ui.home.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,8 +41,10 @@ import coil.request.ImageRequest
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.SectionMock
+import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
@@ -60,8 +64,9 @@ fun SectionBanner(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PinkGray)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_world),
@@ -101,7 +106,7 @@ fun SectionBanner(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PinkGray)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -191,23 +196,42 @@ private fun SectionItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun SectionBannerPreview() {
-    SectionBanner(
-        navHostController = rememberNavController(),
-        sectionState = ResultState.Success(SectionMock().sectionMock)
-    )
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        SectionBanner(
+            navHostController = rememberNavController(),
+            sectionState = ResultState.Success(SectionMock().sectionMock)
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SectionBannerErrorPreview() {
-    SectionBanner(
-        navHostController = rememberNavController(),
-        sectionState = ResultState.Error("Error al cargar las secciones"),
-        onRetryClick = {}
-    )
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        SectionBanner(
+            navHostController = rememberNavController(),
+            sectionState = ResultState.Error("Error al cargar las secciones"),
+            onRetryClick = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)

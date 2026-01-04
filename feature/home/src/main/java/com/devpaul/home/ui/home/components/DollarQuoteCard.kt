@@ -161,27 +161,23 @@ fun DollarQuoteCard(
                         Text(
                             text = dollarQuoteState.response.site ?: "Sitio no disponible",
                             style = MaterialTheme.typography.bodySmall.copy(
-                                fontWeight = FontWeight.Light,
-                                fontSize = 14.sp
+                                fontSize = 16.sp,
                             ),
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(end = 20.dp)
+                                .padding(end = 16.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         DividerView()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = dollarQuoteState.response.date ?: "Fecha no disponible",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontWeight = FontWeight.Light,
-                                fontSize = 14.sp
-                            ),
+                            fontSize = 16.sp,
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(end = 20.dp)
+                                .padding(end = 16.dp)
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

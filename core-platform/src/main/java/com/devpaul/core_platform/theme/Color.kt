@@ -2,7 +2,8 @@ package com.devpaul.core_platform.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Black = Color(0xFF423E3E)
+val Black = Color(0xFF000000)
+val GrayBlack = Color(0xFF3C3C3C)
 val BackgroundBlack = Color(0xFF696969)
 val BrickRed = Color(0xFFd84931)
 val BrickRedLight = Color(0xFFFC8A75)
