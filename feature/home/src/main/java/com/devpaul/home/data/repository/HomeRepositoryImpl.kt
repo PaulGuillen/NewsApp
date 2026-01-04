@@ -22,11 +22,11 @@ class HomeRepositoryImpl(
         return serviceDS.uitService()
     }
 
-    override suspend fun sectionService(): DefaultOutput<SectionEntity> {
+    override suspend fun sectionService(): SectionEntity {
         return serviceDS.sectionService()
     }
 
-    override suspend fun gratitudeService(): DefaultOutput<GratitudeEntity> {
+    override suspend fun gratitudeService(): GratitudeEntity {
         return serviceDS.gratitudeService()
     }
 }

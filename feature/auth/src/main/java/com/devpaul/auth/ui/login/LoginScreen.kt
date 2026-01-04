@@ -19,12 +19,17 @@ fun LoginScreen(navHostController: NavHostController) {
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navHostController,
-        onUiEvent = { event, _ ->
+        onUiEvent = { event, showSnackBar ->
             when (event) {
                 is LoginUiEvent.UserLogged -> {
                     navHostController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
+
+                }
+
+                is LoginUiEvent.RecoveryPasswordSuccess -> {
+                    showSnackBar(event.message)
                 }
             }
         },
@@ -62,7 +67,8 @@ fun LoginContent(
             onIntent(LoginUiIntent.ResetPassword(email.trim()))
         },
         showSnackBar = showSnackBar,
-        uiState = uiState.login,
+        onIntent = onIntent,
+        uiState = uiState,
     )
 }
 

@@ -1,5 +1,6 @@
 package com.devpaul.home.ui.home
 
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.home.domain.usecase.DollarQuoteUC
@@ -31,23 +32,9 @@ class HomeViewModel(
                 )
             }
 
-            is HomeUiIntent.GetDollarQuote -> {
-                launchIO {
-                    fetchDollarQuote()
-                }
-            }
-
-            is HomeUiIntent.GetUITValue -> {
-                launchIO {
-                    fetchUit()
-                }
-            }
-
-            is HomeUiIntent.GetSections -> {
-                launchIO {
-                    fetchSection()
-                }
-            }
+            is HomeUiIntent.GetDollarQuote -> launchIO { fetchDollarQuote() }
+            is HomeUiIntent.GetUITValue -> launchIO { fetchUit() }
+            is HomeUiIntent.GetSections -> launchIO { fetchSection() }
         }
     }
 
@@ -111,31 +98,23 @@ class HomeViewModel(
 
     private suspend fun fetchSection() {
         updateUiStateOnMain { it.copy(section = ResultState.Loading) }
-        val result = sectionUC()
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is SectionUC.Success.SectionSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(section = ResultState.Success(it.section))
-                        }
-                    }
-                }
-            }
-            .onFailure<SectionUC.Failure> {
-                when (it) {
-                    is SectionUC.Failure.SectionError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                section = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar las secciones"
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-    }
 
+        when (val result = sectionUC.sectionService()) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(section = ResultState.Success(result.data))
+                }
+            }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        section = ResultState.Error(
+                            message = result.error.message ?: "Error al cargar las secciones"
+                        )
+                    )
+                }
+            }
+        }
+    }
 }

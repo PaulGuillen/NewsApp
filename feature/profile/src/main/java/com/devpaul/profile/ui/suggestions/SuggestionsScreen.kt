@@ -104,7 +104,6 @@ fun SuggestionContent(
 
     BaseContentLayout(
         isBodyScrollable = false,
-        applyStatusBarsPaddingToHeader = true,
         body = {
             CommentsBody(
                 uiState = uiState,

@@ -45,7 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.auth.domain.entity.Login
+import com.devpaul.auth.ui.login.LoginUIState
+import com.devpaul.auth.ui.login.LoginUiIntent
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
@@ -57,6 +58,7 @@ import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
+import com.devpaul.shared.ui.components.organisms.DialogCard
 
 @Composable
 fun LoginForm(
@@ -64,7 +66,8 @@ fun LoginForm(
     onLogin: (String, String, Boolean) -> Unit,
     onForgotPassword: (String) -> Unit,
     showSnackBar: (String) -> Unit,
-    uiState: ResultState<Login>?,
+    onIntent: (LoginUiIntent) -> Unit,
+    uiState: LoginUIState?,
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -113,13 +116,26 @@ fun LoginForm(
         },
     )
 
-    when (uiState) {
+    when (val status = uiState?.loginStatus) {
         is ResultState.Loading -> {
             ScreenLoading()
         }
 
         is ResultState.Error -> {
-            showSnackBar(uiState.message)
+            DialogCard(
+                message = status.message,
+                onDismiss = {
+                    onIntent(LoginUiIntent.DismissDialog)
+                }
+            )
+        }
+
+        else -> {}
+    }
+
+    when (uiState?.recoveryPasswordStatus) {
+        is ResultState.Loading -> {
+            ScreenLoading()
         }
 
         else -> {}

@@ -18,7 +18,7 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = White,        // Color del contenido sobre `secondary`
     tertiary = White,           // Color terciario (opcional, usado para acentos o elementos gráficos adicionales)
     background = Black,         // Color de fondo general (por ejemplo, detrás del contenido principal)
-    surface = DarkChocolate // Color de superficies como tarjetas, diálogos, sheets en modo oscuro
+    surface = Black // Color de superficies como tarjetas, diálogos, sheets en modo oscuro
 )
 
 private val LightColorScheme = lightColorScheme(

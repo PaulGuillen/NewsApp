@@ -2,6 +2,7 @@ package com.devpaul.core_data
 
 import android.content.Context
 import com.devpaul.core_data.interceptor.ChuckerInterceptorProvider
+import com.devpaul.core_data.interceptor.UserAgentInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,6 +25,8 @@ class CoreDataModule {
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
+
+        builder.addInterceptor(UserAgentInterceptor())
         builder.addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })

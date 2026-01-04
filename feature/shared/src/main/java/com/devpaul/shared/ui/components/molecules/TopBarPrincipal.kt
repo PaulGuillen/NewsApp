@@ -42,7 +42,6 @@ fun TopBarPrincipal(
             .height(60.dp)
             .background(MaterialTheme.colorScheme.surface)
             .statusBarsPadding(),
-        shadowElevation = 14.dp,
     ) {
         when (style) {
             1 -> {
@@ -57,7 +56,7 @@ fun TopBarPrincipal(
                             )
                         },
                         fontSize = 22.sp,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
 
                     onEndIconClick?.let {

@@ -2,7 +2,6 @@ package com.devpaul.home.ui.home
 
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.home.domain.entity.DollarQuoteEntity
-import com.devpaul.home.domain.entity.GratitudeEntity
 import com.devpaul.home.domain.entity.SectionEntity
 import com.devpaul.home.domain.entity.UITEntity
 

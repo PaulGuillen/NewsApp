@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.UITMock
@@ -62,7 +64,7 @@ fun UITCard(
                 shape = RoundedCornerShape(12.dp),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, uitState.response.data.link?.toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, uitState.response.link?.toUri())
                     context.startActivity(intent)
                 }
             ) {
@@ -77,13 +79,13 @@ fun UITCard(
                     ) {
                         Box(modifier = Modifier.size(24.dp)) {
                             Image(
-                                painter = rememberAsyncImagePainter(uitState.response.data.iconImage),
-                                contentDescription = "Icono del dólar"
+                                painter = painterResource(id = R.drawable.uit_icon),
+                                contentDescription = "Icono del UIT"
                             )
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = uitState.response.data.service ?: "Servicio no disponible",
+                            text = uitState.response.service ?: "Servicio no disponible",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
@@ -106,14 +108,14 @@ fun UITCard(
                         Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = uitState.response.data.value.toString(),
+                            text = uitState.response.value.toString(),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = uitState.response.data.site ?: "Sitio no disponible",
+                        text = uitState.response.site ?: "Sitio no disponible",
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.End,
                         modifier = Modifier
@@ -124,7 +126,7 @@ fun UITCard(
                     DividerView()
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = uitState.response.data.year.toString(),
+                        text = uitState.response.year.toString(),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.End,

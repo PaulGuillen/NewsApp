@@ -29,7 +29,6 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.PinkGray
 import com.devpaul.home.data.datasource.mock.GratitudeMock
 import com.devpaul.home.ui.home.components.AcknowledgmentSection
-import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -62,12 +61,6 @@ fun AcknowledgmentContent(
 ) {
     BaseContentLayout(
         isBodyScrollable = false,
-        header = {
-            TopBarPrincipal(
-                style = 2,
-                onStartIconClick = { navHostController.popBackStack() },
-            )
-        },
         body = {
             AcknowledgmentBody(
                 context = context,
@@ -102,7 +95,7 @@ fun AcknowledgmentBody(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .offset(y = (-60).dp)
+                .offset(y = (-70).dp)
                 .fillMaxWidth()
         ) {
             Column(

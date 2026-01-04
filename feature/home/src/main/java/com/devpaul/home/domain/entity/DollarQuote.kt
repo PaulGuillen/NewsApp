@@ -5,13 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DollarQuoteEntity(
-    val status: Int,
-    val message: String,
-    val data: DollarQuoteDataEntity,
-) : Parcelable
-
-@Parcelize
-data class DollarQuoteDataEntity(
     val service: String? = null,
     val site: String? = null,
     val link: String? = null,
@@ -19,8 +12,6 @@ data class DollarQuoteDataEntity(
     val note: String? = null,
     val usdToEuro: String? = null,
     val date: String? = null,
-    val imageUrl : String? = null,
-    val iconImage: String? = null,
 ) : Parcelable
 
 @Parcelize

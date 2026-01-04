@@ -65,13 +65,13 @@ fun RegisterContent(
             }
         },
         onError = {
-            val request = uiState.registerRequest
+
             onIntent(
                 RegisterUiIntent.Register(
-                    name = request?.name ?: "",
-                    lastname = request?.lastName ?: "",
-                    email = request?.email ?: "",
-                    password = request?.password ?: "",
+                    name = "",
+                    lastname = "",
+                    email = "",
+                    password = "",
                 )
             )
         }

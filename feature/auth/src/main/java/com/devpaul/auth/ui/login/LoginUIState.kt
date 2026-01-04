@@ -1,10 +1,9 @@
 package com.devpaul.auth.ui.login
 
-import com.devpaul.auth.data.datasource.dto.login.LoginRequest
-import com.devpaul.auth.domain.entity.Login
+import com.devpaul.auth.domain.entity.Auth
 import com.devpaul.core_platform.extension.ResultState
 
 data class LoginUIState(
-    val login: ResultState<Login>? = ResultState.Idle,
-    val loginRequest: LoginRequest? = null,
+    val loginStatus: ResultState<Auth> = ResultState.Idle,
+    val recoveryPasswordStatus: ResultState<Unit> = ResultState.Idle,
 )

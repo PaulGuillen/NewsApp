@@ -2,8 +2,10 @@ package com.devpaul.home.ui.home.components
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,15 +31,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.White
 import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.domain.entity.DollarQuoteEntity
@@ -66,18 +69,18 @@ fun DollarQuoteCard(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 onClick = {
                     val intent =
-                        Intent(Intent.ACTION_VIEW, dollarQuoteState.response.data.link?.toUri())
+                        Intent(Intent.ACTION_VIEW, dollarQuoteState.response.link?.toUri())
                     context.startActivity(intent)
                 }
             ) {
                 Column {
-                    AsyncImage(
-                        model = dollarQuoteState.response.data.imageUrl,
+                    Image(
+                        painter = painterResource(id = R.drawable.dollar_background),
                         contentDescription = "Imagen del dólar",
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Crop
                     )
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -91,7 +94,7 @@ fun DollarQuoteCard(
                         ) {
                             Box(modifier = Modifier.size(24.dp)) {
                                 Image(
-                                    painter = rememberAsyncImagePainter(dollarQuoteState.response.data.iconImage),
+                                    painter = painterResource(id = R.drawable.icon_dollar),
                                     contentDescription = "Icono del dólar"
                                 )
                             }
@@ -100,7 +103,7 @@ fun DollarQuoteCard(
                                 text = "Valor del dólar (USD)",
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
+                                    fontSize = 18.sp
                                 ),
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
@@ -117,14 +120,16 @@ fun DollarQuoteCard(
                                 text = "Compra:",
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
+                                    fontSize = 16.sp
                                 ),
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = dollarQuoteState.response.data.prices?.firstOrNull()?.buy?.toString()
+                                text = dollarQuoteState.response.prices?.firstOrNull()?.buy?.toString()
                                     ?: "N/A",
-                                style = MaterialTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 16.sp
+                                )
                             )
                         }
 
@@ -137,22 +142,28 @@ fun DollarQuoteCard(
                             Text(
                                 text = "Venta:",
                                 style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
                                 ),
                             )
                             Spacer(modifier = Modifier.width(4.dp))
 
                             Text(
-                                text = dollarQuoteState.response.data.prices?.firstOrNull()?.sell.toString(),
-                                style = MaterialTheme.typography.bodyMedium
+                                text = dollarQuoteState.response.prices?.firstOrNull()?.sell.toString(),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 16.sp
+                                )
                             )
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = dollarQuoteState.response.data.site ?: "Sitio no disponible",
-                            style = MaterialTheme.typography.bodySmall,
+                            text = dollarQuoteState.response.site ?: "Sitio no disponible",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Light,
+                                fontSize = 14.sp
+                            ),
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -162,8 +173,11 @@ fun DollarQuoteCard(
                         DividerView()
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = dollarQuoteState.response.data.date ?: "Fecha no disponible",
-                            style = MaterialTheme.typography.bodySmall,
+                            text = dollarQuoteState.response.date ?: "Fecha no disponible",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Light,
+                                fontSize = 14.sp
+                            ),
                             textAlign = TextAlign.End,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -233,14 +247,30 @@ fun DollarQuoteLoadingCardPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun DollarQuoteSuccessCardPreview() {
-    DollarQuoteCard(
-        context = LocalContext.current,
-        dollarQuoteState = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
-        onRetry = {}
-    )
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        DollarQuoteCard(
+            context = LocalContext.current,
+            dollarQuoteState = ResultState.Success(
+                response = DollarQuoteMock().dollarQuoteMock
+            ),
+            onRetry = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)

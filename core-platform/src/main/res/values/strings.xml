@@ -57,4 +57,9 @@
     <string name="header_actually">Lo mas reciente</string>
     <string name="header_explore">Panel principal</string>
 
+    <string name="auth_error_invalid_credentials">El correo o la contraseña ingresados son incorrectos.</string>
+    <string name="auth_error_email_already_in_use">El correo electrónico ya se encuentra en uso.</string>
+    <string name="auth_error_network">Ocurrió un error de conexión. Verifica tu acceso a internet.</string>
+    <string name="auth_error_unknown">Ocurrió un error inesperado. Inténtalo nuevamente.</string>
+
 </resources>

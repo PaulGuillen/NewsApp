@@ -1,5 +1,6 @@
 package com.devpaul.home.ui.acknowledgments
 
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.home.domain.usecase.GratitudeUC
@@ -19,41 +20,28 @@ class AcknowledgmentViewModel(
 
     override suspend fun onUiIntent(intent: AcknowledgmentUiIntent) {
         when (intent) {
-            is AcknowledgmentUiIntent.GetGratitude -> {
-                launchIO {
-                    fetchGratitude()
-                }
-            }
+            is AcknowledgmentUiIntent.GetGratitude -> launchIO {fetchGratitude()}
         }
     }
 
     private suspend fun fetchGratitude() {
         updateUiStateOnMain { it.copy(gratitude = ResultState.Loading) }
-        val result = gratitudeUC()
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is GratitudeUC.Success.GratitudeSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(gratitude = ResultState.Success(it.gratitude))
-                        }
-                    }
-                }
-            }
-            .onFailure<GratitudeUC.Failure> {
-                when (it) {
-                    is GratitudeUC.Failure.GratitudeError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                gratitude = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar los agradecimientos"
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-    }
 
+        when (val result = gratitudeUC.gratitudeService()) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(gratitude = ResultState.Success(result.data))
+                }
+            }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        gratitude = ResultState.Error(
+                            message = result.error.message ?: "Error al cargar los agradecimientos"
+                        ))
+                }
+            }
+        }
+    }
 }
