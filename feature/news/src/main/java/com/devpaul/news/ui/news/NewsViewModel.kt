@@ -1,5 +1,6 @@
 package com.devpaul.news.ui.news
 
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.news.domain.entity.CountryItemEntity
@@ -59,31 +60,24 @@ class NewsViewModel(
 
     private suspend fun fetchCountry() {
         updateUiStateOnMain { it.copy(country = ResultState.Loading) }
-        val result = countryUC()
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is CountryUC.Success.CountrySuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(country = ResultState.Success(it.country))
-                        }
-                    }
+
+        when (val result = countryUC.countryService()) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(country = ResultState.Success(result.data))
                 }
             }
-            .onFailure<CountryUC.Failure> {
-                when (it) {
-                    is CountryUC.Failure.CountryError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                country = ResultState.Error(
-                                    it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar los países"
-                                )
-                            )
-                        }
-                    }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        country = ResultState.Error(
+                            message = result.error.message ?: "Error al cargar las secciones"
+                        )
+                    )
                 }
             }
+        }
     }
 
     private suspend fun fetchGoogleNews(country: CountryItemEntity) {

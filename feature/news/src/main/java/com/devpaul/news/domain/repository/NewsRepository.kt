@@ -8,7 +8,7 @@ import com.devpaul.news.domain.entity.RedditEntity
 
 interface NewsRepository {
 
-    suspend fun countryService(): DefaultOutput<CountryEntity>
+    suspend fun countryService(): CountryEntity
 
     suspend fun googleService(
         q: String,

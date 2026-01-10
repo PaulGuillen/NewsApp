@@ -14,7 +14,7 @@ class NewsRepositoryImpl(
     private val serviceDS: NewsServiceDS
 ) : NewsRepository {
 
-    override suspend fun countryService(): DefaultOutput<CountryEntity> {
+    override suspend fun countryService(): CountryEntity {
         return serviceDS.countryService()
     }
 

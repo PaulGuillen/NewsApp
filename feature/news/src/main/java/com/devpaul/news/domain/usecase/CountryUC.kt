@@ -1,34 +1,38 @@
 package com.devpaul.news.domain.usecase
 
-import com.devpaul.core_data.DefaultOutput
-import com.devpaul.core_domain.entity.Defaults
-import com.devpaul.core_domain.entity.transform
-import com.devpaul.core_domain.entity.transformHttpError
-import com.devpaul.core_domain.use_case.SimpleUC
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.news.domain.entity.CountryEntity
+import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.repository.NewsRepository
 import org.koin.core.annotation.Factory
 
 @Factory
 class CountryUC(
     private val newsRepository: NewsRepository,
-) : SimpleUC.OnlyResult<DefaultOutput<CountryUC.Success>> {
+) {
+    suspend fun countryService(): Output<CountryEntity, Throwable> {
+        return try {
+            val countryEntity = newsRepository.countryService()
 
-    override suspend fun invoke(): DefaultOutput<Success> {
-        return newsRepository.countryService()
-            .transformHttpError {
-                Failure.CountryError(it)
-            }
-            .transform {
-                Success.CountrySuccess(it)
-            }
-    }
+            fun priority(item: CountryItemEntity): Int =
+                when (item.title.lowercase()) {
+                    "perú", "peru" -> 1
+                    "argentina" -> 2
+                    "méxico", "mexico" -> 3
+                    else -> 4
+                }
 
-    sealed class Failure : Defaults.CustomError() {
-        data class CountryError(val error: HttpError<String>) : Failure()
-    }
+            val sorted = countryEntity.data
+                .sortedWith(
+                    compareBy<CountryItemEntity> { priority(it) }
+                        .thenBy { it.title }
+                )
 
-    sealed class Success {
-        data class CountrySuccess(val country: CountryEntity) : Success()
+            Output.Success(
+                countryEntity.copy(data = sorted)
+            )
+        } catch (ex: Exception) {
+            Output.Failure(ex)
+        }
     }
 }

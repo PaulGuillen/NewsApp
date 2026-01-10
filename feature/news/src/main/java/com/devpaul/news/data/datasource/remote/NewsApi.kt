@@ -13,8 +13,7 @@ internal interface NewsApi {
     @GET("news/countries")
     suspend fun country(): Response<CountryResponse>
 
-    @GET("news/google")
-    //@GET("https://run.mocky.io/v3/df06e3d5-b9db-4596-9b4e-d1fa84d37fc7")
+    @GET("https://news.google.com/rss/search")
     suspend fun google(
         @Query("q") query: String,
         @Query("hl") mode: String,

@@ -36,12 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.White
-import com.devpaul.home.data.datasource.mock.DollarQuoteMock
 import com.devpaul.home.data.datasource.mock.UITMock
 import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer

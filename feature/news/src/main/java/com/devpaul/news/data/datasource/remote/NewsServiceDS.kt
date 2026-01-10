@@ -5,19 +5,27 @@ import com.devpaul.core_data.safeApiCall
 import com.devpaul.news.domain.entity.CountryEntity
 import org.koin.core.annotation.Factory
 import com.devpaul.core_domain.entity.transform
+import com.devpaul.news.data.datasource.mapper.toCountryEntity
 import com.devpaul.news.data.datasource.mapper.toDomain
 import com.devpaul.news.domain.entity.DeltaProjectEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 @Factory
 class NewsServiceDS(
+    private val firestore: FirebaseFirestore,
     private val newsService: NewsService,
 ) {
-    suspend fun countryService(): DefaultOutput<CountryEntity> {
-        return safeApiCall {
-            newsService.country()
-        }.transform { it.toDomain() }
+
+    suspend fun countryService(): CountryEntity {
+        val snapshot = firestore
+            .collection(COLLECTION_COUNTRY)
+            .get()
+            .await()
+
+        return snapshot.documents.toCountryEntity()
     }
 
     suspend fun googleService(
@@ -68,4 +76,7 @@ class NewsServiceDS(
         }.transform { it.toDomain() }
     }
 
+    companion object {
+        private const val COLLECTION_COUNTRY= "country"
+    }
 }
