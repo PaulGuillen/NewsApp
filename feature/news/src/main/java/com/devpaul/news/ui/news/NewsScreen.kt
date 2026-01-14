@@ -1,7 +1,9 @@
 package com.devpaul.news.ui.news
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.ui.news.components.country.CountryCards
@@ -31,6 +35,7 @@ import com.devpaul.news.ui.news.components.deltaproject.GDELTCards
 import com.devpaul.news.ui.news.components.google.GoogleNewsCards
 import com.devpaul.news.ui.news.components.reddit.RedditCards
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
@@ -186,17 +191,45 @@ fun NewsBodyPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
-fun NewsBodyNoSelectedCountryPreview() {
-    NewsBody(
-        context = LocalContext.current,
-        navController = NavHostController(LocalContext.current),
-        uiState = NewsUiState(
-            country = ResultState.Success(NewsMock().countryMock),
-            selectedCountry = null
-        ),
-        onIntent = {},
-        onCountrySelected = {}
-    )
+fun NewsScreenPreview() {
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "Home",
+                )
+            },
+            body = {
+                NewsBody(
+                    context = LocalContext.current,
+                    navController = NavHostController(LocalContext.current),
+                    uiState = NewsUiState(
+                        country = ResultState.Success(NewsMock().countryMock),
+                        selectedCountry = null
+                    ),
+                    onIntent = {},
+                    onCountrySelected = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
+        )
+    }
 }

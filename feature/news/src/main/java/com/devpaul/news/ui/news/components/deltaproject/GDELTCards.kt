@@ -40,7 +40,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.domain.entity.DeltaProjectEntity
+import com.devpaul.news.domain.entity.DeltaProjectDataEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 
@@ -48,7 +48,7 @@ import com.devpaul.shared.data.skeleton.SkeletonType
 fun GDELTCards(
     navController: NavController,
     context: Context,
-    deltaProjectState: ResultState<DeltaProjectEntity>,
+    deltaProjectState: ResultState<DeltaProjectDataEntity>,
     selectedCountry: CountryItemEntity,
     onRetry: () -> Unit,
 ) {
@@ -93,13 +93,13 @@ fun GDELTCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(deltaProjectState.response.data.items) { articleItem ->
+                    items(deltaProjectState.response.articles) { articleItem ->
                         GDELTCard(context = context, deltaProject = articleItem)
                     }
                 }
 
                 Text(
-                    text = "Cantidad: ${deltaProjectState.response.data.totalItems}",
+                    text = "Cantidad: ${deltaProjectState.response.articles.size}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier

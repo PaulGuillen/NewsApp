@@ -3,6 +3,11 @@ package com.devpaul.core_platform.extension
 import android.content.Context
 import android.util.Patterns
 import com.devpaul.core_platform.R
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun isValidEmail(email: String): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
@@ -53,9 +58,57 @@ fun validateStartSession(
 }
 
 fun limitText(text: String, maxCharacters: Int): String {
-    return if (text.length > maxCharacters) {
-        text.take(maxCharacters) + "…"
-    } else {
-        text
+    if (text.length > maxCharacters) {
+        return text.take(maxCharacters) + "…"
+    }
+
+    return text
+}
+
+fun Long.toDateText(
+    zoneId: ZoneId = ZoneId.of("America/Lima"),
+    pattern: String = "dd 'de' MMMM yyyy, HH:mm"
+): String {
+    return Instant.ofEpochMilli(this)
+        .atZone(zoneId)
+        .format(
+            DateTimeFormatter
+                .ofPattern(pattern)
+                .withLocale(Locale("es", "PE"))
+        )
+}
+
+fun String.toReadableDate(
+    zoneId: ZoneId = ZoneId.of("America/Lima"),
+    pattern: String = "dd 'de' MMMM yyyy, HH:mm"
+): String {
+    val millis = this.toEpochMillis()
+    if (millis == 0L) return ""
+
+    return Instant.ofEpochMilli(millis)
+        .atZone(zoneId)
+        .format(
+            DateTimeFormatter
+                .ofPattern(pattern)
+                .withLocale(Locale("es", "PE"))
+        )
+}
+
+fun String.toEpochMillis(): Long {
+    if (this.isBlank()) return 0L
+
+    return try {
+        when {
+            this.contains("T") && this.endsWith("Z") -> {
+                ZonedDateTime.parse(
+                    this,
+                    DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX")
+                ).toInstant().toEpochMilli()
+            }
+            this.length <= 10 -> this.toLong() * 1000
+            else -> this.toLong()
+        }
+    } catch (e: Exception) {
+        0L
     }
 }

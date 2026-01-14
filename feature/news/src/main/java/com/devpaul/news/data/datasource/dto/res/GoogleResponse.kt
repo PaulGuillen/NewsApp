@@ -1,40 +1,59 @@
 package com.devpaul.news.data.datasource.dto.res
 
-import com.google.gson.annotations.SerializedName
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
+import org.simpleframework.xml.Text
 
-data class GoogleResponse(
-    @SerializedName("status") val status: Int,
-    @SerializedName("message") val message: String,
-    @SerializedName("data") val data: GoogleData
+@Root(name = "rss", strict = false)
+data class GoogleNewsXML @JvmOverloads constructor(
+    @field:Element(name = "channel")
+    var channel: Channel = Channel()
 )
 
-data class GoogleData(
-    @SerializedName("items") val items: List<GoogleNewsItem>,
-    @SerializedName("totalItems") val totalItems: Int,
-    @SerializedName("totalPages") val totalPages: Int,
-    @SerializedName("currentPage") val currentPage: Int,
-    @SerializedName("perPage") val perPage: Int
+@Root(name = "channel", strict = false)
+data class Channel @JvmOverloads constructor(
+    @field:Element(name = "generator", required = false)
+    var generator: String? = null,
+    @field:Element(name = "title")
+    var title: String = "",
+    @field:Element(name = "link")
+    var link: String = "",
+    @field:Element(name = "language")
+    var language: String = "",
+    @field:Element(name = "webMaster", required = false)
+    var webMaster: String? = null,
+    @field:Element(name = "copyright", required = false)
+    var copyright: String? = null,
+    @field:Element(name = "lastBuildDate", required = false)
+    var lastBuildDate: String? = null,
+    @field:Element(name = "description", required = false)
+    var description: String? = null,
+    @field:ElementList(name = "item", inline = true)
+    var items: MutableList<NewsItem> = mutableListOf()
 )
 
-data class GoogleNewsItem(
-    @SerializedName("title") val title: String,
-    @SerializedName("link") val link: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("pubDate") val pubDate: String,
-    @SerializedName("source") val source: Source,
-    @SerializedName("guid") val guid: Guid
+@Root(name = "item", strict = false)
+data class NewsItem @JvmOverloads constructor(
+    @field:Element(name = "title")
+    var title: String = "",
+    @field:Element(name = "link")
+    var link: String = "",
+    @field:Element(name = "guid", required = false)
+    var guid: String? = null,
+    @field:Element(name = "pubDate", required = false)
+    var pubDate: String? = null,
+    @field:Element(name = "description", required = false)
+    var description: String? = null,
+    @field:Element(name = "source", required = false)
+    var source: NewsSource? = null
 )
 
-data class Source(
-    @SerializedName("url") val url: String,
-    @SerializedName("name") val name: String
-)
-
-data class Guid(
-    @SerializedName("_") val value: String,
-    @SerializedName("\$") val metadata: GuidMeta
-)
-
-data class GuidMeta(
-    @SerializedName("isPermaLink") val isPermLink: String
+@Root(name = "source", strict = false)
+data class NewsSource @JvmOverloads constructor(
+    @field:Attribute(name = "url")
+    var url: String = "",
+    @field:Text
+    var name: String = ""
 )

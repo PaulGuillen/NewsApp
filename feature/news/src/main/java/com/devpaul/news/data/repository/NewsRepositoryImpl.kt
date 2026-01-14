@@ -1,9 +1,10 @@
 package com.devpaul.news.data.repository
 
 import com.devpaul.core_data.DefaultOutput
+import com.devpaul.news.data.datasource.mapper.toDomain
 import com.devpaul.news.data.datasource.remote.NewsServiceDS
 import com.devpaul.news.domain.entity.CountryEntity
-import com.devpaul.news.domain.entity.DeltaProjectEntity
+import com.devpaul.news.domain.entity.DeltaProjectDataEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.domain.repository.NewsRepository
@@ -36,27 +37,15 @@ class NewsRepositoryImpl(
         q: String,
         mode: String,
         format: String,
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<DeltaProjectEntity> {
+    ): DeltaProjectDataEntity {
         return serviceDS.deltaProjectService(
-            q = q,
+            query = q,
             mode = mode,
             format = format,
-            page = page,
-            perPage = perPage,
-        )
+        ).toDomain()
     }
 
-    override suspend fun redditService(
-        country: String,
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<RedditEntity> {
-        return serviceDS.redditService(
-            country = country,
-            page = page,
-            perPage = perPage,
-        )
+    override suspend fun redditService(country: String): RedditEntity {
+        return serviceDS.redditService(country = country).toDomain()
     }
 }

@@ -2,15 +2,17 @@ package com.devpaul.core_data
 
 import android.content.Context
 import com.devpaul.core_data.interceptor.ChuckerInterceptorProvider
-import com.devpaul.core_data.interceptor.UserAgentInterceptor
+import com.devpaul.core_data.interceptor.BaseUrlInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Module
@@ -26,7 +28,7 @@ class CoreDataModule {
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
 
-        builder.addInterceptor(UserAgentInterceptor())
+        builder.addInterceptor(BaseUrlInterceptor())
         builder.addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
@@ -57,6 +59,18 @@ class CoreDataModule {
             .baseUrl(BuildConfig.BASE_URL)
             .client(httpClient)
             .addConverterFactory(gsonConverterFactory)
+            .build()
+    }
+
+    @Single
+    @Named("xmlRetrofit")
+    fun xmlRetrofit(
+        httpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://news.google.com/")
+            .client(httpClient)
+            .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
             .build()
     }
 }

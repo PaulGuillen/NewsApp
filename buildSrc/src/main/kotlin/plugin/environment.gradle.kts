@@ -17,7 +17,13 @@ project.extensions.findByType(BaseExtension::class.java)?.let { android ->
                 buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
                 buildConfigField("String", "ENVIRONMENT", "\"prod\"")
                 buildConfigField("int", "VERSION_CODE", "$versionCode")
-                 buildConfigField("String", "BASE_URL", "\"https://infoperu-be.fly.dev\"")
+                buildConfigField("String", "BASE_URL", "\"https://infoperu-be.fly.dev\"")
+                buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
+                buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+                buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
+                buildConfigField("String", "BASE_URL_GDELT_PROJECT", "\"https://api.gdeltproject.org/api/v2/\"")
+                buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
+
             }
 
             create("dev") {
@@ -29,6 +35,12 @@ project.extensions.findByType(BaseExtension::class.java)?.let { android ->
                 buildConfigField("String", "ENVIRONMENT", "\"dev\"")
                 buildConfigField("int", "VERSION_CODE", "$versionCode")
                 buildConfigField("String", "BASE_URL", "\"http://192.168.100.6:3000/\"")
+                buildConfigField("String", "BASE_URL_NEWS", "\"https://newsapi.org/\"")
+                buildConfigField("String", "BASE_URL_PERU", "\"https://deperu.com/api/rest/\"")
+                buildConfigField("String", "BASE_URL_GOOGLE_NEWS", "\"https://news.google.com/\"")
+                buildConfigField("String", "BASE_URL_GDELT_PROJECT", "\"https://api.gdeltproject.org/api/v2/\"")
+                buildConfigField("String", "BASE_URL_REDDIT", "\"https://www.reddit.com/\"")
+
             }
         }
 

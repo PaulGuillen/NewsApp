@@ -1,22 +1,18 @@
 package com.devpaul.news.data.datasource.mock
 
+import com.devpaul.news.domain.entity.Article
 import com.devpaul.news.domain.entity.CountryEntity
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.DeltaProjectDataEntity
-import com.devpaul.news.domain.entity.DeltaProjectEntity
-import com.devpaul.news.domain.entity.DeltaProjectItemEntity
-import com.devpaul.news.domain.entity.GoogleDataEntity
 import com.devpaul.news.domain.entity.GoogleEntity
-import com.devpaul.news.domain.entity.GoogleNewsItemEntity
-import com.devpaul.news.domain.entity.GuidEntity
-import com.devpaul.news.domain.entity.GuidMetaEntity
-import com.devpaul.news.domain.entity.ImageResolutionEntity
+import com.devpaul.news.domain.entity.GoogleNewsJSON
+import com.devpaul.news.domain.entity.ListingDataEntity
 import com.devpaul.news.domain.entity.MediaEmbedEntity
-import com.devpaul.news.domain.entity.MediaMetaDataEntity
-import com.devpaul.news.domain.entity.RedditDataEntity
+import com.devpaul.news.domain.entity.NewsItemJSON
+import com.devpaul.news.domain.entity.NewsSourceJSON
+import com.devpaul.news.domain.entity.PostDataEntity
+import com.devpaul.news.domain.entity.PostDataWrapperEntity
 import com.devpaul.news.domain.entity.RedditEntity
-import com.devpaul.news.domain.entity.RedditPostItemEntity
-import com.devpaul.news.domain.entity.SourceEntity
 
 data class NewsMock(
     val countryMock: CountryEntity = CountryEntity(
@@ -37,141 +33,96 @@ data class NewsMock(
     val googleMock: GoogleEntity = GoogleEntity(
         status = 200,
         message = "Success",
-        data = GoogleDataEntity(
-            items = listOf(
-                GoogleNewsItemEntity(
+        data = GoogleNewsJSON(
+            title = "Noticias de prueba",
+            link = "https://example.com/noticias",
+            language = "es",
+            lastBuildDate = "2025-06-16 10:00",
+            description = "Descripción simulada de noticias de prueba.",
+            totalItems = 1,
+            totalPages = 1,
+            currentPage = 1,
+            perPage = 10,
+            newsItems = listOf(
+                NewsItemJSON(
                     title = "Título de noticia simulada",
                     link = "https://example.com/noticia",
                     description = "Esta es una descripción simulada para una noticia de prueba.",
                     pubDate = "2025-06-16 10:00",
-                    source = SourceEntity(
+                    source = NewsSourceJSON(
                         url = "https://example.com",
                         name = "Fuente de Prueba"
                     ),
-                    guid = GuidEntity(
-                        value = "guid-123",
-                        metadata = GuidMetaEntity(
-                            isPermLink = "true"
-                        )
-                    )
+                    guid = "mock-guid-12345"
                 )
             ),
-            totalItems = 1,
-            totalPages = 1,
-            currentPage = 1,
-            perPage = 10
         )
     ),
 
     val redditMock: RedditEntity = RedditEntity(
-        status = 200,
-        message = "Success",
-        data = RedditDataEntity(
-            items = listOf(
-                RedditPostItemEntity(
-                    id = "abc123",
-                    title = "Título de prueba en Reddit",
-                    author = "usuario_mock",
-                    subreddit = "Peru",
-                    selfText = "Texto simulado de una publicación de Reddit.",
-                    url = "https://reddit.com/r/Peru/comments/abc123",
-                    thumbnail = "https://via.placeholder.com/150",
-                    createdUtc = 1687000000,
-                    createdAt = "2025-06-16 10:00",
-                    numComments = 42,
-                    ups = 120,
-                    permalink = "/r/Peru/comments/abc123",
-                    isVideo = false,
-                    authorFullname = "t2_mockuser",
-                    saved = false,
-                    subredditNamePrefixed = "r/Peru",
-                    hidden = false,
-                    linkFlairCssClass = null,
-                    thumbnailHeight = 150,
-                    thumbnailWidth = 150,
-                    linkFlairTextColor = "dark",
-                    upvoteRatio = 0.95,
-                    authorFlairBackgroundColor = "#ffffff",
-                    subredditType = "public",
-                    totalAwardsReceived = 0,
-                    authorFlairTemplateId = null,
-                    isOriginalContent = true,
-                    isSelf = true,
-                    score = 300,
-                    domain = "self.Peru",
-                    allowLiveComments = true,
-                    selftextHtml = null,
-                    likes = null,
-                    stickied = false,
-                    over18 = false,
-                    spoiler = false,
-                    locked = false,
-                    authorFlairText = "MockFlair",
-                    linkFlairText = "Anuncio",
-                    linkFlairBackgroundColor = "#eeeeee",
-                    linkFlairType = "text",
-                    authorFlairType = "text",
-                    quarantine = false,
-                    distinguished = null,
-                    numCrossposts = 1,
-                    isRedditMediaDomain = false,
-                    media = MediaEmbedEntity(
-                        content = null,
-                        width = null,
-                        height = null
-                    ),
-                    mediaMetadata = MediaMetaDataEntity(
-                        status = "valid",
-                        e = "Image",
-                        m = "image/jpg",
-                        p = listOf(
-                            ImageResolutionEntity(
-                                y = 100,
-                                x = 100,
-                                u = "https://via.placeholder.com/100"
-                            ),
-                            ImageResolutionEntity(
-                                y = 150,
-                                x = 150,
-                                u = "https://via.placeholder.com/150"
-                            )
+        kind = "t3",
+        data = ListingDataEntity(
+            after = "t3_mockafter",
+            before = null,
+            children = listOf(
+                PostDataWrapperEntity(
+                    kind = "t3",
+                    data = PostDataEntity(
+                        approvedAtUtc = null,
+                        subreddit = "mocksubreddit",
+                        selfText = "This is a mock self text for testing.",
+                        authorFullname = "mock_author_123",
+                        saved = false,
+                        modReasonTitle = null,
+                        gilded = 0,
+                        clicked = false,
+                        title = "Mock Reddit Post Title",
+                        subredditNamePrefixed = "r/mocksubreddit",
+                        hidden = false,
+                        pwls = 6,
+                        linkFlairCssClass = null,
+                        downs = 0,
+                        thumbnailHeight = 140,
+                        topAwardedType = null,
+                        hideScore = false,
+                        name = "t3_mockname",
+                        quarantine = false,
+                        linkFlairTextColor = "dark",
+                        upvoteRatio = 0.95,
+                        authorFlairBackgroundColor = null,
+                        subredditType = "public",
+                        ups = 123,
+                        totalAwardsReceived = 1,
+                        thumbnailWidth = 140,
+                        authorFlairTemplateId = null,
+                        isOriginalContent = false,
+                        userReports = emptyList(),
+                        secureMedia = MediaEmbedEntity(
+                            content = null,
+                            width = null,
+                            height = null,
                         ),
-                        s = ImageResolutionEntity(
-                            y = 200,
-                            x = 200,
-                            u = "https://via.placeholder.com/200"
-                        ),
-                        id = "media_mock_id"
+                        isRedditMediaDomain = false,
                     )
                 )
-            ),
-            totalItems = 1,
-            totalPages = 1,
-            currentPage = 1,
-            perPage = 10
+            )
         )
     ),
 
-    val deltaMock: DeltaProjectEntity = DeltaProjectEntity(
-        status = 200,
-        message = "Success",
-        data = DeltaProjectDataEntity(
-            items = listOf(
-                DeltaProjectItemEntity(
-                    url = "https://example.com/noticia-principal",
-                    urlMobile = "https://m.example.com/noticia-principal",
-                    title = "Noticia simulada sobre política y sociedad",
-                    seenDate = "2025-06-16 09:30",
-                    socialImage = "https://via.placeholder.com/300",
-                    domain = "example.com",
-                    language = "es",
-                    sourceCountry = "PE"
-                )
-            ),
-            totalItems = 1,
-            totalPages = 1,
-            currentPage = 1,
-            perPage = 10
-        )
+
+    val deltaMock: DeltaProjectDataEntity = DeltaProjectDataEntity(
+        articles = listOf(
+            Article(
+                url = "https://example.com/delta-article",
+                urlMobile = "https://m.example.com/delta-article",
+                title = "Título de artículo simulado de Delta Project",
+                seenDate = "2025-06-16 10:00",
+                socialImage = "https://via.placeholder.com/150",
+                domain = "example.com",
+                language = "es",
+                sourceCountry = "PE"
+            )
+        ),
     )
+
 )

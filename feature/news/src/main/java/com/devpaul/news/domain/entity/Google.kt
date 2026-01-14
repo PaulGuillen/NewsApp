@@ -7,41 +7,35 @@ import kotlinx.parcelize.Parcelize
 data class GoogleEntity(
     val status: Int,
     val message: String,
-    val data: GoogleDataEntity
+    val data: GoogleNewsJSON
 ) : Parcelable
 
 @Parcelize
-data class GoogleDataEntity(
-    val items: List<GoogleNewsItemEntity>,
+data class GoogleNewsJSON(
+    val title: String,
+    val link: String,
+    val language: String,
+    val lastBuildDate: String?,
+    val description: String?,
     val totalItems: Int,
     val totalPages: Int,
     val currentPage: Int,
-    val perPage: Int
-) : Parcelable
+    val perPage: Int,
+    val newsItems: List<NewsItemJSON>
+): Parcelable
 
 @Parcelize
-data class GoogleNewsItemEntity(
+data class NewsItemJSON(
     val title: String,
     val link: String,
-    val description: String,
-    val pubDate: String,
-    val source: SourceEntity,
-    val guid: GuidEntity
+    val guid: String?,
+    val pubDate: String?,
+    val description: String?,
+    val source: NewsSourceJSON
 ) : Parcelable
 
 @Parcelize
-data class SourceEntity(
+data class NewsSourceJSON(
     val url: String,
-    val name: String
-) : Parcelable
-
-@Parcelize
-data class GuidEntity(
-    val value: String,
-    val metadata: GuidMetaEntity
-) : Parcelable
-
-@Parcelize
-data class GuidMetaEntity(
-    val isPermLink: String
-) : Parcelable
+    val name: String,
+): Parcelable

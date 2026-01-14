@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.news.data.datasource.mock.NewsMock
-import com.devpaul.news.domain.entity.DeltaProjectEntity
+import com.devpaul.news.domain.entity.DeltaProjectDataEntity
 import com.devpaul.news.domain.entity.GoogleEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.ui.news_detail.components.NewsCard
@@ -108,27 +108,29 @@ fun NewsDetailHeader(
 ) {
     val totalItems = when (newsType) {
         "googleNews" -> (uiState.google as? ResultState.Success)?.response?.data?.totalItems ?: 0
-        "redditNews" -> (uiState.reddit as? ResultState.Success)?.response?.data?.totalItems ?: 0
-        "deltaProjectNews" -> (uiState.deltaProject as? ResultState.Success)?.response?.data?.totalItems
+        "redditNews" -> (uiState.reddit as? ResultState.Success)?.response?.data?.children?.size
+        "deltaProjectNews" -> (uiState.deltaProject as? ResultState.Success)?.response?.articles?.size
             ?: 0
 
         else -> 0
     }
 
-    if (totalItems > 0) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 6.dp)
-                .fillMaxWidth()
-        ) {
-            NewsCountCard(
-                title = when (newsType) {
-                    "redditNews" -> "Cantidad de posts: $totalItems"
-                    else -> "Cantidad de noticias: $totalItems"
-                }
-            )
-        }
+    if (totalItems != null) {
+        if (totalItems > 0) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 6.dp)
+                    .fillMaxWidth()
+            ) {
+                NewsCountCard(
+                    title = when (newsType) {
+                        "redditNews" -> "Cantidad de posts: $totalItems"
+                        else -> "Cantidad de noticias: $totalItems"
+                    }
+                )
+            }
 
+        }
     }
 }
 
@@ -223,13 +225,13 @@ fun GoogleNewsList(
                     .then(modifier)
                     .padding(horizontal = 8.dp)
             ) {
-                items(googleState.response.data.items) { item ->
+                items(googleState.response.data.newsItems) { item ->
                     NewsCard(
                         context = context,
                         title = item.title,
-                        summary = item.description,
+                        summary = item.description.toString(),
                         url = item.link,
-                        date = item.pubDate,
+                        date = item.pubDate.toString(),
                         author = item.source.name,
                         isSelected = selectedUrl == item.link,
                         onSelect = { onSelectUrl(item.link) }
@@ -245,7 +247,7 @@ fun GoogleNewsList(
 
 @Composable
 fun DeltaNewsList(
-    deltaProjectState: ResultState<DeltaProjectEntity>,
+    deltaProjectState: ResultState<DeltaProjectDataEntity>,
     context: Context,
     modifier: Modifier,
     selectedUrl: String?,
@@ -260,7 +262,7 @@ fun DeltaNewsList(
                     .then(modifier)
                     .padding(horizontal = 8.dp)
             ) {
-                items(deltaProjectState.response.data.items) { item ->
+                items(deltaProjectState.response.articles) { item ->
                     NewsCard(
                         context = context,
                         title = item.title,
@@ -297,16 +299,16 @@ fun RedditNewsList(
                     .then(modifier)
                     .padding(horizontal = 8.dp)
             ) {
-                items(redditState.response.data.items) { post ->
+                items(redditState.response.data.children) { post ->
                     NewsCard(
                         context = context,
-                        title = post.title,
-                        summary = post.selfText,
-                        url = post.url,
-                        date = post.createdAt,
-                        author = post.authorFullname,
-                        isSelected = selectedUrl == post.url,
-                        onSelect = { onSelectUrl(post.url) }
+                        title = post.data.title ?: "",
+                        summary = post.data.selfText ?: "",
+                        url = post.data.url ?: "",
+                        date = post.data.approvedAtUtc ?: "",
+                        author = post.data.authorFullname ?: "",
+                        isSelected = selectedUrl == post.data.url,
+                        onSelect = { onSelectUrl(post.data.url.toString()) }
                     )
                 }
             }

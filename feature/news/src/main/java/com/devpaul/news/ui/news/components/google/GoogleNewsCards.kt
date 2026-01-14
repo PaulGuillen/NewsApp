@@ -1,8 +1,10 @@
 package com.devpaul.news.ui.news.components.google
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,15 +36,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.GoogleEntity
+import com.devpaul.news.ui.news.NewsBody
+import com.devpaul.news.ui.news.NewsUiState
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
+import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 
 @Composable
 fun GoogleNewsCards(
@@ -93,7 +102,7 @@ fun GoogleNewsCards(
                 LazyRow(
                     modifier = Modifier
                 ) {
-                    items(googleState.response.data.items) { newsItem ->
+                    items(googleState.response.data.newsItems) { newsItem ->
                         GoogleNewsCard(context = context, googleItem = newsItem)
                     }
                 }
@@ -158,20 +167,54 @@ fun GoogleNewsCards(
     }
 }
 
-@Preview(showBackground = true)
+
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun GoogleNewsCardsPreview() {
-    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
-    selectedCountry?.let {
-        GoogleNewsCards(
-            navController = rememberNavController(),
-            context = LocalContext.current,
-            googleState = ResultState.Success(NewsMock().googleMock),
-            selectedCountry = it,
-            onRetry = { }
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "Home",
+                )
+            },
+            body = {
+                GoogleNewsCards(
+                    navController = rememberNavController(),
+                    context = LocalContext.current,
+                    googleState = ResultState.Success(NewsMock().googleMock),
+                    selectedCountry = CountryItemEntity(
+                        id = "1",
+                        summary = "",
+                        title = "Perú",
+                        category = "",
+                        imageUrl = "https://example.com/image.png",
+                        initLetters = "P",
+                    ),
+                    onRetry = {},
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

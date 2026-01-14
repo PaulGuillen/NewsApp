@@ -28,12 +28,13 @@ import androidx.core.net.toUri
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.devpaul.core_platform.R
-import com.devpaul.news.domain.entity.DeltaProjectItemEntity
+import com.devpaul.core_platform.extension.toReadableDate
+import com.devpaul.news.domain.entity.Article
 
 @Composable
 fun GDELTCard(
     context: Context,
-    deltaProject: DeltaProjectItemEntity
+    deltaProject: Article
 ) {
     Card(
         modifier = Modifier
@@ -94,7 +95,7 @@ fun GDELTCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = deltaProject.seenDate,
+                    text = deltaProject.seenDate.toReadableDate(),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.Start)

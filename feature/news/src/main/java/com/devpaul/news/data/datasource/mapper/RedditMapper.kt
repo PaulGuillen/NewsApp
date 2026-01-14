@@ -1,116 +1,75 @@
 package com.devpaul.news.data.datasource.mapper
 
-import com.devpaul.news.data.datasource.dto.res.ImageResolution
-import com.devpaul.news.data.datasource.dto.res.MediaEmbed
-import com.devpaul.news.data.datasource.dto.res.MediaMetaData
-import com.devpaul.news.data.datasource.dto.res.RedditData
-import com.devpaul.news.data.datasource.dto.res.RedditPost
-import com.devpaul.news.data.datasource.dto.res.RedditResponse
-import com.devpaul.news.domain.entity.ImageResolutionEntity
-import com.devpaul.news.domain.entity.MediaEmbedEntity
-import com.devpaul.news.domain.entity.MediaMetaDataEntity
-import com.devpaul.news.domain.entity.RedditDataEntity
+import com.devpaul.infoxperu.domain.models.res.ListingData
+import com.devpaul.infoxperu.domain.models.res.PostData
+import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
+import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import com.devpaul.news.domain.entity.ListingDataEntity
+import com.devpaul.news.domain.entity.PostDataEntity
+import com.devpaul.news.domain.entity.PostDataWrapperEntity
 import com.devpaul.news.domain.entity.RedditEntity
-import com.devpaul.news.domain.entity.RedditPostItemEntity
 
 fun RedditResponse.toDomain(): RedditEntity {
     return RedditEntity(
-        status = status,
-        message = message,
-        data = data.toDomain()
+        kind = kind,
+        data = data.toEntity()
     )
 }
 
-fun RedditData.toDomain(): RedditDataEntity {
-    return RedditDataEntity(
-        items = items.map { it.toDomain() },
-        totalItems = totalItems,
-        totalPages = totalPages,
-        currentPage = currentPage,
-        perPage = perPage,
+fun ListingData.toEntity(): ListingDataEntity {
+    return ListingDataEntity(
+        after = after,
+        dist = dist,
+        modhash = modhash,
+        geoFilter = geoFilter,
+        children = children
+            .filter { it.data.isValid() }
+            .map { it.toEntity() },
+        before = before
     )
 }
 
-fun RedditPost.toDomain(): RedditPostItemEntity {
-    return RedditPostItemEntity(
-        id = id,
-        title = title,
-        author = author,
+fun PostDataWrapper.toEntity(): PostDataWrapperEntity {
+    return PostDataWrapperEntity(
+        kind = kind ?: "",
+        data = data.toEntity()
+    )
+}
+
+fun PostData.toEntity(): PostDataEntity {
+    return PostDataEntity(
+        approvedAtUtc = approvedAtUtc,
         subreddit = subreddit,
         selfText = selfText,
-        url = url,
-        thumbnail = thumbnail,
-        createdUtc = createdUtc,
-        createdAt = createdAt,
-        numComments = numComments,
-        ups = ups,
-        permalink = permalink,
-        isVideo = isVideo,
         authorFullname = authorFullname,
-        saved = saved,
-        subredditNamePrefixed = subredditNamePrefixed,
-        hidden = hidden,
-        linkFlairCssClass = linkFlairCssClass,
-        thumbnailHeight = thumbnailHeight,
-        thumbnailWidth = thumbnailWidth,
-        linkFlairTextColor = linkFlairTextColor,
-        upvoteRatio = upvoteRatio,
-        authorFlairBackgroundColor = authorFlairBackgroundColor,
-        subredditType = subredditType,
-        totalAwardsReceived = totalAwardsReceived,
-        authorFlairTemplateId = authorFlairTemplateId,
-        isOriginalContent = isOriginalContent,
-        isSelf = isSelf,
-        score = score,
-        domain = domain,
-        allowLiveComments = allowLiveComments,
-        selftextHtml = selftextHtml,
-        likes = likes,
-        stickied = stickied,
-        over18 = over18,
-        spoiler = spoiler,
-        locked = locked,
-        authorFlairText = authorFlairText,
-        linkFlairText = linkFlairText,
-        linkFlairBackgroundColor = linkFlairBackgroundColor,
-        linkFlairType = linkFlairType,
-        authorFlairType = authorFlairType,
-        quarantine = quarantine,
-        distinguished = distinguished,
-        numCrossposts = numCrossposts,
-        isRedditMediaDomain = isRedditMediaDomain,
-        media = media?.toDomain(),
-        mediaMetadata = mediaMetadata?.toDomain()
+        saved = saved ?: false,
+        modReasonTitle = modReasonTitle,
+        gilded = gilded ?: 0,
+        clicked = clicked ?: false,
+        id = id.orEmpty(),
+        title = title.orEmpty(),
+        author = author,
+        score = score ?: 0,
+        numComments = numComments ?: 0,
+        thumbnail = thumbnail.takeIf { it?.startsWith("http") == true },
+        url = url,
+        createdUtc = createdUtc ?: 0.0,
+        createdAtMillis = ((created ?: 0.0) * 1000).toLong(),
+        isVideo = isVideo ?: false,
+        over18 = over18 ?: false,
+        permalink = buildRedditUrl(permalink)
     )
 }
 
-fun MediaEmbed?.toDomain(): MediaEmbedEntity? {
-    return this?.let {
-        MediaEmbedEntity(
-            content = it.content,
-            width = it.width,
-            height = it.height
-        )
-    }
+private fun PostData.isValid(): Boolean {
+    return !title.isNullOrBlank() &&
+            !permalink.isNullOrBlank()
 }
 
-fun MediaMetaData?.toDomain(): MediaMetaDataEntity? {
-    return this?.let {
-        MediaMetaDataEntity(
-            status = it.status,
-            e = it.e,
-            m = it.m,
-            p = it.p?.map { res -> res.toDomain() },
-            s = it.s?.toDomain(),
-            id = it.id
-        )
+private fun buildRedditUrl(permalink: String?): String {
+    return if (permalink.isNullOrBlank()) {
+        ""
+    } else {
+        "https://www.reddit.com$permalink"
     }
-}
-
-fun ImageResolution?.toDomain(): ImageResolutionEntity {
-    return ImageResolutionEntity(
-        y = this?.y,
-        x = this?.x,
-        u = this?.u
-    )
 }

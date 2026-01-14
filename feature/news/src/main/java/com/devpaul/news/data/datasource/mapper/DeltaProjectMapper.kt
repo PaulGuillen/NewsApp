@@ -1,32 +1,18 @@
 package com.devpaul.news.data.datasource.mapper
 
+import com.devpaul.news.data.datasource.dto.res.ArticleResponse
 import com.devpaul.news.data.datasource.dto.res.GDELTResponse
-import com.devpaul.news.data.datasource.dto.res.GDELTData
-import com.devpaul.news.data.datasource.dto.res.GDELTItem
-import com.devpaul.news.domain.entity.DeltaProjectEntity
+import com.devpaul.news.domain.entity.Article
 import com.devpaul.news.domain.entity.DeltaProjectDataEntity
-import com.devpaul.news.domain.entity.DeltaProjectItemEntity
 
-fun GDELTResponse.toDomain(): DeltaProjectEntity {
-    return DeltaProjectEntity(
-        status = status,
-        message = message,
-        data = data.toDomain()
-    )
-}
-
-fun GDELTData.toDomain(): DeltaProjectDataEntity {
+fun GDELTResponse.toDomain(): DeltaProjectDataEntity {
     return DeltaProjectDataEntity(
-        items = items.map { it.toDomain() },
-        totalItems = totalItems,
-        totalPages = totalPages,
-        currentPage = currentPage,
-        perPage = perPage
+        articles = articleResponses.map { it.toDomain() }
     )
 }
 
-fun GDELTItem.toDomain(): DeltaProjectItemEntity {
-    return DeltaProjectItemEntity(
+fun ArticleResponse.toDomain(): Article {
+    return Article(
         url = url,
         urlMobile = urlMobile,
         title = title,

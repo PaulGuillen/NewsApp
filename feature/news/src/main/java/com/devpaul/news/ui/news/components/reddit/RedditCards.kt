@@ -1,8 +1,10 @@
 package com.devpaul.news.ui.news.components.reddit
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -37,12 +36,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.White
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
+import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.ui.components.molecules.TopBar
+import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 
 @Composable
 fun RedditCards(
@@ -90,19 +93,19 @@ fun RedditCards(
                     )
                 }
 
-                LazyRow(
-                    modifier = Modifier
-                ) {
-                    items(redditState.response.data.items) { redditItems ->
+                LazyRow {
+                    items(
+                        items = redditState.response.data.children,
+                    ) { wrapper ->
                         RedditCard(
                             context = context,
-                            redditPost = redditItems
+                            redditPost = wrapper.data
                         )
                     }
                 }
 
                 Text(
-                    text = "Cantidad: ${redditState.response.data.totalItems}",
+                    text = "Cantidad: ${redditState.response.data.children.size}",
                     fontSize = 14.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -162,47 +165,122 @@ fun RedditCards(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun RedditCardsLoadingPreview() {
-    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
-    selectedCountry?.let {
-        RedditCards(
-            navController = rememberNavController(),
-            context = LocalContext.current,
-            redditState = ResultState.Loading,
-            selectedCountry = it,
-            onRetry = {}
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "News",
+                )
+            },
+            body = {
+                RedditCards(
+                    navController = rememberNavController(),
+                    context = LocalContext.current,
+                    redditState = ResultState.Loading,
+                    selectedCountry = NewsMock().countryMock.data[0],
+                    onRetry = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun RedditCardsSuccessPreview() {
-    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
-    selectedCountry?.let {
-        RedditCards(
-            navController = rememberNavController(),
-            context = LocalContext.current,
-            redditState = ResultState.Success(NewsMock().redditMock),
-            selectedCountry = it,
-            onRetry = {}
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "News",
+                )
+            },
+            body = {
+                RedditCards(
+                    navController = rememberNavController(),
+                    context = LocalContext.current,
+                    redditState = ResultState.Success(NewsMock().redditMock),
+                    selectedCountry = NewsMock().countryMock.data[0],
+                    onRetry = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun RedditCardsErrorPreview() {
-    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
-    selectedCountry?.let {
-        RedditCards(
-            navController = rememberNavController(),
-            context = LocalContext.current,
-            redditState = ResultState.Error("Error loading Reddit posts"),
-            selectedCountry = it,
-            onRetry = {}
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                TopBar(
+                    title = "News",
+                )
+            },
+            body = {
+                RedditCards(
+                    navController = rememberNavController(),
+                    context = LocalContext.current,
+                    redditState = ResultState.Error("Error al cargar los datos de Reddit"),
+                    selectedCountry = NewsMock().countryMock.data[0],
+                    onRetry = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
         )
     }
 }

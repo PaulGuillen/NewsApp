@@ -1,37 +1,38 @@
 package com.devpaul.news.domain.usecase
 
-import com.devpaul.core_data.DefaultOutput
 import com.devpaul.core_domain.entity.Defaults
-import com.devpaul.core_domain.entity.transform
-import com.devpaul.core_domain.entity.transformHttpError
-import com.devpaul.core_domain.use_case.SimpleUC
+import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.news.domain.entity.PostDataWrapperEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.domain.repository.NewsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 
 @Factory
 class RedditUC(
     private val newsRepository: NewsRepository,
-) : SimpleUC.ParamsAndResult<RedditUC.Params, DefaultOutput<RedditUC.Success>> {
+) : suspend (RedditUC.Params) -> ResultState<RedditEntity> {
 
-    override suspend fun invoke(params: Params): DefaultOutput<Success> {
-        return newsRepository.redditService(
-            country = params.country,
-            page = params.page,
-            perPage = params.perPage,
-        )
-            .transformHttpError {
-                Failure.RedditError(it)
+    override suspend operator fun invoke(params: Params): ResultState<RedditEntity> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val response = newsRepository.redditService(params.country)
+                val sortedNewsItems =
+                    response.data.children.sortedByDescending { it.data.createdUtc }
+                val limitedNewsItems = limitNewsItems(sortedNewsItems, params.limit)
+                val modifiedResponse =
+                    response.copy(data = response.data.copy(children = limitedNewsItems))
+                ResultState.Success(modifiedResponse)
             }
-            .transform {
-                Success.RedditSuccess(it)
-            }
+        } catch (e: Exception) {
+            ResultState.Error(e.toString())
+        }
     }
 
     data class Params(
         val country: String,
-        val page: Int,
-        val perPage: Int
+        val limit: Int,
     )
 
     sealed class Failure : Defaults.CustomError() {
@@ -41,4 +42,16 @@ class RedditUC(
     sealed class Success {
         data class RedditSuccess(val reddit: RedditEntity) : Success()
     }
+
+    private fun limitNewsItems(
+        newsItems: List<PostDataWrapperEntity>,
+        limit: Int
+    ): List<PostDataWrapperEntity> {
+        return if (limit == 0) {
+            newsItems
+        } else {
+            newsItems.take(limit)
+        }
+    }
+
 }

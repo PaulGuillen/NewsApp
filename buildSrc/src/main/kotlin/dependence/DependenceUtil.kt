@@ -85,6 +85,7 @@ fun Project.androidCoreImplementation() {
         "implementation"(libs["lifecycle-viewmodel-ktx"])
         "implementation"(libs["coil-compose"])
         "implementation"(libs["shimmer-compose"])
+        "implementation"(libs["converter-simplexml"])
     }
 }
 

@@ -24,12 +24,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.devpaul.news.domain.entity.GoogleNewsItemEntity
+import com.devpaul.news.domain.entity.NewsItemJSON
+
 
 @Composable
 fun GoogleNewsCard(
     context: Context,
-    googleItem: GoogleNewsItemEntity,
+    googleItem: NewsItemJSON,
 ) {
     Card(
         modifier = Modifier
@@ -74,7 +75,7 @@ fun GoogleNewsCard(
                     .padding(top = 10.dp, bottom = 10.dp)
             )
             Text(
-                text = googleItem.pubDate,
+                text = googleItem.pubDate ?: "",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.align(Alignment.Start)
             )

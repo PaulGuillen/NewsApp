@@ -112,26 +112,9 @@ class NewsDetailViewModel(
                 current < total
             }
 
-            "deltaProjectNews" -> {
-                val current =
-                    (uiState.deltaProject as? ResultState.Success)?.response?.data?.currentPage ?: 1
-                val total =
-                    (uiState.deltaProject as? ResultState.Success)?.response?.data?.totalPages ?: 1
-                current < total
-            }
-
-            "redditNews" -> {
-                val current =
-                    (uiState.reddit as? ResultState.Success)?.response?.data?.currentPage ?: 1
-                val total =
-                    (uiState.reddit as? ResultState.Success)?.response?.data?.totalPages ?: 1
-                current < total
-            }
-
             else -> false
         }
     }
-
 
     private suspend fun fetchGoogleNews(country: CountryItemEntity, page: Int) {
         val result = googleUC(
@@ -149,14 +132,14 @@ class NewsDetailViewModel(
                         totalPages = it.google.data.totalPages
                         updateUiStateOnMain { uiState ->
                             val previous =
-                                (uiState.google as? ResultState.Success)?.response?.data?.items
+                                (uiState.google as? ResultState.Success)?.response?.data?.newsItems
                                     ?: emptyList()
                             uiState.copy(
                                 google = ResultState.Success(
                                     it.google.copy(
                                         data = it.google.data.copy(
                                             currentPage = page,
-                                            items = previous + it.google.data.items
+                                            newsItems = previous + it.google.data.newsItems
                                         )
                                     )
                                 )
@@ -180,80 +163,14 @@ class NewsDetailViewModel(
                 q = country.category,
                 mode = "ArtList",
                 format = "json",
-                page = page,
-                perPage = 5
             )
         )
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is DeltaProjectUC.Success.DeltaProjectSuccess -> {
-                        totalPages = it.deltaProject.data.totalPages
-                        updateUiStateOnMain { uiState ->
-                            val previous =
-                                (uiState.deltaProject as? ResultState.Success)?.response?.data?.items
-                                    ?: emptyList()
-                            uiState.copy(
-                                deltaProject = ResultState.Success(
-                                    it.deltaProject.copy(
-                                        data = it.deltaProject.data.copy(
-                                            currentPage = page,
-                                            items = previous + it.deltaProject.data.items
-                                        )
-                                    )
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-            .onFailure<DeltaProjectUC.Failure> {
-                updateUiStateOnMain {
-                    it.copy(deltaProject = ResultState.Error(message = "Error al cargar las noticias de Delta Project"))
-                }
-            }.also {
-                updateUiStateOnMain { it.copy(isLoadingMore = false) }
-            }
+
     }
 
     private suspend fun fetchRedditNews(country: CountryItemEntity, page: Int) {
-        val result = redditUC(
-            RedditUC.Params(
-                country = country.category,
-                page = page,
-                perPage = 10
-            )
-        )
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is RedditUC.Success.RedditSuccess -> {
-                        totalPages = it.reddit.data.totalPages
-                        updateUiStateOnMain { uiState ->
-                            val previous =
-                                (uiState.reddit as? ResultState.Success)?.response?.data?.items
-                                    ?: emptyList()
-                            uiState.copy(
-                                reddit = ResultState.Success(
-                                    it.reddit.copy(
-                                        data = it.reddit.data.copy(
-                                            currentPage = page,
-                                            items = previous + it.reddit.data.items
-                                        )
-                                    )
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-            .onFailure<RedditUC.Failure> {
-                updateUiStateOnMain {
-                    it.copy(reddit = ResultState.Error(message = "Error al cargar las noticias de Reddit"))
-                }
-            }.also {
-                updateUiStateOnMain { it.copy(isLoadingMore = false) }
-            }
+
+
     }
 
     fun selectUrl(url: String) {

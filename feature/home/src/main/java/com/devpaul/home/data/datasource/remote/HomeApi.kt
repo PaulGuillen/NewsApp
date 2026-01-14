@@ -7,10 +7,9 @@ import retrofit2.http.GET
 
 internal interface HomeApi {
 
-    @GET("https://deperu.com/api/rest/cotizaciondolar.json")
+    @GET("api/rest/cotizaciondolar.json")
     suspend fun dollarQuote(): Response<DollarQuoteResponse>
 
-    @GET("https://deperu.com/api/rest/uitperu.json")
+    @GET("api/rest/uitperu.json")
     suspend fun uit(): Response<UITResponse>
-
 }
