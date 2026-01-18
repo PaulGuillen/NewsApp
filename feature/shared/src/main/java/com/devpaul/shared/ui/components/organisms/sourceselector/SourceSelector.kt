@@ -65,6 +65,7 @@ fun SourceSelector(
 @Composable
 fun SourceSelectorPreview() {
     SourceSelector(
+        modifier = Modifier.padding(4.dp),
         selectedSource = Source.GOOGLE,
         onSourceSelected = {}
     )

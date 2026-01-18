@@ -39,6 +39,8 @@ class NewsViewModel(
             is NewsUiIntent.SelectCountry -> selectCountry(intent.country)
             is NewsUiIntent.SelectSource -> selectSource(intent.source)
             is NewsUiIntent.RetrySelectedSource -> retrySelectedSource()
+            is NewsUiIntent.NextCoachMark -> nextCoachMark()
+            is NewsUiIntent.SkipCoachMark -> skipCoachMark()
         }
     }
 
@@ -208,6 +210,21 @@ class NewsViewModel(
 
     fun selectUrl(url: String) {
         _selectedUrl.value = url
+    }
+
+    suspend fun nextCoachMark() {
+        updateUiStateOnMain {
+            val next = it.coachMarkStepIndex + 1
+            if (next >= 2) {
+                it.copy(showCoachMark = false)
+            } else {
+                it.copy(coachMarkStepIndex = next)
+            }
+        }
+    }
+
+    suspend fun skipCoachMark() {
+        updateUiStateOnMain { it.copy(showCoachMark = false) }
     }
 
     companion object {

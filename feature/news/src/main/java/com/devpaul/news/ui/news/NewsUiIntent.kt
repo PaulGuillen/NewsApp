@@ -8,4 +8,6 @@ sealed class NewsUiIntent {
     data class SelectCountry(val country: CountryItemEntity) : NewsUiIntent()
     data class SelectSource(val source: Source) : NewsUiIntent()
     object RetrySelectedSource : NewsUiIntent()
+    object NextCoachMark : NewsUiIntent()
+    object SkipCoachMark : NewsUiIntent()
 }

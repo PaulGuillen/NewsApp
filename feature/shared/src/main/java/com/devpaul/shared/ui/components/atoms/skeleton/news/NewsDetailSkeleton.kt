@@ -29,14 +29,14 @@ fun NewsDetailContentSkeleton(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(horizontal = 10.dp, vertical = 8.dp)
             .verticalScroll(rememberScrollState())
     ) {
         repeat(8) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(130.dp)
+                    .height(140.dp)
                     .padding(bottom = 16.dp)
                     .background(brush = shimmerBrush, shape = RoundedCornerShape(8.dp))
             )

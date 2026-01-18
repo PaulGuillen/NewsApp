@@ -15,4 +15,7 @@ data class NewsUiState(
     val reddit: ResultState<RedditEntity> = ResultState.Loading,
     val selectedCountry: CountryItemEntity? = null,
     val selectedSource: Source = Source.GOOGLE,
+    val isNewsDetailLoading: Boolean = false,
+    val coachMarkStepIndex: Int = 0,
+    val showCoachMark: Boolean = true
 )
