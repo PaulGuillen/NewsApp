@@ -64,14 +64,16 @@ class NewsViewModel(
 
     private suspend fun selectCountry(country: CountryItemEntity) {
         updateUiStateOnMain {
-            it.copy(selectedCountry = country)
+            it.copy(
+                selectedCountry = country,
+                selectedSource = Source.GOOGLE,
+                google = ResultState.Idle,
+                reddit = ResultState.Idle,
+                deltaProject = ResultState.Idle
+            )
         }
 
-        when (uiState.selectedSource) {
-            Source.GOOGLE -> fetchGoogleNews(country)
-            Source.REDDIT -> fetchRedditNews(country)
-            Source.DELTA -> fetchDeltaNews(country)
-        }
+        fetchGoogleNews(country)
     }
 
     private suspend fun selectSource(source: Source) {

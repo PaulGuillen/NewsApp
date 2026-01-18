@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NewsSourceSelector(
+fun SourceSelector(
     modifier: Modifier = Modifier,
     selectedSource: Source,
     onSourceSelected: (Source) -> Unit,
@@ -63,8 +63,8 @@ fun NewsSourceSelector(
 
 @Preview(showBackground = true)
 @Composable
-fun NewsSourceSelectorPreview() {
-    NewsSourceSelector(
+fun SourceSelectorPreview() {
+    SourceSelector(
         selectedSource = Source.GOOGLE,
         onSourceSelected = {}
     )

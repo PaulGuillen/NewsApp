@@ -40,7 +40,7 @@ import com.devpaul.news.ui.news.components.news.ErrorRetryCard
 import com.devpaul.shared.ui.components.organisms.LoadMoreFooter
 import com.devpaul.news.ui.news.components.news.NewsCard
 import com.devpaul.shared.ui.components.organisms.sourceselector.Source
-import com.devpaul.shared.ui.components.organisms.sourceselector.NewsSourceSelector
+import com.devpaul.shared.ui.components.organisms.sourceselector.SourceSelector
 import com.devpaul.news.ui.news.components.news.rememberUiPagination
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
@@ -138,7 +138,7 @@ fun NewsBody(
             return
         }
 
-        NewsSourceSelector(
+        SourceSelector(
             modifier = Modifier
                 .padding(horizontal = 12.dp),
             selectedSource = uiState.selectedSource,
@@ -227,11 +227,18 @@ fun NewsBody(
 
                         LazyColumn(state = listState) {
                             items(items.take(visibleCount)) { post ->
+
+                                val tittle = when {
+                                    !post.data.selfText.isNullOrEmpty() -> post.data.selfText
+                                    !post.data.title.isNullOrEmpty() -> post.data.title
+                                    else -> "Sin enunciado"
+                                }
+
                                 NewsCard(
                                     modifier = Modifier
                                         .padding(vertical = 8.dp, horizontal = 12.dp),
                                     context = context,
-                                    title = post.data.selfText ?: "",
+                                    title = tittle,
                                     url = post.data.url ?: "",
                                     date = post.data.createdAtMillis?.toDateText() ?: "",
                                     author = post.data.authorFullname ?: "",
