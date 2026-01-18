@@ -30,14 +30,14 @@ fun CountryCardSkeletonContent(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .horizontalScroll(rememberScrollState())
-            .padding(start = 10.dp, top = 2.dp, bottom = 2.dp, end = 2.dp)
+            .padding(start = 10.dp, top = 8.dp, bottom = 2.dp, end = 2.dp)
     ) {
         repeat(5) {
             Box(
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp)
-                    .padding(8.dp)
+                    .width(110.dp)
+                    .height(80.dp)
+                    .padding(4.dp)
                     .background(brush = shimmerBrush, shape = RoundedCornerShape(8.dp))
             )
         }

@@ -11,7 +11,5 @@ internal interface GoogleApi {
     suspend fun google(
         @Query("q") query: String,
         @Query("hl") mode: String,
-        @Query("page") page: Int,
-        @Query("perPage") perPage: Int,
     ): Response<GoogleNewsXML>
 }

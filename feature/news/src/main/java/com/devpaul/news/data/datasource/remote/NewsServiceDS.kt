@@ -34,15 +34,11 @@ class NewsServiceDS(
     suspend fun googleService(
         q: String,
         hl: String,
-        page: Int,
-        perPage: Int,
     ): DefaultOutput<GoogleEntity> {
         return safeApiCall {
             googleService.google(
                 query = q,
                 mode = hl,
-                page = page,
-                perPage = perPage
             )
         }.transform { it.toDomain() }
     }

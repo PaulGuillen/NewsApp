@@ -1,4 +1,4 @@
-package com.devpaul.news.ui.news.components.news
+package com.devpaul.shared.ui.components.organisms
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +8,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -23,4 +24,10 @@ fun LoadMoreFooter() {
             modifier = Modifier.size(24.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadMoreFooterPreview() {
+    LoadMoreFooter()
 }

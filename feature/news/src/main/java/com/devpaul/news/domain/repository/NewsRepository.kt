@@ -13,8 +13,6 @@ interface NewsRepository {
     suspend fun googleService(
         q: String,
         hl: String,
-        page: Int,
-        perPage: Int,
     ): DefaultOutput<GoogleEntity>
 
     suspend fun deltaProjectService(

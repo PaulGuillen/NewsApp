@@ -23,8 +23,6 @@ class GoogleUC(
         return newsRepository.googleService(
             q = params.q,
             hl = params.hl,
-            page = params.page,
-            perPage = params.perPage
         )
             .transformHttpError {
                 Failure.GoogleError(it)
@@ -33,9 +31,6 @@ class GoogleUC(
 
                 val processedItems = googleEntity.data.newsItems
                     .sortedByDescending { it.parsedDateMillis() }
-                    .let { list ->
-                        if (params.limit == 0) list else list.take(params.limit)
-                    }
                     .map { it.withSpanishDate() }
 
                 val processed = googleEntity.copy(
@@ -83,9 +78,6 @@ class GoogleUC(
     data class Params(
         val q: String,
         val hl: String,
-        val page: Int,
-        val perPage: Int,
-        val limit: Int = 0
     )
 
     sealed class Failure : Defaults.CustomError() {

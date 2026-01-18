@@ -12,18 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,16 +35,16 @@ import com.devpaul.core_platform.extension.toReadableDate
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
-import com.devpaul.news.ui.news.components.news.DropdownDialog
-import com.devpaul.news.ui.news.components.news.DropdownSelector
-import com.devpaul.news.ui.news.components.news.LoadMoreFooter
 import com.devpaul.news.ui.news.components.country.CountryCards
+import com.devpaul.news.ui.news.components.news.ErrorRetryCard
+import com.devpaul.shared.ui.components.organisms.LoadMoreFooter
+import com.devpaul.news.ui.news.components.news.NewsCard
+import com.devpaul.shared.ui.components.organisms.sourceselector.Source
+import com.devpaul.shared.ui.components.organisms.sourceselector.NewsSourceSelector
 import com.devpaul.news.ui.news.components.news.rememberUiPagination
-import com.devpaul.news.ui.news_detail.components.NewsCard
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBar
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -78,6 +73,7 @@ fun NewsScreen(navController: NavHostController) {
                 NewsBody(
                     context = context,
                     uiState = uiState,
+                    onIntent = onIntent,
                     onCountrySelected = { countryItem ->
                         onIntent(NewsUiIntent.SelectCountry(countryItem))
                     },
@@ -96,6 +92,7 @@ fun NewsScreen(navController: NavHostController) {
 fun NewsBody(
     context: Context,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     onCountrySelected: (CountryItemEntity) -> Unit,
     selectedUrl: String?,
     onSelectUrl: (String) -> Unit
@@ -105,90 +102,71 @@ fun NewsBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.padding(top = 8.dp))
-
         CountryCards(
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 8.dp)
+                .fillMaxWidth(),
             countryState = uiState.country,
             selectedCountry = uiState.selectedCountry,
             onCountrySelected = onCountrySelected
         )
 
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            thickness = 1.5.dp,
-            color = MaterialTheme.colorScheme.outline
-        )
-
         if (uiState.selectedCountry == null) {
-            Spacer(modifier = Modifier.height(80.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painter = painterResource(id = R.drawable.no_country_selected),
-                    contentDescription = null,
-                    modifier = Modifier.size(128.dp)
-                )
-                Spacer(modifier = Modifier.padding(16.dp))
-                Text(
-                    text = stringResource(R.string.select_country_to_see_news),
-                    style = MaterialTheme.typography.titleMedium
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.no_country_selected),
+                        contentDescription = null,
+                        modifier = Modifier.size(120.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = stringResource(R.string.select_country_to_see_news),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
+
             return
         }
 
-        var selectedNew by remember { mutableStateOf<String?>(null) }
-        var showDialog by remember { mutableStateOf(false) }
-
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            DropdownSelector(
-                modifier = Modifier
-                    .padding(horizontal = 14.dp, vertical = 12.dp)
-                    .width(140.dp),
-                selectedValue = selectedNew,
-                onClick = { showDialog = true }
-            )
-        }
-
-        if (showDialog) {
-            DropdownDialog(
-                title = "Selecciona fuente",
-                onDismiss = { showDialog = false },
-                onItemSelected = {
-                    selectedNew = it
-                    showDialog = false
-                }
-            )
-        }
-
-        val currentItemsCount = when (selectedNew) {
-            "Google News" -> uiState.google.let {
-                if (it is ResultState.Success) it.response.data.newsItems.size else 0
+        NewsSourceSelector(
+            modifier = Modifier
+                .padding(horizontal = 12.dp),
+            selectedSource = uiState.selectedSource,
+            onSourceSelected = { source ->
+                onIntent(NewsUiIntent.SelectSource(source))
             }
-            "Delta Project" -> uiState.deltaProject.let {
-                if (it is ResultState.Success) it.response.articles.size else 0
-            }
-            "Reddit" -> uiState.reddit.let {
-                if (it is ResultState.Success) it.response.data.children.size else 0
-            }
-            else -> 0
+        )
+
+        val currentItemsCount = when (uiState.selectedSource) {
+            Source.GOOGLE ->
+                (uiState.google as? ResultState.Success)?.response?.data?.newsItems?.size ?: 0
+
+            Source.REDDIT ->
+                (uiState.reddit as? ResultState.Success)?.response?.data?.children?.size ?: 0
+
+            Source.DELTA ->
+                (uiState.deltaProject as? ResultState.Success)?.response?.articles?.size ?: 0
         }
 
         val (visibleCount, listState, isLoadingMore) =
             rememberUiPagination(totalItems = currentItemsCount)
 
-        LaunchedEffect(selectedNew) {
+        LaunchedEffect(uiState.selectedSource) {
             listState.scrollToItem(0)
         }
 
-        when (selectedNew) {
-            "Google News" -> {
+        when (uiState.selectedSource) {
+            Source.GOOGLE -> {
                 when (uiState.google) {
 
                     is ResultState.Loading -> {
@@ -201,12 +179,14 @@ fun NewsBody(
                         LazyColumn(state = listState) {
                             items(items.take(visibleCount)) { item ->
                                 NewsCard(
+                                    modifier = Modifier
+                                        .padding(vertical = 8.dp, horizontal = 12.dp),
                                     context = context,
                                     title = item.title,
-                                    summary = item.description.toString(),
                                     url = item.link,
                                     date = item.pubDate.toString(),
                                     author = item.source.name,
+                                    source = Source.GOOGLE.label,
                                     isSelected = selectedUrl == item.link,
                                     onSelect = { onSelectUrl(item.link) }
                                 )
@@ -218,43 +198,27 @@ fun NewsBody(
                         }
                     }
 
-                    else -> {}
-                }
-            }
-
-
-            "Delta Project" -> {
-                when (uiState.deltaProject) {
-                    is ResultState.Loading -> SkeletonRenderer(SkeletonType.NEWS_DETAIL)
-
-                    is ResultState.Success -> {
-                        val items = uiState.deltaProject.response.articles
-
-                        LazyColumn(state = listState) {
-                            items(items.take(visibleCount)) { item ->
-                                NewsCard(
-                                    context = context,
-                                    title = item.title,
-                                    summary = item.domain,
-                                    url = item.url,
-                                    date = item.seenDate.toReadableDate(),
-                                    author = item.sourceCountry,
-                                    isSelected = selectedUrl == item.url,
-                                    onSelect = { onSelectUrl(item.url) }
-                                )
+                    is ResultState.Error -> {
+                        ErrorRetryCard(
+                            message = uiState.google.message,
+                            onRetry = {
+                                onIntent(NewsUiIntent.RetrySelectedSource)
                             }
-
-                            if (isLoadingMore) {
-                                item { LoadMoreFooter() }
-                            }
-                        }
+                        )
                     }
 
-                    else -> {}
+                    else -> {
+                        ErrorRetryCard(
+                            message = stringResource(R.string.error_loading_news),
+                            onRetry = {
+                                onIntent(NewsUiIntent.RetrySelectedSource)
+                            }
+                        )
+                    }
                 }
             }
 
-            "Reddit" -> {
+            Source.REDDIT -> {
                 when (uiState.reddit) {
                     is ResultState.Loading -> SkeletonRenderer(SkeletonType.NEWS_DETAIL)
 
@@ -264,12 +228,14 @@ fun NewsBody(
                         LazyColumn(state = listState) {
                             items(items.take(visibleCount)) { post ->
                                 NewsCard(
+                                    modifier = Modifier
+                                        .padding(vertical = 8.dp, horizontal = 12.dp),
                                     context = context,
-                                    title = post.data.title ?: "",
-                                    summary = post.data.selfText ?: "",
+                                    title = post.data.selfText ?: "",
                                     url = post.data.url ?: "",
                                     date = post.data.createdAtMillis?.toDateText() ?: "",
                                     author = post.data.authorFullname ?: "",
+                                    source = Source.REDDIT.label,
                                     isSelected = selectedUrl == post.data.url,
                                     onSelect = { onSelectUrl(post.data.url.toString()) }
                                 )
@@ -284,30 +250,42 @@ fun NewsBody(
                     else -> {}
                 }
             }
+
+            Source.DELTA -> {
+                when (uiState.deltaProject) {
+                    is ResultState.Loading -> SkeletonRenderer(SkeletonType.NEWS_DETAIL)
+
+                    is ResultState.Success -> {
+                        val items = uiState.deltaProject.response.articles
+
+                        LazyColumn(state = listState) {
+                            items(items.take(visibleCount)) { item ->
+                                NewsCard(
+                                    modifier = Modifier
+                                        .padding(vertical = 8.dp, horizontal = 12.dp),
+                                    context = context,
+                                    title = item.title,
+                                    url = item.url,
+                                    date = item.seenDate.toReadableDate(),
+                                    author = item.sourceCountry,
+                                    source = Source.DELTA.label,
+                                    isSelected = selectedUrl == item.url,
+                                    onSelect = { onSelectUrl(item.url) },
+                                )
+                            }
+
+                            if (isLoadingMore) {
+                                item { LoadMoreFooter() }
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsBodyPreview() {
-    NewsBody(
-        context = LocalContext.current,
-        selectedUrl = null,
-        onSelectUrl = {},
-        uiState = NewsUiState(
-            country = ResultState.Success(NewsMock().countryMock),
-            selectedCountry = CountryItemEntity(
-                id = "1",
-                summary = "",
-                title = "Perú",
-                category = "",
-                imageUrl = "https://example.com/image.png",
-                initLetters = "P",
-            )
-        ),
-        onCountrySelected = {}
-    )
 }
 
 @Preview(
@@ -321,7 +299,7 @@ fun NewsBodyPreview() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun NewsScreenPreview() {
+fun SelectedPreview() {
     InfoXPeruTheme(
         darkTheme = isSystemInDarkTheme(),
         dynamicColor = false
@@ -329,11 +307,6 @@ fun NewsScreenPreview() {
         val navController = rememberNavController()
         BaseContentLayout(
             isBodyScrollable = false,
-            header = {
-                TopBar(
-                    title = "Home",
-                )
-            },
             body = {
                 NewsBody(
                     context = LocalContext.current,
@@ -343,7 +316,89 @@ fun NewsScreenPreview() {
                         country = ResultState.Success(NewsMock().countryMock),
                         selectedCountry = null
                     ),
-                    onCountrySelected = {}
+                    onCountrySelected = {},
+                    onIntent = {}
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
+        )
+    }
+}
+
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun SuccessPreview() {
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            body = {
+                NewsBody(
+                    context = LocalContext.current,
+                    selectedUrl = null,
+                    onSelectUrl = {},
+                    uiState = NewsUiState(
+                        country = ResultState.Success(NewsMock().countryMock),
+                        selectedCountry = NewsMock().countryMock.data.first(),
+                        google = ResultState.Success(NewsMock().googleMock),
+                    ),
+                    onCountrySelected = {},
+                    onIntent = {},
+                )
+            },
+            footer = {
+                BottomNavigationBar(navController)
+            }
+        )
+    }
+}
+
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun ErrorPreview() {
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        val navController = rememberNavController()
+        BaseContentLayout(
+            isBodyScrollable = false,
+            body = {
+                NewsBody(
+                    context = LocalContext.current,
+                    selectedUrl = null,
+                    onSelectUrl = {},
+                    uiState = NewsUiState(
+                        country = ResultState.Success(NewsMock().countryMock),
+                        selectedCountry = NewsMock().countryMock.data.first(),
+                        selectedSource = Source.GOOGLE,
+                        google = ResultState.Error("Error loading data"),
+                    ),
+                    onCountrySelected = {},
+                    onIntent = {},
                 )
             },
             footer = {

@@ -22,14 +22,10 @@ class NewsRepositoryImpl(
     override suspend fun googleService(
         q: String,
         hl: String,
-        page: Int,
-        perPage: Int,
     ): DefaultOutput<GoogleEntity> {
         return serviceDS.googleService(
             q = q,
             hl = hl,
-            page = page,
-            perPage = perPage,
         )
     }
 

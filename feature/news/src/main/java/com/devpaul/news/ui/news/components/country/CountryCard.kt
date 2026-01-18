@@ -16,14 +16,20 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.GreenLight
 import com.devpaul.core_platform.theme.White
+import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.domain.entity.CountryItemEntity
 
 @Composable
@@ -37,9 +43,9 @@ fun CountryCard(
 
     Card(
         modifier = Modifier
-            .width(120.dp)
-            .height(120.dp)
-            .padding(8.dp),
+            .width(110.dp)
+            .height(80.dp)
+            .padding(4.dp),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(
@@ -58,7 +64,7 @@ fun CountryCard(
                 painter = rememberAsyncImagePainter(country.imageUrl),
                 contentDescription = country.title,
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(50.dp)
             )
             Text(
                 textAlign = TextAlign.Center,
@@ -72,4 +78,14 @@ fun CountryCard(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CountryCardPreview() {
+    val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
+    CountryCard(
+        country = NewsMock().countryMock.data.first(),
+        isSelected = selectedCountry?.id == NewsMock().countryMock.data.first().id,
+    )
 }

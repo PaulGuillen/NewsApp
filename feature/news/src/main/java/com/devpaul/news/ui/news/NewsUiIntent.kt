@@ -1,11 +1,11 @@
 package com.devpaul.news.ui.news
 
 import com.devpaul.news.domain.entity.CountryItemEntity
+import com.devpaul.shared.ui.components.organisms.sourceselector.Source
 
 sealed class NewsUiIntent {
-    data object GetCountries : NewsUiIntent()
+    object GetCountries : NewsUiIntent()
     data class SelectCountry(val country: CountryItemEntity) : NewsUiIntent()
-    data class GetDeltaProject(val country: CountryItemEntity): NewsUiIntent()
-    data class GetReddit(val country: CountryItemEntity): NewsUiIntent()
-    data class GetGoogleNews(val country: CountryItemEntity): NewsUiIntent()
+    data class SelectSource(val source: Source) : NewsUiIntent()
+    object RetrySelectedSource : NewsUiIntent()
 }

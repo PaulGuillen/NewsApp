@@ -62,4 +62,8 @@
     <string name="auth_error_network">Ocurrió un error de conexión. Verifica tu acceso a internet.</string>
     <string name="auth_error_unknown">Ocurrió un error inesperado. Inténtalo nuevamente.</string>
 
+    <!-- Errors Screen -->
+    <string name="error_loading_news">No se puede cargar la siguiente fuente</string>
+    <string name="retry">Reintentar</string>
+
 </resources>

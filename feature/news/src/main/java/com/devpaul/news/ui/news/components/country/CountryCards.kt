@@ -3,7 +3,6 @@ package com.devpaul.news.ui.news.components.country
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -23,6 +22,7 @@ import com.devpaul.shared.data.skeleton.SkeletonType
 
 @Composable
 fun CountryCards(
+    modifier: Modifier,
     countryState: ResultState<CountryEntity>,
     selectedCountry: CountryItemEntity?,
     onCountrySelected: (CountryItemEntity) -> Unit,
@@ -34,9 +34,7 @@ fun CountryCards(
 
         is ResultState.Success -> {
             Column(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(),
+                modifier = modifier,
             ) {
                 Row(
                     modifier = Modifier
@@ -74,6 +72,7 @@ fun CountryCards(
 fun CountryCardsPreview() {
     val selectedCountry by remember { mutableStateOf<CountryItemEntity?>(null) }
     CountryCards(
+        modifier = Modifier,
         countryState = ResultState.Success(NewsMock().countryMock),
         selectedCountry = selectedCountry,
         onCountrySelected = {}
@@ -84,6 +83,7 @@ fun CountryCardsPreview() {
 @Composable
 fun CountryCardsLoadingPreview() {
     CountryCards(
+        modifier = Modifier,
         countryState = ResultState.Loading,
         selectedCountry = null,
         onCountrySelected = {}
@@ -94,6 +94,7 @@ fun CountryCardsLoadingPreview() {
 @Composable
 fun CountryCardsErrorPreview() {
     CountryCards(
+        modifier = Modifier,
         countryState = ResultState.Error("Failed to load countries"),
         selectedCountry = null,
         onCountrySelected = {}

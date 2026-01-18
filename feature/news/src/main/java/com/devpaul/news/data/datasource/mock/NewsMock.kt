@@ -26,6 +26,30 @@ data class NewsMock(
                 category = "Mock Category",
                 imageUrl = "https://via.placeholder.com/150",
                 initLetters = "MCN"
+            ),
+            CountryItemEntity(
+                id = "1",
+                summary = "Mock summary for country news",
+                title = "Mock Country News Title",
+                category = "Mock Category",
+                imageUrl = "https://via.placeholder.com/150",
+                initLetters = "MCN"
+            ),
+            CountryItemEntity(
+                id = "1",
+                summary = "Mock summary for country news",
+                title = "Mock Country News Title",
+                category = "Mock Category",
+                imageUrl = "https://via.placeholder.com/150",
+                initLetters = "MCN"
+            ),
+            CountryItemEntity(
+                id = "1",
+                summary = "Mock summary for country news",
+                title = "Mock Country News Title",
+                category = "Mock Category",
+                imageUrl = "https://via.placeholder.com/150",
+                initLetters = "MCN"
             )
         )
     ),
@@ -54,7 +78,40 @@ data class NewsMock(
                         name = "Fuente de Prueba"
                     ),
                     guid = "mock-guid-12345"
-                )
+                ),
+                NewsItemJSON(
+                    title = "Título de noticia simulada",
+                    link = "https://example.com/noticia",
+                    description = "Esta es una descripción simulada para una noticia de prueba.",
+                    pubDate = "2025-06-16 10:00",
+                    source = NewsSourceJSON(
+                        url = "https://example.com",
+                        name = "Fuente de Prueba"
+                    ),
+                    guid = "mock-guid-12345"
+                ),
+                NewsItemJSON(
+                    title = "Título de noticia simulada",
+                    link = "https://example.com/noticia",
+                    description = "Esta es una descripción simulada para una noticia de prueba.",
+                    pubDate = "2025-06-16 10:00",
+                    source = NewsSourceJSON(
+                        url = "https://example.com",
+                        name = "Fuente de Prueba"
+                    ),
+                    guid = "mock-guid-12345"
+                ),
+                NewsItemJSON(
+                    title = "Título de noticia simulada",
+                    link = "https://example.com/noticia",
+                    description = "Esta es una descripción simulada para una noticia de prueba.",
+                    pubDate = "2025-06-16 10:00",
+                    source = NewsSourceJSON(
+                        url = "https://example.com",
+                        name = "Fuente de Prueba"
+                    ),
+                    guid = "mock-guid-12345"
+                ),
             ),
         )
     ),

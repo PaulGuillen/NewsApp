@@ -10,6 +10,7 @@ import com.devpaul.news.domain.usecase.CountryUC
 import com.devpaul.news.domain.usecase.DeltaProjectUC
 import com.devpaul.news.domain.usecase.GoogleUC
 import com.devpaul.news.domain.usecase.RedditUC
+import com.devpaul.shared.ui.components.organisms.sourceselector.Source
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -33,33 +34,11 @@ class NewsViewModel(
 
     override suspend fun onUiIntent(intent: NewsUiIntent) {
         when (intent) {
-            is NewsUiIntent.GetCountries -> launchIO { fetchCountry() }
-            is NewsUiIntent.SelectCountry -> {
-                updateUiStateOnMain { it.copy(selectedCountry = intent.country) }
-                launchConcurrentRequests(
-                    { fetchGoogleNews(intent.country) },
-                    { fetchDeltaNews(intent.country) },
-                    { fetchRedditNews(intent.country) }
-                )
-            }
 
-            is NewsUiIntent.GetDeltaProject -> {
-                launchIO {
-                    fetchDeltaNews(intent.country)
-                }
-            }
-
-            is NewsUiIntent.GetReddit -> {
-                launchIO {
-                    fetchRedditNews(intent.country)
-                }
-            }
-
-            is NewsUiIntent.GetGoogleNews -> {
-                launchIO {
-                    fetchGoogleNews(intent.country)
-                }
-            }
+            is NewsUiIntent.GetCountries -> fetchCountry()
+            is NewsUiIntent.SelectCountry -> selectCountry(intent.country)
+            is NewsUiIntent.SelectSource -> selectSource(intent.source)
+            is NewsUiIntent.RetrySelectedSource -> retrySelectedSource()
         }
     }
 
@@ -76,12 +55,60 @@ class NewsViewModel(
             is Output.Failure -> {
                 updateUiStateOnMain { uiState ->
                     uiState.copy(
-                        country = ResultState.Error(
-                            message = result.error.message ?: "Error al cargar las secciones"
-                        )
+                        country = ResultState.Error(message = result.error.message ?: ERROR_COUNTRY)
                     )
                 }
             }
+        }
+    }
+
+    private suspend fun selectCountry(country: CountryItemEntity) {
+        updateUiStateOnMain {
+            it.copy(selectedCountry = country)
+        }
+
+        when (uiState.selectedSource) {
+            Source.GOOGLE -> fetchGoogleNews(country)
+            Source.REDDIT -> fetchRedditNews(country)
+            Source.DELTA -> fetchDeltaNews(country)
+        }
+    }
+
+    private suspend fun selectSource(source: Source) {
+        updateUiStateOnMain {
+            it.copy(selectedSource = source)
+        }
+
+        val country = uiState.selectedCountry ?: return
+
+        when (source) {
+            Source.GOOGLE -> {
+                if (uiState.google !is ResultState.Success) {
+                    fetchGoogleNews(country)
+                }
+            }
+
+            Source.REDDIT -> {
+                if (uiState.reddit !is ResultState.Success) {
+                    fetchRedditNews(country)
+                }
+            }
+
+            Source.DELTA -> {
+                if (uiState.deltaProject !is ResultState.Success) {
+                    fetchDeltaNews(country)
+                }
+            }
+        }
+    }
+
+    private suspend fun retrySelectedSource() {
+        val country = uiState.selectedCountry ?: return
+
+        when (uiState.selectedSource) {
+            Source.GOOGLE -> fetchGoogleNews(country)
+            Source.REDDIT -> fetchRedditNews(country)
+            Source.DELTA -> fetchDeltaNews(country)
         }
     }
 
@@ -90,9 +117,7 @@ class NewsViewModel(
         val result = googleUC(
             GoogleUC.Params(
                 q = country.category,
-                hl = "es",
-                page = 1,
-                perPage = 10
+                hl = GOOGLE_LANG,
             )
         )
         result.handleNetworkDefault()
@@ -111,8 +136,7 @@ class NewsViewModel(
                         updateUiStateOnMain { uiState ->
                             uiState.copy(
                                 google = ResultState.Error(
-                                    it.error.apiErrorResponse?.message
-                                        ?: "Error al cargar las noticias de Google"
+                                    message = it.error.apiErrorResponse?.message ?: ERROR_GOOGLE
                                 )
                             )
                         }
@@ -122,7 +146,6 @@ class NewsViewModel(
     }
 
     private suspend fun fetchDeltaNews(country: CountryItemEntity) {
-
         updateUiStateOnMain {
             it.copy(deltaProject = ResultState.Loading)
         }
@@ -130,8 +153,8 @@ class NewsViewModel(
         val result = deltaProjectUC(
             params = DeltaProjectUC.Params(
                 q = country.category,
-                mode = "ArtList",
-                format = "json",
+                mode = DELTA_MODE,
+                format = DELTA_FORMAT,
             )
         )
 
@@ -187,5 +210,10 @@ class NewsViewModel(
 
     companion object {
         const val PAGE_SIZE = 10
+        const val GOOGLE_LANG = "es"
+        const val DELTA_MODE = "ArtList"
+        const val DELTA_FORMAT = "json"
+        const val ERROR_COUNTRY = "Error al cargar las secciones"
+        const val ERROR_GOOGLE = "Error al cargar las noticias de Google"
     }
 }
