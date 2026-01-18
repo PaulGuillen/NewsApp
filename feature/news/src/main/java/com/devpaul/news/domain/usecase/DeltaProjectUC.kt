@@ -24,12 +24,14 @@ class DeltaProjectUC(
                     mode = params.mode,
                     format = params.format,
                 )
+
                 val validArticles = filterValidArticles(response.articles)
                 val sortedArticles = sortArticlesByDate(validArticles)
 
                 if (sortedArticles.isNotEmpty()) {
-                    val limitedNews = limitArticles(sortedArticles, 10)
-                    ResultState.Success(limitedNews)
+                    ResultState.Success(
+                        DeltaProjectDataEntity(sortedArticles)
+                    )
                 } else {
                     ResultState.Error("No se encontraron artículos válidos.")
                 }
@@ -54,9 +56,7 @@ class DeltaProjectUC(
     }
 
     private fun filterValidArticles(articles: List<Article>): List<Article> {
-        return articles.filter { article ->
-            article.isValid()
-        }
+        return articles.filter { it.isValid() }
     }
 
     private fun Article.isValid(): Boolean {
@@ -71,9 +71,5 @@ class DeltaProjectUC(
         return articles.sortedByDescending {
             ZonedDateTime.parse(it.seenDate, dateFormatter)
         }
-    }
-
-    private fun limitArticles(articles: List<Article>, limit: Int): DeltaProjectDataEntity {
-        return DeltaProjectDataEntity(articles.take(limit))
     }
 }

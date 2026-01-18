@@ -1,5 +1,7 @@
 package com.devpaul.news.ui.news
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -21,6 +23,9 @@ class NewsViewModel(
         NewsUiState()
     }
 ) {
+
+    private val _selectedUrl = mutableStateOf<String?>(null)
+    val selectedUrl: State<String?> get() = _selectedUrl
 
     init {
         NewsUiIntent.GetCountries.execute()
@@ -157,7 +162,6 @@ class NewsViewModel(
         val result = redditUC(
             RedditUC.Params(
                 country = country.category,
-                limit = 10
             )
         )
         when (result) {
@@ -175,6 +179,13 @@ class NewsViewModel(
 
             else -> {}
         }
+    }
 
+    fun selectUrl(url: String) {
+        _selectedUrl.value = url
+    }
+
+    companion object {
+        const val PAGE_SIZE = 10
     }
 }
