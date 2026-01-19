@@ -3,6 +3,7 @@ package com.devpaul.core_data.util
 object Constant {
     // DataStore Keys
     const val LOG_IN_KEY = "logIn"
+    const val NEWS_COACHMARK_SHOWN_KEY = "coachMarkNews"
     const val USER_UID_KEY = "userUID"
 
     //Collections

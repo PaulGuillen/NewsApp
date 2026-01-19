@@ -17,5 +17,5 @@ data class NewsUiState(
     val selectedSource: Source = Source.GOOGLE,
     val isNewsDetailLoading: Boolean = false,
     val coachMarkStepIndex: Int = 0,
-    val showCoachMark: Boolean = true
+    val showCoachMark: Boolean = false
 )

@@ -121,7 +121,7 @@ fun NewsScreen(navController: NavHostController) {
 }
 
 @Composable
-fun NewsBody(
+private fun NewsBody(
     context: Context,
     uiState: NewsUiState,
     onIntent: (NewsUiIntent) -> Unit,
@@ -129,213 +129,310 @@ fun NewsBody(
     onSelectUrl: (String) -> Unit,
     coachMarkTargets: MutableMap<String, LayoutCoordinates>
 ) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        CountrySection(
+            uiState = uiState,
+            onIntent = onIntent,
+            coachMarkTargets = coachMarkTargets
+        )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CountryCards(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR] = it
-                    },
-                countryState = uiState.country,
-                selectedCountry = uiState.selectedCountry,
-                onCountrySelected = {
-                    onIntent(NewsUiIntent.SelectCountry(it))
-                }
-            )
+        when {
+            uiState.selectedCountry == null -> {
+                EmptyCountryState()
+            }
 
-            if (uiState.selectedCountry == null) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                        Image(
-                            painter = painterResource(id = R.drawable.no_country_selected),
-                            contentDescription = null,
-                            modifier = Modifier.size(120.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(
-                            text = stringResource(R.string.select_country_to_see_news),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-
-            } else {
-                SourceSelector(
-                    modifier = Modifier
-                        .onGloballyPositioned {
-                            coachMarkTargets[CoachMarkTargets.SOURCE_SELECTOR] = it
-                        }
-                        .padding(4.dp),
-                    selectedSource = uiState.selectedSource,
-                    onSourceSelected = {
-                        onIntent(NewsUiIntent.SelectSource(it))
-                    }
+            else -> {
+                SourceSection(
+                    uiState = uiState,
+                    onIntent = onIntent,
+                    coachMarkTargets = coachMarkTargets
                 )
 
-                val currentItemsCount = when (uiState.selectedSource) {
-                    Source.GOOGLE ->
-                        (uiState.google as? ResultState.Success)
-                            ?.response?.data?.newsItems?.size ?: 0
-
-                    Source.REDDIT ->
-                        (uiState.reddit as? ResultState.Success)
-                            ?.response?.data?.children?.size ?: 0
-
-                    Source.DELTA ->
-                        (uiState.deltaProject as? ResultState.Success)
-                            ?.response?.articles?.size ?: 0
-                }
-
-                val (visibleCount, listState, isLoadingMore) =
-                    rememberUiPagination(totalItems = currentItemsCount)
-
-                LaunchedEffect(uiState.selectedSource) {
-                    listState.scrollToItem(0)
-                }
-
-                when (uiState.selectedSource) {
-
-                    Source.GOOGLE -> when (uiState.google) {
-
-                        is ResultState.Loading ->
-                            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
-
-                        is ResultState.Success -> {
-                            LazyColumn(state = listState) {
-                                items(
-                                    uiState.google.response.data.newsItems
-                                        .take(visibleCount)
-                                ) { item ->
-                                    NewsCard(
-                                        modifier = Modifier.padding(10.dp),
-                                        context = context,
-                                        title = item.title,
-                                        url = item.link,
-                                        date = item.pubDate.toString(),
-                                        author = item.source.name,
-                                        source = Source.GOOGLE.label,
-                                        isSelected = selectedUrl == item.link,
-                                        onSelect = { onSelectUrl(item.link) }
-                                    )
-                                }
-                                if (isLoadingMore) {
-                                    item { LoadMoreFooter() }
-                                }
-                            }
-                        }
-
-                        is ResultState.Error ->
-                            ErrorRetryCard(
-                                message = uiState.google.message,
-                                onRetry = {
-                                    onIntent(NewsUiIntent.RetrySelectedSource)
-                                }
-                            )
-
-                        is ResultState.Idle -> {}
-                    }
-
-                    Source.REDDIT -> when (uiState.reddit) {
-
-                        is ResultState.Loading ->
-                            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
-
-                        is ResultState.Success -> {
-                            LazyColumn(state = listState) {
-                                items(
-                                    uiState.reddit.response.data.children
-                                        .take(visibleCount)
-                                ) { post ->
-                                    NewsCard(
-                                        modifier = Modifier.padding(12.dp),
-                                        context = context,
-                                        title = post.data.title ?: "",
-                                        url = post.data.url ?: "",
-                                        date = post.data.createdAtMillis?.toDateText() ?: "",
-                                        author = post.data.authorFullname ?: "",
-                                        source = Source.REDDIT.label,
-                                        isSelected = selectedUrl == post.data.url,
-                                        onSelect = {
-                                            post.data.url?.let(onSelectUrl)
-                                        }
-                                    )
-                                }
-                                if (isLoadingMore) {
-                                    item { LoadMoreFooter() }
-                                }
-                            }
-                        }
-
-                        is ResultState.Error ->
-                            ErrorRetryCard(
-                                message = uiState.reddit.message,
-                                onRetry = {
-                                    onIntent(NewsUiIntent.RetrySelectedSource)
-                                }
-                            )
-
-                        is ResultState.Idle -> {}
-                    }
-
-                    Source.DELTA -> when (uiState.deltaProject) {
-
-                        is ResultState.Loading ->
-                            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
-
-                        is ResultState.Success -> {
-                            LazyColumn(state = listState) {
-                                items(
-                                    uiState.deltaProject.response.articles
-                                        .take(visibleCount)
-                                ) { item ->
-                                    NewsCard(
-                                        modifier = Modifier.padding(12.dp),
-                                        context = context,
-                                        title = item.title,
-                                        url = item.url,
-                                        date = item.seenDate.toReadableDate(),
-                                        author = item.sourceCountry,
-                                        source = Source.DELTA.label,
-                                        isSelected = selectedUrl == item.url,
-                                        onSelect = { onSelectUrl(item.url) }
-                                    )
-                                }
-                                if (isLoadingMore) {
-                                    item { LoadMoreFooter() }
-                                }
-                            }
-                        }
-
-                        is ResultState.Error ->
-                            ErrorRetryCard(
-                                message = uiState.deltaProject.message,
-                                onRetry = {
-                                    onIntent(NewsUiIntent.RetrySelectedSource)
-                                }
-                            )
-
-                        is ResultState.Idle -> {}
-                    }
-                }
+                NewsContent(
+                    context = context,
+                    uiState = uiState,
+                    selectedUrl = selectedUrl,
+                    onSelectUrl = onSelectUrl
+                )
             }
         }
     }
 }
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CountrySection(
+    uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
+    coachMarkTargets: MutableMap<String, LayoutCoordinates>
+) {
+    CountryCards(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .onGloballyPositioned {
+                coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR] = it
+            },
+        countryState = uiState.country,
+        selectedCountry = uiState.selectedCountry,
+        onCountrySelected = {
+            onIntent(NewsUiIntent.SelectCountry(it))
+        }
+    )
+}
+
+@Composable
+private fun SourceSection(
+    uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
+    coachMarkTargets: MutableMap<String, LayoutCoordinates>
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        SourceSelector(
+            modifier = Modifier
+                .onGloballyPositioned {
+                    coachMarkTargets[CoachMarkTargets.SOURCE_SELECTOR] = it
+                }
+                .padding(4.dp),
+            selectedSource = uiState.selectedSource,
+            onSourceSelected = {
+                onIntent(NewsUiIntent.SelectSource(it))
+            }
+        )
+    }
+}
+
+@Composable
+private fun EmptyCountryState() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Image(
+                painter = painterResource(R.drawable.no_country_selected),
+                contentDescription = null,
+                modifier = Modifier.size(120.dp)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.select_country_to_see_news),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
+
+@Composable
+private fun NewsContent(
+    context: Context,
+    uiState: NewsUiState,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
+) {
+    val totalItems = remember(uiState.selectedSource, uiState) {
+        when (uiState.selectedSource) {
+            Source.GOOGLE ->
+                (uiState.google as? ResultState.Success)
+                    ?.response?.data?.newsItems?.size ?: 0
+
+            Source.REDDIT ->
+                (uiState.reddit as? ResultState.Success)
+                    ?.response?.data?.children?.size ?: 0
+
+            Source.DELTA ->
+                (uiState.deltaProject as? ResultState.Success)
+                    ?.response?.articles?.size ?: 0
+        }
+    }
+
+    val (visibleCount, listState, isLoadingMore) =
+        rememberUiPagination(totalItems)
+
+    LaunchedEffect(uiState.selectedSource) {
+        listState.scrollToItem(0)
+    }
+
+    when (uiState.selectedSource) {
+        Source.GOOGLE -> GoogleNewsContent(
+            context,
+            uiState,
+            listState,
+            visibleCount,
+            isLoadingMore,
+            selectedUrl,
+            onSelectUrl
+        )
+
+        Source.REDDIT -> RedditNewsContent(
+            context,
+            uiState,
+            listState,
+            visibleCount,
+            isLoadingMore,
+            selectedUrl,
+            onSelectUrl
+        )
+
+        Source.DELTA -> DeltaNewsContent(
+            context,
+            uiState,
+            listState,
+            visibleCount,
+            isLoadingMore,
+            selectedUrl,
+            onSelectUrl
+        )
+    }
+}
+
+@Composable
+private fun GoogleNewsContent(
+    context: Context,
+    uiState: NewsUiState,
+    listState: androidx.compose.foundation.lazy.LazyListState,
+    visibleCount: Int,
+    isLoadingMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
+) {
+    when (uiState.google) {
+        is ResultState.Loading ->
+            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
+
+        is ResultState.Success -> {
+            LazyColumn(state = listState) {
+                items(uiState.google.response.data.newsItems.take(visibleCount)) { item ->
+                    NewsCard(
+                        modifier = Modifier.padding(12.dp),
+                        context = context,
+                        title = item.title,
+                        url = item.link,
+                        date = item.pubDate.toString(),
+                        author = item.source.name,
+                        source = Source.GOOGLE.label,
+                        isSelected = selectedUrl == item.link,
+                        onSelect = { onSelectUrl(item.link) }
+                    )
+                }
+                if (isLoadingMore) item { LoadMoreFooter() }
+            }
+        }
+
+        is ResultState.Error ->
+            ErrorRetryCard(
+                message = uiState.google.message,
+                onRetry = {}
+            )
+
+        ResultState.Idle -> {}
+    }
+}
+
+@Composable
+private fun RedditNewsContent(
+    context: Context,
+    uiState: NewsUiState,
+    listState: androidx.compose.foundation.lazy.LazyListState,
+    visibleCount: Int,
+    isLoadingMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
+) {
+    when (uiState.reddit) {
+        is ResultState.Loading ->
+            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
+
+        is ResultState.Success -> {
+            LazyColumn(state = listState) {
+                items(uiState.reddit.response.data.children.take(visibleCount)) { post ->
+                    NewsCard(
+                        modifier = Modifier.padding(12.dp),
+                        context = context,
+                        title = post.data.title ?: "",
+                        url = post.data.url ?: "",
+                        date = post.data.createdAtMillis?.toDateText() ?: "",
+                        author = post.data.authorFullname ?: "",
+                        source = Source.REDDIT.label,
+                        isSelected = selectedUrl == post.data.url,
+                        onSelect = {
+                            post.data.url?.let(onSelectUrl)
+                        }
+                    )
+                }
+                if (isLoadingMore) item { LoadMoreFooter() }
+            }
+        }
+
+        is ResultState.Error ->
+            ErrorRetryCard(
+                message = uiState.reddit.message,
+                onRetry = {}
+            )
+
+        ResultState.Idle -> {}
+    }
+}
+
+@Composable
+private fun DeltaNewsContent(
+    context: Context,
+    uiState: NewsUiState,
+    listState: androidx.compose.foundation.lazy.LazyListState,
+    visibleCount: Int,
+    isLoadingMore: Boolean,
+    selectedUrl: String?,
+    onSelectUrl: (String) -> Unit
+) {
+    when (uiState.deltaProject) {
+        is ResultState.Loading ->
+            SkeletonRenderer(SkeletonType.NEWS_DETAIL)
+
+        is ResultState.Success -> {
+            LazyColumn(state = listState) {
+                items(uiState.deltaProject.response.articles.take(visibleCount)) { item ->
+                    NewsCard(
+                        modifier = Modifier.padding(12.dp),
+                        context = context,
+                        title = item.title,
+                        url = item.url,
+                        date = item.seenDate.toReadableDate(),
+                        author = item.sourceCountry,
+                        source = Source.DELTA.label,
+                        isSelected = selectedUrl == item.url,
+                        onSelect = { onSelectUrl(item.url) }
+                    )
+                }
+                if (isLoadingMore) item { LoadMoreFooter() }
+            }
+        }
+
+        is ResultState.Error ->
+            ErrorRetryCard(
+                message = uiState.deltaProject.message,
+                onRetry = {}
+            )
+
+        ResultState.Idle -> {}
+    }
+}
+
+@Preview(
+    name = "SelectedCountry",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "SelectedCountryDark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun SelectedPreview() {
     InfoXPeruTheme(
@@ -355,14 +452,13 @@ fun SelectedPreview() {
     }
 }
 
-
 @Preview(
-    name = "Light",
+    name = "Success",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    name = "Dark",
+    name = "SuccessDark",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
@@ -373,6 +469,7 @@ fun SuccessPreview() {
         dynamicColor = false
     ) {
         val navController = rememberNavController()
+
         BaseContentLayout(
             isBodyScrollable = false,
             body = {
@@ -381,7 +478,8 @@ fun SuccessPreview() {
                     uiState = NewsUiState(
                         country = ResultState.Success(NewsMock().countryMock),
                         selectedCountry = NewsMock().countryMock.data.first(),
-                        google = ResultState.Success(NewsMock().googleMock),
+                        selectedSource = Source.GOOGLE,
+                        google = ResultState.Success(NewsMock().googleMock)
                     ),
                     onIntent = {},
                     selectedUrl = null,
@@ -397,12 +495,12 @@ fun SuccessPreview() {
 }
 
 @Preview(
-    name = "Light",
+    name = "Error",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    name = "Dark",
+    name = "ErrorDark",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
@@ -413,6 +511,7 @@ fun ErrorPreview() {
         dynamicColor = false
     ) {
         val navController = rememberNavController()
+
         BaseContentLayout(
             isBodyScrollable = false,
             body = {
@@ -422,9 +521,8 @@ fun ErrorPreview() {
                         country = ResultState.Success(NewsMock().countryMock),
                         selectedCountry = NewsMock().countryMock.data.first(),
                         selectedSource = Source.GOOGLE,
-                        google = ResultState.Error("Error loading data"),
+                        google = ResultState.Error("Error loading data")
                     ),
-
                     onIntent = {},
                     selectedUrl = null,
                     onSelectUrl = {},

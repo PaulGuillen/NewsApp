@@ -2,7 +2,9 @@ package com.devpaul.news.ui.news
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_domain.entity.Output
+import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.news.domain.entity.CountryItemEntity
@@ -19,6 +21,7 @@ class NewsViewModel(
     private val googleUC: GoogleUC,
     private val deltaProjectUC: DeltaProjectUC,
     private val redditUC: RedditUC,
+    private val dataStoreUseCase: DataStoreUseCase,
 ) : StatefulViewModel<NewsUiState, NewsUiIntent, NewsUiEvent>(
     defaultUIState = {
         NewsUiState()
@@ -27,6 +30,7 @@ class NewsViewModel(
 
     private val _selectedUrl = mutableStateOf<String?>(null)
     val selectedUrl: State<String?> get() = _selectedUrl
+    private var coachMarkChecked = false
 
     init {
         NewsUiIntent.GetCountries.execute()
@@ -34,7 +38,6 @@ class NewsViewModel(
 
     override suspend fun onUiIntent(intent: NewsUiIntent) {
         when (intent) {
-
             is NewsUiIntent.GetCountries -> fetchCountry()
             is NewsUiIntent.SelectCountry -> selectCountry(intent.country)
             is NewsUiIntent.SelectSource -> selectSource(intent.source)
@@ -49,14 +52,29 @@ class NewsViewModel(
 
         when (val result = countryUC.countryService()) {
             is Output.Success -> {
-                updateUiStateOnMain { uiState ->
-                    uiState.copy(country = ResultState.Success(result.data))
+                updateUiStateOnMain {
+                    it.copy(country = ResultState.Success(result.data))
+                }
+
+                if (coachMarkChecked) return
+                coachMarkChecked = true
+
+                val alreadyShown = dataStoreUseCase.getBoolean(Constant.NEWS_COACHMARK_SHOWN_KEY) == true
+
+                if (!alreadyShown) {
+                    dataStoreUseCase.setValue(Constant.NEWS_COACHMARK_SHOWN_KEY, true)
+                    updateUiStateOnMain {
+                        it.copy(
+                            showCoachMark = true,
+                            coachMarkStepIndex = 0,
+                        )
+                    }
                 }
             }
 
             is Output.Failure -> {
-                updateUiStateOnMain { uiState ->
-                    uiState.copy(
+                updateUiStateOnMain {
+                    it.copy(
                         country = ResultState.Error(message = result.error.message ?: ERROR_COUNTRY)
                     )
                 }
@@ -215,16 +233,15 @@ class NewsViewModel(
     suspend fun nextCoachMark() {
         updateUiStateOnMain {
             val next = it.coachMarkStepIndex + 1
-            if (next >= 2) {
-                it.copy(showCoachMark = false)
-            } else {
-                it.copy(coachMarkStepIndex = next)
-            }
+            if (next >= 2) it.copy(showCoachMark = false)
+            else it.copy(coachMarkStepIndex = next)
         }
     }
 
     suspend fun skipCoachMark() {
-        updateUiStateOnMain { it.copy(showCoachMark = false) }
+        updateUiStateOnMain {
+            it.copy(showCoachMark = false)
+        }
     }
 
     companion object {

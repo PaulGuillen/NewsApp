@@ -20,8 +20,7 @@ fun SourceSelector(
     modifier: Modifier = Modifier,
     selectedSource: Source,
     onSourceSelected: (Source) -> Unit,
-
-    ) {
+) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -40,8 +39,8 @@ fun SourceSelector(
                         MaterialTheme.colorScheme.surface
                 ),
                 border = BorderStroke(
-                    1.dp,
-                    if (isSelected)
+                    width = 1.dp,
+                    color = if (isSelected)
                         MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.outline
