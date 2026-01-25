@@ -44,6 +44,8 @@ class NewsViewModel(
             is NewsUiIntent.RetrySelectedSource -> retrySelectedSource()
             is NewsUiIntent.NextCoachMark -> nextCoachMark()
             is NewsUiIntent.SkipCoachMark -> skipCoachMark()
+             is NewsUiIntent.CoachMarkCountryCompleted -> nextCoachMark()
+            is NewsUiIntent.CoachMarkSourceCompleted -> skipCoachMark()
         }
     }
 
@@ -93,6 +95,10 @@ class NewsViewModel(
             )
         }
 
+        if (uiState.showCoachMark && uiState.coachMarkStepIndex == 0) {
+            onUiIntent(NewsUiIntent.CoachMarkCountryCompleted)
+        }
+
         fetchGoogleNews(country)
     }
 
@@ -121,6 +127,10 @@ class NewsViewModel(
                     fetchDeltaNews(country)
                 }
             }
+        }
+
+        if (uiState.showCoachMark && uiState.coachMarkStepIndex == 1) {
+            onUiIntent(NewsUiIntent.CoachMarkSourceCompleted)
         }
     }
 

@@ -10,4 +10,6 @@ sealed class NewsUiIntent {
     object RetrySelectedSource : NewsUiIntent()
     object NextCoachMark : NewsUiIntent()
     object SkipCoachMark : NewsUiIntent()
+    object CoachMarkCountryCompleted : NewsUiIntent()
+    object CoachMarkSourceCompleted : NewsUiIntent()
 }
