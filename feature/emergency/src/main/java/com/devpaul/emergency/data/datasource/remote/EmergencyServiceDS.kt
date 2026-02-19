@@ -1,8 +1,10 @@
 package com.devpaul.emergency.data.datasource.remote
 
 import com.devpaul.emergency.data.datasource.mapper.toGeneralEntity
+import com.devpaul.emergency.data.datasource.mapper.toPoliceEntity
 import com.devpaul.emergency.data.datasource.mapper.toSectionEntity
 import com.devpaul.emergency.domain.entity.GeneralEntity
+import com.devpaul.emergency.domain.entity.PoliceEntity
 import com.devpaul.emergency.domain.entity.SectionEntity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -32,6 +34,16 @@ class EmergencyServiceDS(
             .await()
 
         return snapshot.toGeneralEntity()
+    }
+
+    suspend fun policeService(type: String): PoliceEntity {
+        val snapshot = firestore
+            .collection(COLLECTION_DISTRICT)
+            .document(type)
+            .get()
+            .await()
+
+        return snapshot.toPoliceEntity()
     }
 
     suspend fun civilDefenseService(): GeneralEntity {

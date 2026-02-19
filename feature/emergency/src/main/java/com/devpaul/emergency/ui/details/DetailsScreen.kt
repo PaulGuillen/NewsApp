@@ -12,31 +12,39 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
+import com.devpaul.emergency.ui.details.components.PoliceCard
 import com.devpaul.emergency.ui.details.components.Region
 import com.devpaul.emergency.ui.details.components.RegionChooserRow
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.domain.extractPhones
+import com.devpaul.shared.domain.normalizeSearch
 import com.devpaul.shared.domain.rememberCallActions
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
@@ -96,14 +104,24 @@ fun DetailBody(
     uiState: DetailsUiState,
     onIntent: (DetailsUiIntent) -> Unit
 ) {
-    if (uiState.generalCase && !uiState.civilCase && !uiState.securityCase) {
+    if (uiState.generalCase) {
         GeneralCase(uiState = uiState, onIntent = onIntent)
-    } else if (uiState.civilCase && !uiState.generalCase && !uiState.securityCase) {
-        CivilDefenseCase(uiState = uiState, onIntent = onIntent)
-    } else if (uiState.securityCase && !uiState.generalCase && !uiState.civilCase) {
+        return
+    }
+
+    if (uiState.securityCase) {
         SecurityCase(uiState = uiState)
-    } else {
-        // Display other case details
+        return
+    }
+
+    if (uiState.policeCase) {
+        PoliceCase(uiState = uiState, onIntent = onIntent)
+        return
+    }
+
+    if (uiState.civilCase) {
+        CivilDefenseCase(uiState = uiState, onIntent = onIntent)
+        return
     }
 }
 
@@ -296,6 +314,85 @@ fun SecurityCase(
 
         is ResultState.Error -> {
             // Show error message
+        }
+
+        else -> Unit
+    }
+}
+
+@Composable
+fun PoliceCase(
+    uiState: DetailsUiState,
+    onIntent: (DetailsUiIntent) -> Unit
+) {
+    when (val state = uiState.police) {
+        is ResultState.Loading -> {
+            SkeletonRenderer(type = SkeletonType.CIVIL_DEFENSE_EMERGENCY)
+        }
+
+        is ResultState.Success -> {
+            val data = state.response.data
+
+            var query by rememberSaveable { mutableStateOf("") }
+
+            val filtered = remember(query, data) {
+                if (query.isBlank()) data
+                else {
+                    val q = query.normalizeSearch()
+                    data.filter { item ->
+                        item.district.normalizeSearch().contains(q) ||
+                                item.address.normalizeSearch().contains(q)
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                RegionChooserRow(
+                    selected = uiState.selectedPoliceRegion,
+                    onSelect = { region -> onIntent(DetailsUiIntent.ChangePoliceRegion(region)) },
+                    limaEnabled = true
+                )
+
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    label = { Text("Buscar por distrito o dirección") },
+                    placeholder = { Text("Ej: San Isidro, Canaval y Moreyra...") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Search
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = { /* opcional: cerrar teclado */ }
+                    )
+                )
+
+                if (filtered.isEmpty()) {
+                    Text(
+                        text = "No se encontraron resultados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                } else {
+                    filtered.forEach { item ->
+                        PoliceCard(item = item, onIntent = onIntent)
+                    }
+                }
+            }
+        }
+
+        is ResultState.Error -> {
+            EmergencyError(error = state.message, onIntent = onIntent)
         }
 
         else -> Unit
