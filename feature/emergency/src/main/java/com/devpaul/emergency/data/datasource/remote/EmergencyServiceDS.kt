@@ -1,56 +1,53 @@
 package com.devpaul.emergency.data.datasource.remote
 
-import com.devpaul.core_data.DefaultOutput
-import com.devpaul.core_data.safeApiCall
-import com.devpaul.core_domain.entity.transform
-import com.devpaul.emergency.data.datasource.mapper.toDomain
+import com.devpaul.emergency.data.datasource.mapper.toGeneralEntity
+import com.devpaul.emergency.data.datasource.mapper.toSectionEntity
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.SectionEntity
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import org.koin.core.annotation.Factory
 
 @Factory
 class EmergencyServiceDS(
+    private val firestore: FirebaseFirestore,
     private val emergencyService: EmergencyService,
 ) {
 
-    suspend fun sectionService(): DefaultOutput<SectionEntity> {
-        return safeApiCall {
-            emergencyService.section()
-        }.transform { it.toDomain() }
+    suspend fun sectionService(): SectionEntity {
+        val snapshot = firestore
+            .collection(COLLECTION_DISTRICT)
+            .document(COLLECTION_SECTION)
+            .get()
+            .await()
+
+        return snapshot.toSectionEntity()
     }
 
-    suspend fun generalService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return safeApiCall {
-            emergencyService.general(page, perPage)
-        }.transform { it.toDomain() }
+    suspend fun generalService(): GeneralEntity {
+        val snapshot = firestore
+            .collection(COLLECTION_DISTRICT)
+            .document(COLLECTION_GENERAL)
+            .get()
+            .await()
+
+        return snapshot.toGeneralEntity()
     }
 
-    suspend fun civilDefenseService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return safeApiCall {
-            emergencyService.civilDefense(page, perPage)
-        }.transform { it.toDomain() }
-    }
-    suspend fun limaSecurityService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return safeApiCall {
-            emergencyService.limaSecurity(page, perPage)
-        }.transform { it.toDomain() }
+    suspend fun civilDefenseService(): GeneralEntity {
+        val snapshot = firestore
+            .collection(COLLECTION_DISTRICT)
+            .document(COLLECTION_DEFENSE_CIVIL)
+            .get()
+            .await()
+
+        return snapshot.toGeneralEntity()
     }
 
-    suspend fun provincesSecurityService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return safeApiCall {
-            emergencyService.provincesSecurity(page, perPage)
-        }.transform { it.toDomain() }
+    companion object {
+        private const val COLLECTION_DISTRICT = "district"
+        private const val COLLECTION_SECTION = "section"
+        private const val COLLECTION_GENERAL = "general"
+        private const val COLLECTION_DEFENSE_CIVIL = "civil_defense"
     }
 }

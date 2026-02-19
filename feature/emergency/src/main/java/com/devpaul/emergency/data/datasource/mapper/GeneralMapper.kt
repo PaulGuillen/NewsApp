@@ -1,32 +1,32 @@
 package com.devpaul.emergency.data.datasource.mapper
 
-import com.devpaul.emergency.data.datasource.dto.res.GeneralResponse
-import com.devpaul.emergency.data.datasource.dto.res.GeneralResponseItem
-import com.devpaul.emergency.data.datasource.dto.res.PaginationResponse
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
-import com.devpaul.emergency.domain.entity.PaginationEntity
+import com.google.firebase.firestore.DocumentSnapshot
 
-fun GeneralResponse.toDomain() : GeneralEntity {
+fun DocumentSnapshot.toGeneralEntity(): GeneralEntity {
+
+    val rawList = get("data") as? List<*> ?: emptyList<Any>()
+    val data = rawList.mapNotNull { item ->
+
+        val map = item as? Map<*, *> ?: return@mapNotNull null
+
+        val key = map["key"] as? String
+        val value = map["value"] as? List<*> ?: return@mapNotNull null
+        val valueList = value.filterIsInstance<String>()
+
+        if (key.isNullOrBlank() || valueList.isEmpty()) {
+            null
+        } else {
+            GeneralEntityItem(
+                key = key,
+                value = valueList
+            )
+        }
+    }
+
     return GeneralEntity(
-        status = status,
-        data = data.map { it.toDomain() },
-        pagination = pagination.toDomain()
-    )
-}
-
-fun GeneralResponseItem.toDomain() : GeneralEntityItem {
-    return GeneralEntityItem(
-        key = key,
-        value = value
-    )
-}
-
-fun PaginationResponse.toDomain() : PaginationEntity {
-    return PaginationEntity(
-        total = total,
-        perPage = perPage,
-        currentPage = currentPage,
-        totalPages = totalPages
+        status = 200,
+        data = data
     )
 }

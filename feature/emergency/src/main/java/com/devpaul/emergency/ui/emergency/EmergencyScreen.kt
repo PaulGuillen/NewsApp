@@ -1,6 +1,8 @@
 package com.devpaul.emergency.ui.emergency
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,19 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.devpaul.core_data.Screen
-import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
+import com.devpaul.emergency.domain.entity.SectionEntity
 import com.devpaul.emergency.domain.entity.SectionItemEntity
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -66,15 +68,8 @@ fun EmergencyScreen(
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
             isBodyScrollable = false,
-            header = {
-                TopBarPrincipal(
-                    style = 3,
-                    title = stringResource(R.string.header_available_sections)
-                )
-            },
             body = {
                 EmergencyBody(
-                    navController = navHostController,
                     uiState = uiState,
                     onIntent = onIntent,
                 )
@@ -88,13 +83,19 @@ fun EmergencyScreen(
 
 @Composable
 fun EmergencyBody(
-    navController: NavHostController,
     uiState: EmergencyUiState,
     onIntent: (EmergencyUiIntent) -> Unit,
 ) {
     when (val state = uiState.section) {
         is ResultState.Loading -> {
             SkeletonRenderer(SkeletonType.SECTION_EMERGENCY)
+        }
+
+        is ResultState.Success -> {
+            SectionList(
+                onIntent = onIntent,
+                items = state.response.data
+            )
         }
 
         is ResultState.Error -> {
@@ -115,13 +116,6 @@ fun EmergencyBody(
                     Text("Reintentar")
                 }
             }
-        }
-
-        is ResultState.Success -> {
-            SectionList(
-                onIntent = onIntent,
-                items = state.response.data
-            )
         }
 
         ResultState.Idle -> {}
@@ -214,5 +208,52 @@ fun SectionCard(
                 overflow = TextOverflow.Ellipsis
             )
         }
+    }
+}
+
+
+@Preview(
+    name = "Success",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "SuccessDark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun SuccessPreview() {
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        EmergencyBody(
+            onIntent = {},
+            uiState = EmergencyUiState(
+                section = ResultState.Success(
+                    SectionEntity(
+                        status = 200,
+                        data = listOf(
+                            SectionItemEntity(
+                                title = "Seguridad Ciudadana",
+                                image = "https://example.com/image1.jpg",
+                                type = "local_security"
+                            ),
+                            SectionItemEntity(
+                                title = "Bomberos",
+                                image = "https://example.com/image2.jpg",
+                                type = "firefighter"
+                            ),
+                            SectionItemEntity(
+                                title = "Policía Nacional",
+                                image = "https://example.com/image3.jpg",
+                                type = "police"
+                            )
+                        )
+                    )
+                )
+            )
+        )
     }
 }

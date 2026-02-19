@@ -7,17 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 internal interface EmergencyApi {
-
-    @GET("district/section")
-    suspend fun section(): Response<SectionResponse>
-
-    //@GET("https://8bbbd0993edc4cfd84a68674c0f45e7d.api.mockbin.io/")
-    @GET("districts/general")
-    suspend fun general(
-        @Query("page") page: Int,
-        @Query("perPage") perPage: Int,
-    ): Response<GeneralResponse>
-
     @GET("districts/civil_defense")
     suspend fun civilDefense(
         @Query("page") page: Int,

@@ -39,7 +39,8 @@ class AcknowledgmentViewModel(
                     uiState.copy(
                         gratitude = ResultState.Error(
                             message = result.error.message ?: "Error al cargar los agradecimientos"
-                        ))
+                        )
+                    )
                 }
             }
         }

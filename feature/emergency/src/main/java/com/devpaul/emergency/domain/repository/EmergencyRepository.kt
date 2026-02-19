@@ -6,17 +6,11 @@ import com.devpaul.emergency.domain.entity.SectionEntity
 
 interface EmergencyRepository {
 
-    suspend fun sectionService(): DefaultOutput<SectionEntity>
+    suspend fun sectionService(): SectionEntity
 
-    suspend fun generalService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity>
+    suspend fun generalService(): GeneralEntity
 
-    suspend fun civilDefenseService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity>
+    suspend fun civilDefenseService(): GeneralEntity
 
     suspend fun limaSecurityService(
         page: Int,

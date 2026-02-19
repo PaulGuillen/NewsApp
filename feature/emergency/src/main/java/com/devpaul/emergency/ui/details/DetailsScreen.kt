@@ -32,7 +32,6 @@ import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
-import com.devpaul.emergency.domain.entity.PaginationEntity
 import com.devpaul.emergency.ui.details.components.Region
 import com.devpaul.emergency.ui.details.components.RegionChooserRow
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
@@ -344,12 +343,6 @@ fun CivilDefenseCasePreview() {
                 GeneralEntity(
                     status = 200,
                     data = fakeData,
-                    pagination = PaginationEntity(
-                        total = 2,
-                        perPage = 10,
-                        currentPage = 1,
-                        totalPages = 1
-                    )
                 )
             )
         ),

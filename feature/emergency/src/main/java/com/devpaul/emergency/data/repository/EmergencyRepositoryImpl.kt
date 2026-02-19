@@ -12,35 +12,29 @@ class EmergencyRepositoryImpl(
     private val emergencyApi: EmergencyServiceDS,
 ) : EmergencyRepository {
 
-    override suspend fun sectionService(): DefaultOutput<SectionEntity> {
+    override suspend fun sectionService(): SectionEntity {
         return emergencyApi.sectionService()
     }
 
-    override suspend fun generalService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return emergencyApi.generalService(page, perPage)
+    override suspend fun generalService(): GeneralEntity {
+        return emergencyApi.generalService()
     }
 
-    override suspend fun civilDefenseService(
-        page: Int,
-        perPage: Int,
-    ): DefaultOutput<GeneralEntity> {
-        return emergencyApi.civilDefenseService(page, perPage)
+    override suspend fun civilDefenseService(): GeneralEntity {
+        return emergencyApi.civilDefenseService()
     }
 
     override suspend fun limaSecurityService(
         page: Int,
-        perPage: Int,
+        perPage: Int
     ): DefaultOutput<GeneralEntity> {
-        return emergencyApi.limaSecurityService(page, perPage)
+        TODO("Not yet implemented")
     }
 
     override suspend fun provincesSecurityService(
         page: Int,
-        perPage: Int,
+        perPage: Int
     ): DefaultOutput<GeneralEntity> {
-        return emergencyApi.provincesSecurityService(page, perPage)
+        TODO("Not yet implemented")
     }
 }

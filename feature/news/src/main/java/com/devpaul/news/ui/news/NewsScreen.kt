@@ -151,6 +151,7 @@ private fun NewsBody(
                 NewsContent(
                     context = context,
                     uiState = uiState,
+                    onIntent = onIntent,
                     selectedUrl = selectedUrl,
                     onSelectUrl = onSelectUrl
                 )
@@ -233,6 +234,7 @@ private fun EmptyCountryState() {
 private fun NewsContent(
     context: Context,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     selectedUrl: String?,
     onSelectUrl: (String) -> Unit
 ) {
@@ -263,6 +265,7 @@ private fun NewsContent(
         Source.GOOGLE -> GoogleNewsContent(
             context,
             uiState,
+            onIntent,
             listState,
             visibleCount,
             isLoadingMore,
@@ -273,6 +276,7 @@ private fun NewsContent(
         Source.REDDIT -> RedditNewsContent(
             context,
             uiState,
+            onIntent,
             listState,
             visibleCount,
             isLoadingMore,
@@ -283,6 +287,7 @@ private fun NewsContent(
         Source.DELTA -> DeltaNewsContent(
             context,
             uiState,
+            onIntent,
             listState,
             visibleCount,
             isLoadingMore,
@@ -296,6 +301,7 @@ private fun NewsContent(
 private fun GoogleNewsContent(
     context: Context,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     listState: androidx.compose.foundation.lazy.LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
@@ -328,7 +334,7 @@ private fun GoogleNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.google.message,
-                onRetry = {}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
             )
 
         ResultState.Idle -> {}
@@ -339,6 +345,7 @@ private fun GoogleNewsContent(
 private fun RedditNewsContent(
     context: Context,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     listState: androidx.compose.foundation.lazy.LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
@@ -373,7 +380,7 @@ private fun RedditNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.reddit.message,
-                onRetry = {}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
             )
 
         ResultState.Idle -> {}
@@ -384,6 +391,7 @@ private fun RedditNewsContent(
 private fun DeltaNewsContent(
     context: Context,
     uiState: NewsUiState,
+    onIntent: (NewsUiIntent) -> Unit,
     listState: androidx.compose.foundation.lazy.LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
@@ -416,7 +424,7 @@ private fun DeltaNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.deltaProject.message,
-                onRetry = {}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
             )
 
         ResultState.Idle -> {}
