@@ -21,6 +21,12 @@ val TextSecondary  = Color(0xFF111827)
 val BrandAccent = Color(0xFF10D7EE)
 val Blue500 = Color(0xFF1E63B6)
 
+//Emergency Card
+val EmergencyRed = Color(0xFFB91C1C)       // rojo principal
+val EmergencyLight = Color(0xFFFDE2E2)     // fondo light suave
+val EmergencyDark = Color(0xFF7F1D1D)      // fondo dark profundo
+val EmergencyDarkSurface = Color(0xFF991B1B)
+
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)
 val SuccessTitleHeader = Color(0xFF137333)

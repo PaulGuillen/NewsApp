@@ -1,7 +1,7 @@
 package com.devpaul.home.ui.home
 
+import android.content.Intent
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +25,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShowChart
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,10 +47,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.home.ui.home.components.IndicatorCard
+import com.devpaul.home.ui.home.components.emergency.EmergencyBottomSheet
+import com.devpaul.home.ui.home.components.emergency.EmergencyCard
 import com.devpaul.shared.ui.components.atoms.base.SectionHeader
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
@@ -68,6 +67,16 @@ fun HomeScreen(navController: NavHostController) {
 
     BaseScreenWithState(
         viewModel = viewModel,
+        onUiEvent = { event, _ ->
+            when (event) {
+                is HomeUiEvent.DialNumber -> {
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = "tel:${event.number}".toUri()
+                    }
+                    context.startActivity(intent)
+                }
+            }
+        },
         navController = navController,
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
@@ -148,6 +157,17 @@ fun HomeBody(
     navController: NavHostController
 ) {
 
+    if (uiState.showEmergencySheet) {
+        EmergencyBottomSheet(
+            onDismiss = {
+                onIntent(HomeUiIntent.HideEmergencySheet)
+            },
+            onCall = { number ->
+                onIntent(HomeUiIntent.DialEmergency(number))
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -162,7 +182,7 @@ fun HomeBody(
 
         EmergencyCard(
             onClick = {
-                navController.navigate("emergency")
+                onIntent(HomeUiIntent.ShowEmergencySheet)
             }
         )
 
@@ -226,58 +246,6 @@ fun HomeIndicatorsSection() {
                 )
             }
         )
-    }
-}
-
-@Composable
-fun EmergencyCard(onClick: () -> Unit) {
-
-    val errorColor = MaterialTheme.colorScheme.error
-    val errorContainer = MaterialTheme.colorScheme.errorContainer
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = errorContainer
-        ),
-        border = BorderStroke(1.dp, errorColor),
-        shape = RoundedCornerShape(16.dp),
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.Default.Warning,
-                contentDescription = null,
-                tint = errorColor
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    "Números de Emergencia",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = errorColor
-                )
-                Text(
-                    "PNP, SAMU y Bomberos",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-            }
-
-            Button(
-                onClick = onClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = errorColor
-                )
-            ) {
-                Text("LLAMAR")
-            }
-        }
     }
 }
 

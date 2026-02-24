@@ -35,6 +35,9 @@ class HomeViewModel(
             is HomeUiIntent.GetDollarQuote -> launchIO { fetchDollarQuote() }
             is HomeUiIntent.GetUITValue -> launchIO { fetchUit() }
             is HomeUiIntent.GetSections -> launchIO { fetchSection() }
+            is HomeUiIntent.ShowEmergencySheet -> showEmergencySheet()
+            is HomeUiIntent.HideEmergencySheet -> hideEmergencySheet()
+            is HomeUiIntent.DialEmergency -> dialEmergency(intent.number)
         }
     }
 
@@ -116,5 +119,17 @@ class HomeViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun showEmergencySheet() {
+        updateUiStateOnMain { it.copy(showEmergencySheet = true) }
+    }
+
+    private suspend fun hideEmergencySheet() {
+        updateUiStateOnMain { it.copy(showEmergencySheet = false) }
+    }
+
+    private fun dialEmergency(number: String) {
+        HomeUiEvent.DialNumber(number).send()
     }
 }
