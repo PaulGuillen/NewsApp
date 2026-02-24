@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,12 +37,13 @@ import androidx.navigation.NavHostController
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.GeneralEntityItem
+import com.devpaul.emergency.ui.details.components.CivilDefenseCard
+import com.devpaul.emergency.ui.details.components.GeneralCard
 import com.devpaul.emergency.ui.details.components.PoliceCard
 import com.devpaul.emergency.ui.details.components.Region
 import com.devpaul.emergency.ui.details.components.RegionChooserRow
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
-import com.devpaul.shared.domain.extractPhones
 import com.devpaul.shared.domain.normalizeSearch
 import com.devpaul.shared.domain.rememberCallActions
 import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
@@ -137,14 +137,54 @@ fun GeneralCase(
 
         is ResultState.Success -> {
             val data = state.response.data
+
+            var query by rememberSaveable { mutableStateOf("") }
+
+            val filtered = remember(query, data) {
+                if (query.isBlank()) data
+                else {
+                    val q = query.normalizeSearch()
+                    data.filter { item ->
+                        item.key.normalizeSearch().contains(q)
+                    }
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                data.forEach { item ->
-                    EmergencyCard(item = item, onIntent = onIntent)
+
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    label = { Text("Buscar por distrito o dirección") },
+                    placeholder = { Text("Ej: Central Policial, Bomberos y Defensa...") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Search
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = { /* opcional: cerrar teclado */ }
+                    )
+                )
+
+                if (filtered.isEmpty()) {
+                    Text(
+                        text = "No se encontraron resultados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                } else {
+                    filtered.forEach { item ->
+                        GeneralCard(item = item, onIntent = onIntent)
+                    }
                 }
             }
         }
@@ -154,63 +194,6 @@ fun GeneralCase(
         }
 
         else -> Unit
-    }
-}
-
-@Composable
-fun EmergencyCard(
-    item: GeneralEntityItem,
-    onIntent: (DetailsUiIntent) -> Unit
-) {
-    val phones: List<String> = remember(item) {
-        item.value.flatMap { extractPhones(it) }.distinct()
-    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-    ) {
-        Column(Modifier.padding(16.dp)) {
-            Text(
-                text = item.key,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            phones.forEachIndexed { index, phone ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Contacto ${index + 1}: $phone",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
-                    )
-                    Button(
-                        onClick = { onIntent(DetailsUiIntent.CallNumber(phone)) },
-                        modifier = Modifier.height(36.dp)
-                    ) { Text("Llamar") }
-                }
-            }
-
-            if (phones.isEmpty()) {
-                Text(
-                    text = "Sin números disponibles",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 
@@ -264,6 +247,17 @@ fun CivilDefenseCase(
         is ResultState.Success -> {
             val data = state.response.data
             var selected by remember { mutableStateOf(Region.Provincias) }
+            var query by rememberSaveable { mutableStateOf("") }
+
+            val filtered = remember(query, data) {
+                if (query.isBlank()) data
+                else {
+                    val q = query.normalizeSearch()
+                    data.filter { item ->
+                        item.key.normalizeSearch().contains(q)
+                    }
+                }
+            }
 
             Column(
                 modifier = Modifier
@@ -272,6 +266,7 @@ fun CivilDefenseCase(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+
                 RegionChooserRow(
                     selected = selected,
                     onSelect = { region ->
@@ -285,8 +280,33 @@ fun CivilDefenseCase(
                     limaEnabled = false
                 )
 
-                data.forEach { item ->
-                    EmergencyCard(item = item, onIntent = onIntent)
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    label = { Text("Buscar por distrito o dirección") },
+                    placeholder = { Text("Ej: Central Policial, Bomberos y Defensa...") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Search
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = { /* opcional: cerrar teclado */ }
+                    )
+                )
+
+                if (filtered.isEmpty()) {
+                    Text(
+                        text = "No se encontraron resultados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                } else {
+                    filtered.forEach { item ->
+                        CivilDefenseCard(item = item, onIntent = onIntent)
+                    }
                 }
             }
         }
@@ -402,7 +422,7 @@ fun PoliceCase(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun EmergencyCardPreview() {
-    EmergencyCard(
+    CivilDefenseCard(
         item = GeneralEntityItem(
             key = "Policía Nacional",
             value = listOf("123456789", "987654321 (Emergencias)", "555-1234 (Oficina)")
