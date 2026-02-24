@@ -1,37 +1,65 @@
 package com.devpaul.home.ui.home
 
-import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShowChart
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.core_data.Screen
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.InfoXPeruTheme
-import com.devpaul.home.data.datasource.mock.DollarQuoteMock
-import com.devpaul.home.data.datasource.mock.UITMock
-import com.devpaul.home.ui.home.components.DollarQuoteCard
-import com.devpaul.home.ui.home.components.SectionBanner
-import com.devpaul.home.ui.home.components.UITCard
-import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBar
-import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
+import com.devpaul.home.ui.home.components.IndicatorCard
+import com.devpaul.shared.ui.components.atoms.base.SectionHeader
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -45,75 +73,363 @@ fun HomeScreen(navController: NavHostController) {
         BaseContentLayout(
             isBodyScrollable = true,
             header = {
-                TopBarPrincipal(
-                    style = 1,
-                    onEndIconClick = {
-                        navController.navigate(
-                            route = Screen.Acknowledgment.route
-                        )
-                    },
-                )
+                HomeHeader()
             },
             body = {
                 HomeBody(
-                    navController = navController,
-                    context = context,
                     uiState = uiState,
                     onIntent = onIntent,
+                    navController = navController
                 )
             },
+
             footer = {
-                BottomNavigationBar(navController)
+                HomeBottomBar(navController)
             },
+            floatingActionButton = {
+                HomeFab()
+            }
         )
     }
 }
 
 @Composable
+fun HomeHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "Finanzas PE",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "Lunes, 24 de Mayo",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        IconButton(onClick = {}) {
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        IconButton(onClick = {}) {
+            Icon(
+                Icons.Default.Notifications,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
 fun HomeBody(
-    navController: NavHostController,
-    context: Context,
-    modifier: Modifier = Modifier,
     uiState: HomeUiState,
     onIntent: (HomeUiIntent) -> Unit,
+    navController: NavHostController
 ) {
+
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     ) {
-        SectionBanner(
-            navHostController = navController,
-            sectionState = uiState.section,
-            onRetryClick = {
-                onIntent(HomeUiIntent.GetSections)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        HomeIndicatorsSection()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        EmergencyCard(
+            onClick = {
+                navController.navigate("emergency")
             }
         )
 
-        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "Información diaria de Perú",
-            fontSize = 14.sp,
-            modifier = modifier.padding(12.dp),
-            textAlign = TextAlign.Center
-        )
+        FeaturedStoriesSection()
 
-        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+        Spacer(modifier = Modifier.height(24.dp))
 
-        DollarQuoteCard(
-            context = context,
-            dollarQuoteState = uiState.dollarQuote,
-            onRetry = {
-                onIntent(HomeUiIntent.GetDollarQuote)
+        LatestNewsSection(
+            onClickMore = {
+                navController.navigate("allNews")
             }
         )
 
-        UITCard(
-            context = context,
-            uitState = uiState.uitValue,
-            onRetry = {
-                onIntent(HomeUiIntent.GetUITValue)
+        Spacer(modifier = Modifier.height(80.dp))
+    }
+}
+
+@Composable
+fun HomeIndicatorsSection() {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        IndicatorCard(
+            modifier = Modifier.weight(1f),
+            title = "UIT 2024",
+            subtitle = "Valor tributario anual",
+            badgeText = "INFO",
+            valueContent = {
+                Text(
+                    text = "S/ 5,150",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             }
         )
+
+        IndicatorCard(
+            modifier = Modifier.weight(1f),
+            title = "USD / PEN",
+            subtitle = "Compra / Venta Interb.",
+            variationText = "↑ 0.2%",
+            valueContent = {
+                Text(
+                    buildAnnotatedString {
+                        append("3.72")
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color(0xFF9CA3AF)
+                            )
+                        ) {
+                            append(" / 3.75")
+                        }
+                    },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun EmergencyCard(onClick: () -> Unit) {
+
+    val errorColor = MaterialTheme.colorScheme.error
+    val errorContainer = MaterialTheme.colorScheme.errorContainer
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = errorContainer
+        ),
+        border = BorderStroke(1.dp, errorColor),
+        shape = RoundedCornerShape(16.dp),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Icons.Default.Warning,
+                contentDescription = null,
+                tint = errorColor
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "Números de Emergencia",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = errorColor
+                )
+                Text(
+                    "PNP, SAMU y Bomberos",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
+
+            Button(
+                onClick = onClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = errorColor
+                )
+            ) {
+                Text("LLAMAR")
+            }
+        }
+    }
+}
+
+@Composable
+fun FeaturedStoriesSection() {
+
+    Column {
+        SectionHeader("Historias Destacadas")
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(5) {
+                FeaturedCard()
+            }
+        }
+    }
+}
+
+@Composable
+fun FeaturedCard() {
+    Card(
+        modifier = Modifier
+            .width(280.dp)
+            .height(180.dp),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray)
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomStart
+        ) {
+            Text(
+                text = "Impacto del nuevo puerto de Chancay en el PBI",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+fun LatestNewsSection(onClickMore: () -> Unit) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                "Últimas Noticias",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            TextButton(onClick = onClickMore) {
+                Text("Ver todas")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        repeat(3) {
+            NewsItemCard()
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onClickMore
+        ) {
+            Text("Cargar más noticias")
+        }
+    }
+}
+
+@Composable
+fun NewsItemCard() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .background(
+                        MaterialTheme.colorScheme.surfaceVariant,
+                        RoundedCornerShape(12.dp)
+                    )
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column {
+                Text(
+                    "Bolsa de Valores de Lima cierra al alza...",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    "15 min",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeBottomBar(navController: NavHostController) {
+    NavigationBar {
+        NavigationBarItem(
+            selected = true,
+            onClick = {},
+            icon = { Icon(Icons.Default.Home, null) },
+            label = { Text("Inicio") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {},
+            icon = { Icon(Icons.Default.ShowChart, null) },
+            label = { Text("Mercados") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {},
+            icon = { Icon(Icons.Default.AccountBalanceWallet, null) },
+            label = { Text("Cartera") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {},
+            icon = { Icon(Icons.Default.Settings, null) },
+            label = { Text("Ajustes") }
+        )
+    }
+}
+
+@Composable
+fun HomeFab() {
+    FloatingActionButton(
+        onClick = {},
+        containerColor = MaterialTheme.colorScheme.primary
+    ) {
+        Icon(Icons.Default.CalendarMonth, contentDescription = null)
     }
 }
 
@@ -128,33 +444,15 @@ fun HomeBody(
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun HomeScreenPreview() {
+fun HomeBodyPreview() {
     InfoXPeruTheme(
         darkTheme = isSystemInDarkTheme(),
         dynamicColor = false
     ) {
-        val navController = rememberNavController()
-        BaseContentLayout(
-            isBodyScrollable = false,
-            header = {
-                TopBar(
-                    title = "Home",
-                )
-            },
-            body = {
-                HomeBody(
-                    navController = navController,
-                    context = LocalContext.current,
-                    uiState = HomeUiState(
-                        dollarQuote = ResultState.Success(DollarQuoteMock().dollarQuoteMock),
-                        uitValue = ResultState.Success(UITMock().uitMock),
-                    ),
-                    onIntent = {}
-                )
-            },
-            footer = {
-                BottomNavigationBar(navController)
-            }
+        HomeBody(
+            uiState = HomeUiState(),
+            onIntent = {},
+            navController = rememberNavController()
         )
     }
 }

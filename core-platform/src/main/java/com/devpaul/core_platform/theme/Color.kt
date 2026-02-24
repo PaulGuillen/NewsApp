@@ -3,20 +3,23 @@ package com.devpaul.core_platform.theme
 import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF000000)
-val GrayBlack = Color(0xFF3C3C3C)
+val GrayBlack = Color(0xFF8A8A8A)
 val BackgroundBlack = Color(0xFF696969)
 val BrickRed = Color(0xFFd84931)
 val BrickRedLight = Color(0xFFFC8A75)
 val LightGray = Color(0xFFd3f3f3)
 val White = Color(0xFFFFFFFF)
 val SlateGray = Color(0xFF787d7c)
-val Taupe = Color(0xFFEBE9E9)
+val Taupe = Color(0xFFF4F5F5)
 val GreenLight = Color(0xFFD2F5D4)
 val GreenDark = Color(0xFF44C944)
 val BlueDark = Color(0xFF0D325D)
 val PinkGray = Color(0xFFFFCDD2)
 val DarkChocolate = Color(0xFF503C34)
-val BrownGray     = Color(0xFF38241C)
+val BrownGray = Color(0xFF38241C)
+val TextSecondary  = Color(0xFF111827)
+val BrandAccent = Color(0xFF10D7EE)
+val Blue500 = Color(0xFF1E63B6)
 
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)

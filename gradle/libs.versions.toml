@@ -131,7 +131,7 @@ jwtdecode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtdecode" 
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version = "3.5.6" }
-
+androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 chucker-no-op = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
 
