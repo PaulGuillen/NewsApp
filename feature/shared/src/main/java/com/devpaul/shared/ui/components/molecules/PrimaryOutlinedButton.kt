@@ -1,6 +1,5 @@
 package com.devpaul.shared.ui.components.molecules
 
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +16,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
 
 @Composable
 fun PrimaryOutlinedButton(
