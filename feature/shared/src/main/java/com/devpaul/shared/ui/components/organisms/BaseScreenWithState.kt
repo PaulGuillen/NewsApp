@@ -2,6 +2,7 @@ package com.devpaul.shared.ui.components.organisms
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -13,7 +14,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -152,7 +152,7 @@ fun <UiState, UiIntent, UiEvent> BaseScreenWithState(
     // Scaffold para envolver el contenido de la pantalla.
     Scaffold(
         snackbarHost = { CenteredSnackBarHost(hostState = snackBarHostState) },
-        containerColor = Color.Transparent
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         content(padding, uiState, executeIntent, showSnackBar, onBackWithResult)
     }

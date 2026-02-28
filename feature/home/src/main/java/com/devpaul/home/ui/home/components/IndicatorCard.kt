@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.InfoXPeruTheme
+import com.devpaul.core_platform.theme.White
 
 @Composable
 fun IndicatorCard(
@@ -70,7 +71,7 @@ fun IndicatorCard(
                         ) {
                             Text(
                                 badgeText,
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                color = White,
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
