@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Female
+import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -178,12 +182,17 @@ fun SectionTitle(title: String, badge: String? = null) {
 fun OtherServicesGrid() {
 
     Column {
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
             SmallServiceCard(
                 title = "Línea 100",
                 subtitle = "Violencia familiar y sexual",
+                icon = Icons.Default.Female,
+                iconTint = Color(0xFFE91E63),
+                iconBackground = Color(0xFFFCE4EC),
                 modifier = Modifier.weight(1f),
                 index = 0
             )
@@ -191,6 +200,9 @@ fun OtherServicesGrid() {
             SmallServiceCard(
                 title = "Indeci",
                 subtitle = "Defensa Civil nacional",
+                icon = Icons.Default.Warning,
+                iconTint = Color(0xFFF57C00),
+                iconBackground = Color(0xFFFFF3E0),
                 modifier = Modifier.weight(1f),
                 index = 1
             )
@@ -201,18 +213,25 @@ fun OtherServicesGrid() {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
             SmallServiceCard(
                 title = "EsSalud",
                 subtitle = "Citas y urgencias médicas",
+                icon = Icons.Default.LocalHospital,
+                iconTint = Color(0xFF1976D2),
+                iconBackground = Color(0xFFE3F2FD),
                 modifier = Modifier.weight(1f),
-                index = 0
+                index = 2
             )
 
             SmallServiceCard(
                 title = "Cruz Roja",
                 subtitle = "Rescate y apoyo médico",
+                icon = Icons.Default.Favorite,
+                iconTint = Color(0xFFD32F2F),
+                iconBackground = Color(0xFFFFEBEE),
                 modifier = Modifier.weight(1f),
-                index = 0
+                index = 3
             )
         }
     }

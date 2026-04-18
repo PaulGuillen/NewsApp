@@ -30,8 +30,10 @@ class GoogleUC(
             .transform { googleEntity ->
 
                 val processedItems = googleEntity.data.newsItems
-                    .sortedByDescending { it.parsedDateMillis() }
-                    .map { it.withSpanishDate() }
+                    .map {
+                        it.copy(pubDateMillis = it.parsedDateMillis())
+                    }
+                    .sortedByDescending { it.pubDateMillis }
 
                 val processed = googleEntity.copy(
                     data = googleEntity.data.copy(

@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,17 +36,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.extension.toDateText
-import com.devpaul.core_platform.extension.toReadableDate
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.ui.news.components.country.CountryCards
 import com.devpaul.news.ui.news.components.news.ErrorRetryCard
 import com.devpaul.news.ui.news.components.news.NewsCard
+import com.devpaul.news.ui.news.components.news_section.SourceSection
 import com.devpaul.news.ui.news.components.news.rememberUiPagination
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
-import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
+import com.devpaul.shared.domain.formatDeltaTime
+import com.devpaul.shared.domain.formatGoogleTime
+import com.devpaul.shared.domain.formatRedditTime
+import com.devpaul.shared.domain.getRelativeTime
+import com.devpaul.shared.ui.components.molecules.AppHeader
+import com.devpaul.shared.ui.components.molecules.HomeBottomBar
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import com.devpaul.shared.ui.components.organisms.LoadMoreFooter
@@ -52,7 +58,6 @@ import com.devpaul.shared.ui.components.organisms.coachmark.CoachMarkOverlay
 import com.devpaul.shared.ui.components.organisms.coachmark.CoachMarkStep
 import com.devpaul.shared.ui.components.organisms.coachmark.CoachMarkTargets
 import com.devpaul.shared.ui.components.organisms.sourceselector.Source
-import com.devpaul.shared.ui.components.organisms.sourceselector.SourceSelector
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -89,6 +94,9 @@ fun NewsScreen(navController: NavHostController) {
         Box(modifier = Modifier.fillMaxSize()) {
             BaseContentLayout(
                 isBodyScrollable = false,
+                header = {
+                    NewsHeader()
+                },
                 body = {
                     NewsBody(
                         context = context,
@@ -100,7 +108,7 @@ fun NewsScreen(navController: NavHostController) {
                     )
                 },
                 footer = {
-                    BottomNavigationBar(navController)
+                    HomeBottomBar(navController)
                 }
             )
 
@@ -118,6 +126,16 @@ fun NewsScreen(navController: NavHostController) {
             }
         }
     }
+}
+
+@Composable
+fun NewsHeader() {
+    AppHeader(
+        title = "Finanzas PE",
+        subtitle = "Lunes, 24 de Mayo",
+        icon = Icons.Default.Public,
+        onNotificationClick = { }
+    )
 }
 
 @Composable
@@ -145,7 +163,6 @@ private fun NewsBody(
                 SourceSection(
                     uiState = uiState,
                     onIntent = onIntent,
-                    coachMarkTargets = coachMarkTargets
                 )
 
                 NewsContent(
@@ -179,31 +196,6 @@ private fun CountrySection(
             onIntent(NewsUiIntent.SelectCountry(it))
         }
     )
-}
-
-@Composable
-private fun SourceSection(
-    uiState: NewsUiState,
-    onIntent: (NewsUiIntent) -> Unit,
-    coachMarkTargets: MutableMap<String, LayoutCoordinates>
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        SourceSelector(
-            modifier = Modifier
-                .onGloballyPositioned {
-                    coachMarkTargets[CoachMarkTargets.SOURCE_SELECTOR] = it
-                }
-                .padding(4.dp),
-            selectedSource = uiState.selectedSource,
-            onSourceSelected = {
-                onIntent(NewsUiIntent.SelectSource(it))
-            }
-        )
-    }
 }
 
 @Composable
@@ -316,15 +308,17 @@ private fun GoogleNewsContent(
             LazyColumn(state = listState) {
                 items(uiState.google.response.data.newsItems.take(visibleCount)) { item ->
                     NewsCard(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
                         context = context,
                         title = item.title,
-                        url = item.link,
-                        date = item.pubDate.toString(),
-                        author = item.source.name,
                         source = Source.GOOGLE.label,
+                        category = item.source.name,
+                        time = getRelativeTime(item.pubDateMillis),
+                        url = item.link,
                         isSelected = selectedUrl == item.link,
-                        onSelect = { onSelectUrl(item.link) }
+                        onSelect = {
+                            onSelectUrl(item.link)
+                        }
                     )
                 }
                 if (isLoadingMore) item { LoadMoreFooter() }
@@ -334,7 +328,7 @@ private fun GoogleNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.google.message,
-                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource) }
             )
 
         ResultState.Idle -> {}
@@ -359,17 +353,18 @@ private fun RedditNewsContent(
         is ResultState.Success -> {
             LazyColumn(state = listState) {
                 items(uiState.reddit.response.data.children.take(visibleCount)) { post ->
+                    val item = post.data
                     NewsCard(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
                         context = context,
-                        title = post.data.title ?: "",
-                        url = post.data.url ?: "",
-                        date = post.data.createdAtMillis?.toDateText() ?: "",
-                        author = post.data.authorFullname ?: "",
+                        title = item.title ?: "",
                         source = Source.REDDIT.label,
-                        isSelected = selectedUrl == post.data.url,
+                        category = item.subreddit ?: "Reddit",
+                        time = formatRedditTime(item.createdAtMillis),
+                        url = item.url ?: "",
+                        isSelected = selectedUrl == item.url,
                         onSelect = {
-                            post.data.url?.let(onSelectUrl)
+                            item.url?.let(onSelectUrl)
                         }
                     )
                 }
@@ -380,7 +375,7 @@ private fun RedditNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.reddit.message,
-                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource) }
             )
 
         ResultState.Idle -> {}
@@ -405,16 +400,19 @@ private fun DeltaNewsContent(
         is ResultState.Success -> {
             LazyColumn(state = listState) {
                 items(uiState.deltaProject.response.articles.take(visibleCount)) { item ->
+                    val safeUrl = item.url
                     NewsCard(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
                         context = context,
                         title = item.title,
-                        url = item.url,
-                        date = item.seenDate.toReadableDate(),
-                        author = item.sourceCountry,
                         source = Source.DELTA.label,
-                        isSelected = selectedUrl == item.url,
-                        onSelect = { onSelectUrl(item.url) }
+                        category = item.sourceCountry,
+                        time = formatDeltaTime(item.seenDate),
+                        url = safeUrl,
+                        isSelected = selectedUrl == safeUrl,
+                        onSelect = {
+                            onSelectUrl(safeUrl)
+                        }
                     )
                 }
                 if (isLoadingMore) item { LoadMoreFooter() }
@@ -424,62 +422,35 @@ private fun DeltaNewsContent(
         is ResultState.Error ->
             ErrorRetryCard(
                 message = uiState.deltaProject.message,
-                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource)}
+                onRetry = { onIntent(NewsUiIntent.RetrySelectedSource) }
             )
 
         ResultState.Idle -> {}
     }
 }
 
+
 @Preview(
-    name = "SelectedCountry",
+    name = "Light",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Preview(
-    name = "SelectedCountryDark",
+    name = "Dark",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun SelectedPreview() {
+fun NewsScreenPreview() {
     InfoXPeruTheme(
         darkTheme = isSystemInDarkTheme(),
         dynamicColor = false
     ) {
-        NewsBody(
-            context = LocalContext.current,
-            uiState = NewsUiState(
-                country = ResultState.Success(NewsMock().countryMock)
-            ),
-            onIntent = {},
-            selectedUrl = null,
-            onSelectUrl = {},
-            coachMarkTargets = mutableMapOf()
-        )
-    }
-}
-
-@Preview(
-    name = "Success",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "SuccessDark",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun SuccessPreview() {
-    InfoXPeruTheme(
-        darkTheme = isSystemInDarkTheme(),
-        dynamicColor = false
-    ) {
-        val navController = rememberNavController()
-
         BaseContentLayout(
             isBodyScrollable = false,
+            header = {
+                NewsHeader()
+            },
             body = {
                 NewsBody(
                     context = LocalContext.current,
@@ -496,50 +467,8 @@ fun SuccessPreview() {
                 )
             },
             footer = {
-                BottomNavigationBar(navController)
-            }
-        )
-    }
-}
-
-@Preview(
-    name = "Error",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "ErrorDark",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun ErrorPreview() {
-    InfoXPeruTheme(
-        darkTheme = isSystemInDarkTheme(),
-        dynamicColor = false
-    ) {
-        val navController = rememberNavController()
-
-        BaseContentLayout(
-            isBodyScrollable = false,
-            body = {
-                NewsBody(
-                    context = LocalContext.current,
-                    uiState = NewsUiState(
-                        country = ResultState.Success(NewsMock().countryMock),
-                        selectedCountry = NewsMock().countryMock.data.first(),
-                        selectedSource = Source.GOOGLE,
-                        google = ResultState.Error("Error loading data")
-                    ),
-                    onIntent = {},
-                    selectedUrl = null,
-                    onSelectUrl = {},
-                    coachMarkTargets = mutableMapOf()
-                )
+                HomeBottomBar(rememberNavController())
             },
-            footer = {
-                BottomNavigationBar(navController)
-            }
         )
     }
 }

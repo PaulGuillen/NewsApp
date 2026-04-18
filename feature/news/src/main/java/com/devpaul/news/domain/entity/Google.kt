@@ -30,6 +30,7 @@ data class NewsItemJSON(
     val link: String,
     val guid: String?,
     val pubDate: String?,
+    val pubDateMillis: Long = 0L,
     val description: String?,
     val source: NewsSourceJSON
 ) : Parcelable

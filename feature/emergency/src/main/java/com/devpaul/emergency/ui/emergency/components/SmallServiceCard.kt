@@ -3,22 +3,15 @@ package com.devpaul.emergency.ui.emergency.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -26,6 +19,9 @@ import androidx.compose.ui.unit.dp
 fun SmallServiceCard(
     title: String,
     subtitle: String,
+    icon: ImageVector,
+    iconTint: Color,
+    iconBackground: Color,
     modifier: Modifier = Modifier,
     index: Int = 0
 ) {
@@ -70,15 +66,44 @@ fun SmallServiceCard(
                 modifier = Modifier.padding(16.dp)
             ) {
 
+                // 🔹 ICON BOX
+                Box(
+                    modifier = Modifier
+                        .size(52.dp)
+                        .background(
+                            if (isDark)
+                                iconTint.copy(alpha = 0.15f) // fondo con el mismo color suavizado
+                            else
+                                iconBackground,
+                            shape = RoundedCornerShape(14.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = if (isDark)
+                            iconTint.copy(alpha = 0.9f) // mantiene color pero más suave
+                        else
+                            iconTint,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // 🔹 TITLE
                 Text(
                     text = title,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
                     color = if (isDark) Color.White
                     else MaterialTheme.colorScheme.tertiaryContainer
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // 🔹 SUBTITLE
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
@@ -88,8 +113,9 @@ fun SmallServiceCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
+                // 🔹 BUTTON STYLES
                 val borderColor = if (isDark)
                     Color(0xFF1F3A5F)
                 else
@@ -99,6 +125,7 @@ fun SmallServiceCard(
                     Color(0xFF0F1E33)
                 else
                     Color(0xFFF2F4F7)
+
                 val contentColor = if (isDark)
                     Color(0xFF4DA3FF)
                 else
@@ -107,15 +134,18 @@ fun SmallServiceCard(
                 Button(
                     onClick = {},
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(30),
+                    shape = RoundedCornerShape(30.dp),
                     border = BorderStroke(1.dp, borderColor),
-                    colors = ButtonDefaults.outlinedButtonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = containerColor,
                         contentColor = contentColor
                     ),
                     elevation = ButtonDefaults.buttonElevation(0.dp)
                 ) {
-                    Text("Llamar")
+                    Text(
+                        text = "LLAMAR",
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }

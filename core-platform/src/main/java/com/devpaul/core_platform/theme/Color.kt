@@ -27,6 +27,15 @@ val EmergencyLight = Color(0xFFFDE2E2)     // fondo light suave
 val EmergencyDark = Color(0xFF7F1D1D)      // fondo dark profundo
 val EmergencyDarkSurface = Color(0xFF991B1B)
 
+val GooglePrimary = Color(0xFF2563EB)
+val GoogleSoft = Color(0xFFDBEAFE)
+
+val RedditPrimary = Color(0xFFF97316)
+val RedditSoft = Color(0xFFFFEDD5)
+
+val DeltaPrimary = Color(0xFFE11D48)
+val DeltaSoft = Color(0xFFFFE4E6)
+
 //Success Dialog
 val SuccessTitleHeaderBackground = Color(0xFFDFF6DD)
 val SuccessTitleHeader = Color(0xFF137333)

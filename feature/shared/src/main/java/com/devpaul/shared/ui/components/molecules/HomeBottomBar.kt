@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AlignVerticalBottom
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -94,8 +94,8 @@ fun HomeBottomBar(navController: NavHostController) {
                         popUpTo("news") { inclusive = true }
                     }
                 },
-                icon = { Icon(Icons.Default.AlignVerticalBottom, null) },
-                label = { Text("Mercado") },
+                icon = { Icon(Icons.Default.Newspaper, null) },
+                label = { Text("Noticias") },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = selectedColor,
                     selectedTextColor = selectedColor,
@@ -108,10 +108,10 @@ fun HomeBottomBar(navController: NavHostController) {
             Spacer(modifier = Modifier.weight(1f))
 
             NavigationBarItem(
-                selected = navController.currentBackStackEntry?.destination?.route == "emergency",
+                selected = navController.currentBackStackEntry?.destination?.route == "myList",
                 onClick = {
-                    navController.navigate("emergency") {
-                        popUpTo("emergency") { inclusive = true }
+                    navController.navigate("myList") {
+                        popUpTo("myList") { inclusive = true }
                     }
                 },
                 icon = { Icon(Icons.Default.DateRange, null) },
@@ -173,7 +173,11 @@ fun HomeBottomBar(navController: NavHostController) {
             ) {
 
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("emergency") {
+                            popUpTo("emergency") { inclusive = true }
+                        }
+                    },
                     containerColor = selectedColor,
                     shape = CircleShape,
                     elevation = FloatingActionButtonDefaults.elevation(
