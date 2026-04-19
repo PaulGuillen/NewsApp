@@ -9,6 +9,7 @@ android {
 dependencies {
     implementation(project(":feature:news"))
     implementation(project(":feature:emergency"))
+    implementation(project(":feature:mylist"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:shared"))
 }

@@ -9,6 +9,7 @@ import com.devpaul.navigation.NavigationModule
 import com.devpaul.news.NewsModule
 import com.devpaul.profile.ProfileModule
 import com.devpaul.shared.SharedModule
+import com.example.mylist.MyListModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
@@ -22,6 +23,7 @@ import org.koin.core.annotation.Module
         HomeModule::class,
         NewsModule::class,
         EmergencyModule::class,
+        MyListModule::class,
         ProfileModule::class,
     ]
 )

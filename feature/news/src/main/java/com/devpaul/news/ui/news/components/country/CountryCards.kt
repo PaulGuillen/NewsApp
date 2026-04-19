@@ -1,6 +1,7 @@
 package com.devpaul.news.ui.news.components.country
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -38,7 +39,8 @@ fun CountryCards(
             ) {
                 Row(
                     modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
 
                 ) {
                     countryState.response.data.forEach { countryItem ->

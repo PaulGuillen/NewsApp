@@ -23,6 +23,9 @@ sealed class Screen(val route: String) {
             return "emergency_detail/$type"
         }
     }
+
+    data object MyList : Screen(route = "myList")
+
     data object Profile : Screen(route = "profile")
     data object ProfileUpdate : Screen(route = "profile/update")
     data object Suggestions : Screen(route = "profile/suggestions")

@@ -1,7 +1,8 @@
 package com.devpaul.profile.ui.profile
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,38 +11,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.MailOutline
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_data.Screen
-import com.devpaul.core_data.util.Constant
-import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.profile.domain.entity.ProfileUserEntity
-import com.devpaul.profile.ui.profile.components.ProfileOptionItem
-import com.devpaul.shared.data.skeleton.SkeletonRenderer
-import com.devpaul.shared.data.skeleton.SkeletonType
-import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
-import com.devpaul.shared.ui.components.atoms.base.image.ProfileImagePicker
-import com.devpaul.shared.ui.components.molecules.BottomNavigationBar
-import com.devpaul.shared.ui.components.molecules.TopBarPrincipal
+import com.devpaul.core_platform.theme.InfoXPeruTheme
+import com.devpaul.profile.ui.profile.components.ProfileItem
+import com.devpaul.profile.ui.profile.components.Section
+import com.devpaul.shared.ui.components.molecules.AppHeader
+import com.devpaul.shared.ui.components.molecules.HomeBottomBar
 import com.devpaul.shared.ui.components.organisms.BaseContentLayout
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -75,225 +70,185 @@ fun ProfileScreen(navController: NavHostController) {
         },
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
-            isBodyScrollable = true,
+            isBodyScrollable = false,
             header = {
-                TopBarPrincipal(
-                    style = 3,
-                    title = "Mi Cuenta"
-                )
+                ProfileHeader()
             },
             body = {
                 ProfileContent(
-                    modifier = Modifier.fillMaxSize(),
-                    navController = navController,
-                    onIntent = onIntent,
-                    onNavigate = { route ->
-                        navController.navigate(route)
-                    },
-                    uiState = uiState
+
                 )
             },
             footer = {
-                BottomNavigationBar(navController)
+                HomeBottomBar(navController)
             },
         )
     }
 }
 
 @Composable
-fun ProfileContent(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    onNavigate: (String) -> Unit = {},
-    onIntent: (ProfileUiIntent) -> Unit = {},
-    uiState: ProfileUiState
-) {
-    var profile: ProfileUserEntity?
-    var fullName: String
-    var email: String
+fun ProfileHeader() {
+    AppHeader(
+        title = "Emergencias PE",
+        subtitle = "Lunes, 24 de Mayo",
+        icon = Icons.Default.Public,
+        onNotificationClick = { }
+    )
+}
 
-    Box(
-        modifier = modifier
+@Composable
+
+fun ProfileContent() {
+
+    val isDark = isSystemInDarkTheme()
+
+    val background = if (isDark) Color(0xFF0B1B2B) else Color(0xFFF3F4F6)
+    val cardColor = if (isDark) Color(0xFF1E293B) else Color.White
+    val textPrimary = if (isDark) Color.White else Color.Black
+    val textSecondary = Color(0xFF6B7280)
+
+    Column(
+        modifier = Modifier
             .fillMaxSize()
+            .background(background)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 🔥 HEADER
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp, vertical = 6.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            when (val state = uiState.profile) {
-                is ResultState.Loading -> {
-                    SkeletonRenderer(type = SkeletonType.PROFILE_ACCOUNT)
-                }
-
-                is ResultState.Success -> {
-                    profile = state.response.data
-                    fullName = "${profile?.name} ${profile?.lastname}"
-                    email = profile?.email.toString()
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        ProfileImagePicker(
-                            defaultImageUrl = Constant.URL_IMAGE,
-                            base64Image = profile?.image,
-                            modifier = Modifier.size(180.dp),
-                            isCircular = true,
-                            showDialogOnClick = false,
-                            onImageSelected = { _, _ -> }
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(fullName, style = MaterialTheme.typography.titleMedium)
-                        Text(email, style = MaterialTheme.typography.bodySmall)
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        CustomButton(
-                            modifier = Modifier.fillMaxWidth(0.6f),
-                            text = "Editar Perfil",
-                            onClick = {
-                                navController.navigate(Screen.ProfileUpdate.route)
-                            }
-                        )
-                    }
-                }
-
-                is ResultState.Error -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        ProfileImagePicker(
-                            defaultImageUrl = Constant.URL_IMAGE,
-                            base64Image = null,
-                            showDialogOnClick = false,
-                            onImageSelected = { _, _ -> }
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Error al cargar perfil",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        CustomButton(
-                            modifier = Modifier.fillMaxWidth(0.6f),
-                            text = "Reintentar",
-                            onClick = {
-                                onIntent(ProfileUiIntent.GetUserProfile)
-                            }
-                        )
-                    }
-                }
-
-                else -> {}
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+            Box(
+                modifier = Modifier
+                    .size(72.dp)
+                    .background(Color(0xFF1976D2), CircleShape),
+                contentAlignment = Alignment.Center
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    val options = listOf(
-                        Triple("Recomendar a un amigo", Icons.Outlined.Share) {
-                            onIntent(ProfileUiIntent.ShareApp)
-                        },
-                        Triple("Términos de servicio", Icons.Outlined.Build) {
-                            onIntent(ProfileUiIntent.OpenTerms)
-                        },
-                        Triple("Política de privacidad", Icons.Outlined.Settings) {
-                            onIntent(ProfileUiIntent.OpenPrivacy)
-                        },
-                        Triple("Sugerencias", Icons.Outlined.MailOutline) {
-                            onNavigate("profile/suggestions")
-                        },
-                        Triple("Acerca de nosotros", Icons.Outlined.Home) {
-                            onNavigate("profile/about")
-                        }
-                    )
-
-                    options.forEachIndexed { _, (title, icon, action) ->
-                        ProfileOptionItem(
-                            title = title,
-                            icon = icon,
-                            onClick = { action() }
-                        )
-                    }
-
-                    ProfileOptionItem(
-                        title = "Salir",
-                        icon = Icons.AutoMirrored.Outlined.ExitToApp,
-                        color = BrickRed,
-                        showDivider = false,
-                        onClick = {
-                            onIntent(ProfileUiIntent.Logout)
-                        }
-                    )
-                }
+                Text("JP", color = Color.White, fontSize = 20.sp)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
+            Text("Juan Pérez", color = textPrimary, fontSize = 18.sp)
+
+            Text(
+                "juan.perez@email.pe",
+                color = Color(0xFF3B82F6),
+                fontSize = 13.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Box(
+                modifier = Modifier
+                    .background(
+                        Color(0xFF3B82F6).copy(alpha = if (isDark) 0.2f else 0.1f),
+                        RoundedCornerShape(20)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    "MIEMBRO PREMIUM",
+                    color = Color(0xFF3B82F6),
+                    fontSize = 11.sp
+                )
+            }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 🔥 SECCIONES
+        Section("CUENTA Y SEGURIDAD", cardColor) {
+            ProfileItem("Información Personal")
+            HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+            ProfileItem("Seguridad y Acceso")
+            HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+            ProfileItem("Notificaciones")
+        }
+
+        Section("FINANZAS", cardColor) {
+            ProfileItem("Preferencias de Moneda", "PEN (Soles Peruanos)")
+            HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+            ProfileItem("Mercados Seguidos")
+        }
+
+        Section("SOPORTE", cardColor) {
+            ProfileItem("Centro de Ayuda")
+            HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+            ProfileItem("Términos y Privacidad")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // 🔥 LOGOUT
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    if (isDark)
+                        Color(0xFF7F1D1D).copy(alpha = 0.3f)
+                    else
+                        Color(0xFFFEE2E2),
+                    RoundedCornerShape(12.dp)
+                )
+                .padding(vertical = 14.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Cerrar Sesión",
+                color = Color(0xFFEF4444),
+                fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            "VERSIÓN 2.4.0 (BUILD 82)",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            color = textSecondary,
+            fontSize = 10.sp
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun ProfileContentPreview() {
-    BaseContentLayout(
-        header = {
-            TopBarPrincipal(
-                style = 3,
-                title = "Mi Cuenta"
-            )
-        },
-        body = {
-            ProfileContent(
-                modifier = Modifier.fillMaxSize(),
-                navController = rememberNavController(),
-                onNavigate = {},
-                onIntent = {},
-                uiState = ProfileUiState(profile = ResultState.Loading)
-            )
-        },
-    )
-}
+    InfoXPeruTheme(
+        darkTheme = isSystemInDarkTheme(),
+        dynamicColor = false
+    ) {
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = {
+                ProfileHeader()
+            },
+            body = {
+                ProfileContent(
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileErrorContentPreview() {
-    BaseContentLayout(
-        header = {
-            TopBarPrincipal(
-                style = 3,
-                title = "Mi Cuenta"
-            )
-        },
-        body = {
-            ProfileContent(
-                modifier = Modifier.fillMaxSize(),
-                navController = rememberNavController(),
-                onNavigate = {},
-                onIntent = {},
-                uiState = ProfileUiState(profile = ResultState.Error("Error al cargar perfil"))
-            )
-        },
-    )
+                )
+            },
+            footer = {
+                HomeBottomBar(rememberNavController())
+            },
+        )
+    }
 }

@@ -88,10 +88,10 @@ fun HomeBottomBar(navController: NavHostController) {
             )
 
             NavigationBarItem(
-                selected = navController.currentBackStackEntry?.destination?.route == "news",
+                selected = navController.currentBackStackEntry?.destination?.route == Screen.News.route,
                 onClick = {
-                    navController.navigate("news") {
-                        popUpTo("news") { inclusive = true }
+                    navController.navigate(Screen.News.route) {
+                        popUpTo(Screen.News.route) { inclusive = true }
                     }
                 },
                 icon = { Icon(Icons.Default.Newspaper, null) },
@@ -108,10 +108,10 @@ fun HomeBottomBar(navController: NavHostController) {
             Spacer(modifier = Modifier.weight(1f))
 
             NavigationBarItem(
-                selected = navController.currentBackStackEntry?.destination?.route == "myList",
+                selected = navController.currentBackStackEntry?.destination?.route == Screen.MyList.route,
                 onClick = {
-                    navController.navigate("myList") {
-                        popUpTo("myList") { inclusive = true }
+                    navController.navigate(Screen.MyList.route) {
+                        popUpTo(Screen.MyList.route) { inclusive = true }
                     }
                 },
                 icon = { Icon(Icons.Default.DateRange, null) },
@@ -126,10 +126,10 @@ fun HomeBottomBar(navController: NavHostController) {
             )
 
             NavigationBarItem(
-                selected = navController.currentBackStackEntry?.destination?.route == "profile",
+                selected = navController.currentBackStackEntry?.destination?.route == Screen.Profile.route,
                 onClick = {
-                    navController.navigate("profile") {
-                        popUpTo("profile") { inclusive = true }
+                    navController.navigate(Screen.Profile.route) {
+                        popUpTo(Screen.Profile.route) { inclusive = true }
                     }
                 },
                 icon = { Icon(Icons.Default.Person, null) },

@@ -36,7 +36,6 @@ import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.emergency.domain.entity.SectionEntity
 import com.devpaul.emergency.domain.entity.SectionItemEntity
 import com.devpaul.emergency.ui.emergency.components.CriticalServiceItem
-import com.devpaul.emergency.ui.emergency.components.EmergencySearchBar
 import com.devpaul.emergency.ui.emergency.components.SmallServiceCard
 import com.devpaul.shared.ui.components.molecules.AppHeader
 import com.devpaul.shared.ui.components.molecules.HomeBottomBar
@@ -96,9 +95,7 @@ fun EmergencyBody(
             .padding(horizontal = 16.dp)
     ) {
 
-        EmergencySearchBar()
-
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         SectionTitle("Servicios Críticos", badge = "NACIONAL")
 
@@ -248,7 +245,7 @@ fun OtherServicesGrid() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun HomeBodyPreview() {
+fun EmergencyPreview() {
     InfoXPeruTheme(
         darkTheme = isSystemInDarkTheme(),
         dynamicColor = false
