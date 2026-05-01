@@ -102,8 +102,8 @@ fun ProfileContent() {
 
     val isDark = isSystemInDarkTheme()
 
-    val background = if (isDark) Color(0xFF0B1B2B) else Color(0xFFF3F4F6)
-    val cardColor = if (isDark) Color(0xFF1E293B) else Color.White
+    val background = if (isDark) Color(0xFF000000) else Color(0xFFFFFFFF)
+    val cardColor = if (isDark) Color(0xFF1E293B) else Color(0xFFF3F4F6)
     val textPrimary = if (isDark) Color.White else Color.Black
     val textSecondary = Color(0xFF6B7280)
 
