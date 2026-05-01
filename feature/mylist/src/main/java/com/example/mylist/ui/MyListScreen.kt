@@ -35,7 +35,6 @@ import com.example.mylist.ui.components.NewsSavedCard
 import com.example.mylist.ui.components.TabItem
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun MyListScreen(
     navHostController: NavHostController

@@ -51,7 +51,7 @@ fun HomeScreen(navController: NavHostController) {
             when (event) {
                 is HomeUiEvent.DialNumber -> {
                     val intent = Intent(Intent.ACTION_DIAL).apply {
-                        data = "tel:${event.number}".toUri()
+                        data = "tel: ${event.number}".toUri()
                     }
                     context.startActivity(intent)
                 }

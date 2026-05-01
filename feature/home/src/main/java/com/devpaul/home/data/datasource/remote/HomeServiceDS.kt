@@ -8,7 +8,10 @@ import com.devpaul.home.data.datasource.mapper.toGratitudeEntity
 import com.devpaul.home.data.datasource.mapper.toSectionEntity
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.GratitudeEntity
+import com.devpaul.home.domain.entity.HolidayAlertEntity
+import com.devpaul.home.domain.entity.SeasonEntity
 import com.devpaul.home.domain.entity.SectionEntity
+import com.devpaul.home.domain.entity.SunatExchangeRateEntity
 import com.devpaul.home.domain.entity.UITEntity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -29,6 +32,24 @@ class HomeServiceDS(
     suspend fun uitService(): DefaultOutput<UITEntity> {
         return safeApiCall {
             homeService.uit()
+        }.transform { it.toDomain() }
+    }
+
+    suspend fun seasonService(): DefaultOutput<SeasonEntity> {
+        return safeApiCall {
+            homeService.season()
+        }.transform { it.toDomain() }
+    }
+
+    suspend fun holidayAlertService(): DefaultOutput<HolidayAlertEntity> {
+        return safeApiCall {
+            homeService.holidayAlert()
+        }.transform { it.toDomain() }
+    }
+
+    suspend fun sunatExchangeRateService(): DefaultOutput<SunatExchangeRateEntity> {
+        return safeApiCall {
+            homeService.sunatExchangeRate()
         }.transform { it.toDomain() }
     }
 

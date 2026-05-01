@@ -16,6 +16,7 @@ class BaseUrlInterceptor : Interceptor {
             originalUrl.encodedPath.contains("top-headline") -> BuildConfig.BASE_URL_NEWS
             originalUrl.encodedPath.contains("rss/search") -> BuildConfig.BASE_URL_GOOGLE_NEWS
             originalUrl.encodedPath.contains("v2/doc/doc") -> BuildConfig.BASE_URL_GDELT_PROJECT
+            originalUrl.encodedPath.contains("v1/tipo-cambio-sunat") -> BuildConfig.BASE_URL_APIS_NET_PE
             else -> BuildConfig.BASE_URL_PERU
         }.toHttpUrlOrNull()
 

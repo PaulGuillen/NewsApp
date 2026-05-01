@@ -4,7 +4,10 @@ import com.devpaul.core_data.DefaultOutput
 import com.devpaul.home.data.datasource.remote.HomeServiceDS
 import com.devpaul.home.domain.entity.DollarQuoteEntity
 import com.devpaul.home.domain.entity.GratitudeEntity
+import com.devpaul.home.domain.entity.HolidayAlertEntity
+import com.devpaul.home.domain.entity.SeasonEntity
 import com.devpaul.home.domain.entity.SectionEntity
+import com.devpaul.home.domain.entity.SunatExchangeRateEntity
 import com.devpaul.home.domain.entity.UITEntity
 import com.devpaul.home.domain.repository.HomeRepository
 import org.koin.core.annotation.Factory
@@ -20,6 +23,18 @@ class HomeRepositoryImpl(
 
     override suspend fun uitService(): DefaultOutput<UITEntity> {
         return serviceDS.uitService()
+    }
+
+    override suspend fun seasonService(): DefaultOutput<SeasonEntity> {
+        return serviceDS.seasonService()
+    }
+
+    override suspend fun holidayAlertService(): DefaultOutput<HolidayAlertEntity> {
+        return serviceDS.holidayAlertService()
+    }
+
+    override suspend fun sunatExchangeRateService(): DefaultOutput<SunatExchangeRateEntity> {
+        return serviceDS.sunatExchangeRateService()
     }
 
     override suspend fun sectionService(): SectionEntity {
