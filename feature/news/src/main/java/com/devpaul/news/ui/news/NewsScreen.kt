@@ -41,12 +41,11 @@ import com.devpaul.news.data.datasource.mock.NewsMock
 import com.devpaul.news.ui.news.components.country.CountryCards
 import com.devpaul.news.ui.news.components.news.ErrorRetryCard
 import com.devpaul.news.ui.news.components.news.NewsCard
-import com.devpaul.news.ui.news.components.news_section.SourceSection
 import com.devpaul.news.ui.news.components.news.rememberUiPagination
+import com.devpaul.news.ui.news.components.news_section.SourceSection
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 import com.devpaul.shared.domain.formatDeltaTime
-import com.devpaul.shared.domain.formatGoogleTime
 import com.devpaul.shared.domain.formatRedditTime
 import com.devpaul.shared.domain.getRelativeTime
 import com.devpaul.shared.ui.components.molecules.AppHeader
@@ -131,7 +130,7 @@ fun NewsScreen(navController: NavHostController) {
 @Composable
 fun NewsHeader() {
     AppHeader(
-        title = "Finanzas PE",
+        title = "Emergencias PE",
         subtitle = "Lunes, 24 de Mayo",
         icon = Icons.Default.Public,
         onNotificationClick = { }

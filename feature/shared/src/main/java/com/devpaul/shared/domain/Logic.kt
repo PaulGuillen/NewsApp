@@ -9,11 +9,14 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import java.io.ByteArrayOutputStream
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 fun uriToBitmap(context: Context, uri: Uri): Bitmap {
     val inputStream = context.contentResolver.openInputStream(uri)
@@ -133,4 +136,18 @@ fun getRelativeTime(timestamp: Long): String {
         else -> "Hace $days d"
     }
 }
+
+fun String?.toLocalDate(): LocalDate? {
+    if (this.isNullOrBlank()) return null
+    return try {
+        LocalDate.parse(this, API_DATE_FORMATTER)
+    } catch (_: DateTimeParseException) {
+        null
+    }
+}
+
+val API_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d-M-yyyy")
+
+val SPANISH_DATE_FORMATTER: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", Locale("es", "PE"))
 

@@ -4,7 +4,10 @@ import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
 import com.devpaul.home.domain.usecase.DollarQuoteUC
+import com.devpaul.home.domain.usecase.HolidayAlertUC
+import com.devpaul.home.domain.usecase.SeasonUC
 import com.devpaul.home.domain.usecase.SectionUC
+import com.devpaul.home.domain.usecase.SunatExchangeRateUC
 import com.devpaul.home.domain.usecase.UITValueUC
 import org.koin.android.annotation.KoinViewModel
 
@@ -13,6 +16,9 @@ class HomeViewModel(
     private val dollarQuoteUC: DollarQuoteUC,
     private val uitValueUC: UITValueUC,
     private val sectionUC: SectionUC,
+    private val holidayAlertUC: HolidayAlertUC,
+    private val seasonUC: SeasonUC,
+    private val sunatExchangeRateUC: SunatExchangeRateUC,
 ) : StatefulViewModel<HomeUiState, HomeUiIntent, HomeUiEvent>(
     defaultUIState = {
         HomeUiState()
@@ -28,6 +34,9 @@ class HomeViewModel(
                 launchConcurrentRequests(
                     { fetchDollarQuote() },
                     { fetchUit() },
+                    { fetchSeason() },
+                    { fetchHolidayAlert() },
+                    { fetchSunatExchangeRate() },
                     { fetchSection() }
                 )
             }
@@ -70,6 +79,64 @@ class HomeViewModel(
             }
     }
 
+    private suspend fun fetchHolidayAlert() {
+        updateUiStateOnMain { it.copy(holidayAlert = ResultState.Loading) }
+        val result = holidayAlertUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is HolidayAlertUC.Success.HolidayAlertSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(holidayAlert = ResultState.Success(it.holidayAlert))
+                        }
+                    }
+                }
+            }
+            .onFailure<HolidayAlertUC.Failure> {
+                when (it) {
+                    is HolidayAlertUC.Failure.HolidayAlertError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                holidayAlert = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar alerta de feriados"
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+    }
+
+    private suspend fun fetchSunatExchangeRate() {
+        updateUiStateOnMain { it.copy(sunatExchangeRate = ResultState.Loading) }
+        val result = sunatExchangeRateUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is SunatExchangeRateUC.Success.SunatExchangeRateSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(sunatExchangeRate = ResultState.Success(it.exchangeRate))
+                        }
+                    }
+                }
+            }
+            .onFailure<SunatExchangeRateUC.Failure> {
+                when (it) {
+                    is SunatExchangeRateUC.Failure.SunatExchangeRateError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                sunatExchangeRate = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar tipo de cambio SUNAT"
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+    }
+
     private suspend fun fetchUit() {
         updateUiStateOnMain { it.copy(uitValue = ResultState.Loading) }
         val result = uitValueUC()
@@ -91,6 +158,35 @@ class HomeViewModel(
                                 uitValue = ResultState.Error(
                                     message = it.error.apiErrorResponse?.message
                                         ?: "Error al cargar el valor de la UIT"
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+    }
+
+    private suspend fun fetchSeason() {
+        updateUiStateOnMain { it.copy(season = ResultState.Loading) }
+        val result = seasonUC()
+        result.handleNetworkDefault()
+            .onSuccessful {
+                when (it) {
+                    is SeasonUC.Success.SeasonSuccess -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(season = ResultState.Success(it.season))
+                        }
+                    }
+                }
+            }
+            .onFailure<SeasonUC.Failure> {
+                when (it) {
+                    is SeasonUC.Failure.SeasonError -> {
+                        updateUiStateOnMain { uiState ->
+                            uiState.copy(
+                                season = ResultState.Error(
+                                    message = it.error.apiErrorResponse?.message
+                                        ?: "Error al cargar las estaciones"
                                 )
                             )
                         }
