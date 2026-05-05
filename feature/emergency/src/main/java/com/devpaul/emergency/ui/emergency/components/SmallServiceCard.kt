@@ -23,7 +23,8 @@ fun SmallServiceCard(
     iconTint: Color,
     iconBackground: Color,
     modifier: Modifier = Modifier,
-    index: Int = 0
+    index: Int = 0,
+    onClick: () -> Unit = {}
 ) {
 
     val isDark = isSystemInDarkTheme()
@@ -132,7 +133,7 @@ fun SmallServiceCard(
                     Color(0xFF1565C0)
 
                 Button(
-                    onClick = {},
+                    onClick = onClick,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(30.dp),
                     border = BorderStroke(1.dp, borderColor),

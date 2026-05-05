@@ -18,7 +18,9 @@ import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.ExperimentalMaterial3Api
+import android.content.Intent
+import androidx.core.net.toUri
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,10 +51,28 @@ fun EmergencyScreen(
 ) {
 
     val viewModel: EmergencyViewModel = koinViewModel()
+    val ctx = LocalContext.current
 
     BaseScreenWithState(
         viewModel = viewModel,
         navController = navHostController,
+        onUiEvent = { event, _ ->
+            when (event) {
+                is EmergencyUiEvent.CallNumber -> {
+                    try {
+                        val intent = Intent(Intent.ACTION_DIAL, "tel:${event.number}".toUri()).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        ctx.startActivity(intent)
+                    } catch (_: Exception) { /* ignore */ }
+                }
+
+                is EmergencyUiEvent.NavigateToDetails -> {
+                    // Ajusta la ruta según tu navegación real
+                    navHostController.navigate("emergency_detail/${event.type}")
+                }
+            }
+        }
     ) { _, uiState, onIntent, _, _ ->
         BaseContentLayout(
             isBodyScrollable = true,
@@ -82,12 +102,14 @@ fun EmergencyHeader() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmergencyBody(
     uiState: EmergencyUiState,
     onIntent: (EmergencyUiIntent) -> Unit,
 ) {
+
+    // Ahora los efectos (dial, navegación) los emite el ViewModel como UiEvent
+    // y se manejan en `onUiEvent` pasado a `BaseScreenWithState`.
 
     Column(
         modifier = Modifier
@@ -109,7 +131,8 @@ fun EmergencyBody(
                 Color(0xFF1E3A8A)
             else
                 Color(0xFFE0ECFF),
-            iconTint = Color(0xFF2563EB)
+            iconTint = Color(0xFF2563EB),
+            onClick = { onIntent(EmergencyUiIntent.CallNumber("105")) }
         )
 
         CriticalServiceItem(
@@ -120,7 +143,8 @@ fun EmergencyBody(
                 Color(0xFF3F1D1D)
             else
                 Color(0xFFFDE2E2),
-            iconTint = Color(0xFFDC2626)
+            iconTint = Color(0xFFDC2626),
+            onClick = { onIntent(EmergencyUiIntent.CallNumber("116")) }
         )
         CriticalServiceItem(
             title = "SAMU (Minsa)",
@@ -130,7 +154,8 @@ fun EmergencyBody(
                 Color(0xFF0F3D2E)
             else
                 Color(0xFFD2F5D4),
-            iconTint = Color(0xFF16A34A)
+            iconTint = Color(0xFF16A34A),
+            onClick = { onIntent(EmergencyUiIntent.CallNumber("106")) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -139,7 +164,7 @@ fun EmergencyBody(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OtherServicesGrid()
+        OtherServicesGrid(onIntent = onIntent)
 
         Spacer(modifier = Modifier.height(24.dp))
     }
@@ -176,7 +201,7 @@ fun SectionTitle(title: String, badge: String? = null) {
 }
 
 @Composable
-fun OtherServicesGrid() {
+fun OtherServicesGrid(onIntent: (EmergencyUiIntent) -> Unit) {
 
     Column {
 
@@ -191,7 +216,8 @@ fun OtherServicesGrid() {
                 iconTint = Color(0xFFE91E63),
                 iconBackground = Color(0xFFFCE4EC),
                 modifier = Modifier.weight(1f),
-                index = 0
+                index = 0,
+                onClick = { onIntent(EmergencyUiIntent.CallNumber("100")) }
             )
 
             SmallServiceCard(
@@ -201,7 +227,8 @@ fun OtherServicesGrid() {
                 iconTint = Color(0xFFF57C00),
                 iconBackground = Color(0xFFFFF3E0),
                 modifier = Modifier.weight(1f),
-                index = 1
+                index = 1,
+                onClick = { onIntent(EmergencyUiIntent.CallNumber("116")) }
             )
         }
 
@@ -218,7 +245,8 @@ fun OtherServicesGrid() {
                 iconTint = Color(0xFF1976D2),
                 iconBackground = Color(0xFFE3F2FD),
                 modifier = Modifier.weight(1f),
-                index = 2
+                index = 2,
+                onClick = { onIntent(EmergencyUiIntent.CallNumber("113")) }
             )
 
             SmallServiceCard(
@@ -228,7 +256,8 @@ fun OtherServicesGrid() {
                 iconTint = Color(0xFFD32F2F),
                 iconBackground = Color(0xFFFFEBEE),
                 modifier = Modifier.weight(1f),
-                index = 3
+                index = 3,
+                onClick = { onIntent(EmergencyUiIntent.CallNumber("123")) }
             )
         }
     }

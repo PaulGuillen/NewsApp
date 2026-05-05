@@ -24,6 +24,9 @@ class EmergencyViewModel(
             is EmergencyUiIntent.NavigateToDetails -> {
                 EmergencyUiEvent.NavigateToDetails(type = intent.type).send()
             }
+            is EmergencyUiIntent.CallNumber -> {
+                EmergencyUiEvent.CallNumber(number = intent.number).send()
+            }
         }
     }
 
