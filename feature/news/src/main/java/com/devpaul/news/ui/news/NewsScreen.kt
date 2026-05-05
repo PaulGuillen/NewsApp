@@ -2,14 +2,11 @@ package com.devpaul.news.ui.news
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.InfoXPeruTheme
@@ -90,6 +87,26 @@ fun NewsScreen(navController: NavHostController) {
         viewModel = viewModel,
         navController = navController
     ) { _, uiState, onIntent, _, _ ->
+
+        LaunchedEffect(uiState.country, uiState.selectedCountry) {
+            if (uiState.selectedCountry == null && uiState.country is ResultState.Success) {
+                val countryList = uiState.country.response.data
+                val peru = countryList.firstOrNull {
+                    it.title.equals(
+                        Constant.COUNTRY_PERU,
+                        ignoreCase = true
+                    ) || it.title.contains("Peru", ignoreCase = true) || it.title.contains(
+                        "Perú",
+                        ignoreCase = true
+                    )
+                }
+                if (peru != null) {
+                    onIntent(NewsUiIntent.SelectCountry(peru))
+                    onIntent(NewsUiIntent.SelectSource(Source.GOOGLE))
+                }
+            }
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
             BaseContentLayout(
                 isBodyScrollable = false,
@@ -205,13 +222,6 @@ private fun EmptyCountryState() {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Image(
-                painter = painterResource(R.drawable.no_country_selected),
-                contentDescription = null,
-                modifier = Modifier.size(120.dp)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = stringResource(R.string.select_country_to_see_news),
