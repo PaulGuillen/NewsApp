@@ -471,3 +471,183 @@ fun NewsScreenPreview() {
         )
     }
 }
+
+@Preview(
+    name = "CoachMark - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "CoachMark - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun CoachMarkOverlayPreview() {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            val coachMarkTargets = remember { mutableStateMapOf<String, LayoutCoordinates>() }
+
+            Box(
+                modifier = Modifier
+                    .padding(top = 120.dp)
+                    .size(160.dp)
+                    .onGloballyPositioned { coords ->
+                        coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR] = coords
+                    }
+                    .align(Alignment.TopCenter)
+            ) {
+                Text(text = "TARGET", style = MaterialTheme.typography.bodyMedium)
+            }
+
+            val target = coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR]
+            if (target != null) {
+                CoachMarkOverlay(
+                    target = target,
+                    title = "Selecciona un país",
+                    description = "Elige el país para ver las noticias disponibles",
+                    onNext = {},
+                    onSkip = {}
+                )
+            }
+        }
+    }
+}
+
+@Preview(
+    name = "News - Loading",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "News - Loading Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun NewsScreenLoadingPreview() {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = { NewsHeader() },
+            body = {
+                NewsBody(
+                    context = LocalContext.current,
+                    uiState = NewsUiState(
+                        country = ResultState.Loading,
+                        selectedCountry = null,
+                        selectedSource = Source.GOOGLE,
+                        google = ResultState.Loading,
+                        reddit = ResultState.Loading,
+                        deltaProject = ResultState.Loading
+                    ),
+                    onIntent = {},
+                    selectedUrl = null,
+                    onSelectUrl = {},
+                    coachMarkTargets = mutableMapOf()
+                )
+            },
+            footer = { HomeBottomBar(rememberNavController()) }
+        )
+    }
+}
+
+@Preview(
+    name = "News - Empty Country",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "News - Empty Country Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun NewsScreenEmptyCountryPreview() {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        BaseContentLayout(
+            isBodyScrollable = false,
+            header = { NewsHeader() },
+            body = {
+                NewsBody(
+                    context = LocalContext.current,
+                    uiState = NewsUiState(
+                        country = ResultState.Success(NewsMock().countryMock),
+                        selectedCountry = null,
+                        selectedSource = Source.GOOGLE
+                    ),
+                    onIntent = {},
+                    selectedUrl = null,
+                    onSelectUrl = {},
+                    coachMarkTargets = mutableMapOf()
+                )
+            },
+            footer = { HomeBottomBar(rememberNavController()) }
+        )
+    }
+}
+
+@Preview(
+    name = "News - With CoachMark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "News - With CoachMark Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun NewsScreenWithCoachMarkPreview() {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Build a full NewsBody with coachmark visible; the preview will render the overlay
+            val coachMarkTargets = remember { mutableStateMapOf<String, LayoutCoordinates>() }
+
+            BaseContentLayout(
+                isBodyScrollable = false,
+                header = { NewsHeader() },
+                body = {
+                    NewsBody(
+                        context = LocalContext.current,
+                        uiState = NewsUiState(
+                            country = ResultState.Success(NewsMock().countryMock),
+                            selectedCountry = NewsMock().countryMock.data.first(),
+                            selectedSource = Source.GOOGLE,
+                            google = ResultState.Success(NewsMock().googleMock),
+                            showCoachMark = true,
+                            coachMarkStepIndex = 0
+                        ),
+                        onIntent = {},
+                        selectedUrl = null,
+                        onSelectUrl = {},
+                        coachMarkTargets = coachMarkTargets
+                    )
+                },
+                footer = { HomeBottomBar(rememberNavController()) }
+            )
+
+            // place a target box so overlay has coordinates in preview
+            Box(
+                modifier = Modifier
+                    .padding(top = 120.dp)
+                    .size(160.dp)
+                    .onGloballyPositioned { coords ->
+                        coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR] = coords
+                    }
+                    .align(Alignment.TopCenter)
+            ) {}
+            val target = coachMarkTargets[CoachMarkTargets.COUNTRY_SELECTOR]
+            if (target != null) {
+                CoachMarkOverlay(
+                    target = target,
+                    title = "Selecciona un país",
+                    description = "Elige el país para ver las noticias disponibles",
+                    onNext = {},
+                    onSkip = {}
+                )
+            }
+        }
+    }
+}
+
