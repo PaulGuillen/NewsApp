@@ -17,34 +17,42 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.devpaul.core_platform.theme.BrandAccent
 import com.devpaul.core_platform.theme.GreenDark
+import com.devpaul.shared.data.datasource.NewsSavedStore
+import com.devpaul.shared.data.datasource.SavedNews
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewsCard(
     modifier: Modifier = Modifier,
     context: Context,
     title: String,
+    country: String = "",
     source: String,
     category: String,
     time: String,
@@ -69,8 +77,8 @@ fun NewsCard(
     val divider = if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0)
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
+            .then(Modifier.fillMaxWidth())
             .clickable {
                 onSelect()
                 context.startActivity(
@@ -124,11 +132,45 @@ fun NewsCard(
             Spacer(modifier = Modifier.weight(1f))
 
             // 🔥 BOOKMARK ICON
+            val inspection = LocalInspectionMode.current
+            val id = url.ifBlank { title.hashCode().toString() }
+            val savedListState: State<List<SavedNews>> = if (!inspection) {
+                val flow = remember(context) { NewsSavedStore.getSavedNewsFlow(context) }
+                flow.collectAsState(initial = emptyList())
+            } else {
+                remember { mutableStateOf(emptyList()) }
+            }
+
+            val savedList = savedListState.value
+            val isSaved = remember(savedList, id) { savedList.any { it.id == id } }
+            val scope = rememberCoroutineScope()
+
+            val icon = if (isSaved) Icons.Default.Bookmark else Icons.Default.BookmarkBorder
+            val tintColor = if (isSaved) BrandAccent else metaColor
+
             Icon(
-                imageVector = Icons.Default.BookmarkBorder,
+                imageVector = icon,
                 contentDescription = null,
-                tint = metaColor,
-                modifier = Modifier.size(18.dp)
+                tint = tintColor,
+                modifier = Modifier
+                    .size(18.dp)
+                    .clickable {
+                        if (!inspection) {
+                            scope.launch {
+                                val saved = SavedNews(
+                                    id = id,
+                                    title = title,
+                                    country = country,
+                                    source = source,
+                                    category = category,
+                                    time = time,
+                                    url = url
+                                )
+                                // always save from News screen (add/replace)
+                                NewsSavedStore.saveArticle(context, saved)
+                            }
+                        }
+                    }
             )
         }
     }
