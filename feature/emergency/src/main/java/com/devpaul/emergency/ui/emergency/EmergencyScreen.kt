@@ -1,5 +1,6 @@
 package com.devpaul.emergency.ui.emergency
 
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,11 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.LocalHospital
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Warning
-import android.content.Intent
-import androidx.core.net.toUri
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.extension.ResultState
@@ -60,11 +59,13 @@ fun EmergencyScreen(
             when (event) {
                 is EmergencyUiEvent.CallNumber -> {
                     try {
-                        val intent = Intent(Intent.ACTION_DIAL, "tel:${event.number}".toUri()).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
+                        val intent =
+                            Intent(Intent.ACTION_DIAL, "tel:${event.number}".toUri()).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
                         ctx.startActivity(intent)
-                    } catch (_: Exception) { /* ignore */ }
+                    } catch (_: Exception) { /* ignore */
+                    }
                 }
 
                 is EmergencyUiEvent.NavigateToDetails -> {
@@ -73,7 +74,7 @@ fun EmergencyScreen(
                 }
             }
         }
-    ) { _, uiState, onIntent, _, _ ->
+    ) { _, _, onIntent, _, _ ->
         BaseContentLayout(
             isBodyScrollable = true,
             header = {
@@ -81,7 +82,6 @@ fun EmergencyScreen(
             },
             body = {
                 EmergencyBody(
-                    uiState = uiState,
                     onIntent = onIntent,
                 )
             },
@@ -97,14 +97,11 @@ fun EmergencyHeader() {
     AppHeader(
         title = "Emergencias PE",
         subtitle = "Lunes, 24 de Mayo",
-        icon = Icons.Default.Public,
-        onNotificationClick = { }
     )
 }
 
 @Composable
 fun EmergencyBody(
-    uiState: EmergencyUiState,
     onIntent: (EmergencyUiIntent) -> Unit,
 ) {
 
@@ -284,30 +281,6 @@ fun EmergencyPreview() {
             body = {
                 EmergencyBody(
                     onIntent = {},
-                    uiState = EmergencyUiState(
-                        section = ResultState.Success(
-                            SectionEntity(
-                                status = 200,
-                                data = listOf(
-                                    SectionItemEntity(
-                                        title = "Seguridad Ciudadana",
-                                        image = "https://example.com/image1.jpg",
-                                        type = "local_security"
-                                    ),
-                                    SectionItemEntity(
-                                        title = "Bomberos",
-                                        image = "https://example.com/image2.jpg",
-                                        type = "firefighter"
-                                    ),
-                                    SectionItemEntity(
-                                        title = "Policía Nacional",
-                                        image = "https://example.com/image3.jpg",
-                                        type = "police"
-                                    )
-                                )
-                            )
-                        )
-                    )
                 )
             },
             footer = {

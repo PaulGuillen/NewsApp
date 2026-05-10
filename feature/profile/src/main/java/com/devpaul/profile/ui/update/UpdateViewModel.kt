@@ -3,6 +3,7 @@ package com.devpaul.profile.ui.update
 import androidx.lifecycle.viewModelScope
 import com.devpaul.core_data.serialization.Wrapper
 import com.devpaul.core_data.serialization.fromJsonGeneric
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -57,34 +58,32 @@ class UpdateViewModel(
             password = userProfile.password,
             image = userProfile.image ?: "",
         )
+
         updateUiStateOnMain { it.copy(updateUser = ResultState.Loading) }
-        val result =
-            updateProfileUC(UpdateProfileUC.Params(uid = userProfile.uid, profileUser = updateUser))
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is UpdateProfileUC.Success.UpdateSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(updateUser = ResultState.Success(it.updateUser))
-                        }
-                        originalProfile = userProfile
-                    }
+
+        when (
+            val result = updateProfileUC.updateProfile(
+                uid = userProfile.uid,
+                profileUser = updateUser
+            )
+        ) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(updateUser = ResultState.Success(result.data))
+                }
+                originalProfile = userProfile
+            }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        updateUser = ResultState.Error(
+                            message = result.error.message ?: ERROR_UPDATE_PROFILE,
+                        )
+                    )
                 }
             }
-            .onFailure<UpdateProfileUC.Failure> {
-                when (it) {
-                    is UpdateProfileUC.Failure.UpdateError -> {
-                        updateUiStateOnMain { uitState ->
-                            uitState.copy(
-                                updateUser = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "Ocurrió un error al actualizar el perfil.",
-                                )
-                            )
-                        }
-                    }
-                }
-            }
+        }
     }
 
     fun hasProfileChanged(current: ProfileUserEntity): Boolean {
@@ -97,4 +96,7 @@ class UpdateViewModel(
         }
     }
 
+    private companion object {
+        const val ERROR_UPDATE_PROFILE = "Ocurrió un error al actualizar el perfil."
+    }
 }

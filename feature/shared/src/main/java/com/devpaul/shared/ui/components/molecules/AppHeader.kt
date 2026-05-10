@@ -27,7 +27,7 @@ fun AppHeader(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
-    icon: ImageVector,
+    icon: ImageVector? = null,
     onNotificationClick: (() -> Unit)? = null,
 
     ) {
@@ -44,12 +44,14 @@ fun AppHeader(
                 .clip(CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.size(42.dp)
-            )
+            icon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.size(42.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(12.dp))

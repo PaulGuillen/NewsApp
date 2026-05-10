@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -26,14 +28,22 @@ fun ProfileActionButton(
     modifier: Modifier = Modifier
 ) {
     val colors = rememberProfileUiColors()
+    val isDark = isSystemInDarkTheme()
+    val shape = RoundedCornerShape(14.dp)
 
     Button(
         onClick = onClick,
         modifier = modifier
+            .shadow(
+                elevation = if (isDark) 12.dp else 0.dp,
+                shape = shape,
+                ambientColor = colors.actionBorder,
+                spotColor = colors.actionBorder
+            )
             .fillMaxWidth()
             .height(52.dp),
-        shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp, colors.actionBorder),
+        shape = shape,
+        border = BorderStroke(if (isDark) 1.4.dp else 1.dp, colors.actionBorder),
         colors = ButtonDefaults.buttonColors(
             containerColor = colors.actionContainer,
             contentColor = colors.actionContent

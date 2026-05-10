@@ -1,8 +1,5 @@
 package com.devpaul.profile.data.datasource.remote
 
-import com.devpaul.core_data.DefaultOutput
-import com.devpaul.core_domain.entity.Defaults
-import com.devpaul.core_domain.entity.Output
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.data.datasource.mapper.getLikedByMap
@@ -31,109 +28,93 @@ class FirebaseProfileDS(
     private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun getProfileById(uid: String): DefaultOutput<ProfileEntity> {
-        return runCatchingOutput {
-            val snapshot = firestore.collection(USERS_COLLECTION).document(uid).get().await()
+    suspend fun getProfileById(uid: String): ProfileEntity {
+        val snapshot = firestore.collection(USERS_COLLECTION).document(uid).get().await()
 
-            if (!snapshot.exists()) {
-                return@runCatchingOutput notFoundOutput("No se encontró el perfil del usuario")
-            }
-
-            Output.Success(snapshot.toProfileEntity(uid))
+        if (!snapshot.exists()) {
+            throw NoSuchElementException("No se encontró el perfil del usuario")
         }
+
+        return snapshot.toProfileEntity(uid)
     }
 
     suspend fun updateUserData(
         uid: String,
         profileUser: UpdateRequest
-    ): DefaultOutput<GenericEntity> {
-        return runCatchingOutput {
-            firestore.collection(USERS_COLLECTION)
-                .document(uid)
-                .set(profileUser.toFirestoreMap(uid), SetOptions.merge())
-                .await()
+    ): GenericEntity {
+        firestore.collection(USERS_COLLECTION)
+            .document(uid)
+            .set(profileUser.toFirestoreMap(uid), SetOptions.merge())
+            .await()
 
-            Output.Success(
-                GenericEntity(
-                    status = 200,
-                    message = "Perfil actualizado correctamente"
-                )
-            )
-        }
+        return GenericEntity(
+            status = 200,
+            message = "Perfil actualizado correctamente"
+        )
     }
 
     suspend fun createComment(
         commentRequest: CommentRequest
-    ): DefaultOutput<CommentEntity> {
-        return runCatchingOutput {
-            val commentRef = firestore.collection(COMMENTS_COLLECTION).document()
+    ): CommentEntity {
+        val commentRef = firestore.collection(COMMENTS_COLLECTION).document()
 
-            commentRef.set(
-                hashMapOf(
-                    COMMENT_ID_FIELD to commentRef.id,
-                    USER_ID_FIELD to commentRequest.userId.valueOrDefault(),
-                    NAME_FIELD to commentRequest.name.valueOrDefault(),
-                    LASTNAME_FIELD to commentRequest.lastname.valueOrDefault(),
-                    IMAGE_FIELD to commentRequest.image.orEmpty(),
-                    COMMENT_FIELD to commentRequest.comment.valueOrDefault(),
-                    CREATED_AT_FIELD to FieldValue.serverTimestamp(),
-                    LIKES_FIELD to 0
-                )
-            ).await()
-
-            val snapshot = commentRef.get().await()
-
-            Output.Success(
-                CommentEntity(
-                    status = 200,
-                    message = "Comentario registrado correctamente",
-                    commentId = commentRef.id,
-                    data = snapshot.toCommentDataEntity()
-                )
+        commentRef.set(
+            hashMapOf(
+                COMMENT_ID_FIELD to commentRef.id,
+                USER_ID_FIELD to commentRequest.userId.valueOrDefault(),
+                NAME_FIELD to commentRequest.name.valueOrDefault(),
+                LASTNAME_FIELD to commentRequest.lastname.valueOrDefault(),
+                IMAGE_FIELD to commentRequest.image.orEmpty(),
+                COMMENT_FIELD to commentRequest.comment.valueOrDefault(),
+                CREATED_AT_FIELD to FieldValue.serverTimestamp(),
+                LIKES_FIELD to 0
             )
-        }
+        ).await()
+
+        val snapshot = commentRef.get().await()
+
+        return CommentEntity(
+            status = 200,
+            message = "Comentario registrado correctamente",
+            commentId = commentRef.id,
+            data = snapshot.toCommentDataEntity()
+        )
     }
 
     suspend fun getComments(
         limit: Int,
         lastTimestamp: Long? = null
-    ): DefaultOutput<GetCommentEntity> {
-        return runCatchingOutput {
-            var query: Query = firestore.collection(COMMENTS_COLLECTION)
-                .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
-                .limit(limit.toLong())
+    ): GetCommentEntity {
+        var query: Query = firestore.collection(COMMENTS_COLLECTION)
+            .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
+            .limit(limit.toLong())
 
-            if (lastTimestamp != null) {
-                query = query.startAfter(Timestamp(lastTimestamp, 0))
-            }
-
-            val snapshot = query.get().await()
-            val comments = snapshot.documents.map { it.toGetCommentDataEntity() }
-            val nextCursor = snapshot.documents
-                .lastOrNull()
-                ?.getTimestamp(CREATED_AT_FIELD)
-                ?.seconds
-                ?.takeIf { snapshot.size() >= limit }
-
-            Output.Success(
-                GetCommentEntity(
-                    status = 200,
-                    comments = comments,
-                    nextPageCursor = nextCursor
-                )
-            )
+        if (lastTimestamp != null) {
+            query = query.startAfter(Timestamp(lastTimestamp, 0))
         }
+
+        val snapshot = query.get().await()
+        val comments = snapshot.documents.map { it.toGetCommentDataEntity() }
+        val nextCursor = snapshot.documents
+            .lastOrNull()
+            ?.getTimestamp(CREATED_AT_FIELD)
+            ?.seconds
+            ?.takeIf { snapshot.size() >= limit }
+
+        return GetCommentEntity(
+            status = 200,
+            comments = comments,
+            nextPageCursor = nextCursor
+        )
     }
 
-    suspend fun getPost(): DefaultOutput<PostEntity> {
-        return runCatchingOutput {
-            val snapshot = firestore.collection(POSTS_COLLECTION)
-                .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
-                .get()
-                .await()
+    suspend fun getPost(): PostEntity {
+        val snapshot = firestore.collection(POSTS_COLLECTION)
+            .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
+            .get()
+            .await()
 
-            Output.Success(snapshot.documents.toPostEntity())
-        }
+        return snapshot.documents.toPostEntity()
     }
 
     suspend fun incrementLike(
@@ -141,43 +122,40 @@ class FirebaseProfileDS(
         commentId: String,
         userId: String,
         increment: Boolean
-    ): DefaultOutput<GenericEntity> {
-        return runCatchingOutput {
-            val collection = type.toCollectionName()
-            val idField = collection.toIdField()
-            val document = findTargetDocument(collection, idField, commentId)
-                ?: return@runCatchingOutput notFoundOutput("No se encontró el registro a actualizar")
+    ): GenericEntity {
+        val collection = type.toCollectionName()
+        val idField = collection.toIdField()
+        val document = findTargetDocument(collection, idField, commentId)
+            ?: throw NoSuchElementException("No se encontrÃ³ el registro a actualizar")
 
-            firestore.runTransaction { transaction ->
-                val snapshot = transaction.get(document)
-                val currentLikes = snapshot.getLong(LIKES_FIELD)?.toInt() ?: 0
-                val likedBy = snapshot.getLikedByMap().toMutableMap()
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(document)
+            val currentLikes = snapshot.getLong(LIKES_FIELD)?.toInt() ?: 0
+            val likedBy = snapshot.getLikedByMap().toMutableMap()
 
-                val alreadyLiked = likedBy[userId] == true
-                val shouldIncrement = increment && !alreadyLiked
-                val shouldDecrement = !increment && alreadyLiked
+            val alreadyLiked = likedBy[userId] == true
+            val shouldIncrement = increment && !alreadyLiked
+            val shouldDecrement = !increment && alreadyLiked
 
-                if (shouldIncrement) {
-                    likedBy[userId] = true
-                    transaction.update(document, buildLikePayload(currentLikes + 1, likedBy))
-                } else if (shouldDecrement) {
-                    likedBy.remove(userId)
-                    transaction.update(
-                        document,
-                        buildLikePayload((currentLikes - 1).coerceAtLeast(0), likedBy)
-                    )
-                }else {
-                    // No se realiza ninguna actualización si el estado de like no cambia
-                }
-            }.await()
-
-            Output.Success(
-                GenericEntity(
-                    status = 200,
-                    message = "Like actualizado correctamente"
+            if (shouldIncrement) {
+                likedBy[userId] = true
+                transaction.update(document, buildLikePayload(currentLikes + 1, likedBy))
+            } else if (shouldDecrement) {
+                likedBy.remove(userId)
+                transaction.update(
+                    document,
+                    buildLikePayload((currentLikes - 1).coerceAtLeast(0), likedBy)
                 )
-            )
-        }
+            }else {
+                // No se realiza ninguna actualización si el estado de like no cambia
+                return@runTransaction
+            }
+        }.await()
+
+        return GenericEntity(
+            status = 200,
+            message = "Like actualizado correctamente"
+        )
     }
 
     private suspend fun findTargetDocument(
@@ -207,30 +185,6 @@ class FirebaseProfileDS(
         return mapOf(
             LIKES_FIELD to likes,
             LIKED_BY_FIELD to likedBy
-        )
-    }
-
-    private suspend fun <T> runCatchingOutput(
-        block: suspend () -> DefaultOutput<T>
-    ): DefaultOutput<T> {
-        return try {
-            block()
-        } catch (throwable: Throwable) {
-            Output.Failure(
-                Defaults.UnknownError(
-                    code = -1,
-                    throwable = throwable
-                )
-            )
-        }
-    }
-
-    private fun <T> notFoundOutput(message: String): DefaultOutput<T> {
-        return Output.Failure(
-            Defaults.HttpError(
-                code = 404,
-                data = message
-            )
         )
     }
 

@@ -2,6 +2,7 @@ package com.devpaul.profile.ui.suggestions
 
 import com.devpaul.core_data.serialization.Wrapper
 import com.devpaul.core_data.serialization.fromJsonGeneric
+import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -36,45 +37,34 @@ class SuggestionViewModel(
 
     override suspend fun onUiIntent(intent: SuggestionUiIntent) {
         when (intent) {
-            is SuggestionUiIntent.CreateComment -> {
-                launchIO {
-                    createComment(
-                        userId = intent.userId,
-                        name = intent.name,
-                        lastname = intent.lastname,
-                        image = intent.image,
-                        comment = intent.comment,
-                    )
-                }
+            is SuggestionUiIntent.CreateComment -> launchIO {
+                createComment(
+                    userId = intent.userId,
+                    name = intent.name,
+                    lastname = intent.lastname,
+                    image = intent.image,
+                    comment = intent.comment,
+                )
             }
 
-            is SuggestionUiIntent.PatchIncrementLike -> {
-                launchIO {
-                    incrementLike(
-                        type = intent.type,
-                        commentId = intent.commentId,
-                        userId = intent.userId,
-                        increment = intent.increment,
-                    )
-                }
+            is SuggestionUiIntent.PatchIncrementLike -> launchIO {
+                incrementLike(
+                    type = intent.type,
+                    commentId = intent.commentId,
+                    userId = intent.userId,
+                    increment = intent.increment,
+                )
             }
 
-            is SuggestionUiIntent.GetPost -> {
-                launchIO {
-                    fetchPost()
-                }
+            is SuggestionUiIntent.GetPost -> launchIO {
+                fetchPost()
             }
 
-            is SuggestionUiIntent.GetComments -> {
-                launchIO {
-                    fetchComments(intent.isNextPage)
-                }
+            is SuggestionUiIntent.GetComments -> launchIO {
+                fetchComments(intent.isNextPage)
             }
 
-            is SuggestionUiIntent.NavigateBack -> {
-                navigationBack()
-            }
-
+            is SuggestionUiIntent.NavigateBack -> navigationBack()
         }
     }
 
@@ -98,6 +88,7 @@ class SuggestionViewModel(
         comment: String
     ) {
         updateUiStateOnMain { it.copy(createComment = ResultState.Loading) }
+
         val request = CommentRequest(
             userId = userId,
             name = name,
@@ -105,30 +96,24 @@ class SuggestionViewModel(
             image = image,
             comment = comment
         )
-        val result = createCommentUC(CreateCommentUC.Params(createComment = request))
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is CreateCommentUC.Success.CreateCommentSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(createComment = ResultState.Success(it.comment))
-                        }
-                    }
-                }
-            }.onFailure<CreateCommentUC.Failure> {
-                when (it) {
-                    is CreateCommentUC.Failure.CreateCommentError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                createComment = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "An error occurred while creating comment."
-                                )
-                            )
-                        }
-                    }
+
+        when (val result = createCommentUC.createComment(request)) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(createComment = ResultState.Success(result.data))
                 }
             }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        createComment = ResultState.Error(
+                            message = result.error.message ?: ERROR_CREATE_COMMENT
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private suspend fun incrementLike(
@@ -138,111 +123,108 @@ class SuggestionViewModel(
         increment: Boolean,
     ) {
         updateUiStateOnMain { it.copy(incrementLike = ResultState.Loading) }
-        val result = patchIncrementLike(
-            IncrementLikeUC.Params(
+
+        when (
+            val result = patchIncrementLike.incrementLike(
                 type = type,
                 commentId = commentId,
                 userId = userId,
                 increment = increment
             )
-        )
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is IncrementLikeUC.Success.IncrementLikeSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(incrementLike = ResultState.Success(it.incrementLike))
-                        }
-                    }
-                }
-            }.onFailure<IncrementLikeUC.Failure> {
-                when (it) {
-                    is IncrementLikeUC.Failure.IncrementLikeError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                incrementLike = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "An error occurred while incrementing like."
-                                )
-                            )
-                        }
-                    }
+        ) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(incrementLike = ResultState.Success(result.data))
                 }
             }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        incrementLike = ResultState.Error(
+                            message = result.error.message ?: ERROR_INCREMENT_LIKE
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private suspend fun fetchPost() {
         updateUiStateOnMain { it.copy(posts = ResultState.Loading) }
-        val result = getPostUC()
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is GetPostUC.Success.AllPostsSuccess -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(posts = ResultState.Success(it.allPosts))
-                        }
-                    }
-                }
-            }.onFailure<GetPostUC.Failure> {
-                when (it) {
-                    is GetPostUC.Failure.AllPostsError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                posts = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message
-                                        ?: "An error occurred while fetching all posts."
-                                )
-                            )
-                        }
-                    }
+
+        when (val result = getPostUC.getPost()) {
+            is Output.Success -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(posts = ResultState.Success(result.data))
                 }
             }
+
+            is Output.Failure -> {
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(
+                        posts = ResultState.Error(
+                            message = result.error.message ?: ERROR_GET_POSTS
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private suspend fun fetchComments(isNextPage: Boolean = false) {
         val cursor = uiState.nextPageCursor
         updateUiStateOnMain { it.copy(isLoadingMore = true) }
 
-        val result = getCommentUC(
-            GetCommentUC.Params(
+        when (
+            val result = getCommentUC.getComments(
                 limit = 10,
                 lastTimestamp = if (isNextPage) cursor else null
             )
-        )
+        ) {
+            is Output.Success -> {
+                val oldList = if (isNextPage) {
+                    (uiState.getComments as? ResultState.Success)?.response?.comments.orEmpty()
+                } else {
+                    emptyList()
+                }
+                val newList = oldList + result.data.comments
+                val newCursor = result.data.nextPageCursor
 
-        result.handleNetworkDefault()
-            .onSuccessful {
-                when (it) {
-                    is GetCommentUC.Success.GetCommentSuccess -> {
-                        val oldList = if (isNextPage)
-                            (uiState.getComments as? ResultState.Success)?.response?.comments.orEmpty()
-                        else
-                            emptyList()
-                        val newList = oldList + it.comment.comments
-                        val newCursor = it.comment.nextPageCursor
+                updateUiStateOnMain { state ->
+                    state.copy(
+                        getComments = ResultState.Success(
+                            result.data.copy(comments = newList)
+                        ),
+                        nextPageCursor = newCursor,
+                        isLoadingMore = false
+                    )
+                }
+            }
 
-                        updateUiStateOnMain { state ->
-                            state.copy(
-                                getComments = ResultState.Success(
-                                    it.comment.copy(comments = newList)
-                                ),
-                                nextPageCursor = newCursor,
-                                isLoadingMore = false
-                            )
+            is Output.Failure -> {
+                updateUiStateOnMain { state ->
+                    state.copy(
+                        isLoadingMore = false,
+                        getComments = if (!isNextPage) {
+                            ResultState.Error(result.error.message ?: ERROR_GET_COMMENTS)
+                        } else {
+                            state.getComments
                         }
-                    }
+                    )
                 }
             }
-            .onFailure<GetCommentUC.Failure> {
-                updateUiStateOnMain {
-                    it.copy(isLoadingMore = false)
-                }
-            }
+        }
     }
-
 
     private fun navigationBack() {
         SuggestionUiEvent.NavigationBack.send()
     }
 
+    private companion object {
+        const val ERROR_CREATE_COMMENT = "An error occurred while creating comment."
+        const val ERROR_INCREMENT_LIKE = "An error occurred while incrementing like."
+        const val ERROR_GET_POSTS = "An error occurred while fetching all posts."
+        const val ERROR_GET_COMMENTS = "An error occurred while fetching comments."
+    }
 }

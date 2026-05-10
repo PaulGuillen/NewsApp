@@ -1,6 +1,5 @@
 package com.devpaul.profile.data.repository
 
-import com.devpaul.core_data.DefaultOutput
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.data.datasource.remote.ProfileServiceDS
@@ -17,18 +16,18 @@ class ProfileRepositoryImpl(
     private val profileServiceDS: ProfileServiceDS,
 ) : ProfileRepository {
 
-    override suspend fun profileById(uid: String): DefaultOutput<ProfileEntity> {
+    override suspend fun profileById(uid: String): ProfileEntity {
         return profileServiceDS.getProfileById(uid = uid)
     }
 
     override suspend fun updateUserData(
         uid: String,
         profileUser: UpdateRequest
-    ): DefaultOutput<GenericEntity> {
+    ): GenericEntity {
         return profileServiceDS.getUpdateUserData(uid = uid, profileUser = profileUser)
     }
 
-    override suspend fun createComment(postRequest: CommentRequest): DefaultOutput<CommentEntity> {
+    override suspend fun createComment(postRequest: CommentRequest): CommentEntity {
         return profileServiceDS.createComment(postRequest = postRequest)
     }
 
@@ -37,7 +36,7 @@ class ProfileRepositoryImpl(
         commentId: String,
         userId: String,
         increment: Boolean,
-    ): DefaultOutput<GenericEntity> {
+    ): GenericEntity {
         return profileServiceDS.incrementLike(
             type = type,
             commentId = commentId,
@@ -46,14 +45,14 @@ class ProfileRepositoryImpl(
         )
     }
 
-    override suspend fun getPost(): DefaultOutput<PostEntity> {
+    override suspend fun getPost(): PostEntity {
         return profileServiceDS.getPost()
     }
 
     override suspend fun getComments(
         limit: Int,
         lastTimestamp: Long?
-    ): DefaultOutput<GetCommentEntity> {
+    ): GetCommentEntity {
         return profileServiceDS.getComments(
             limit = limit,
             lastTimestamp = lastTimestamp

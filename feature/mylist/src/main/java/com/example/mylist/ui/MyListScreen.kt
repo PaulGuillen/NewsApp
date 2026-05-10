@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -61,7 +59,7 @@ fun MyListScreen(navHostController: NavHostController) {
 
 @Composable
 fun MyListHeader() {
-    AppHeader(title = "Emergencias PE", subtitle = "Lunes, 24 de Mayo", icon = Icons.Default.Public, onNotificationClick = {})
+    AppHeader(title = "Emergencias PE", subtitle = "Lunes, 24 de Mayo")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +76,10 @@ fun MyListContent() {
     val savedList by savedFlow.collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.fillMaxSize().background(background).padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(background)
+        .padding(horizontal = 16.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Row {
@@ -99,11 +100,21 @@ fun MyListContent() {
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (savedList.isEmpty()) {
-                NewsSavedCard(title = "No tienes artículos guardados", category = "", time = "", isHighlighted = false)
+                NewsSavedCard(
+                    title = "No tienes artículos guardados",
+                    category = "",
+                    time = "",
+                    isHighlighted = false
+                )
             } else {
                 val filtered = savedList.filter { if (selectedTab == 0) !it.isRead else it.isRead }
                 if (filtered.isEmpty()) {
-                    NewsSavedCard(title = if (selectedTab == 0) "No hay artículos por leer" else "No hay artículos leídos", category = "", time = "", isHighlighted = false)
+                    NewsSavedCard(
+                        title = if (selectedTab == 0) "No hay artículos por leer" else "No hay artículos leídos",
+                        category = "",
+                        time = "",
+                        isHighlighted = false
+                    )
                 } else {
                     filtered.forEach { item ->
                         val dismissState = rememberSwipeToDismissBoxState(
@@ -135,7 +146,15 @@ fun MyListContent() {
                                     selectedArticleId = item.id
                                     val link = item.url
                                     if (!link.isNullOrBlank()) {
-                                        try { ctx.startActivity(Intent(Intent.ACTION_VIEW, link.toUri())) } catch (_: Throwable) {}
+                                        try {
+                                            ctx.startActivity(
+                                                Intent(
+                                                    Intent.ACTION_VIEW,
+                                                    link.toUri()
+                                                )
+                                            )
+                                        } catch (_: Throwable) {
+                                        }
                                     }
                                     scope.launch {
                                         delay(600)

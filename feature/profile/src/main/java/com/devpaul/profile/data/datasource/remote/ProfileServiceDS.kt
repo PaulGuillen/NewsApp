@@ -1,6 +1,5 @@
 package com.devpaul.profile.data.datasource.remote
 
-import com.devpaul.core_data.DefaultOutput
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.domain.entity.CommentEntity
@@ -14,20 +13,20 @@ import org.koin.core.annotation.Factory
 class ProfileServiceDS(
     private val firebaseProfileDS: FirebaseProfileDS
 ) {
-    suspend fun getProfileById(uid: String): DefaultOutput<ProfileEntity> {
+    suspend fun getProfileById(uid: String): ProfileEntity {
         return firebaseProfileDS.getProfileById(uid)
     }
 
     suspend fun getUpdateUserData(
         uid: String,
         profileUser: UpdateRequest,
-    ): DefaultOutput<GenericEntity> {
+    ): GenericEntity {
         return firebaseProfileDS.updateUserData(uid, profileUser)
     }
 
     suspend fun createComment(
         postRequest: CommentRequest,
-    ): DefaultOutput<CommentEntity> {
+    ): CommentEntity {
         return firebaseProfileDS.createComment(postRequest)
     }
 
@@ -36,7 +35,7 @@ class ProfileServiceDS(
         commentId: String,
         userId: String,
         increment: Boolean,
-    ): DefaultOutput<GenericEntity> {
+    ): GenericEntity {
         return firebaseProfileDS.incrementLike(
             type = type,
             commentId = commentId,
@@ -45,14 +44,14 @@ class ProfileServiceDS(
         )
     }
 
-    suspend fun getPost(): DefaultOutput<PostEntity> {
+    suspend fun getPost(): PostEntity {
         return firebaseProfileDS.getPost()
     }
 
     suspend fun getComments(
         limit: Int,
         lastTimestamp: Long? = null
-    ): DefaultOutput<GetCommentEntity> {
+    ): GetCommentEntity {
         return firebaseProfileDS.getComments(
             limit = limit,
             lastTimestamp = lastTimestamp

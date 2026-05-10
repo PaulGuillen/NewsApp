@@ -16,11 +16,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -96,8 +94,6 @@ fun ProfileHeader() {
     AppHeader(
         title = "Emergencias PE",
         subtitle = "Lunes, 24 de Mayo",
-        icon = Icons.Default.Public,
-        onNotificationClick = { }
     )
 }
 

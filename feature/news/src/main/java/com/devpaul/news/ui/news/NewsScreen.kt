@@ -10,9 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -149,8 +148,6 @@ fun NewsHeader() {
     AppHeader(
         title = "Emergencias PE",
         subtitle = "Lunes, 24 de Mayo",
-        icon = Icons.Default.Public,
-        onNotificationClick = { }
     )
 }
 
@@ -303,7 +300,7 @@ private fun GoogleNewsContent(
     context: Context,
     uiState: NewsUiState,
     onIntent: (NewsUiIntent) -> Unit,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
     selectedUrl: String?,
@@ -350,7 +347,7 @@ private fun RedditNewsContent(
     context: Context,
     uiState: NewsUiState,
     onIntent: (NewsUiIntent) -> Unit,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
     selectedUrl: String?,
@@ -398,7 +395,7 @@ private fun DeltaNewsContent(
     context: Context,
     uiState: NewsUiState,
     onIntent: (NewsUiIntent) -> Unit,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     visibleCount: Int,
     isLoadingMore: Boolean,
     selectedUrl: String?,

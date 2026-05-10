@@ -7,6 +7,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.devpaul.core_platform.theme.Black
+import com.devpaul.core_platform.theme.BrandAccent
 import com.devpaul.core_platform.theme.EmergencyDark
 import com.devpaul.core_platform.theme.EmergencyLight
 import com.devpaul.core_platform.theme.EmergencyRed
@@ -41,9 +42,9 @@ fun rememberProfileUiColors(): ProfileUiColors {
             secondaryText = if (isDark) ProfileDarkMuted else colorScheme.onSurfaceVariant,
             accent = if (isDark) ProfileDarkAccent else colorScheme.primary,
             outline = if (isDark) ProfileDarkCard else colorScheme.outlineVariant,
-            actionContainer = if (isDark) EmergencyDark else EmergencyLight,
-            actionContent = EmergencyRed,
-            actionBorder = if (isDark) EmergencyRed.copy(alpha = 0.35f) else EmergencyRed.copy(alpha = 0.18f)
+            actionContainer = if (isDark) Color(0xFF062C33) else EmergencyLight,
+            actionContent = if (isDark) BrandAccent else EmergencyRed,
+            actionBorder = if (isDark) BrandAccent.copy(alpha = 0.72f) else EmergencyRed.copy(alpha = 0.18f)
         )
     }
 }
