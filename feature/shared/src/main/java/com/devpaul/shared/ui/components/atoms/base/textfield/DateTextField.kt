@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -20,7 +21,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +37,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.devpaul.core_platform.theme.BrandAccent
 import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.White
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -58,6 +59,8 @@ fun DateTextField(
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
     val date = remember { mutableStateOf(LocalDate.now()) }
+    val isDark = isSystemInDarkTheme()
+    val accent = if (isDark) BrandAccent else BrickRed
 
     val dialogState = rememberMaterialDialogState()
     var showTooltip by remember { mutableStateOf(false) }
@@ -81,9 +84,9 @@ fun DateTextField(
             initialDate = date.value,
             title = "Selecciona una fecha",
             colors = DatePickerDefaults.colors(
-                headerBackgroundColor = BrickRed,
-                dateActiveBackgroundColor = BrickRed,
-                dateInactiveTextColor = BrickRed.copy(alpha = 0.5f),
+                headerBackgroundColor = accent,
+                dateActiveBackgroundColor = accent,
+                dateInactiveTextColor = accent.copy(alpha = 0.5f),
             ),
             allowedDateValidator = { it.year <= LocalDate.now().year }
         ) {
@@ -138,7 +141,7 @@ fun DateTextField(
                     },
                     imageVector = Icons.Default.DateRange,
                     contentDescription = null,
-                    tint = BrickRed
+                    tint = accent
                 )
             },
             enabled = enabled,
@@ -147,11 +150,7 @@ fun DateTextField(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done
             ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = BrickRed,
-                cursorColor = BrickRed,
-                focusedLabelColor = BrickRed,
-            )
+            colors = profileFieldColors()
         )
     }
 }

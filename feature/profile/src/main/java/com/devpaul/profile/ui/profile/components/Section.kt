@@ -1,8 +1,6 @@
 package com.devpaul.profile.ui.profile.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devpaul.profile.ui.components.rememberProfileUiColors
 
 @Composable
 fun Section(
@@ -23,19 +22,20 @@ fun Section(
     cardColor: Color,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column {
+    val colors = rememberProfileUiColors()
 
+    Column {
         Text(
             text = title,
             fontSize = 11.sp,
-            color = Color(0xFF9CA3AF),
+            color = colors.secondaryText,
             modifier = Modifier.padding(vertical = 12.dp)
         )
 
         Column(
             modifier = Modifier
-                .background(cardColor, RoundedCornerShape(16.dp))
                 .fillMaxWidth()
+                .background(cardColor, RoundedCornerShape(16.dp))
         ) {
             content()
         }

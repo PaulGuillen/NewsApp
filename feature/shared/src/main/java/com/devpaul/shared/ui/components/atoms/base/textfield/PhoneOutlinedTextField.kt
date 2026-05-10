@@ -11,11 +11,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.devpaul.core_platform.theme.BrickRed
 
 @Composable
 fun PhoneOutlinedTextField(
@@ -36,10 +34,6 @@ fun PhoneOutlinedTextField(
         label = { Text(stringResource(id = labelRes)) },
         leadingIcon = { Icon(leadingIcon, contentDescription = null) },
         keyboardOptions = keyboardOptions,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = BrickRed,
-            cursorColor = BrickRed,
-            focusedLabelColor = BrickRed,
-        )
+        colors = profileFieldColors()
     )
 }

@@ -35,7 +35,9 @@ class UpdateViewModel(
 
     suspend fun getProfileData() {
         val profileJson = dataStoreUseCase.getString("profile_data")
-        val wrapper: Wrapper<ProfileUserEntity>? = Gson().fromJsonGeneric(profileJson)
+        val wrapper: Wrapper<ProfileUserEntity>? = profileJson
+            ?.takeIf { it.isNotBlank() }
+            ?.let { Gson().fromJsonGeneric(it) }
         val profile = wrapper?.data
 
         originalProfile = profile
@@ -53,7 +55,7 @@ class UpdateViewModel(
             phone = userProfile.phone,
             email = userProfile.email,
             password = userProfile.password,
-            image = userProfile.image ?: ""
+            image = userProfile.image ?: "",
         )
         updateUiStateOnMain { it.copy(updateUser = ResultState.Loading) }
         val result =

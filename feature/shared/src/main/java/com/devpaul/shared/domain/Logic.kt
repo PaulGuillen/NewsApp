@@ -146,8 +146,18 @@ fun String?.toLocalDate(): LocalDate? {
     }
 }
 
+private const val NOT_REGISTERED = "Sin registrar"
+
+fun buildDisplayName(name: String?, lastname: String?): String {
+    val parts = listOf(name.orEmpty().trim(), lastname.orEmpty().trim()).filter { it.isNotEmpty() }
+    return parts.joinToString(" ").ifBlank { NOT_REGISTERED }
+}
+
+fun String?.displayOrDefault(): String = this?.takeIf { it.isNotBlank() } ?: NOT_REGISTERED
+
 val API_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d-M-yyyy")
 
 val SPANISH_DATE_FORMATTER: DateTimeFormatter =
     DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", Locale("es", "PE"))
+
 

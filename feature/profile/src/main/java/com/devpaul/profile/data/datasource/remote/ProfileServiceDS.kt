@@ -1,11 +1,8 @@
 package com.devpaul.profile.data.datasource.remote
 
 import com.devpaul.core_data.DefaultOutput
-import com.devpaul.core_data.safeApiCall
-import com.devpaul.core_domain.entity.transform
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
-import com.devpaul.profile.data.datasource.mapper.toDomain
 import com.devpaul.profile.domain.entity.CommentEntity
 import com.devpaul.profile.domain.entity.GenericEntity
 import com.devpaul.profile.domain.entity.GetCommentEntity
@@ -15,29 +12,23 @@ import org.koin.core.annotation.Factory
 
 @Factory
 class ProfileServiceDS(
-    private val profileServiceDS: ProfileService
+    private val firebaseProfileDS: FirebaseProfileDS
 ) {
     suspend fun getProfileById(uid: String): DefaultOutput<ProfileEntity> {
-        return safeApiCall {
-            profileServiceDS.getProfileById(uid)
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.getProfileById(uid)
     }
 
     suspend fun getUpdateUserData(
         uid: String,
         profileUser: UpdateRequest,
     ): DefaultOutput<GenericEntity> {
-        return safeApiCall {
-            profileServiceDS.updateUserData(uid, profileUser)
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.updateUserData(uid, profileUser)
     }
 
     suspend fun createComment(
         postRequest: CommentRequest,
     ): DefaultOutput<CommentEntity> {
-        return safeApiCall {
-            profileServiceDS.createComment(request = postRequest)
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.createComment(postRequest)
     }
 
     suspend fun incrementLike(
@@ -46,28 +37,25 @@ class ProfileServiceDS(
         userId: String,
         increment: Boolean,
     ): DefaultOutput<GenericEntity> {
-        return safeApiCall {
-            profileServiceDS.incrementLike(
-                type = type,
-                commentId = commentId,
-                userId = userId,
-                increment = increment
-            )
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.incrementLike(
+            type = type,
+            commentId = commentId,
+            userId = userId,
+            increment = increment
+        )
     }
 
     suspend fun getPost(): DefaultOutput<PostEntity> {
-        return safeApiCall {
-            profileServiceDS.getPost()
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.getPost()
     }
 
     suspend fun getComments(
         limit: Int,
         lastTimestamp: Long? = null
     ): DefaultOutput<GetCommentEntity> {
-        return safeApiCall {
-            profileServiceDS.getComments(limit, lastTimestamp)
-        }.transform { it.toDomain() }
+        return firebaseProfileDS.getComments(
+            limit = limit,
+            lastTimestamp = lastTimestamp
+        )
     }
 }

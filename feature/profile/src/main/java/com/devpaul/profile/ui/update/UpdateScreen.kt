@@ -1,10 +1,13 @@
 package com.devpaul.profile.ui.update
 
 import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,11 +17,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -36,8 +44,9 @@ import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.profile.domain.entity.ProfileUserEntity
+import com.devpaul.profile.ui.components.ProfileActionButton
+import com.devpaul.profile.ui.components.rememberProfileUiColors
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
-import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.dialog.ErrorNotification
 import com.devpaul.shared.ui.components.atoms.base.dialog.InfoNotification
 import com.devpaul.shared.ui.components.atoms.base.dialog.SuccessNotification
@@ -229,14 +238,45 @@ fun UpdateScreenHeader(
     navController: NavHostController,
     shouldReloadGlobal: MutableState<Boolean>
 ) {
-    TopBarPrincipal(
-        style = 2,
-        title = stringResource(R.string.header_update),
-        onStartIconClick = {
-            navController.setNavigationResult("shouldReload", shouldReloadGlobal.value)
-            navController.popBackStack()
+    val colors = rememberProfileUiColors()
+
+    if (isSystemInDarkTheme()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colors.background)
+                .padding(horizontal = 6.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = {
+                    navController.setNavigationResult("shouldReload", shouldReloadGlobal.value)
+                    navController.popBackStack()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Atrás",
+                    tint = colors.primaryText
+                )
+            }
+
+            Text(
+                text = stringResource(R.string.header_update),
+                color = colors.primaryText,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
-    )
+    } else {
+        TopBarPrincipal(
+            style = 2,
+            title = stringResource(R.string.header_update),
+            onStartIconClick = {
+                navController.setNavigationResult("shouldReload", shouldReloadGlobal.value)
+                navController.popBackStack()
+            }
+        )
+    }
 }
 
 @Composable
@@ -252,6 +292,7 @@ fun UpdateScreenBody(
     imageUri: MutableState<Uri?>,
     uiState: UpdateUiState,
 ) {
+    val colors = rememberProfileUiColors()
 
     OnValueChangeEffect(uiState.profile) { profile ->
         name.value = profile.name
@@ -266,6 +307,7 @@ fun UpdateScreenBody(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -291,9 +333,14 @@ fun UpdateScreenBody(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                colors = CardDefaults.cardColors(
+                    containerColor = colors.surface
+                ),
                 shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                border = BorderStroke(
+                    1.dp,
+                    colors.outline
+                ),
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     CustomOutlinedTextField(
@@ -386,9 +433,9 @@ fun UpdateScreenFooter(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 10.dp)
     ) {
-        CustomButton(
-            modifier = Modifier.fillMaxWidth(),
+        ProfileActionButton(
             text = stringResource(id = R.string.button_update),
+            icon = Icons.AutoMirrored.Filled.ArrowForward,
             onClick = {
                 val updatedProfile = ProfileUserEntity(
                     id = uiState.profile?.id.orEmpty(),
@@ -408,6 +455,7 @@ fun UpdateScreenFooter(
                     showDialogInfo.value = true
                 }
             },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

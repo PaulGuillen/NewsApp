@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +17,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.tooling.preview.Preview
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.BrickRed
 
 @Composable
 fun PasswordField(
@@ -52,11 +50,7 @@ fun PasswordField(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Next,
         ),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = BrickRed,
-            cursorColor = BrickRed,
-            focusedLabelColor = BrickRed,
-        )
+        colors = profileFieldColors()
     )
 }
 

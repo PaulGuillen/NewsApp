@@ -59,3 +59,10 @@ val ErrorButtonText = Color(0xFFDC2626)
 
 //Utils
 val ColorHorizontalDivider = Color(0xFFE0E0E0)
+
+// Profile / Update dark palette
+val ProfileDarkBackground = Color(0xFF111C26)
+val ProfileDarkCard = Color(0xFF243247)
+val ProfileDarkText = Color(0xFFF3F6FB)
+val ProfileDarkMuted = Color(0xFF6E7B8F)
+val ProfileDarkAccent = Color(0xFF2388FF)

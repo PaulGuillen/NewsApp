@@ -80,7 +80,9 @@ class SuggestionViewModel(
 
     suspend fun getProfileData() {
         val profileJson = dataStoreUseCase.getString("profile_data")
-        val wrapper: Wrapper<ProfileUserEntity>? = Gson().fromJsonGeneric(profileJson)
+        val wrapper: Wrapper<ProfileUserEntity>? = profileJson
+            ?.takeIf { it.isNotBlank() }
+            ?.let { Gson().fromJsonGeneric(it) }
         profile = wrapper?.data
 
         updateUiStateOnMain {

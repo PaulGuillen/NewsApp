@@ -28,6 +28,10 @@ class ProfileUserResponse(
     val email: String,
     @SerializedName("password")
     val password: String,
+    @SerializedName("country")
+    val country: String = "",
+    @SerializedName("district")
+    val district: String = "",
     @SerializedName("image")
     val image: String? = null
 )

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.core.net.toUri
 import com.devpaul.core_data.util.Constant.LOG_IN_KEY
 import com.devpaul.core_data.util.Constant.USER_UID_KEY
+import com.devpaul.core_data.serialization.Wrapper
 import com.devpaul.core_domain.use_case.DataStoreUseCase
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.StatefulViewModel
@@ -61,7 +62,7 @@ class ProfileViewModel(
                             uiState.copy(profile = ResultState.Success(it.profile))
                         }
 
-                        val profileJson = Gson().toJson(it.profile)
+                        val profileJson = Gson().toJson(Wrapper(it.profile.data))
                         dataStoreUseCase.setValue("profile_data", profileJson)
                     }
                 }

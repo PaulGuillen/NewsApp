@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +39,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.profile.data.datasource.mock.PostMock
 import com.devpaul.profile.domain.entity.PostEntity
 import com.devpaul.profile.domain.entity.PostItemEntity
+import com.devpaul.profile.ui.components.rememberProfileUiColors
 import com.devpaul.shared.data.skeleton.SkeletonRenderer
 import com.devpaul.shared.data.skeleton.SkeletonType
 import kotlinx.coroutines.delay
@@ -50,141 +52,178 @@ fun PostScreen(
     onBackClick: () -> Unit,
 ) {
     when (post) {
-        is ResultState.Loading -> {
-            SkeletonRenderer(type = SkeletonType.POST_SCREEN)
-        }
-
-        is ResultState.Success -> {
-            val data = post.response.data.firstOrNull() ?: return
-            var isLiked by remember { mutableStateOf(data.likedBy?.get(userId) == true) }
-            var likeCount by remember { mutableStateOf(data.likes ?: 0) }
-            var isProcessing by remember { mutableStateOf(false) }
-
-            LaunchedEffect(isProcessing) {
-                if (isProcessing) {
-                    delay(1000)
-                    isProcessing = false
-                }
-            }
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Image(
-                        painter = rememberAsyncImagePainter(data.image),
-                        contentDescription = data.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(160.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color.Black,
-                            modifier = Modifier
-                                .size(36.dp)
-                                .background(
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(18.dp)
-                                )
-                                .padding(8.dp)
-                                .clickable { onBackClick() }
-                        )
-
-                        Icon(
-                            imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = "Favorito",
-                            tint = if (isLiked) Color.Red else Color.Gray,
-                            modifier = Modifier
-                                .size(36.dp)
-                                .background(
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(18.dp)
-                                )
-                                .padding(8.dp)
-                                .clickable(enabled = !isProcessing) {
-                                    isLiked = !isLiked
-                                    likeCount = if (isLiked) likeCount + 1 else likeCount - 1
-                                    isProcessing = true
-                                    onLikeClick(data, isLiked)
-                                }
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                ) {
-                    Text(
-                        text = data.title ?: "",
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "$likeCount me gusta",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 4.dp)
-                    )
-
-                    val description = data.description.orEmpty()
-                    val lineBreaks = remember(description) { description.count { it == '\n' } }
-
-                    val shouldForceShowMore = lineBreaks >= 3
-                    var isExpanded by remember { mutableStateOf(false) }
-                    var isOverflowing by remember { mutableStateOf(false) }
-
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 4.dp),
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
-                        overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { result ->
-                            isOverflowing = result.lineCount > 1
-                        }
-                    )
-
-                    if (shouldForceShowMore || isOverflowing) {
-                        Text(
-                            text = if (isExpanded) "Ver menos" else "Ver más",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .clickable { isExpanded = !isExpanded }
-                                .padding(bottom = 8.dp)
-                        )
-                    }
-                }
-            }
-        }
+        is ResultState.Loading -> SkeletonRenderer(type = SkeletonType.POST_SCREEN)
+        is ResultState.Success -> PostContent(
+            post = post.response.data.firstOrNull() ?: return,
+            userId = userId,
+            onLikeClick = onLikeClick,
+            onBackClick = onBackClick
+        )
 
         is ResultState.Error -> {
             Text(
                 text = "Error al cargar el post.",
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(16.dp)
             )
         }
 
         else -> Unit
+    }
+}
+
+@Composable
+private fun PostContent(
+    post: PostItemEntity,
+    userId: String,
+    onLikeClick: (PostItemEntity, Boolean) -> Unit,
+    onBackClick: () -> Unit,
+) {
+    val colors = rememberProfileUiColors()
+    var isLiked by remember(post, userId) { mutableStateOf(post.likedBy?.get(userId) == true) }
+    var likeCount by remember(post) { mutableStateOf(post.likes ?: 0) }
+    var isProcessing by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isProcessing) {
+        if (isProcessing) {
+            delay(1000)
+            isProcessing = false
+        }
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = colors.background
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = rememberAsyncImagePainter(post.image),
+                    contentDescription = post.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    contentScale = ContentScale.Crop
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    PostActionIcon(
+                        backgroundColor = colors.surface.copy(alpha = 0.92f),
+                        onClick = onBackClick,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Volver",
+                                tint = colors.primaryText
+                            )
+                        }
+                    )
+
+                    PostActionIcon(
+                        backgroundColor = colors.surface.copy(alpha = 0.92f),
+                        onClick = {
+                            if (!isProcessing) {
+                                isLiked = !isLiked
+                                likeCount = if (isLiked) likeCount + 1 else likeCount - 1
+                                isProcessing = true
+                                onLikeClick(post, isLiked)
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "Favorito",
+                                tint = if (isLiked) colors.accent else colors.primaryText
+                            )
+                        }
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(colors.surface)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+            ) {
+                Text(
+                    text = post.title ?: "",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colors.primaryText,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "$likeCount me gusta",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.secondaryText,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 4.dp)
+                )
+
+                val description = post.description.orEmpty()
+                val lineBreaks = remember(description) { description.count { it == '\n' } }
+                val shouldForceShowMore = lineBreaks >= 3
+                var isExpanded by remember(description) { mutableStateOf(false) }
+                var isOverflowing by remember(description) { mutableStateOf(false) }
+
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.primaryText,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { result ->
+                        isOverflowing = result.lineCount > 1
+                    }
+                )
+
+                if (shouldForceShowMore || isOverflowing) {
+                    Text(
+                        text = if (isExpanded) "Ver menos" else "Ver más",
+                        color = colors.accent,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .clickable { isExpanded = !isExpanded }
+                            .padding(bottom = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PostActionIcon(
+    backgroundColor: Color,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(18.dp)
+            )
+            .clickable { onClick() }
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        icon()
     }
 }
 

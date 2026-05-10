@@ -1,6 +1,7 @@
 package com.devpaul.profile.ui.profile.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,43 +20,39 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devpaul.profile.ui.components.rememberProfileUiColors
 
 @Composable
 fun ProfileItem(
     title: String,
-    subtitle: String? = null
+    subtitle: String? = null,
+    onClick: (() -> Unit)? = null
 ) {
-
-    val isDark = isSystemInDarkTheme()
-
-    val textPrimary = if (isDark) Color.White else Color.Black
-    val textSecondary = if (isDark) Color(0xFF94A3B8) else Color(0xFF6B7280)
-    val iconTint = if (isDark) Color(0xFF60A5FA) else Color(0xFF3B82F6)
-    val iconBg = if (isDark)
-        Color(0xFF60A5FA).copy(alpha = 0.15f)
-    else
-        Color(0xFF3B82F6).copy(alpha = 0.15f)
+    val colors = rememberProfileUiColors()
+    val iconBackgroundAlpha = if (isSystemInDarkTheme()) 0.14f else 0.15f
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(enabled = onClick != null) { onClick?.invoke() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Box(
             modifier = Modifier
                 .size(36.dp)
-                .background(iconBg, RoundedCornerShape(10.dp)),
+                .background(
+                    colors.accent.copy(alpha = iconBackgroundAlpha),
+                    RoundedCornerShape(10.dp)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = null,
-                tint = iconTint
+                tint = colors.accent
             )
         }
 
@@ -64,22 +61,24 @@ fun ProfileItem(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = textPrimary // 🔥 AQUÍ LA CLAVE
+                color = colors.primaryText
             )
             subtitle?.let {
                 Text(
                     text = it,
                     fontSize = 12.sp,
-                    color = textSecondary // 🔥 AQUÍ LA CLAVE
+                    color = colors.secondaryText
                 )
             }
         }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-            contentDescription = null,
-            tint = textSecondary,
-            modifier = Modifier.size(16.dp)
-        )
+        if (onClick != null) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                contentDescription = null,
+                tint = colors.secondaryText,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }

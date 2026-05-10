@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.devpaul.core_data.util.Constant
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.profile.ui.components.rememberProfileUiColors
 import com.devpaul.profile.ui.suggestions.components.CommentScreen
 import com.devpaul.profile.ui.suggestions.components.PostScreen
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
@@ -44,19 +46,14 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SuggestionsScreen(navController: NavHostController) {
-
     val viewModel: SuggestionViewModel = koinViewModel()
 
     BaseScreenWithState(
         viewModel = viewModel,
-        onInit = { _, _ ->
-            viewModel.getProfileData()
-        },
+        onInit = { _, _ -> viewModel.getProfileData() },
         onUiEvent = { event, _ ->
             when (event) {
-                is SuggestionUiEvent.NavigationBack -> {
-                    navController.popBackStack()
-                }
+                is SuggestionUiEvent.NavigationBack -> navController.popBackStack()
             }
         },
         navController = navController,
@@ -75,40 +72,32 @@ fun SuggestionContent(
     showSnackBar: (String) -> Unit,
     onIntent: (SuggestionUiIntent) -> Unit,
 ) {
+    val colors = rememberProfileUiColors()
     var commentText by remember { mutableStateOf("") }
     val createCommentState = uiState.createComment
-    var hasFetched by remember { mutableStateOf(false) }
 
     LaunchedEffect(createCommentState) {
-        if (createCommentState is ResultState.Success && !hasFetched) {
+        if (createCommentState is ResultState.Success) {
             commentText = ""
-            hasFetched = true
             onIntent(SuggestionUiIntent.GetComments(isNextPage = false))
         }
     }
 
-
-    when (uiState.createComment) {
-        is ResultState.Loading -> {
-            ScreenLoading()
-        }
-
-        is ResultState.Error -> {
-            showSnackBar("Error al crear el comentario")
-        }
-
-        else -> {
-            // Handle other states if needed
-        }
+    when (createCommentState) {
+        is ResultState.Loading -> ScreenLoading()
+        is ResultState.Error -> showSnackBar("Error al crear el comentario")
+        else -> Unit
     }
 
     BaseContentLayout(
         isBodyScrollable = false,
         body = {
-            CommentsBody(
-                uiState = uiState,
-                onIntent = onIntent
-            )
+            Surface(color = colors.background) {
+                CommentsBody(
+                    uiState = uiState,
+                    onIntent = onIntent
+                )
+            }
         },
         footer = {
             CommentsFooter(
@@ -138,10 +127,9 @@ fun CommentsBody(
     uiState: SuggestionUiState,
     onIntent: (SuggestionUiIntent) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    val colors = rememberProfileUiColors()
 
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         PostScreen(
             post = uiState.posts,
             userId = uiState.profile?.id.orEmpty(),
@@ -160,7 +148,10 @@ fun CommentsBody(
             }
         )
 
-        HorizontalDivider(thickness = 1.5.dp, color = Color.LightGray)
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = colors.outline
+        )
 
         CommentScreen(
             comment = uiState.getComments,
@@ -169,7 +160,6 @@ fun CommentsBody(
                 onIntent(SuggestionUiIntent.GetComments(isNextPage = true))
             }
         )
-
     }
 }
 
@@ -180,15 +170,14 @@ fun CommentsFooter(
     onCommentChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
+    val colors = rememberProfileUiColors()
+
+    Column(modifier = Modifier.padding(8.dp)) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(containerColor = colors.surface),
             shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+            border = BorderStroke(1.dp, colors.outline),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -216,13 +205,21 @@ fun CommentsFooter(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedTextColor = colors.primaryText,
+                        unfocusedTextColor = colors.primaryText,
+                        cursorColor = colors.accent,
+                        focusedPlaceholderColor = colors.secondaryText,
+                        unfocusedPlaceholderColor = colors.secondaryText
                     )
-
                 )
 
                 IconButton(onClick = onSendClick) {
-                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Enviar")
+                    Icon(
+                        Icons.AutoMirrored.Filled.Send,
+                        contentDescription = "Enviar",
+                        tint = colors.accent
+                    )
                 }
             }
         }
