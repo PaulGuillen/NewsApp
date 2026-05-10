@@ -41,15 +41,12 @@ class LoginViewModel(
     }
 
     private suspend fun login(email: String, password: String, rememberMe: Boolean) {
-
         updateUiStateOnMain {
             it.copy(loginStatus = ResultState.Loading)
         }
 
         when (val result = authUC.login(email = email, password = password)) {
-
             is Output.Success -> {
-
                 val auth: Auth = result.data
 
                 dataStoreUseCase.setValue(USER_UID_KEY, auth.uid)
@@ -80,6 +77,9 @@ class LoginViewModel(
             AuthUC.Failure.EmailAlreadyInUse ->
                 "El correo electrónico ya se encuentra en uso."
 
+            AuthUC.Failure.InvalidUser ->
+                "No existe una cuenta asociada a este correo electrónico."
+
             AuthUC.Failure.Network ->
                 "Ocurrió un error de conexión. Verifica tu acceso a internet."
 
@@ -94,7 +94,6 @@ class LoginViewModel(
     }
 
     private suspend fun sendPasswordResetEmail(email: String) {
-
         updateUiStateOnMain {
             it.copy(recoveryPasswordStatus = ResultState.Loading)
         }
@@ -114,10 +113,29 @@ class LoginViewModel(
                 }
 
                 LoginUiEvent.RecoveryPasswordError(
-                    error = Constant.PASSWORD_RECOVERY_FAILURE + result.error.message
+                    error = mapRecoveryErrorToMessage(result.error)
                 ).send()
-
             }
+        }
+    }
+
+    private fun mapRecoveryErrorToMessage(error: AuthUC.Failure): String {
+        val base = Constant.PASSWORD_RECOVERY_FAILURE
+        return when (error) {
+            AuthUC.Failure.InvalidCredentials ->
+                base + "Correo electrónico inválido."
+
+            AuthUC.Failure.InvalidUser ->
+                base + "No existe una cuenta asociada a este correo."
+
+            AuthUC.Failure.Network ->
+                base + "Verifica tu conexión a internet."
+
+            AuthUC.Failure.EmailAlreadyInUse ->
+                base + "No se pudo procesar la solicitud."
+
+            is AuthUC.Failure.Unknown ->
+                base + "Inténtalo nuevamente."
         }
     }
 

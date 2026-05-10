@@ -1,5 +1,7 @@
 package com.devpaul.auth.ui.login
 
+import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -9,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.auth.ui.login.components.LoginForm
 import com.devpaul.core_data.Screen
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,6 +33,10 @@ fun LoginScreen(navHostController: NavHostController) {
 
                 is LoginUiEvent.RecoveryPasswordSuccess -> {
                     showSnackBar(event.message)
+                }
+
+                is LoginUiEvent.RecoveryPasswordError -> {
+                    showSnackBar(event.error)
                 }
             }
         },
@@ -72,13 +79,24 @@ fun LoginContent(
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Login Screen - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Login Screen - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun LoginContentPreview() {
-    LoginContent(
-        navHostController = rememberNavController(),
-        onIntent = { },
-        showSnackBar = { },
-        uiState = LoginUIState()
-    )
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        LoginContent(
+            navHostController = rememberNavController(),
+            onIntent = { },
+            showSnackBar = { },
+            uiState = LoginUIState()
+        )
+    }
 }

@@ -1,5 +1,7 @@
 package com.devpaul.auth.ui.register
 
+import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,6 +13,7 @@ import com.devpaul.auth.domain.entity.Register
 import com.devpaul.auth.ui.register.components.RegisterForm
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.shared.domain.handleDefaultErrors
 import com.devpaul.shared.ui.components.organisms.BaseScreenWithState
 import org.koin.androidx.compose.koinViewModel
@@ -64,35 +67,36 @@ fun RegisterContent(
                 popUpTo(Screen.Login.route) { inclusive = true }
             }
         },
-        onError = {
-
-            onIntent(
-                RegisterUiIntent.Register(
-                    name = "",
-                    lastname = "",
-                    email = "",
-                    password = "",
-                )
-            )
-        }
+        onError = {}
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Register Screen - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Register Screen - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun RegisterContentPreview() {
-    RegisterContent(
-        navHostController = rememberNavController(),
-        onIntent = { },
-        showSnackBar = { },
-        uiState = RegisterUiState(
-            register = ResultState.Success(
-                Register(
-                    status = 200,
-                    message = "Registration successful",
-                    uid = "12345",
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        RegisterContent(
+            navHostController = rememberNavController(),
+            onIntent = { },
+            showSnackBar = { },
+            uiState = RegisterUiState(
+                register = ResultState.Success(
+                    Register(
+                        status = 200,
+                        message = "Registration successful",
+                        uid = "12345",
+                    )
                 )
-            )
-        ),
-    )
+            ),
+        )
+    }
 }

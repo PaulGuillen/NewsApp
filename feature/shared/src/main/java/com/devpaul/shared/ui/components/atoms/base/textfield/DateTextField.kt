@@ -61,6 +61,9 @@ fun DateTextField(
     val date = remember { mutableStateOf(LocalDate.now()) }
     val isDark = isSystemInDarkTheme()
     val accent = if (isDark) BrandAccent else BrickRed
+    val dialogBackground = if (isDark) Color(0xFF0D1822) else White
+    val dialogText = if (isDark) Color(0xFFE6F7FA) else Color(0xFF1B1B1F)
+    val buttonColor = if (isDark) BrandAccent else BrickRed
 
     val dialogState = rememberMaterialDialogState()
     var showTooltip by remember { mutableStateOf(false) }
@@ -74,10 +77,10 @@ fun DateTextField(
 
     MaterialDialog(
         dialogState = dialogState,
-        backgroundColor = White,
+        backgroundColor = dialogBackground,
         buttons = {
-            positiveButton(text = "OK", textStyle = TextStyle(color = BrickRed))
-            negativeButton(text = "Cancelar", textStyle = TextStyle(color = BrickRed))
+            positiveButton(text = "OK", textStyle = TextStyle(color = buttonColor))
+            negativeButton(text = "Cancelar", textStyle = TextStyle(color = buttonColor))
         }
     ) {
         datepicker(
@@ -86,7 +89,11 @@ fun DateTextField(
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = accent,
                 dateActiveBackgroundColor = accent,
+                dateActiveTextColor = dialogBackground,
+                dateInactiveBackgroundColor = dialogBackground,
                 dateInactiveTextColor = accent.copy(alpha = 0.5f),
+                calendarHeaderTextColor = dialogText,
+                headerTextColor = dialogBackground,
             ),
             allowedDateValidator = { it.year <= LocalDate.now().year }
         ) {

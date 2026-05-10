@@ -1,5 +1,7 @@
 package com.devpaul.auth.ui.register.components
 
+import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.devpaul.auth.ui.register.RegisterFormCallbacks
 import com.devpaul.auth.ui.register.RegisterFormState
 import com.devpaul.core_platform.R
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
 import com.devpaul.shared.ui.components.atoms.base.textfield.PasswordField
 
@@ -71,7 +73,16 @@ fun RegisterFormFields(
     )
 }
 
-@Preview(showBackground = true, name = "Register Form Fields Preview")
+@Preview(
+    name = "Register Fields - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Register Fields - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun PreviewRegisterFormFields() {
     val state = RegisterFormState(
@@ -92,7 +103,7 @@ fun PreviewRegisterFormFields() {
         onConfirmPasswordVisibilityChange = {},
     )
 
-    MaterialTheme {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

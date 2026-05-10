@@ -1,7 +1,9 @@
 package com.devpaul.auth.ui.login.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.auth.ui.components.rememberAuthUiColors
 import com.devpaul.auth.ui.login.LoginUIState
 import com.devpaul.auth.ui.login.LoginUiIntent
 import com.devpaul.core_data.Screen
@@ -52,7 +57,7 @@ import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
-import com.devpaul.core_platform.theme.BrickRed
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
@@ -117,10 +122,7 @@ fun LoginForm(
     )
 
     when (val status = uiState?.loginStatus) {
-        is ResultState.Loading -> {
-            ScreenLoading()
-        }
-
+        is ResultState.Loading -> ScreenLoading()
         is ResultState.Error -> {
             DialogCard(
                 message = status.message,
@@ -130,15 +132,12 @@ fun LoginForm(
             )
         }
 
-        else -> {}
+        else -> Unit
     }
 
     when (uiState?.recoveryPasswordStatus) {
-        is ResultState.Loading -> {
-            ScreenLoading()
-        }
-
-        else -> {}
+        is ResultState.Loading -> ScreenLoading()
+        else -> Unit
     }
 }
 
@@ -155,128 +154,163 @@ fun LoginBody(
     rememberMe: Boolean,
     onRememberMeChange: (Boolean) -> Unit,
 ) {
-    Column(
+    val colors = rememberAuthUiColors()
+    val cardShape = RoundedCornerShape(28.dp)
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .background(colors.background)
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Image(
-            painter = painterResource(id = R.drawable.logo_info_peru),
-            contentDescription = stringResource(id = R.string.app_name),
+        Box(
             modifier = Modifier
-                .size(280.dp)
-                .padding(bottom = 20.dp)
+                .size(220.dp)
+                .offset(x = (-70).dp, y = (-30).dp)
+                .background(colors.accentSoft, CircleShape)
         )
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .fillMaxWidth(),
-                    text = "Bienvenido a Info Perú",
-                    fontSize = 18.sp,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    textAlign = TextAlign.Center,
+            Box(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 18.dp,
+                        shape = RoundedCornerShape(34.dp),
+                        ambientColor = colors.buttonGlow,
+                        spotColor = colors.buttonGlow
+                    )
+                    .background(
+                        color = colors.accentSoft,
+                        shape = RoundedCornerShape(34.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_info_peru),
+                    contentDescription = stringResource(id = R.string.app_name),
+                    modifier = Modifier.size(260.dp)
                 )
+            }
 
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Ingresa con tus credenciales para iniciar sesión",
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center,
-                )
+            Spacer(modifier = Modifier.height(16.dp))
 
-                HorizontalDivider(
-                    thickness = 1.5.dp,
-                    color = Color.LightGray,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = colors.card),
+                shape = cardShape,
+                border = BorderStroke(1.dp, colors.cardBorder),
+            ) {
+                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Bienvenido a Info Perú",
+                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        textAlign = TextAlign.Center,
+                        color = colors.title,
+                    )
 
-                CustomOutlinedTextField(
-                    value = email,
-                    onValueChange = onEmailChange,
-                    labelRes = R.string.register_screen_email,
-                    leadingIcon = Icons.Default.Email,
-                    enabled = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Ingresa con tus credenciales para iniciar sesión",
+                        fontSize = 15.sp,
+                        color = colors.body,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = colors.cardBorder.copy(alpha = 0.65f),
+                        modifier = Modifier.padding(vertical = 14.dp)
+                    )
+
+                    CustomOutlinedTextField(
+                        value = email,
+                        onValueChange = onEmailChange,
+                        labelRes = R.string.register_screen_email,
+                        leadingIcon = Icons.Default.Email,
+                        enabled = true,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    PasswordField(
+                        value = password,
+                        onValueChange = onPasswordChange,
+                        label = "Contraseña",
+                        passwordVisible = passwordVisible,
+                        onPasswordVisibilityChange = onPasswordVisibilityChange
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 0.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Checkbox(
+                    modifier = Modifier.offset(x = (-10).dp),
+                    checked = rememberMe,
+                    onCheckedChange = { onRememberMeChange(it) },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = colors.accent,
+                        uncheckedColor = colors.checkboxUnchecked,
+                        checkmarkColor = colors.buttonContent
                     )
                 )
+                Text(
+                    modifier = Modifier.offset(x = (-10).dp),
+                    text = "Recordar usuario/contraseña",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 14.sp,
+                    color = colors.body,
+                )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-                PasswordField(
-                    value = password,
-                    onValueChange = onPasswordChange,
-                    label = "Contraseña",
-                    passwordVisible = passwordVisible,
-                    onPasswordVisibilityChange = onPasswordVisibilityChange
+            CustomButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(id = R.string.login_button),
+                onClick = onLoginClick,
+                painterIcon = painterResource(id = R.drawable.baseline_self_improvement_24),
+                containerColor = colors.buttonContainer,
+                contentColor = colors.buttonContent,
+                glowColor = colors.buttonGlow,
+                shadowEnabled = true,
+                borderColor = colors.buttonBorder
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            TextButton(
+                modifier = Modifier.align(Alignment.End),
+                onClick = onForgotPasswordClick
+            ) {
+                Text(
+                    stringResource(id = R.string.forgot_password),
+                    modifier = Modifier.offset(x = 10.dp),
+                    color = colors.link,
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 0.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Checkbox(
-                modifier = Modifier.offset(x = (-10).dp),
-                checked = rememberMe,
-                onCheckedChange = { onRememberMeChange(it) },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = BrickRed,
-                    uncheckedColor = Color.Black,
-                )
-            )
-            Text(
-                modifier = Modifier.offset(x = (-10).dp),
-                text = "Recordar usuario/contraseña",
-                style = MaterialTheme.typography.bodySmall,
-                fontSize = 14.sp,
-            )
-        }
-
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        CustomButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(id = R.string.login_button),
-            onClick = onLoginClick,
-            painterIcon = painterResource(id = R.drawable.baseline_self_improvement_24),
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        TextButton(
-            modifier = Modifier.align(Alignment.End),
-            onClick = onForgotPasswordClick
-        ) {
-            Text(
-                stringResource(id = R.string.forgot_password),
-                modifier = Modifier.offset(x = (10).dp),
-                color = BrickRed,
-            )
-        }
-
     }
 }
 
@@ -284,9 +318,13 @@ fun LoginBody(
 fun LoginFooter(
     navHostController: NavHostController
 ) {
+    val colors = rememberAuthUiColors()
+
     Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(colors.backgroundSolid)
+            .padding(bottom = 8.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
         Row(
@@ -295,7 +333,7 @@ fun LoginFooter(
         ) {
             Text(
                 text = stringResource(id = R.string.not_have_account),
-                color = MaterialTheme.colorScheme.onBackground,
+                color = colors.body,
                 style = MaterialTheme.typography.bodyMedium
             )
             TextButton(onClick = {
@@ -308,34 +346,45 @@ fun LoginFooter(
                 Text(
                     modifier = Modifier.offset(x = (-4).dp),
                     text = stringResource(id = R.string.register),
-                    color = BrickRed
+                    color = colors.link
                 )
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Login Form - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Login Form - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun BaseContentLayoutPreview() {
-    BaseContentLayout(
-        header = {},
-        body = {
-            LoginBody(
-                email = "",
-                onEmailChange = {},
-                password = "",
-                onPasswordChange = {},
-                passwordVisible = false,
-                onPasswordVisibilityChange = {},
-                onLoginClick = {},
-                onForgotPasswordClick = {},
-                rememberMe = false,
-                onRememberMeChange = {}
-            )
-        },
-        footer = {
-            LoginFooter(navHostController = rememberNavController())
-        }
-    )
+    InfoXPeruTheme(darkTheme = androidx.compose.foundation.isSystemInDarkTheme(), dynamicColor = false) {
+        BaseContentLayout(
+            header = {},
+            body = {
+                LoginBody(
+                    email = "",
+                    onEmailChange = {},
+                    password = "",
+                    onPasswordChange = {},
+                    passwordVisible = false,
+                    onPasswordVisibilityChange = {},
+                    onLoginClick = {},
+                    onForgotPasswordClick = {},
+                    rememberMe = false,
+                    onRememberMeChange = {}
+                )
+            },
+            footer = {
+                LoginFooter(navHostController = rememberNavController())
+            }
+        )
+    }
 }
