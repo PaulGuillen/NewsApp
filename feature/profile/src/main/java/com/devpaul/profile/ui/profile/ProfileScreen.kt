@@ -93,7 +93,6 @@ fun ProfileScreen(navController: NavHostController) {
 fun ProfileHeader() {
     AppHeader(
         title = "Emergencias PE",
-        subtitle = "Lunes, 24 de Mayo",
     )
 }
 

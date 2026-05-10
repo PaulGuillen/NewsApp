@@ -96,7 +96,6 @@ fun EmergencyScreen(
 fun EmergencyHeader() {
     AppHeader(
         title = "Emergencias PE",
-        subtitle = "Lunes, 24 de Mayo",
     )
 }
 

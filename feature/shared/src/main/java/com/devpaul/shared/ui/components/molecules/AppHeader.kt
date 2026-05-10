@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,16 +22,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.devpaul.shared.domain.currentSpanishDate
 
 @Composable
 fun AppHeader(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
-    icon: ImageVector? = null,
+    icon: ImageVector = Icons.Default.Public,
     onNotificationClick: (() -> Unit)? = null,
 
     ) {
+    val resolvedSubtitle = subtitle ?: currentSpanishDate()
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -44,14 +48,12 @@ fun AppHeader(
                 .clip(CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            icon?.let {
-                Icon(
-                    imageVector = it,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier.size(42.dp)
-                )
-            }
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.size(42.dp)
+            )
         }
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -64,13 +66,11 @@ fun AppHeader(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            subtitle?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            Text(
+                text = resolvedSubtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
 
         onNotificationClick?.let {

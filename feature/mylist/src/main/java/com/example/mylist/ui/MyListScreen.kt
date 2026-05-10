@@ -59,7 +59,7 @@ fun MyListScreen(navHostController: NavHostController) {
 
 @Composable
 fun MyListHeader() {
-    AppHeader(title = "Emergencias PE", subtitle = "Lunes, 24 de Mayo")
+    AppHeader(title = "Emergencias PE")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

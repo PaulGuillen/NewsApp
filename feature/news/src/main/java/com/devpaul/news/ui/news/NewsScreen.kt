@@ -147,7 +147,6 @@ fun NewsScreen(navController: NavHostController) {
 fun NewsHeader() {
     AppHeader(
         title = "Emergencias PE",
-        subtitle = "Lunes, 24 de Mayo",
     )
 }
 

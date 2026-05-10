@@ -79,7 +79,6 @@ fun HomeScreen(navController: NavHostController) {
 fun HomeHeader() {
     AppHeader(
         title = "Emergencias PE",
-        subtitle = "Lunes, 24 de Mayo",
     )
 }
 

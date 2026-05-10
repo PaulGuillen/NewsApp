@@ -155,6 +155,8 @@ fun buildDisplayName(name: String?, lastname: String?): String {
 
 fun String?.displayOrDefault(): String = this?.takeIf { it.isNotBlank() } ?: NOT_REGISTERED
 
+fun currentSpanishDate(): String = LocalDate.now().format(SPANISH_DATE_FORMATTER)
+
 val API_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d-M-yyyy")
 
 val SPANISH_DATE_FORMATTER: DateTimeFormatter =
