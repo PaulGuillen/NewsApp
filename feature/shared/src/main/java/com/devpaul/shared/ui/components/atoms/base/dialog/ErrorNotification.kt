@@ -1,38 +1,19 @@
 package com.devpaul.shared.ui.components.atoms.base.dialog
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,17 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.devpaul.core_platform.theme.ColorHorizontalDivider
 import com.devpaul.core_platform.theme.ErrorButtonText
-import com.devpaul.core_platform.theme.ErrorIcon
-import com.devpaul.core_platform.theme.ErrorTitle
-import com.devpaul.core_platform.theme.ErrorTitleHeader
-import com.devpaul.core_platform.theme.ErrorTitleHeaderBackground
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 
 @Composable
 fun ErrorNotification(
@@ -77,26 +52,33 @@ fun ErrorNotification(
             AnimatedVisibility(
                 visible = animateVisible,
                 enter = slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(800)
-                ) + fadeIn(tween(800)),
-
+                    initialOffsetY = { -it / 3 },
+                    animationSpec = tween(500)
+                ) + fadeIn(tween(400)),
                 exit = slideOutVertically(
-                    targetOffsetY = { -it },
-                    animationSpec = tween(600)
-                ) + fadeOut(tween(600))
+                    targetOffsetY = { -it / 4 },
+                    animationSpec = tween(280)
+                ) + fadeOut(tween(220))
             ) {
-                ErrorNotificationContent(
-                    titleHeader = titleHeader,
-                    title = title,
-                    message = message,
-                    primaryButtonText = primaryButtonText,
-                    onPrimaryClick = onPrimaryClick,
-                    onDismiss = onDismiss,
-                    secondaryButtonText = secondaryButtonText,
-                    onSecondaryClick = onSecondaryClick,
-                    showDismissIcon = showDismissIcon
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(notificationPalette(ErrorButtonText).shellBackground)
+                        .padding(horizontal = 18.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    ErrorNotificationContent(
+                        titleHeader = titleHeader,
+                        title = title,
+                        message = message,
+                        primaryButtonText = primaryButtonText,
+                        onPrimaryClick = onPrimaryClick,
+                        onDismiss = onDismiss,
+                        secondaryButtonText = secondaryButtonText,
+                        onSecondaryClick = onSecondaryClick,
+                        showDismissIcon = showDismissIcon
+                    )
+                }
             }
         }
     }
@@ -114,125 +96,51 @@ fun ErrorNotificationContent(
     onSecondaryClick: (() -> Unit)? = null,
     showDismissIcon: Boolean = true
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        ) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(ErrorTitleHeaderBackground)
-                        .padding(start = 16.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = titleHeader,
-                        color = ErrorTitleHeader,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    if (showDismissIcon) {
-                        IconButton(onClick = { onDismiss?.invoke() }) {
-                            Icon(Icons.Default.Close, contentDescription = "Cerrar")
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.size(38.dp))
-                    }
-                }
-
-                HorizontalDivider(color = ColorHorizontalDivider)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = null,
-                        tint = ErrorIcon,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(48.dp)
-                    )
-
-                    Column {
-                        Text(
-                            text = title,
-                            color = ErrorTitle,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = message,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black.copy(alpha = 0.87f)
-                        )
-                    }
-                }
-
-                HorizontalDivider(color = ColorHorizontalDivider)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    if (!secondaryButtonText.isNullOrBlank() && onSecondaryClick != null) {
-                        OutlinedButton(
-                            onClick = {
-                                onSecondaryClick()
-                                onDismiss?.invoke()
-                            },
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
-                        ) {
-                            Text(secondaryButtonText)
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-
-                    Button(
-                        onClick = {
-                            onPrimaryClick()
-                            onDismiss?.invoke()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = ErrorButtonText,
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(primaryButtonText)
-                    }
-                }
-            }
-        }
-    }
+    NotificationContent(
+        titleHeader = titleHeader,
+        title = title,
+        message = message,
+        icon = Icons.Default.Clear,
+        accent = ErrorButtonText,
+        primaryButtonText = primaryButtonText,
+        onPrimaryClick = onPrimaryClick,
+        onDismiss = onDismiss,
+        secondaryButtonText = secondaryButtonText,
+        onSecondaryClick = onSecondaryClick,
+        showDismissIcon = showDismissIcon
+    )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Error - Light",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Error - Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun ErrorNotificationPreview() {
-    ErrorNotificationContent(
-        titleHeader = "Error dialog",
-        title = "¡Hubo un problema!",
-        message = "Ocurrió un error al procesar tu solicitud.",
-        primaryButtonText = "Reintentar",
-        secondaryButtonText = "Cancelar",
-        onPrimaryClick = {},
-        onSecondaryClick = {},
-        onDismiss = {}
-    )
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(notificationPalette(ErrorButtonText).shellBackground)
+                .padding(18.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            ErrorNotificationContent(
+                titleHeader = "Atencion",
+                title = "Actualizacion fallida",
+                message = "No pudimos guardar tus cambios en este momento. Intentalo nuevamente en unos segundos.",
+                primaryButtonText = "Reintentar",
+                secondaryButtonText = "Cancelar",
+                onPrimaryClick = {},
+                onSecondaryClick = {},
+                onDismiss = {}
+            )
+        }
+    }
 }
