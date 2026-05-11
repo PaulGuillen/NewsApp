@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import com.devpaul.core_platform.theme.Black
 import com.devpaul.core_platform.theme.BrandAccent
-import com.devpaul.core_platform.theme.EmergencyDark
 import com.devpaul.core_platform.theme.EmergencyLight
 import com.devpaul.core_platform.theme.EmergencyRed
 import com.devpaul.core_platform.theme.ProfileDarkAccent

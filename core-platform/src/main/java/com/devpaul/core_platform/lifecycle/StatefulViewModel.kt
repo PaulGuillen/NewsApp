@@ -6,9 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.devpaul.core_domain.entity.Defaults
-import com.devpaul.core_domain.entity.Output
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.lifecycle.base.UiStateHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.coroutines.cancellation.CancellationException
 
 abstract class StatefulViewModel<UiState, UiIntent, UiEvent>(
     defaultUIState: () -> UiState,

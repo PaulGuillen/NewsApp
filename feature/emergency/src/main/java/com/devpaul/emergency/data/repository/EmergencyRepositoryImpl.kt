@@ -1,6 +1,5 @@
 package com.devpaul.emergency.data.repository
 
-import com.devpaul.core_data.DefaultOutput
 import com.devpaul.emergency.data.datasource.remote.EmergencyServiceDS
 import com.devpaul.emergency.domain.entity.GeneralEntity
 import com.devpaul.emergency.domain.entity.PoliceEntity

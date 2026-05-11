@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.Black
 
 @Composable
 fun TopBarPrincipal(

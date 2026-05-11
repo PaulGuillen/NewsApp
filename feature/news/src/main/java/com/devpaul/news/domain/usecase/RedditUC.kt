@@ -2,7 +2,6 @@ package com.devpaul.news.domain.usecase
 
 import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.core_platform.extension.ResultState
-import com.devpaul.news.domain.entity.PostDataWrapperEntity
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.domain.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers

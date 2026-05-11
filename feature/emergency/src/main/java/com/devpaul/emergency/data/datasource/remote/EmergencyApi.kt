@@ -1,7 +1,6 @@
 package com.devpaul.emergency.data.datasource.remote
 
 import com.devpaul.emergency.data.datasource.dto.res.GeneralResponse
-import com.devpaul.emergency.data.datasource.dto.res.SectionResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

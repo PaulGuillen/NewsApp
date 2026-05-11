@@ -5,13 +5,10 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
-import androidx.navigation.NavArgs
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.R
 import com.devpaul.core_platform.entity.DialogInteractionListener
-import com.devpaul.core_platform.lifecycle.StatefulViewModel
-import com.devpaul.navigation.core.getSafeArgs
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

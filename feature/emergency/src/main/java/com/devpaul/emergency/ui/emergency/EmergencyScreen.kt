@@ -32,10 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.InfoXPeruTheme
-import com.devpaul.emergency.domain.entity.SectionEntity
-import com.devpaul.emergency.domain.entity.SectionItemEntity
 import com.devpaul.emergency.ui.emergency.components.CriticalServiceItem
 import com.devpaul.emergency.ui.emergency.components.SmallServiceCard
 import com.devpaul.shared.ui.components.molecules.AppHeader
