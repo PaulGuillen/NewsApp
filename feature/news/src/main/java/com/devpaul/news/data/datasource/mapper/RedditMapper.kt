@@ -1,9 +1,9 @@
 package com.devpaul.news.data.datasource.mapper
 
-import com.devpaul.infoxperu.domain.models.res.ListingData
-import com.devpaul.infoxperu.domain.models.res.PostData
-import com.devpaul.infoxperu.domain.models.res.PostDataWrapper
-import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import com.devpaul.news.data.datasource.dto.res.ListingData
+import com.devpaul.news.data.datasource.dto.res.PostData
+import com.devpaul.news.data.datasource.dto.res.PostDataWrapper
+import com.devpaul.news.data.datasource.dto.res.RedditResponse
 import com.devpaul.news.domain.entity.ListingDataEntity
 import com.devpaul.news.domain.entity.PostDataEntity
 import com.devpaul.news.domain.entity.PostDataWrapperEntity

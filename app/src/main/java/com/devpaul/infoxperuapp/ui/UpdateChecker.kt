@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.ui
+package com.devpaul.infoxperuapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context

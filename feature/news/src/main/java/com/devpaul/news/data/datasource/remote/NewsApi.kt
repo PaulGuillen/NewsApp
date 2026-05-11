@@ -1,6 +1,6 @@
 package com.devpaul.news.data.datasource.remote
 
-import com.devpaul.infoxperu.domain.models.res.RedditResponse
+import com.devpaul.news.data.datasource.dto.res.RedditResponse
 import com.devpaul.news.data.datasource.dto.res.CountryResponse
 import com.devpaul.news.data.datasource.dto.res.GDELTResponse
 

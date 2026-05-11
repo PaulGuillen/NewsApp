@@ -4,8 +4,8 @@ import com.devpaul.core_data.DefaultOutput
 import com.devpaul.core_data.safeApiCall
 import com.devpaul.core_domain.entity.error.ApiException
 import com.devpaul.core_domain.entity.transform
-import com.devpaul.infoxperu.domain.models.res.RedditResponse
 import com.devpaul.news.data.datasource.dto.res.GDELTResponse
+import com.devpaul.news.data.datasource.dto.res.RedditResponse
 import com.devpaul.news.data.datasource.mapper.toCountryEntity
 import com.devpaul.news.data.datasource.mapper.toDomain
 import com.devpaul.news.domain.entity.CountryEntity

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.devpaul.infoxperu"
+    namespace = "com.devpaul.infoxperuapp"
 
     defaultConfig {
         applicationId = "com.devpaul.infoxperu"

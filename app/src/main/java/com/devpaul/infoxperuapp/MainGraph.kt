@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu
+package com.devpaul.infoxperuapp
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

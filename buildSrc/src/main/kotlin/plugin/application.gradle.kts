@@ -9,6 +9,7 @@ import dependence.firebaseImplementation
 import dependence.koinImplementation
 import dependence.retrofitImplementation
 import dependence.uiCoreLibsImplementation
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -42,9 +43,21 @@ android {
         compose = true
     }
 
+    val localProperties = Properties()
+    localProperties.load(rootProject.file("local.properties").inputStream())
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties["KEYSTORE_PATH"] as String)
+            storePassword = localProperties["KEYSTORE_PASSWORD"] as String
+            keyAlias = localProperties["KEY_ALIAS"] as String
+            keyPassword = localProperties["KEY_PASSWORD"] as String
+        }
+    }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu
+package com.devpaul.infoxperuapp
 
 import com.devpaul.auth.AuthModule
 import com.devpaul.core_data.CoreDataModule

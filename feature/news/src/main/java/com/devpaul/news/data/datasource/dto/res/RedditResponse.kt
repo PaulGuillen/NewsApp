@@ -1,4 +1,4 @@
-package com.devpaul.infoxperu.domain.models.res
+package com.devpaul.news.data.datasource.dto.res
 
 import com.google.gson.annotations.SerializedName
 
