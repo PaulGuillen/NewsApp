@@ -67,10 +67,10 @@ class ProfileViewModel(
     private fun sharedApp() {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "InfoPerÃº")
-            putExtra(Intent.EXTRA_TEXT, "Descarga InfoPerÃº desde https://infoperu.app")
+            putExtra(Intent.EXTRA_SUBJECT, "InfoPerúº")
+            putExtra(Intent.EXTRA_TEXT, "Descarga InfoPerúº desde https://infoperu.app")
         }
-        ProfileUiEvent.LaunchIntent(intent = Intent.createChooser(shareIntent, "Compartir vÃ­a"))
+        ProfileUiEvent.LaunchIntent(intent = Intent.createChooser(shareIntent, "Compartir vía"))
             .send()
     }
 

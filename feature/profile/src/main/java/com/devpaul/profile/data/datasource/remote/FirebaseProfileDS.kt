@@ -126,7 +126,7 @@ class FirebaseProfileDS(
         val collection = type.toCollectionName()
         val idField = collection.toIdField()
         val document = findTargetDocument(collection, idField, commentId)
-            ?: throw NoSuchElementException("No se encontrÃ³ el registro a actualizar")
+            ?: throw NoSuchElementException("No se encontró el registro a actualizar")
 
         firestore.runTransaction { transaction ->
             val snapshot = transaction.get(document)
