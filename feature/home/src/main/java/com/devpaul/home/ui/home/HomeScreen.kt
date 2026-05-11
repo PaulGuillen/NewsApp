@@ -99,7 +99,7 @@ fun HomeBody(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         HomeIndicatorsSection(uiState = uiState)
         Spacer(modifier = Modifier.height(16.dp))
         EmergencyCard(onClick = { onIntent(HomeUiIntent.ShowEmergencySheet) })

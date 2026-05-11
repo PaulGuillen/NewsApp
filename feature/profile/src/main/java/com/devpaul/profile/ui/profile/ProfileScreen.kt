@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.devpaul.core_data.BuildConfig
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.theme.InfoXPeruTheme
@@ -201,7 +202,7 @@ fun ProfileContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            "VERSIÓN 2.4.0 (BUILD 82)",
+            text = "Versión " + BuildConfig.VERSION_NAME,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             color = colors.secondaryText,
