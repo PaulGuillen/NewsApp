@@ -1,4 +1,4 @@
-package com.devpaul.infoxperuapp
+package com.devpaul.infographic
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,9 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.SetStatusBarColor
-import com.devpaul.infoxperuapp.ui.ForceUpdateScreen
-import com.devpaul.infoxperuapp.ui.UpdateChecker
-import com.devpaul.infoxperuapp.ui.openPlayStore
+import com.devpaul.infographic.ui.ForceUpdateScreen
+import com.devpaul.infographic.ui.UpdateChecker
+import com.devpaul.infographic.ui.openPlayStore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.devpaul.infoxperuapp
+package com.devpaul.infographic
 
 import com.devpaul.auth.AuthModule
 import com.devpaul.core_data.CoreDataModule

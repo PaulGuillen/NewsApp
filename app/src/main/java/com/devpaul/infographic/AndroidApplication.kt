@@ -1,4 +1,4 @@
-package com.devpaul.infoxperuapp
+package com.devpaul.infographic
 
 import android.app.Application
 import com.devpaul.core_platform.log.TimberFactory

@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "com.devpaul.infoxperuapp"
+    namespace = "com.devpaul.infographic"
 
     defaultConfig {
-        applicationId = "com.devpaul.infoxperu"
+        applicationId = "com.devpaul.infographic"
     }
 
 }

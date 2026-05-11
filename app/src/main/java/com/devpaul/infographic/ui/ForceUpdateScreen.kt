@@ -1,4 +1,4 @@
-package com.devpaul.infoxperuapp.ui
+package com.devpaul.infographic.ui
 
 import android.content.Context
 import android.content.Intent
