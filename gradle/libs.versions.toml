@@ -1,9 +1,9 @@
 # Archivo libs.versions.toml
 
 [versions]
-agp = "8.7.3"
+agp = "8.12.3"
 datetime = "0.9.0"
-kotlin = "1.9.21"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -19,7 +19,7 @@ lifecycle = "2.8.3"
 coroutines = "1.7.3"
 timber = "5.0.1"
 firebase-bom = "33.1.2"
-ksp = "1.9.21-1.0.16"
+ksp = "2.0.21-1.0.28"
 runtimeLivedata = "1.6.8"
 coil = "2.1.0"
 shimmer = "1.0.3"
@@ -115,6 +115,7 @@ koin-annotations = { group = "io.insert-koin", name = "koin-annotations", versio
 koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-ksp" }
 android-application-gradle = { group = "com.android.application", name = "com.android.application.gradle.plugin", version.ref = "agp" }
 jetbrains-kotlin-android-gradle = { group = "org.jetbrains.kotlin.android", name = "org.jetbrains.kotlin.android.gradle.plugin", version.ref = "kotlin" }
+jetbrains-kotlin-compose-gradle = { group = "org.jetbrains.kotlin.plugin.compose", name = "org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
 jetbrains-kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 google-ksp-gradle = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -138,6 +139,7 @@ chucker-no-op = { group = "com.github.chuckerteam.chucker", name = "library-no-o
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

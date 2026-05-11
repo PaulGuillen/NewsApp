@@ -13,6 +13,7 @@ import dependence.uiCoreLibsImplementation
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
@@ -60,10 +61,6 @@ android {
 
     kotlinOptions {
         jvmTarget = Config.javaVersion.toString()
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     packaging {

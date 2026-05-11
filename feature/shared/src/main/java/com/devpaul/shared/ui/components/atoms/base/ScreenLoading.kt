@@ -1,7 +1,6 @@
 package com.devpaul.shared.ui.components.atoms.base
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,7 +57,6 @@ private fun ScreenLoadingContent() {
             )
         }
     }
-    val overlay = palette.first
     val cardColor = palette.second
     val accent = palette.third
     val textColor = if (isDark) ProfileDarkText else Color(0xFF2B2730)
@@ -66,8 +64,7 @@ private fun ScreenLoadingContent() {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(overlay),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Card(
