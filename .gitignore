@@ -242,3 +242,8 @@ fabric.properties
 #sign/*.properties
 
 *.properties
+
+# APK / AAB metadata
+*.apk
+*.aab
+**/output-metadata.json
