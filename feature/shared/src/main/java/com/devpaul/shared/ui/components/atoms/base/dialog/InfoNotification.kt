@@ -63,7 +63,6 @@ fun InfoNotification(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(notificationPalette(InfoButtonText).shellBackground)
                         .padding(horizontal = 18.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -127,7 +126,6 @@ fun InfoNotificationPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(notificationPalette(InfoButtonText).shellBackground)
                 .padding(18.dp),
             contentAlignment = Alignment.Center
         ) {

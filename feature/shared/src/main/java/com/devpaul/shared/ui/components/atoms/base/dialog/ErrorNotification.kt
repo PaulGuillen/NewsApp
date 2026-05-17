@@ -63,7 +63,6 @@ fun ErrorNotification(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(notificationPalette(ErrorButtonText).shellBackground)
                         .padding(horizontal = 18.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -127,7 +126,6 @@ fun ErrorNotificationPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(notificationPalette(ErrorButtonText).shellBackground)
                 .padding(18.dp),
             contentAlignment = Alignment.Center
         ) {

@@ -63,7 +63,6 @@ fun SuccessNotification(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(notificationPalette(SuccessButtonText).shellBackground)
                         .padding(horizontal = 18.dp),
                     contentAlignment = Alignment.Center
                 ) {
