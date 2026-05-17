@@ -21,14 +21,43 @@ fun validateRegistration(
     password: String,
     confirmPassword: String
 ): String? {
+
+    val cleanName = name.trim()
+    val cleanLastName = lastName.trim()
+    val cleanEmail = email.trim()
+
     return when {
-        name.isEmpty() -> context.getString(R.string.error_name_empty)
-        lastName.isEmpty() -> context.getString(R.string.error_lastname_empty)
-        email.isEmpty() -> context.getString(R.string.error_email_empty)
-        !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
-        password.isEmpty() -> context.getString(R.string.error_password_empty)
-        confirmPassword.isEmpty() -> context.getString(R.string.error_confirm_password_empty)
-        password != confirmPassword -> context.getString(R.string.error_password_mismatch)
+
+        cleanName.isEmpty() ->
+            context.getString(R.string.error_name_empty)
+
+        cleanName.length < 2 ->
+            context.getString(R.string.error_name_invalid)
+
+        cleanLastName.isEmpty() ->
+            context.getString(R.string.error_lastname_empty)
+
+        cleanLastName.length < 2 ->
+            context.getString(R.string.error_lastname_invalid)
+
+        cleanEmail.isEmpty() ->
+            context.getString(R.string.error_email_empty)
+
+        !isValidEmail(cleanEmail) ->
+            context.getString(R.string.error_email_invalid)
+
+        password.isEmpty() ->
+            context.getString(R.string.error_password_empty)
+
+        password.length < 6 ->
+            context.getString(R.string.error_password_length)
+
+        confirmPassword.isEmpty() ->
+            context.getString(R.string.error_confirm_password_empty)
+
+        password != confirmPassword ->
+            context.getString(R.string.error_password_mismatch)
+
         else -> null
     }
 }
@@ -37,9 +66,17 @@ fun validateEmail(
     context: Context,
     email: String,
 ): String? {
+
+    val cleanEmail = email.trim()
+
     return when {
-        email.isEmpty() -> context.getString(R.string.error_email_empty)
-        !isValidEmail(email) -> context.getString(R.string.error_email_invalid)
+
+        cleanEmail.isEmpty() ->
+            context.getString(R.string.error_email_empty)
+
+        !isValidEmail(cleanEmail) ->
+            context.getString(R.string.error_email_invalid)
+
         else -> null
     }
 }

@@ -68,7 +68,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",
-                                tint = MaterialTheme.colorScheme.onSecondary
+                                tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
                     }
@@ -90,13 +90,15 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_arrow_circle_left_24),
                                 contentDescription = "Atrás",
-                                tint = MaterialTheme.colorScheme.onSecondary
+                                tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
 
                         Text(
                             text = title,
                             fontSize = 20.sp,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
 
@@ -109,7 +111,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Favoritos",
-                                tint = MaterialTheme.colorScheme.onSecondary
+                                tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
                     }
@@ -137,7 +139,7 @@ fun TopBarPrincipal(
                             Icon(
                                 painter = painterResource(id = R.drawable.outline_hr_resting_24),
                                 contentDescription = "Icono final",
-                                tint = MaterialTheme.colorScheme.onSecondary
+                                tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
                     }

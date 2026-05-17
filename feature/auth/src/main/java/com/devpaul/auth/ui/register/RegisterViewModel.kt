@@ -45,9 +45,9 @@ class RegisterViewModel(
 
         when (
             val result = authUC.register(
-                name = name,
-                lastname = lastName,
-                email = email,
+                name = name.trim(),
+                lastname = lastName.trim(),
+                email = email.trim().lowercase(),
                 password = password,
             )
         ) {

@@ -57,6 +57,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.core_platform.extension.validateEmail
 import com.devpaul.core_platform.extension.validateStartSession
 import com.devpaul.core_platform.theme.InfoXPeruTheme
+import com.devpaul.core_platform.theme.White
 import com.devpaul.shared.ui.components.atoms.base.ScreenLoading
 import com.devpaul.shared.ui.components.atoms.base.button.CustomButton
 import com.devpaul.shared.ui.components.atoms.base.textfield.CustomOutlinedTextField
@@ -271,7 +272,7 @@ fun LoginBody(
                     colors = CheckboxDefaults.colors(
                         checkedColor = colors.accent,
                         uncheckedColor = colors.checkboxUnchecked,
-                        checkmarkColor = colors.buttonContent
+                        checkmarkColor = White
                     )
                 )
                 Text(

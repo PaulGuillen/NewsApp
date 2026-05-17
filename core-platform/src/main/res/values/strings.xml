@@ -36,6 +36,9 @@
     <string name="section_available_sections_header">Secciones disponibles</string>
     <string name="section_daily_info_header">Información diaria</string>
     <string name="icon_search">Icono de busquedad</string>
+    <string name="error_name_invalid">El nombre debe tener al menos 2 caracteres</string>
+    <string name="error_lastname_invalid">El apellido debe tener al menos 2 caracteres</string>
+    <string name="error_password_length">La contraseña debe tener al menos 6 caracteres</string>
 
     <!--BottomNavigationBar-->
     <string name="bottom_nav_home">Inicio</string>

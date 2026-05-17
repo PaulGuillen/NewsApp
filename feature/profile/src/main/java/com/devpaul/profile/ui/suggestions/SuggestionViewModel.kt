@@ -90,11 +90,11 @@ class SuggestionViewModel(
         updateUiStateOnMain { it.copy(createComment = ResultState.Loading) }
 
         val request = CommentRequest(
-            userId = userId,
-            name = name,
-            lastname = lastname,
+            userId = userId.trim(),
+            name = name.trim(),
+            lastname = lastname.trim(),
             image = image,
-            comment = comment
+            comment = comment.trim(),
         )
 
         when (val result = createCommentUC.createComment(request)) {

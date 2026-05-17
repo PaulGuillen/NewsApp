@@ -1,6 +1,8 @@
 package com.devpaul.profile.ui.profile.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devpaul.core_platform.theme.GrayBlack
 import com.devpaul.profile.ui.components.rememberProfileUiColors
 
 @Composable
@@ -22,9 +25,12 @@ fun Section(
     cardColor: Color,
     content: @Composable ColumnScope.() -> Unit
 ) {
+
     val colors = rememberProfileUiColors()
+    val isDark = isSystemInDarkTheme()
 
     Column {
+
         Text(
             text = title,
             fontSize = 11.sp,
@@ -35,7 +41,21 @@ fun Section(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(cardColor, RoundedCornerShape(16.dp))
+                .then(
+                    if (!isDark) {
+                        Modifier.border(
+                            width = 1.dp,
+                            color = GrayBlack.copy(alpha = 0.25f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                    } else {
+                        Modifier
+                    }
+                )
+                .background(
+                    color = cardColor,
+                    shape = RoundedCornerShape(16.dp)
+                )
         ) {
             content()
         }
