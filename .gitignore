@@ -247,3 +247,9 @@ fabric.properties
 *.apk
 *.aab
 **/output-metadata.json
+
+# Kotlin compiler sessions
+.kotlin/
+.kotlin_sessions/
+*.salive
+kotlin-compiler-*

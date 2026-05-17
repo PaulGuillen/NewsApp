@@ -65,13 +65,33 @@ class ProfileViewModel(
     }
 
     private fun sharedApp() {
+
+        val shareMessage = """
+        🇵🇪 ¡Descubre InfoPerú!
+        
+        Mantente informado en tiempo real con:
+        
+        📰 Noticias del Perú
+        💵 Precio del dólar
+        📊 Valor de la UIT
+        🚨 Números de emergencia
+        
+        📲 Descárgala gratis en Google Play:
+        https://play.google.com/store/apps/details?id=com.devpaul.infographic
+    """.trimIndent()
+
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "InfoPerúº")
-            putExtra(Intent.EXTRA_TEXT, "Descarga InfoPerúº desde https://infoperu.app")
+            putExtra(Intent.EXTRA_SUBJECT, "InfoPerú")
+            putExtra(Intent.EXTRA_TEXT, shareMessage)
         }
-        ProfileUiEvent.LaunchIntent(intent = Intent.createChooser(shareIntent, "Compartir vía"))
-            .send()
+
+        ProfileUiEvent.LaunchIntent(
+            intent = Intent.createChooser(
+                shareIntent,
+                "Compartir aplicación"
+            )
+        ).send()
     }
 
     private fun openTerms() {

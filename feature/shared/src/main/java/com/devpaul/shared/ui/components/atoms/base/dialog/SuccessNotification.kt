@@ -127,7 +127,6 @@ fun SuccessNotificationContentPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(notificationPalette(SuccessButtonText).shellBackground)
                 .padding(18.dp),
             contentAlignment = Alignment.Center
         ) {
