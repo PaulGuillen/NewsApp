@@ -9,6 +9,14 @@ object Constant {
     //Collections
     const val USERS_COLLECTION = "users"
     const val COUNTRY_COLLECTION = "country"
+    const val COMMENTS_COLLECTION = "comments"
+    const val POSTS_COLLECTION = "posts"
+    const val COLLECTION_DISTRICT = "district"
+    const val COLLECTION_SECTION = "section"
+    const val COLLECTION_GENERAL = "general"
+    const val COLLECTION_DEFENSE_CIVIL = "civil_defense"
+    const val COLLECTION_SECTION_ITEMS = "sectionItems"
+    const val COLLECTION_GRATITUDE = "gratitude"
 
     // Fields
     const val ID_FIELD = "id"
@@ -33,10 +41,6 @@ object Constant {
     const val COUNTRY_PERU = "Perú"
     const val COUNTRY_ARGENTINA = "Argentina"
     const val COUNTRY_MEXICO = "Mexico"
-
-    //Collections
-    const val GRATITUDE = "gratitude"
-    const val SECTION_ITEMS = "sectionItems"
 
     // NewsScreen
     const val NEWS_LANGUAGE = "es"

@@ -1,5 +1,6 @@
 package com.devpaul.profile.data.datasource.remote
 
+import com.devpaul.core_data.util.Constant
 import com.devpaul.profile.data.datasource.dto.req.CommentRequest
 import com.devpaul.profile.data.datasource.dto.req.UpdateRequest
 import com.devpaul.profile.data.datasource.mapper.getLikedByMap
@@ -29,7 +30,7 @@ class FirebaseProfileDS(
 ) {
 
     suspend fun getProfileById(uid: String): ProfileEntity {
-        val snapshot = firestore.collection(USERS_COLLECTION).document(uid).get().await()
+        val snapshot = firestore.collection(Constant.USERS_COLLECTION).document(uid).get().await()
 
         if (!snapshot.exists()) {
             throw NoSuchElementException("No se encontró el perfil del usuario")
@@ -42,7 +43,7 @@ class FirebaseProfileDS(
         uid: String,
         profileUser: UpdateRequest
     ): GenericEntity {
-        firestore.collection(USERS_COLLECTION)
+        firestore.collection(Constant.USERS_COLLECTION)
             .document(uid)
             .set(profileUser.toFirestoreMap(uid), SetOptions.merge())
             .await()
@@ -56,7 +57,7 @@ class FirebaseProfileDS(
     suspend fun createComment(
         commentRequest: CommentRequest
     ): CommentEntity {
-        val commentRef = firestore.collection(COMMENTS_COLLECTION).document()
+        val commentRef = firestore.collection(Constant.COMMENTS_COLLECTION).document()
 
         commentRef.set(
             hashMapOf(
@@ -85,7 +86,7 @@ class FirebaseProfileDS(
         limit: Int,
         lastTimestamp: Long? = null
     ): GetCommentEntity {
-        var query: Query = firestore.collection(COMMENTS_COLLECTION)
+        var query: Query = firestore.collection(Constant.COMMENTS_COLLECTION)
             .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
             .limit(limit.toLong())
 
@@ -109,7 +110,7 @@ class FirebaseProfileDS(
     }
 
     suspend fun getPost(): PostEntity {
-        val snapshot = firestore.collection(POSTS_COLLECTION)
+        val snapshot = firestore.collection(Constant.POSTS_COLLECTION)
             .orderBy(CREATED_AT_FIELD, Query.Direction.DESCENDING)
             .get()
             .await()
@@ -146,7 +147,7 @@ class FirebaseProfileDS(
                     document,
                     buildLikePayload((currentLikes - 1).coerceAtLeast(0), likedBy)
                 )
-            }else {
+            } else {
                 // No se realiza ninguna actualización si el estado de like no cambia
                 return@runTransaction
             }
@@ -190,23 +191,19 @@ class FirebaseProfileDS(
 
     private fun String.toCollectionName(): String {
         return when (lowercase()) {
-            "post", "posts" -> POSTS_COLLECTION
-            else -> COMMENTS_COLLECTION
+            "post", "posts" -> Constant.POSTS_COLLECTION
+            else -> Constant.COMMENTS_COLLECTION
         }
     }
 
     private fun String.toIdField(): String {
         return when (this) {
-            POSTS_COLLECTION -> POST_ID_FIELD
+            Constant.POSTS_COLLECTION -> POST_ID_FIELD
             else -> COMMENT_ID_FIELD
         }
     }
 
     private companion object {
-        const val USERS_COLLECTION = "users"
-        const val COMMENTS_COLLECTION = "comments"
-        const val POSTS_COLLECTION = "posts"
-
         const val COMMENT_ID_FIELD = "commentId"
         const val POST_ID_FIELD = "postId"
         const val USER_ID_FIELD = "userId"

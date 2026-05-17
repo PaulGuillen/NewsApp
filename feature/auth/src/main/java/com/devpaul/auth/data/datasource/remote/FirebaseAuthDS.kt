@@ -3,6 +3,7 @@ package com.devpaul.auth.data.datasource.remote
 import com.devpaul.auth.data.datasource.mapper.toDomain
 import com.devpaul.auth.domain.entity.Auth
 import com.devpaul.auth.domain.entity.Register
+import com.devpaul.core_data.util.Constant
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -44,7 +45,7 @@ class FirebaseAuthDS(
         val uid = user.uid
 
         try {
-            firestore.collection(USERS_COLLECTION)
+            firestore.collection(Constant.USERS_COLLECTION)
                 .document(uid)
                 .set(
                     mapOf(
@@ -75,7 +76,4 @@ class FirebaseAuthDS(
         auth.sendPasswordResetEmail(email).await()
     }
 
-    private companion object {
-        const val USERS_COLLECTION = "users"
-    }
 }

@@ -2,6 +2,7 @@ package com.devpaul.home.data.datasource.remote
 
 import com.devpaul.core_data.DefaultOutput
 import com.devpaul.core_data.safeApiCall
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_domain.entity.transform
 import com.devpaul.home.data.datasource.mapper.toDomain
 import com.devpaul.home.data.datasource.mapper.toGratitudeEntity
@@ -55,7 +56,7 @@ class HomeServiceDS(
 
     suspend fun sectionService(): SectionEntity {
         val snapshot = firestore
-            .collection(COLLECTION_SECTION_ITEMS)
+            .collection(Constant.COLLECTION_SECTION_ITEMS)
             .get()
             .await()
 
@@ -64,15 +65,10 @@ class HomeServiceDS(
 
     suspend fun gratitudeService(): GratitudeEntity {
         val snapshot = firestore
-            .collection(COLLECTION_GRATITUDE)
+            .collection(Constant.COLLECTION_GRATITUDE)
             .get()
             .await()
 
         return snapshot.documents.toGratitudeEntity()
-    }
-
-    companion object {
-        private const val COLLECTION_SECTION_ITEMS = "sectionItems"
-        private const val COLLECTION_GRATITUDE = "gratitude"
     }
 }

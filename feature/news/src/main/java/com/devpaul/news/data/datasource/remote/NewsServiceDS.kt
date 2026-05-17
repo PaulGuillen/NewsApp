@@ -2,6 +2,7 @@ package com.devpaul.news.data.datasource.remote
 
 import com.devpaul.core_data.DefaultOutput
 import com.devpaul.core_data.safeApiCall
+import com.devpaul.core_data.util.Constant
 import com.devpaul.core_domain.entity.error.ApiException
 import com.devpaul.core_domain.entity.transform
 import com.devpaul.news.data.datasource.dto.res.GDELTResponse
@@ -24,7 +25,7 @@ class NewsServiceDS(
 
     suspend fun countryService(): CountryEntity {
         val snapshot = firestore
-            .collection(COLLECTION_COUNTRY)
+            .collection(Constant.COUNTRY_COLLECTION)
             .get()
             .await()
 
@@ -47,7 +48,7 @@ class NewsServiceDS(
         query: String,
         mode: String,
         format: String
-    ) : GDELTResponse {
+    ): GDELTResponse {
         try {
             val response = newsService.deltaProject(query, mode, format)
             if (response.isSuccessful) {
@@ -79,9 +80,5 @@ class NewsServiceDS(
             Timber.e("Error fetching data: ${e.message}")
             throw e
         }
-    }
-
-    companion object {
-        private const val COLLECTION_COUNTRY = "country"
     }
 }

@@ -1,5 +1,6 @@
 package com.devpaul.emergency.data.datasource.remote
 
+import com.devpaul.core_data.util.Constant
 import com.devpaul.emergency.data.datasource.mapper.toGeneralEntity
 import com.devpaul.emergency.data.datasource.mapper.toPoliceEntity
 import com.devpaul.emergency.data.datasource.mapper.toSectionEntity
@@ -13,13 +14,12 @@ import org.koin.core.annotation.Factory
 @Factory
 class EmergencyServiceDS(
     private val firestore: FirebaseFirestore,
-    private val emergencyService: EmergencyService,
 ) {
 
     suspend fun sectionService(): SectionEntity {
         val snapshot = firestore
-            .collection(COLLECTION_DISTRICT)
-            .document(COLLECTION_SECTION)
+            .collection(Constant.COLLECTION_DISTRICT)
+            .document(Constant.COLLECTION_SECTION)
             .get()
             .await()
 
@@ -28,8 +28,8 @@ class EmergencyServiceDS(
 
     suspend fun generalService(): GeneralEntity {
         val snapshot = firestore
-            .collection(COLLECTION_DISTRICT)
-            .document(COLLECTION_GENERAL)
+            .collection(Constant.COLLECTION_DISTRICT)
+            .document(Constant.COLLECTION_GENERAL)
             .get()
             .await()
 
@@ -38,7 +38,7 @@ class EmergencyServiceDS(
 
     suspend fun policeService(type: String): PoliceEntity {
         val snapshot = firestore
-            .collection(COLLECTION_DISTRICT)
+            .collection(Constant.COLLECTION_DISTRICT)
             .document(type)
             .get()
             .await()
@@ -48,18 +48,12 @@ class EmergencyServiceDS(
 
     suspend fun civilDefenseService(): GeneralEntity {
         val snapshot = firestore
-            .collection(COLLECTION_DISTRICT)
-            .document(COLLECTION_DEFENSE_CIVIL)
+            .collection(Constant.COLLECTION_DISTRICT)
+            .document(Constant.COLLECTION_DEFENSE_CIVIL)
             .get()
             .await()
 
         return snapshot.toGeneralEntity()
     }
 
-    companion object {
-        private const val COLLECTION_DISTRICT = "district"
-        private const val COLLECTION_SECTION = "section"
-        private const val COLLECTION_GENERAL = "general"
-        private const val COLLECTION_DEFENSE_CIVIL = "civil_defense"
-    }
 }
