@@ -12,8 +12,8 @@ project.extensions.findByType(BaseExtension::class.java)?.let { android ->
             create("prod") {
                 dimension = dimensionName
                 versionNameSuffix = "-prod"
-                versionName = "1.0.2"
-                versionCode = 5
+                versionName = "1.0.3"
+                versionCode = 6
                 buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
                 buildConfigField("String", "ENVIRONMENT", "\"prod\"")
                 buildConfigField("int", "VERSION_CODE", "$versionCode")
