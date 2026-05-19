@@ -1,20 +1,19 @@
 package com.devpaul.infographic
 
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.theme.InfoXPeruTheme
 import com.devpaul.core_platform.theme.SetStatusBarColor
@@ -22,29 +21,51 @@ import com.devpaul.infographic.ui.ForceUpdateScreen
 import com.devpaul.infographic.ui.openPlayStore
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
+sealed class UpdateState {
+    data object Loading : UpdateState()
+    data object Required : UpdateState()
+    data object NotRequired : UpdateState()
+}
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var appUpdateManager: AppUpdateManager
 
+    private val immediateUpdateOptions =
+        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+
+    private var updateState by mutableStateOf<UpdateState>(UpdateState.Loading)
+
+    private val immediateUpdateLauncher =
+        registerForActivityResult(StartIntentSenderForResult()) { result ->
+            if (result.resultCode != RESULT_OK) {
+                showForceUpdateMandatoryMessageAndClose()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         appUpdateManager = AppUpdateManagerFactory.create(this)
         enableEdgeToEdge()
+
+        validateAppUpdate()
+
         setContent {
             val isDarkTheme = isSystemInDarkTheme()
             val statusBarColor = if (isDarkTheme) Color.Black else Color.White
-
-            SetStatusBarColor(color = statusBarColor, darkIcons = !isDarkTheme)
-
             val navController = rememberNavController()
-            val showForceUpdate = remember { mutableStateOf(false) }
 
-            LaunchedEffect(Unit) {
-                checkForAppUpdate(onUpdateAvailable = { showForceUpdate.value = true } )
-            }
+            SetStatusBarColor(
+                color = statusBarColor,
+                darkIcons = !isDarkTheme
+            )
 
             InfoXPeruTheme(
                 darkTheme = isDarkTheme,
@@ -53,95 +74,93 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (showForceUpdate.value) {
-                        ForceUpdateScreen(
-                            onOpenStore = {
-                                startImmediateUpdate()
-                            }
-                        )
-                    } else {
-                        MainGraph(
-                            navController = navController
-                        )
+                    when (updateState) {
+                        UpdateState.Required -> {
+                            ForceUpdateScreen(
+                                onOpenStore = {
+                                    startImmediateUpdate()
+                                }
+                            )
+                        }
+
+                        UpdateState.NotRequired -> {
+                            MainGraph(
+                                navController = navController
+                            )
+                        }
+
+                        UpdateState.Loading -> {
+                            // Pantalla vacía mientras Google Play valida la actualización
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun checkForAppUpdate(
-        onUpdateAvailable: () -> Unit
-    ) {
-        appUpdateManager.appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-
-                val hasUpdate =
-                    appUpdateInfo.updateAvailability() ==
-                            UpdateAvailability.UPDATE_AVAILABLE
-
-                val immediateAllowed =
-                    appUpdateInfo.isUpdateTypeAllowed(
-                        AppUpdateType.IMMEDIATE
-                    )
-
-                if (hasUpdate && immediateAllowed) {
-                    onUpdateAvailable()
-                }
-            }
-    }
-
-    private fun startImmediateUpdate() {
-        appUpdateManager.appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-                try {
-                    appUpdateManager.startUpdateFlowForResult(
-                        appUpdateInfo,
-                        AppUpdateType.IMMEDIATE,
-                        this,
-                        REQUEST_CODE_APP_UPDATE
-                    )
-                } catch (_: IntentSender.SendIntentException) {
-                    openPlayStore(this)
-                }
-            }
-    }
-
     override fun onResume() {
         super.onResume()
-        appUpdateManager.appUpdateInfo
-            .addOnSuccessListener { appUpdateInfo ->
-
-                val updateInProgress =
-                    appUpdateInfo.updateAvailability() ==
-                            UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-
-                if (updateInProgress) {
-                    startImmediateUpdate()
-                }
-            }
+        validateAppUpdate()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (
-            requestCode == REQUEST_CODE_APP_UPDATE &&
-            resultCode != RESULT_OK
-        ) {
-            Toast.makeText(
-                this,
-                "Debes actualizar la aplicación para continuar.",
-                Toast.LENGTH_LONG
-            ).show()
-            finish()
+    private fun validateAppUpdate() {
+        lifecycleScope.launch {
+            updateState = checkForAppUpdate()
         }
     }
 
-    companion object {
-        private const val REQUEST_CODE_APP_UPDATE = 500
+    private suspend fun checkForAppUpdate(): UpdateState {
+        return try {
+            val appUpdateInfo = appUpdateManager.appUpdateInfo.await()
+
+            val updateInProgress =
+                appUpdateInfo.updateAvailability() ==
+                        UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+
+            val hasUpdate =
+                appUpdateInfo.updateAvailability() ==
+                        UpdateAvailability.UPDATE_AVAILABLE
+
+            val immediateAllowed =
+                appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+
+            when {
+                updateInProgress -> UpdateState.Required
+                hasUpdate && immediateAllowed -> UpdateState.Required
+                else -> UpdateState.NotRequired
+            }
+        } catch (_: Exception) {
+            UpdateState.NotRequired
+        }
+    }
+
+    private fun startImmediateUpdate() {
+        lifecycleScope.launch {
+            try {
+                val appUpdateInfo = appUpdateManager.appUpdateInfo.await()
+
+                val started = appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    immediateUpdateLauncher,
+                    immediateUpdateOptions
+                )
+
+                if (!started) {
+                    openPlayStore(this@MainActivity)
+                }
+            } catch (_: Exception) {
+                openPlayStore(this@MainActivity)
+            }
+        }
+    }
+
+    private fun showForceUpdateMandatoryMessageAndClose() {
+        Toast.makeText(
+            this,
+            "Debes actualizar la aplicación para continuar.",
+            Toast.LENGTH_LONG
+        ).show()
+
+        finish()
     }
 }
