@@ -51,6 +51,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devpaul.auth.ui.components.rememberAuthUiColors
 import com.devpaul.auth.ui.login.LoginUIState
 import com.devpaul.auth.ui.login.LoginUiIntent
+import com.devpaul.core_data.BuildConfig
 import com.devpaul.core_data.Screen
 import com.devpaul.core_platform.R
 import com.devpaul.core_platform.extension.ResultState
@@ -310,6 +311,17 @@ fun LoginBody(
                     color = colors.link,
                 )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "Versión " + BuildConfig.VERSION_NAME,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 14.sp
+            )
+
         }
     }
 }
