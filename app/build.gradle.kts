@@ -29,4 +29,5 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.koin.navigation)
+    implementation(libs.app.update.ktx)
 }
