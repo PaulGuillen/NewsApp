@@ -55,35 +55,38 @@ Aplicación Android modular que consume APIs gratuitas para ofrecer:
 
 ### 🔐 Autenticación
 
-<img width="320" height="1400" alt="Screenshot_1752696025" src="https://github.com/user-attachments/assets/0a337098-53f5-4951-8eab-41d616db0f6e" />
-<img width="320" height="1400" alt="Screenshot_1752696028" src="https://github.com/user-attachments/assets/07ea8180-d20b-491b-bbf1-2b523688fa01" />
-<img width="320" height="1400" alt="Screenshot_1752695926" src="https://github.com/user-attachments/assets/f0df4c27-ca52-481b-a7fc-ab25c82fd57c" />
+<p align="center">
+<img width="300" height="800" alt="Screenshot_1780270033" src="https://github.com/user-attachments/assets/2ffdb61f-682f-4f60-b88a-bd0b0d9b9ff5" />
+<img width="300" height="800" alt="Screenshot_1780270355" src="https://github.com/user-attachments/assets/2d2e4de7-05cb-483c-8a0e-c16ebb2d4bd2" />
+<img width="300" height="800" alt="Screenshot_1780270041" src="https://github.com/user-attachments/assets/533eb21f-6e3e-4a39-8110-5f35083f08db" />
+<img width="300" height="800" alt="Screenshot_1780270363" src="https://github.com/user-attachments/assets/02f850d4-3577-4c10-8cd6-e0ecc1877552" />
+</p>
 
 <br><br>
 
-_Inicio_
+_Navigation_
 
-<img width="320" height="1400" alt="Screenshot_1752696124" src="https://github.com/user-attachments/assets/71fa303c-076e-4a75-8ab7-26e35e59e497" />
-<img width="320" height="1400" alt="Screenshot_1752696126" src="https://github.com/user-attachments/assets/284dde6b-52f7-47f9-9292-e2345b047154" />
-<img width="320" height="1400" alt="Screenshot_1752696208" src="https://github.com/user-attachments/assets/8d0c1cdf-4aab-49ff-a012-44e44d660318" />
-<img width="320" height="1400" alt="Screenshot_1752696202" src="https://github.com/user-attachments/assets/1d151d75-8a87-49e2-9348-038cadcd8287" />
-<img width="320" height="1400" alt="Screenshot_1752696133" src="https://github.com/user-attachments/assets/2b09863a-ca0c-47b5-9e7d-fd4f2bce9b02" />
+<p align="center">
+<img width="300" height="800" alt="Screenshot_1780270300" src="https://github.com/user-attachments/assets/7ad22388-d748-4723-816c-446ed42d1eef" />
+<img width="300" height="800" alt="Screenshot_1780270350" src="https://github.com/user-attachments/assets/73de964f-76e6-4140-b486-aefd33d1ea8c" />
+
+<img width="300" height="800" alt="Screenshot_1780270304" src="https://github.com/user-attachments/assets/37eb8a6a-f666-4860-807f-6d6fc37ad720" />
+<img width="300" height="800" alt="Screenshot_1780270347" src="https://github.com/user-attachments/assets/1b320be9-7702-4f84-8aba-3fc2287fdc26" />
+
+<img width="300" height="800" alt="Screenshot_1780270307" src="https://github.com/user-attachments/assets/90e4481c-807a-4959-be42-f3d180e5c607" />
+<img width="300" height="800" alt="Screenshot_1780270344" src="https://github.com/user-attachments/assets/559e8a82-b6f8-446d-aed9-36a74dde029a" />
+
+<img width="300" height="800" alt="Screenshot_1780270309" src="https://github.com/user-attachments/assets/0ea32d4e-bc97-4bab-9054-3c4950dc6adb" />
+<img width="300" height="800" alt="Screenshot_1780270342" src="https://github.com/user-attachments/assets/9f5ae406-1312-4a61-b069-55ebe6fec103" />
+
+<img width="300" height="800" alt="Screenshot_1780270313" src="https://github.com/user-attachments/assets/c11e7e37-f8f7-4545-826f-ab84d8bb8311" />
+<img width="300" height="800" alt="Screenshot_1780270340" src="https://github.com/user-attachments/assets/09eba53e-bb22-4894-be92-21ff224c9d04" />
+
+</p>
 
 <br><br>
 
 _Noticias_
-
-<img width="320" height="1400" alt="Screenshot_1752696382" src="https://github.com/user-attachments/assets/ea523e1d-20b4-4c17-932b-4f7c19db2830" />
-<img width="320" height="1400" alt="Screenshot_1752696388" src="https://github.com/user-attachments/assets/eaaa4a3d-2d2e-4e6e-9ac7-5ed30a489c11" />
-<img width="320" height="1400" alt="Screenshot_1752696390" src="https://github.com/user-attachments/assets/4e77b8f7-ab97-48e9-808b-3030add2eb15" />
-<img width="320" height="1400" alt="Screenshot_1752696401" src="https://github.com/user-attachments/assets/c38c1133-6080-494f-b194-07a2512617f1" />
-<img width="320" height="1400" alt="Screenshot_1752696403" src="https://github.com/user-attachments/assets/952f315d-b552-4f43-a614-ba56d94677a8" />
-<img width="320" height="1400" alt="Screenshot_1752696414" src="https://github.com/user-attachments/assets/dcc29d73-a3ad-46ab-bc42-38d6c3385605" />
-<img width="320" height="1400" alt="Screenshot_1752696419" src="https://github.com/user-attachments/assets/c6d56aee-eaeb-4178-bfd4-557a1ba64050" />
-<img width="320" height="1400" alt="Screenshot_1752696427" src="https://github.com/user-attachments/assets/e39ac56a-6549-4a8b-bd85-f18892d7647b" />
-<img width="320" height="1400" alt="Screenshot_1752696434" src="https://github.com/user-attachments/assets/3a11aea8-cc22-4fb8-b1d9-061eb716daf9" />
-<img width="320" height="1400" alt="Screenshot_1752696437" src="https://github.com/user-attachments/assets/5ae937ab-cb46-4996-b3ad-31873e439f84" />
-
 
 _Video avance funcionalidades_
 
