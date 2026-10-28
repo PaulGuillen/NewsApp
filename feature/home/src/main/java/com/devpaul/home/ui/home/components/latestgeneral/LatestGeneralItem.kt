@@ -17,7 +17,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,14 +24,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LatestGeneralItem(category: String, title: String, body: String, footer: String) {
-    val categoryTextColor = Color.White
+    val categoryTextColor = MaterialTheme.colorScheme.onPrimary
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .heightIn(min = 96.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(0.1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Column(
@@ -57,7 +56,7 @@ fun LatestGeneralItem(category: String, title: String, body: String, footer: Str
                     Box(
                         modifier = Modifier
                             .background(
-                                MaterialTheme.colorScheme.onTertiaryContainer,
+                                MaterialTheme.colorScheme.primary,
                                 androidx.compose.foundation.shape.RoundedCornerShape(50)
                             )
                             .padding(horizontal = 10.dp, vertical = 4.dp)

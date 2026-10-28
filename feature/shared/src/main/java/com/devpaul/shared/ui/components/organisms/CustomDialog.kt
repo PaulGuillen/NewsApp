@@ -1,6 +1,8 @@
 package com.devpaul.shared.ui.components.organisms
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,8 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.devpaul.core_platform.R
-import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.core_platform.theme.White
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 
 @Composable
 fun CustomDialog(
@@ -35,6 +36,8 @@ fun CustomDialog(
     Dialog(onDismissRequest = { }) {
         Surface(
             shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
             shadowElevation = 8.dp
         ) {
             Column(
@@ -52,15 +55,19 @@ fun CustomDialog(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 description?.takeIf { it.isNotBlank() }?.let {
-                    Text(text = it, style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
                 buttonText?.takeIf { it.isNotBlank() }?.let {
                     Button(
                         onClick = onButtonClick,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = BrickRed,
-                            contentColor = White
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         Text(text = it)
@@ -71,14 +78,17 @@ fun CustomDialog(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CustomDialogPreview() {
-    CustomDialog(
-        image = painterResource(id = R.drawable.baseline_check_circle_24),
-        title = "Title",
-        description = "Description",
-        buttonText = "Button",
-        onButtonClick = {}
-    )
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme()) {
+        CustomDialog(
+            image = painterResource(id = R.drawable.baseline_check_circle_24),
+            title = "Title",
+            description = "Description",
+            buttonText = "Button",
+            onButtonClick = {}
+        )
+    }
 }

@@ -50,7 +50,7 @@ fun TopBarPrincipal(
                             appendStyled("Info", Color(0xFFD32F2F), FontWeight.Bold)
                             appendStyled(
                                 "Perú",
-                                MaterialTheme.colorScheme.onSecondary,
+                                MaterialTheme.colorScheme.onSurface,
                                 FontWeight.Normal
                             )
                         },

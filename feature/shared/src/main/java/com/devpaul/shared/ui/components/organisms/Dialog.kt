@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.devpaul.core_platform.theme.BrickRed
+import com.devpaul.core_platform.theme.InfoXPeruTheme
 
 @Composable
 fun DialogCard(
@@ -42,7 +45,8 @@ fun DialogCard(
             shape = RoundedCornerShape(6.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             )
         ) {
             Column(
@@ -57,14 +61,18 @@ fun DialogCard(
 
                 Text(
                     text = message,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 OutlinedButton(
                     modifier = Modifier
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(6.dp),
-                    border = BorderStroke(1.dp, BrickRed),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
                     onClick = {
                         onConfirm?.invoke()
                         onDismiss()
@@ -81,10 +89,11 @@ fun DialogCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DialogCardPreview() {
-    MaterialTheme {
+    InfoXPeruTheme(darkTheme = isSystemInDarkTheme()) {
         DialogCard(
             title = "Ocurrió un problema",
             message = "Para continuar con la operación, solicita una nueva clave por SMS.",

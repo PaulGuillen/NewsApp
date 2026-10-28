@@ -3,7 +3,6 @@ package com.devpaul.shared.ui.components.atoms.base.dialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,13 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.ProfileDarkMuted
-import com.devpaul.core_platform.theme.ProfileDarkText
 import com.devpaul.core_platform.theme.White
 
 @Immutable
@@ -67,33 +66,34 @@ internal data class NotificationPalette(
 
 @Composable
 internal fun notificationPalette(accent: Color): NotificationPalette {
-    val isDark = isSystemInDarkTheme()
     val scheme = MaterialTheme.colorScheme
+    val isDark = scheme.surface.luminance() < 0.5f
+    val contentAccent = if (isDark) lerp(accent, White, 0.5f) else accent
 
     return remember(isDark, scheme, accent) {
         if (isDark) {
             NotificationPalette(
                 shellBackground = Black.copy(alpha = 0.72f),
-                cardBackground = Color(0xFF101A26),
+                cardBackground = scheme.surface,
                 cardBorder = accent.copy(alpha = 0.38f),
                 headerBackground = Brush.horizontalGradient(
                     listOf(
                         accent.copy(alpha = 0.18f),
-                        Color(0xFF16283D),
-                        Color(0xFF101A26)
+                        scheme.surfaceVariant,
+                        scheme.surface
                     )
                 ),
-                headerText = accent,
-                titleText = ProfileDarkText,
-                messageText = Color(0xFFB9C6D8),
+                headerText = contentAccent,
+                titleText = scheme.onSurface,
+                messageText = scheme.onSurfaceVariant,
                 iconBadgeBackground = accent.copy(alpha = 0.18f),
-                iconTint = accent,
-                primaryButton = accent,
+                iconTint = contentAccent,
+                primaryButton = contentAccent,
                 onPrimaryButton = Black,
-                secondaryButtonText = ProfileDarkText,
+                secondaryButtonText = scheme.onSurface,
                 secondaryButtonBorder = accent.copy(alpha = 0.32f),
-                closeTint = ProfileDarkMuted,
-                divider = White.copy(alpha = 0.08f),
+                closeTint = scheme.onSurfaceVariant,
+                divider = scheme.outlineVariant,
                 glow = accent.copy(alpha = 0.28f)
             )
         } else {
@@ -104,21 +104,21 @@ internal fun notificationPalette(accent: Color): NotificationPalette {
                 headerBackground = Brush.horizontalGradient(
                     listOf(
                         accent.copy(alpha = 0.15f),
-                        White,
-                        White
+                        scheme.surface,
+                        scheme.surface
                     )
                 ),
                 headerText = accent,
-                titleText = Color(0xFF18212F),
-                messageText = Black.copy(alpha = 0.74f),
+                titleText = scheme.onSurface,
+                messageText = scheme.onSurfaceVariant,
                 iconBadgeBackground = accent.copy(alpha = 0.12f),
                 iconTint = accent,
                 primaryButton = accent,
                 onPrimaryButton = White,
-                secondaryButtonText = Color(0xFF2C3A4D),
+                secondaryButtonText = scheme.onSurface,
                 secondaryButtonBorder = accent.copy(alpha = 0.22f),
-                closeTint = Color(0xFF6A7688),
-                divider = accent.copy(alpha = 0.08f),
+                closeTint = scheme.onSurfaceVariant,
+                divider = scheme.outlineVariant,
                 glow = accent.copy(alpha = 0.10f)
             )
         }

@@ -5,3 +5,7 @@ plugins {
 android {
     namespace = "com.devpaul.shared"
 }
+
+dependencies {
+    implementation(libs.androidx.material)
+}

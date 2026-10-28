@@ -62,7 +62,7 @@ fun LatestGeneralSection(uiState: HomeUiState) {
                         .padding(vertical = 8.dp)
                         .heightIn(min = 96.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = androidx.compose.foundation.BorderStroke(
                         0.1.dp,
                         MaterialTheme.colorScheme.outline
@@ -118,7 +118,7 @@ fun LatestGeneralSection(uiState: HomeUiState) {
                         .padding(vertical = 8.dp)
                         .heightIn(min = 96.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = androidx.compose.foundation.BorderStroke(
                         0.1.dp,
                         MaterialTheme.colorScheme.outline

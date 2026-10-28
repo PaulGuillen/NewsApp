@@ -15,22 +15,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.devpaul.core_platform.theme.Black
-import com.devpaul.core_platform.theme.BrandAccent
-import com.devpaul.core_platform.theme.BrickRed
 import com.devpaul.core_platform.theme.InfoXPeruTheme
-import com.devpaul.core_platform.theme.ProfileDarkText
-import com.devpaul.core_platform.theme.White
 
 @Composable
 fun ScreenLoading() {
@@ -41,25 +35,11 @@ fun ScreenLoading() {
 
 @Composable
 private fun ScreenLoadingContent() {
-    val isDark = isSystemInDarkTheme()
-    val palette = remember(isDark) {
-        if (isDark) {
-            Triple(
-                Color(0xAA050A11),
-                Color(0xFF101A26),
-                BrandAccent
-            )
-        } else {
-            Triple(
-                Black.copy(alpha = 0.26f),
-                White,
-                BrickRed
-            )
-        }
-    }
-    val cardColor = palette.second
-    val accent = palette.third
-    val textColor = if (isDark) ProfileDarkText else Color(0xFF2B2730)
+    val scheme = MaterialTheme.colorScheme
+    val isDark = scheme.surface.luminance() < 0.5f
+    val cardColor = scheme.surface
+    val accent = scheme.primary
+    val textColor = scheme.onSurface
     val shape = RoundedCornerShape(24.dp)
 
     Box(

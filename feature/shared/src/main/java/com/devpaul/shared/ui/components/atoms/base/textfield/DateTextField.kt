@@ -9,13 +9,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme as Material2Theme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
@@ -32,14 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.devpaul.core_platform.theme.BrandAccent
-import com.devpaul.core_platform.theme.BrickRed
-import com.devpaul.core_platform.theme.White
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -59,11 +57,11 @@ fun DateTextField(
 ) {
     val formatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
     val date = remember { mutableStateOf(LocalDate.now()) }
-    val isDark = isSystemInDarkTheme()
-    val accent = if (isDark) BrandAccent else BrickRed
-    val dialogBackground = if (isDark) Color(0xFF0D1822) else White
-    val dialogText = if (isDark) Color(0xFFE6F7FA) else Color(0xFF1B1B1F)
-    val buttonColor = if (isDark) BrandAccent else BrickRed
+    val scheme = MaterialTheme.colorScheme
+    val accent = scheme.primary
+    val dialogBackground = scheme.surface
+    val dialogText = scheme.onSurface
+    val buttonColor = scheme.primary
 
     val dialogState = rememberMaterialDialogState()
     var showTooltip by remember { mutableStateOf(false) }
@@ -75,30 +73,48 @@ fun DateTextField(
         }
     }
 
-    MaterialDialog(
-        dialogState = dialogState,
-        backgroundColor = dialogBackground,
-        buttons = {
-            positiveButton(text = "OK", textStyle = TextStyle(color = buttonColor))
-            negativeButton(text = "Cancelar", textStyle = TextStyle(color = buttonColor))
-        }
+    Material2Theme(
+        colors = Material2Theme.colors.copy(
+            primary = scheme.primary,
+            primaryVariant = scheme.primary,
+            secondary = scheme.secondary,
+            secondaryVariant = scheme.secondary,
+            background = scheme.background,
+            surface = scheme.surface,
+            error = scheme.error,
+            onPrimary = scheme.onPrimary,
+            onSecondary = scheme.onSecondary,
+            onBackground = scheme.onBackground,
+            onSurface = scheme.onSurface,
+            onError = scheme.onError,
+            isLight = scheme.surface.luminance() > 0.5f
+        )
     ) {
-        datepicker(
-            initialDate = date.value,
-            title = "Selecciona una fecha",
-            colors = DatePickerDefaults.colors(
-                headerBackgroundColor = accent,
-                dateActiveBackgroundColor = accent,
-                dateActiveTextColor = dialogBackground,
-                dateInactiveBackgroundColor = dialogBackground,
-                dateInactiveTextColor = accent.copy(alpha = 0.5f),
-                calendarHeaderTextColor = dialogText,
-                headerTextColor = dialogBackground,
-            ),
-            allowedDateValidator = { it.year <= LocalDate.now().year }
+        MaterialDialog(
+            dialogState = dialogState,
+            backgroundColor = dialogBackground,
+            buttons = {
+                positiveButton(text = "OK", textStyle = TextStyle(color = buttonColor))
+                negativeButton(text = "Cancelar", textStyle = TextStyle(color = buttonColor))
+            }
         ) {
-            date.value = it
-            onDateSelected(it.format(formatter))
+            datepicker(
+                initialDate = date.value,
+                title = "Selecciona una fecha",
+                colors = DatePickerDefaults.colors(
+                    headerBackgroundColor = accent,
+                    dateActiveBackgroundColor = accent,
+                    dateActiveTextColor = scheme.onPrimary,
+                    dateInactiveBackgroundColor = dialogBackground,
+                    dateInactiveTextColor = dialogText,
+                    calendarHeaderTextColor = dialogText,
+                    headerTextColor = scheme.onPrimary,
+                ),
+                allowedDateValidator = { it.year <= LocalDate.now().year }
+            ) {
+                date.value = it
+                onDateSelected(it.format(formatter))
+            }
         }
     }
 

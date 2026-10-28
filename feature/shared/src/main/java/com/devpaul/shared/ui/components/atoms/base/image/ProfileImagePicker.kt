@@ -113,6 +113,10 @@ fun ProfileImagePicker(
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            iconContentColor = MaterialTheme.colorScheme.primary,
             tonalElevation = 0.dp,
             title = { Text("Selecciona imagen", style = MaterialTheme.typography.titleMedium) },
             text = {

@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devpaul.core_platform.theme.InfoXPeruTheme
-import com.devpaul.core_platform.theme.White
 
 @Composable
 fun IndicatorCard(
@@ -38,7 +37,7 @@ fun IndicatorCard(
 
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = MaterialTheme.colorScheme.surface,
         shadowElevation = 4.dp,
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(0.1.dp, MaterialTheme.colorScheme.outline),
@@ -66,12 +65,12 @@ fun IndicatorCard(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.onTertiaryContainer)
+                                .background(MaterialTheme.colorScheme.primary)
                                 .padding(horizontal = 12.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 badgeText,
-                                color = White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }

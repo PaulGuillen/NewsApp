@@ -205,22 +205,25 @@ fun CommentCard(commentData: GetCommentDataEntity) {
             if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     title = {
                         Text(
                             buildDisplayName(commentData.name, commentData.lastname),
-                            color = colors.primaryText
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     },
                     text = {
                         Text(
                             "\"${commentData.comment.displayOrDefault()}\"",
-                            color = colors.primaryText
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
                     confirmButton = {
                         Text(
                             "Cerrar",
-                            color = colors.accent,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .padding(8.dp)
                                 .clickable { showDialog = false }
