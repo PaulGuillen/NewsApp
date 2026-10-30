@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.devpaul.core_platform.theme.InfoXPeruTheme
@@ -24,6 +25,8 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -42,8 +45,22 @@ class MainActivity : ComponentActivity() {
 
     private var updateState by mutableStateOf<UpdateState>(UpdateState.Loading)
 
+    private val updatePreferences by lazy {
+        getSharedPreferences("mandatory_update", MODE_PRIVATE)
+    }
+
+    private val installedVersionCode by lazy {
+        PackageInfoCompat.getLongVersionCode(
+            packageManager.getPackageInfo(packageName, 0)
+        )
+    }
+
+    private var validationJob: Job? = null
+    private var updateFlowStarted = false
+
     private val immediateUpdateLauncher =
         registerForActivityResult(StartIntentSenderForResult()) { result ->
+            updateFlowStarted = false
             if (result.resultCode != RESULT_OK) {
                 showForceUpdateMandatoryMessageAndClose()
             }
@@ -55,7 +72,9 @@ class MainActivity : ComponentActivity() {
         appUpdateManager = AppUpdateManagerFactory.create(this)
         enableEdgeToEdge()
 
-        validateAppUpdate()
+        if (isUpdateRequiredForInstalledVersion()) {
+            updateState = UpdateState.Required
+        }
 
         setContent {
             val isDarkTheme = isSystemInDarkTheme()
@@ -104,9 +123,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun validateAppUpdate() {
-        lifecycleScope.launch {
+        if (validationJob?.isActive == true) return
+        validationJob = lifecycleScope.launch {
             updateState = checkForAppUpdate()
         }
+    }
+
+    private fun isUpdateRequiredForInstalledVersion(): Boolean {
+        return updatePreferences.getLong("blocked_version_code", -1L) == installedVersionCode
+    }
+
+    private fun requireAppUpdate() {
+        updatePreferences.edit()
+            .putLong("blocked_version_code", installedVersionCode)
+            .apply()
+        updateState = UpdateState.Required
     }
 
     private suspend fun checkForAppUpdate(): UpdateState {
@@ -125,16 +156,32 @@ class MainActivity : ComponentActivity() {
                 appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
 
             when {
-                updateInProgress -> UpdateState.Required
-                hasUpdate && immediateAllowed -> UpdateState.Required
+                updateInProgress -> {
+                    requireAppUpdate()
+                    startImmediateUpdate()
+                    UpdateState.Required
+                }
+                hasUpdate && immediateAllowed -> {
+                    requireAppUpdate()
+                    UpdateState.Required
+                }
+                isUpdateRequiredForInstalledVersion() -> UpdateState.Required
                 else -> UpdateState.NotRequired
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (_: Exception) {
-            UpdateState.NotRequired
+            if (isUpdateRequiredForInstalledVersion()) {
+                UpdateState.Required
+            } else {
+                UpdateState.NotRequired
+            }
         }
     }
 
     private fun startImmediateUpdate() {
+        if (updateFlowStarted) return
+        updateFlowStarted = true
         lifecycleScope.launch {
             try {
                 val appUpdateInfo = appUpdateManager.appUpdateInfo.await()
@@ -146,9 +193,14 @@ class MainActivity : ComponentActivity() {
                 )
 
                 if (!started) {
+                    updateFlowStarted = false
                     openPlayStore(this@MainActivity)
                 }
+            } catch (cancelled: CancellationException) {
+                updateFlowStarted = false
+                throw cancelled
             } catch (_: Exception) {
+                updateFlowStarted = false
                 openPlayStore(this@MainActivity)
             }
         }
