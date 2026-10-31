@@ -6,6 +6,7 @@ import com.devpaul.news.domain.entity.Article
 import com.devpaul.news.domain.entity.DeltaProjectDataEntity
 import com.devpaul.news.domain.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import java.time.ZonedDateTime
@@ -36,6 +37,8 @@ class DeltaProjectUC(
                     ResultState.Error("No se encontraron artículos válidos.")
                 }
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (e: Exception) {
             ResultState.Error(e.toString())
         }

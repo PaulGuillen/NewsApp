@@ -5,6 +5,7 @@ import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.domain.repository.NewsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 
@@ -31,6 +32,8 @@ class RedditUC(
 
                 ResultState.Success(modifiedResponse)
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (e: Exception) {
             ResultState.Error(e.toString())
         }

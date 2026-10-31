@@ -7,6 +7,7 @@ import com.devpaul.core_domain.entity.Defaults
 import com.devpaul.core_domain.entity.Output
 import com.devpaul.core_domain.entity.error.ApiErrorResponse
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
@@ -74,6 +75,8 @@ suspend fun <T : Any, E : Any> safeApiCallWithError(
                     )
                 )
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (ex: Exception) {
             Timber.e(ex, "SafeApiCall - safeApiCallWithError caught an exception")
             if (ex is NetworkErrorParcelable) {
