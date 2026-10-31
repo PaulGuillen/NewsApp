@@ -24,3 +24,13 @@ Simple XML also instantiates its internal label, extractor and parameter classes
 
 Before publishing, test the optimized release through an internal testing track: sign-in, home API data, Google News XML, profile loading/editing, cached profile data after upgrading, and the mandatory update flow.
 Confirm the optimization percentages in Play Console after uploading the new bundle; a successful local build does not establish the percentages reported by Google Play.
+
+## Play Console declarations and native symbols
+
+Advertising ID access is removed from the merged app manifest and Advertising ID collection is explicitly disabled for Firebase Analytics.
+Set the Advertising ID declaration in Play Console to No to match this configuration. Updating the AAB does not update that declaration automatically.
+
+Release builds request FULL native debug symbols. Gradle includes available symbols in the AAB and can generate `app/build/outputs/native-debug-symbols/prodRelease/native-debug-symbols.zip`.
+The AndroidX Graphics Path and DataStore native libraries currently arrive with their symbol tables and debug information already stripped.
+Gradle cannot reconstruct those symbols, so a native-symbol warning may remain for those dependencies until their publishers provide matching unstripped binaries or symbol files.
+The R8 `mapping.txt` file is for JVM stack traces and does not replace native symbols.
