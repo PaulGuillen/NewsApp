@@ -101,7 +101,6 @@ fun NewsScreen(navController: NavHostController) {
                 }
                 if (peru != null) {
                     onIntent(NewsUiIntent.SelectCountry(peru))
-                    onIntent(NewsUiIntent.SelectSource(Source.GOOGLE))
                 }
             }
         }
