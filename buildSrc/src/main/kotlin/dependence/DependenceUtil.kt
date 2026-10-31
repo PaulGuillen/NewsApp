@@ -6,6 +6,7 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.getByType
 
 fun Project.getLibs(): VersionCatalog =
@@ -86,7 +87,11 @@ fun Project.androidCoreImplementation() {
         "implementation"(libs["lifecycle-viewmodel-ktx"])
         "implementation"(libs["coil-compose"])
         "implementation"(libs["shimmer-compose"])
-        "implementation"(libs["converter-simplexml"])
+        "implementation"(libs["converter-simplexml"]) {
+            exclude(group = "stax", module = "stax-api")
+            exclude(group = "stax", module = "stax")
+            exclude(group = "xpp3", module = "xpp3")
+        }
     }
 }
 
