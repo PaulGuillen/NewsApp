@@ -1,6 +1,7 @@
 package com.devpaul.news.domain.usecase
 
 import com.devpaul.core_domain.entity.Defaults
+import com.devpaul.core_domain.entity.error.ApiException
 import com.devpaul.core_platform.extension.ResultState
 import com.devpaul.news.domain.entity.RedditEntity
 import com.devpaul.news.domain.repository.NewsRepository
@@ -34,8 +35,15 @@ class RedditUC(
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (e: Exception) {
-            ResultState.Error(e.toString())
+        } catch (exception: Exception) {
+            val message = when {
+                exception is ApiException && exception.code == 403 ->
+                    "Reddit no permite consultar las noticias en este momento. Prueba otra fuente."
+                exception is ApiException && exception.code == 429 ->
+                    "Reddit ha recibido demasiadas consultas. Intenta de nuevo más tarde."
+                else -> "No se pudieron cargar las noticias de Reddit. Intenta de nuevo."
+            }
+            ResultState.Error(message)
         }
     }
 

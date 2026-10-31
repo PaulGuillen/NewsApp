@@ -39,8 +39,8 @@ class DeltaProjectUC(
             }
         } catch (cancelled: CancellationException) {
             throw cancelled
-        } catch (e: Exception) {
-            ResultState.Error(e.toString())
+        } catch (exception: Exception) {
+            ResultState.Error("No se pudieron cargar las noticias de Delta. Intenta de nuevo.")
         }
     }
 
