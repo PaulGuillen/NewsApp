@@ -29,11 +29,13 @@ import com.devpaul.home.domain.entity.SeasonEntity
 import com.devpaul.shared.domain.SPANISH_DATE_FORMATTER
 import com.devpaul.shared.domain.toLocalDate
 import java.time.LocalDate
+import java.time.ZoneId
 
 @Composable
 fun SeasonSection(seasonState: ResultState<SeasonEntity>) {
 
-    val currentYear = LocalDate.now().year.toString()
+    val currentDate = LocalDate.now(ZoneId.of("America/Lima"))
+    val currentYear = currentDate.year.toString()
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val cardWidth = screenWidth * 0.75f
@@ -82,7 +84,7 @@ fun SeasonSection(seasonState: ResultState<SeasonEntity>) {
                 is ResultState.Success -> {
 
                     val seasonCards =
-                        seasonState.response.toSeasonCards(currentYear)
+                        seasonState.response.toSeasonCards(currentDate)
 
                     if (seasonCards.isNotEmpty()) {
 
@@ -284,14 +286,16 @@ private fun SeasonFallbackCard(
 
 /* ---------------- MAPPERS ---------------- */
 
-private fun SeasonEntity.toSeasonCards(currentYear: String): List<SeasonCardUi> {
+internal fun SeasonEntity.toSeasonCards(now: LocalDate): List<SeasonCardUi> {
+    val currentYear = now.year.toString()
     val year = years[currentYear] ?: years.entries.maxByOrNull {
         it.key.toIntOrNull() ?: Int.MIN_VALUE
     }?.value ?: return emptyList()
 
-    val now = LocalDate.now()
+    val summer = years.values.mapNotNull { it.summer }
+        .firstOrNull { it.isCurrentOn(now) } ?: year.summer
 
-    return listOfNotNull(
+    val seasonCards = listOfNotNull(
         year.autumn?.toSeasonCardUi(
             "Otoño",
             Icons.Default.WbSunny,
@@ -310,13 +314,26 @@ private fun SeasonEntity.toSeasonCards(currentYear: String): List<SeasonCardUi> 
             listOf(Color(0xFF166534), Color(0xFF4ADE80)),
             now
         ),
-        year.summer?.toSeasonCardUi(
+        summer?.toSeasonCardUi(
             "Verano",
             Icons.Default.WbSunny,
             listOf(Color(0xFFE7CF0E), Color(0xFFB8DE28)),
             now
         )
     )
+
+    val currentIndex = seasonCards.indexOfFirst { it.isCurrent }
+    return if (currentIndex > 0) {
+        seasonCards.drop(currentIndex) + seasonCards.take(currentIndex)
+    } else {
+        seasonCards
+    }
+}
+
+private fun SeasonDetailEntity.isCurrentOn(date: LocalDate): Boolean {
+    val start = startDate.toLocalDate()
+    val end = endDate.toLocalDate()
+    return start != null && end != null && !date.isBefore(start) && date.isBefore(end)
 }
 
 private fun SeasonDetailEntity.toSeasonCardUi(
@@ -344,6 +361,6 @@ private fun SeasonDetailEntity.toSeasonCardUi(
                 append(" el ${start.format(SPANISH_DATE_FORMATTER)}")
             }
         }.ifBlank { "Sin horario disponible" },
-        isCurrent = start != null && end != null && !now.isBefore(start) && now.isBefore(end)
+        isCurrent = isCurrentOn(now)
     )
 }
