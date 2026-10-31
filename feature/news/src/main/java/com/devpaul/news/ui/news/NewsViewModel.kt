@@ -162,17 +162,14 @@ class NewsViewModel(
                     }
                 }
             }
-            .onFailure<GoogleUC.Failure> {
-                when (it) {
-                    is GoogleUC.Failure.GoogleError -> {
-                        updateUiStateOnMain { uiState ->
-                            uiState.copy(
-                                google = ResultState.Error(
-                                    message = it.error.apiErrorResponse?.message ?: ERROR_GOOGLE
-                                )
-                            )
-                        }
-                    }
+            .onFailure { failure ->
+                val message = when (failure) {
+                    is GoogleUC.Failure.GoogleError ->
+                        failure.error.apiErrorResponse?.message ?: ERROR_GOOGLE
+                    else -> ERROR_GOOGLE
+                }
+                updateUiStateOnMain { uiState ->
+                    uiState.copy(google = ResultState.Error(message))
                 }
             }
     }
